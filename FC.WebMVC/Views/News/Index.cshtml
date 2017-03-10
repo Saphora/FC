@@ -1,0 +1,67 @@
+﻿@section META {
+    <title>FESTIVAL CALENDAR | HEADLINES</title>
+    <meta property="og:url" content="http://festival-calendar.nl/news" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FESTIVAL CALENDAR | HEADLINES" />
+    <meta property="og:description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+    <meta property="og:image" content="~/Resources/images/fc-icon.png" />
+    <meta name="keywords" content="Festival,Calendar,News,Headlines,Announcements,Alerts,Subscribe" />
+    <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+}
+
+<div class="row">
+    <div class="col-xs-24 introbox">
+        <center>
+            <h1>HEADLINES</h1>
+        </center>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-24 filter-control" ng-controller="FC.Modules.Filtering.Controllers.FilterBarController as vm">
+        <div class="inner">
+            <div class="filter-control-item float-left">
+                <a href="/news" class="btn btn-default"><i class="fa fa-calendar" style="position:relative;top:-2px"></i> CALENDAR</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row news-overview-wrapper" ng-controller="FC.Modules.News.Controllers.NewsOverviewController as vm">
+    <div class="col-xl-8 col-lg-8 col-md-12 col-sm-24 col-xs-24">
+        <ng-include src="'/Scripts/modules/news/views/news-card.html'" ng-repeat="(i,n) in ColData1"></ng-include>
+    </div>
+    <div class="col-xl-8 col-lg-8 col-md-12 col-sm-24 col-xs-24" >
+        <ng-include src="'/Scripts/modules/news/views/news-card.html'" ng-repeat="(i,n) in ColData2"></ng-include>
+    </div>
+    <div class="col-xl-8 col-lg-8 col-md-12 col-sm-24 col-xs-24">
+        <ng-include src="'/Scripts/modules/news/views/news-card.html'" ng-repeat="(i,n) in ColData3"></ng-include>
+    </div>
+        @*<div class="card overview news-overview">
+            <div class="card-header">
+                <span class="h5">NEWS</span>
+            </div>
+            <div class="card-block">
+                <!--<div class="col-xs-24 no-padding no-margin header-controls">
+                    <a href="/#/news/create/1" class="btn btn-success">
+                        CREATE
+                    </a>
+                </div>-->
+                <ng-include src=""
+                <ng-include src="'/Scripts/Shared/views/loader.html'" ng-if="IsLoading"></ng-include>
+                <ul class="news-list" ng-if="!IsLoading">
+                    <li class="news-item" ng-if="n.Title" ng-repeat="(i,n) in model">
+                        <img ng-src="{{MediaURLRoot}}/{{n.ThumbnailID}}.img?&thumb=true" ng-if="n.ThumbnailID" />
+                        <a href="/news/edit/{{n.NewsID}}" class="edit-ctrl"><i class="fa fa-edit"></i></a>
+                        <a href="/#/news/detail/{{n.NewsID}}" class="title-link"><h5>{{n.Title.toUpperCase()}}</h5></a>
+                        <span class="subtitle" ng-class="n.ThumbnailID ? 'img':''"><strong>AUTHOR: </strong><a href="#">WMeer</a>, <strong>DATE: </strong>{{vm.FormatDate(Date)}}</span>
+                        <a href="#" ng-click="$event.preventDefault();" class="subtxt">{{n.MetaDescription}}</a>
+                        <!--<div class="txt" ng-bind-html="vm.HtmlSafe($sce, n.Text)"></div>-->
+                        <div class="keywords" ng-bind-html="vm.ExplodeTagString($sce,n.MetaKeys)"></div>
+                        <a href="{{n.SourceURL}}" target="_blank" class="source">SOURCE: {{n.SourceName}}</a>
+                    </li>
+                </ul>
+                <div class="col-xs-24" ng-if="ShowMore && !IsLoading">
+                    <a href="{{ShowMoreURL}}" class="btn btn-danger" name="#bottom" style="width:252px;">SHOW OLDER</a>
+                </div>
+            </div>
+        </div>*@
+</div>

@@ -1,0 +1,135 @@
+﻿<div class="row overview-wrapper">
+    <div class="col-xl-18 col-lg-18 col-md-16 col-sm-24 col-xs-24">
+        <div class="card overview">
+            <div class="card-header">
+                <span class="h5">COUNTRIES OVERVIEW</span>
+            </div>
+            <div class="card-block">
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="key" ng-change="vm.DoSort(key)" placeholder="Search by country name" />
+                    </div>
+                </form>
+                <div class="sorting">
+                    <span>
+                        <a href="/#/Countries/filter/0-9" ng-click="$event.preventDefault();vm.DoSort('0-9')">#</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/a" ng-click="$event.preventDefault();vm.DoSort('A')">A</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/b" ng-click="$event.preventDefault();vm.DoSort('B')">B</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/c" ng-click="$event.preventDefault();vm.DoSort('C')">C</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/d" ng-click="$event.preventDefault();vm.DoSort('D')">D</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/e" ng-click="$event.preventDefault();vm.DoSort('E')">E</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/f" ng-click="$event.preventDefault();vm.DoSort('F')">F</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/g" ng-click="$event.preventDefault();vm.DoSort('G')">G</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/h" ng-click="$event.preventDefault();vm.DoSort('H')">H</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/i" ng-click="$event.preventDefault();vm.DoSort('I')">I</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/j" ng-click="$event.preventDefault();vm.DoSort('J')">J</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/k" ng-click="$event.preventDefault();vm.DoSort('K')">K</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/l" ng-click="$event.preventDefault();vm.DoSort('L')">L</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/m" ng-click="$event.preventDefault();vm.DoSort('M')">M</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/n" ng-click="$event.preventDefault();vm.DoSort('N')">N</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/o" ng-click="$event.preventDefault();vm.DoSort('O')">O</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/p" ng-click="$event.preventDefault();vm.DoSort('P')">P</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/q" ng-click="$event.preventDefault();vm.DoSort('Q')">Q</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/r" ng-click="$event.preventDefault();vm.DoSort('R')">R</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/s" ng-click="$event.preventDefault();vm.DoSort('S')">S</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/t" ng-click="$event.preventDefault();vm.DoSort('T')">T</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/u" ng-click="$event.preventDefault();vm.DoSort('U')">U</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/v" ng-click="$event.preventDefault();vm.DoSort('V')">V</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/w" ng-click="$event.preventDefault();vm.DoSort('W')">W</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/x" ng-click="$event.preventDefault();vm.DoSort('X')">X</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/y" ng-click="$event.preventDefault();vm.DoSort('Y')">Y</a>
+                    </span>
+                    <span>
+                        <a href="/#/Countries/filter/z" ng-click="$event.preventDefault();vm.DoSort('Z')">Z</a>
+                    </span>
+                </div>
+                <table class="scrollable">
+                    <thead>
+                        <tr>
+                            <th for-roles="ALL"></th>
+                            <th></th>
+                            <th>NAME</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="Country in Countries">
+                            <td for-roles="ALL">
+                                <a href="#" ng-click="$event.preventDefault();vm.DoMarkFavorite(Country)" title="Mark {{Country.Name.toUpperCase()}} as favorite."><i class="fa fa-heart"></i></a>
+                            </td>
+                            <td>
+                                <a href="/#/details/Country/{{Country.CountryID}}" title="Go to details of Country {{Country.Name.toUpperCase()}}.">{{Country.Name.toUpperCase()}}</a>
+                            </td>
+                            <td>
+                                <a for-roles="ADMIN" ng-click="$event.preventDefault();vm.DoDelete(Country)" title="Remove Country {{Country.Name.toUpperCase()}}." class="control-icon delete" href="/delete/Country/{{Country.CountryID}}">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <a for-roles="ADMIN" href="/#/details/Country/{{Country.CountryID}}" title="Edit {{Country.Name.toUpperCase()}}" class="control-icon edit">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-xs-24" ng-if="ShowMore && !IsLoading">
+                    <a href="{{ShowMoreURL}}" class="btn btn-danger" name="#bottom" style="width:252px;" title="Show more Countries">SHOW MORE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 col-xs-24">
+        <ng-include src="'/scripts/modules/menu/views/quickmenu.html'" ng-controller="FC.Modules.Menu.Controllers.QuickMenuController as vm" ng-init="vm.init()" />
+    </div>
+</div>

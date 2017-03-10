@@ -1,0 +1,335 @@
+﻿$resourcePath: "/Resources/";
+$fntPurple: #FE0089;
+$fntBlue: #4ED7FF; 
+$inputBgColor: #333333;
+$logoGreen: #0D7C05;
+$logoPurple: #AE3CE3;
+$logoYellow: #EDEA03;
+$logoLime: #A6EA03;
+$logoBlue: #4ED7FF;
+$logoPink: #FE0089;
+$logoRed: #FF0000;
+$defaultWhite: #FFFFFF;
+$defaultDarkGrey: #333333;
+$defaultGrey: #333333;
+$defaultLightGrey: #999999;
+$lineHeightDefault: 22px;
+$lineHeightSmall: 14px;
+$lineHeightMedium: 16px;
+$lineHeightLarge: 20px;
+$lineHeightExtraLarge: 25px;
+$defaultPaddingLeft: 10px;
+$defaultPaddingTop: 10px;
+$defaultPaddingRight: 10px;
+$defaultPaddingBottom: 10px;
+$defaultPadding:10px;
+$defaultMargin:10px;
+$defaultMarginLeft:10px;
+$defaultMarginRight:10px;
+$defaultMarginBottom:10px;
+$defaultMarginTop:10px;
+$defaultFontSize: 14px;
+$fontSizeExtraLarge: 25px;
+$fontSizeLarge: 18px;
+$fontSizeMedium: 16px;
+$fontSizeDefault: 14px;
+$fontSizeSmall: 14px;
+$fontSizeExtraSmall: 12px;
+$h1Size: 22px;
+$h2Size: 18px;
+$h3Size: 16px;
+$h4Size: 14px;
+$h5Size: 14px;
+$h6Size: 14px;
+$h7Size: 14px;
+$h8Size: 14px;
+$fontListItemTitleFontSize: 16px;
+$fontButtonFontSizeExtraSmall: 10px;
+$fontButtonFontSizeSmall: 12px;
+$fontButtonFontSizeMedium: 14px;
+$fontButtonFontSizeLarge: 16px;
+$iconSizeExtraSmall: 12px;
+$iconSizeSmall: 14px;
+$iconSizeMedium: 20px;
+$iconSizeLarger: 30px;
+$iconSizeLarge: 40px;
+$iconSizeXLarge: 60px;
+$defaultRight: 10px;
+$defaultLeft: 10px;
+
+.money {
+    .format {
+        font-size: 110%;
+        margin-right: 3px;
+    }
+    .money-value {
+    }
+}
+.default-padding {
+    padding: 10px;
+}
+header {
+    .logo {
+    background-image: url(/Resources/images/logoc.png);
+    background-repeat: no-repeat;
+    background-position:center center;
+
+    height: 45px;
+    width: 200px;
+    background-size: 160px 45px;
+    margin-top: 2px;
+}
+    background-color:#000 !important;
+    li {
+        .menu-item {
+            color:#FFF !important;
+            font-family: GothamBold;
+            font-size: 16px;
+            background-color:#000 !important;
+            &:hover {
+                background-color:#000 !important;
+            }
+            i {
+                color: #FFF;
+                font-size: 20px;
+                float:left;
+                margin-right: 10px;
+                margin-top: 1px;
+                display: block;
+            }
+        }
+        &.open {
+            .menu-item {
+                color: #FFF !important;
+                i {
+                    color: #FFF;        
+                }
+            }
+            background-color:#000 !important;
+        }
+        .dropdown-menu {
+            border-radius: 0 !important;
+            background-color:#000 !important;
+            li > a {
+                color: #fff;
+                font-size: 14px;
+                &:hover {
+                    color: #FFF;
+                    background-color:#000;
+                }
+            }
+        }
+    }
+}
+
+.logo {
+    background-image: url(/Resources/images/logoc.png);
+    background-repeat: no-repeat;
+    background-position:center center;
+
+    height: 35px;
+    width: 200px;
+    background-size: 160px 35px;
+    margin-top: 7px;
+}
+.logo-color-0 {
+    background-color: $logoBlue;
+}
+.logo-color-1 {
+    background-color: $logoRed;
+}
+.logo-color-2 {
+    background-color: $logoPink;
+}
+.logo-color-3 {
+    background-color: $logoPurple;
+}
+.logo-color-4 {
+    background-color: $logoYellow;
+}
+.logo-color-5 {
+    background-color: $logoGreen;
+}
+.logo-color-6 {
+    background-color: $logoLime;
+}
+.font-color-0 {
+    color: $logoBlue;
+}
+.font-color-1 {
+    color: $logoRed;
+}
+.font-color-2 {
+    color: $logoPink;
+}
+.font-color-3 {
+    color: $logoPurple;
+}
+.font-color-4 {
+    color: $logoYellow;
+}
+.font-color-5 {
+    color: $logoGreen;
+}
+.font-color-6 {
+    color: $logoLime;
+}
+@mixin gray-gradient {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#757575+1,3a3a3a+100 */
+    background: rgb(117,117,117); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(117,117,117,1) 1%, rgba(58,58,58,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  rgba(117,117,117,1) 1%,rgba(58,58,58,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(117,117,117,1) 1%,rgba(58,58,58,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#757575', endColorstr='#3a3a3a',GradientType=0 ); /* IE6-9 */
+}
+
+@mixin width-trans {
+    -webkit-transition: width 0.5s; /* Safari */
+    -moz-transition: width 0.5s;
+    //-ms-transition: width 1s;
+    transition: width 0.5s;
+}
+
+@mixin opacity-trans {
+    -webkit-transition: opacity 0.5s;
+    -moz-transition:  opacity 0.5s;
+    //-ms-transition: width 1s;
+    transition: opacity 0.5s;
+}
+
+@mixin height-trans {
+    -webkit-transition: height 0.5s; /* Safari */
+    -moz-transition: height 0.5s;
+    //-ms-transition: height 1s;
+    transition: height 0.5s;
+} 
+
+@mixin touch-scroll-y {
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: inherit;
+    overflow-y: scroll;
+}
+@mixin touch-scroll-x {
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: inherit;
+    overflow-x: scroll;
+}
+@mixin touch-scroll {
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: inherit;
+    overflow: scroll;
+}
+
+@mixin border-radius($px) {
+    -webkit-border-radius: $px !important;
+    -moz-border-radius: $px !important;
+    border-radius: $px !important;
+}
+
+@mixin opacity($alpha, $opacity) {
+    /* Required for IE 5, 6, 7 */
+	/* ...or something to trigger hasLayout, like zoom: 1; */
+	width: 100%; 
+		
+	/* Theoretically for IE 8 & 9 (more valid) */	
+	/* ...but not required as filter works too */
+	/* should come BEFORE filter */
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity="+$alpha+")";
+	
+	/* This works in IE 8 & 9 too */
+	/* ... but also 5, 6, 7 */
+	filter: alpha(opacity=$alpha);
+	
+	/* Older than Firefox 0.9 */
+	-moz-opacity:$opacity;
+	
+	/* Safari 1.x (pre WebKit!) */
+	-khtml-opacity: $opacity;
+    
+	/* Modern!
+	/* Firefox 0.9+, Safari 2?, Chrome any?
+	/* Opera 9+, IE 9+ */
+	opacity: $opacity;
+}
+@mixin min-height-trans {
+    -webkit-transition: min-height 0.5s; /* Safari */
+    -moz-transition: min-height 0.5s;
+    //-ms-transition: height 1s;
+    transition: min-height 0.5s;
+}
+@mixin max-height-trans {
+    -webkit-transition: max-height 0.5s; /* Safari */
+    -moz-transition: max-height 0.5s;
+    //-ms-transition: height 1s;
+    transition: max-height 0.5s;
+}
+.row-fluid {
+    float:left;
+    @include min-height-trans;
+}
+.FC-hidden {
+    height: 0px;
+    visibility: hidden;
+    overflow:hidden;
+}
+.FC-visible {
+    height: auto; 
+    visibility: visible;
+}
+.fcmodal {
+    top: 100px;
+    width: calc(100% - 100px);
+    box-sizing: border-box;
+    margin: 50px;
+}
+.collapsepanel {
+    float:left;
+    width:100%;
+    font-family: GothamBold;
+}
+.collapsepanelcontrols {
+    float:left;
+    width: 100%;
+    border-bottom: 1px solid #999;
+    margin: 0px 0 10px 0;
+    
+    .btn.btn-default {
+        float:right;
+        margin-bottom: 10px;
+        font-size:$fontButtonFontSizeMedium;
+        line-height:$lineHeightSmall;
+        font-family: GothamBold;
+    }
+}
+.rte {
+    b {
+        font-family: GothamBold
+    }
+    h1,h2,h3,h4,h5,h6 {
+        margin: 0;   
+        padding: 5px 5px 5px 10px;
+        font-family: GothamBold;
+    }
+    p {
+        padding: 10px;
+        font-family: GothamBold
+    }
+    h1 {
+        font-size: $h1Size;
+    }
+    h2 {
+        font-size: $h2Size;
+    }
+    h3 {
+        font-size: $h3Size;
+    }   
+    h4 {
+        font-size: $h4Size;
+    }
+    h5 {
+        font-size: $h5Size;
+    }
+    h6 {
+        font-size: $h6Size;
+    }
+}

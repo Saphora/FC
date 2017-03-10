@@ -1,0 +1,136 @@
+﻿<md-dialog aria-label="EDIT SOCIAL PROFILES" flex="50">
+    <div class="card social-dialog">
+        <div class="card-header">
+            <span class="h5">EDIT SOCIAL PROFILES</span>
+        </div>
+        <div class="card-block">
+            <div class="alert alert-danger" role="alert" ng-if="!IsCreated && !IsDeleted && !IsEdited && ServerMsg">
+                {{ServerMsg}}
+            </div>
+            <div class="alert alert-success" role="alert" ng-if="(IsCreated || IsEdited || IsDeleted) && ServerMsg">
+                {{ServerMsg}}
+
+            </div>
+            <div class="form-group selected">
+                    <a href="#" ng-click="$event.preventDefault();DoSaveDelete(profile)" class="btn-sm btn-default" ng-repeat="profile in SocialProfiles">
+                        <i class="fa fa-trash"></i>
+                        {{profile.ProfileType.Name}}
+                    </a>
+            </div>
+            <div class="step_1">
+                <div class="form-group">
+                    <select class="form-control" ng-model="model.ProfileTypeID" ng-change="vm.SetRule()">
+                        <option ng-repeat="type in ProfileTypes" value="{{type.SocialProfileTypeID}}">
+                            {{type.Name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group" ng-if="model.ProfileTypeID">
+                    <input id="URL" class="form-control" type="text" placeholder="http://" ng-model="model.URL" ng-blur="vm.DoValidate()"/>
+                </div>
+                <div class="form-group">
+                    <a href="#" class="btn btn-success"  ng-if="ModelIsValid" ng-click="$event.preventDefault();DoSaveCreate(this)">
+                        SAVE
+                    </a>
+                    <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();DoCancelCRUD(this)">
+                        CANCEL
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</md-dialog>
+
+<!--<form class="col-xs-24 no-margin no-padding" ng-if="SocialProfiles.length !=0">
+    <div class="form-group">
+        <input id="SoundCloudURL" name="SoundCloudURL" type="text" ng-model="model.SoundCloudURL" ng-init="GetFieldState(this, 'SoundCloudURL')" ng-blur="SaveFieldState(this, 'SoundCloudURL', model.SoundCloudURL)" class="form-control" placeholder="https://soundcloud.com/*/*">
+    </div>
+    <div class="form-group">
+        <input id="Website" name="Website" type="text" ng-model="model.Website" ng-init="GetFieldState(this, 'Website')" ng-blur="SaveFieldState(this, 'Website', model.Website)" class="form-control" placeholder="http://website.com">
+    </div>
+    <div class="form-group">
+        <i class="fa fa-facebook-official" aria-hidden="true"></i>
+        <input id="FacebookURL" name="FacebookURL" type="text" ng-model="model.FacebookURL" ng-init="GetFieldState(this, 'FacebookURL')" ng-blur="SaveFieldState(this, 'FacebookURL', model.FacebookURL)" class="form-control" placeholder="https://facebook.com/*">
+    </div>
+    <div class="form-group">
+        <input id="InstagramURL" name="InstagramURL" type="text" ng-model="model.InstagramURL" ng-init="GetFieldState(this, 'InstagramURL')" ng-blur="SaveFieldState(this, 'InstagramURL', model.InstagramURL)" class="form-control" placeholder="https://instagram.com/*">
+    </div>
+    <div class="form-group">
+        <input id="Website" name="TwitterURL" type="text" ng-model="model.TwitterURL" ng-init="GetFieldState(this, 'TwitterURL')" ng-blur="SaveFieldState(this, 'TwitterURL', model.TwitterURL)" class="form-control" placeholder="https://twitter.com/*">
+    </div>
+    <div class="form-group">
+        <input id="YoutubeURL" name="YoutubeURL" type="text" ng-model="model.YoutubeURL" ng-init="GetFieldState(this, 'YoutubeURL')" ng-blur="SaveFieldState(this, 'YoutubeURL', model.YoutubeURL)" class="form-control" placeholder="https://youtube.com/*">
+    </div>
+    <div class="form-group">
+        <input id="FlickrURL" name="FlickrURL" type="text" ng-model="model.FlickrURL" ng-init="GetFieldState(this, 'FlickrURL')" ng-blur="SaveFieldState(this, 'FlickrURL', model.FlickrURL)" class="form-control" placeholder="https://flickr.com/*">
+    </div>
+    <div class="form-group">
+        <input id="DeezerURL" name="DeezerURL" type="text" ng-model="model.DeezerURL" ng-init="GetFieldState(this, 'DeezerURL')" ng-blur="SaveFieldState(this, 'DeezerURL', model.DeezerURL)" class="form-control" placeholder="https://deezer.com/*">
+    </div>
+    <div class="form-group">
+        <input id="MySpaceURL" name="MySpaceURL" type="text" ng-model="model.MySpaceURL" ng-init="GetFieldState(this, 'MySpaceURL')" ng-blur="SaveFieldState(this, 'MySpaceURL', model.MySpaceURL)" class="form-control" placeholder="https://myspace.com/*">
+    </div>
+    <div class="form-group">
+        <input id="SpotifyURL" name="SpotifyURL" type="text" ng-model="model.SpotifyURL" ng-init="GetFieldState(this, 'SpotifyURL')" ng-blur="SaveFieldState(this, 'SoundCloudURL', model.SoundCloudURL)" class="form-control" placeholder="https://open.spotify.com/*/*">
+    </div>
+</form>-->
+<!--<div class="modal-header block-item" theme="header">
+    <div class="header" theme="header">
+        <h1>
+            <i class="fa fa-group"></i>
+            <span class="title">Pick festival performers</span>
+        </h1>
+    </div>
+</div>
+<div class="modal-body artist-browser">
+    <div class="row">
+        <a href="#" class="btn btn-default" theme="button,button-hover">
+            <i class="fa fa-plus-circle"></i>
+            Create new
+        </a>
+    </div>
+    <ng-include src="'/Scripts/Modules/Loading/Views/loading-small.html'" ng-if="!SysArtists"></ng-include>
+    <div class="col-sm-12 selected-artist-list">
+        <span class="title">
+            Selected artists
+        </span>
+        <ul>
+            <li class="artist-list-item" ng-repeat="Artist in ActiveArtists">
+                <a href="#" ng-click="vm.Activate(this,Artist)">
+                    <img src="{{URLRoot}}/{{Artist.Logo}}" class="img" />
+                    <span>{{Artist.Name}}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-12 artist-list">
+        <div class="form-group">
+            <label for="ArtistSearch" class="control-label col-sm-12">Artist name</label>
+            <input type="text" class="form-control col-sm-12" ng-model="ArtistSearchKey" ng-change="vm.Filter()" />
+        </div>
+        <ul ng-if="SysArtists">
+            <li class="artist-list-item" ng-repeat="Artist in SysArtists">
+                <a href="#" ng-click="$event.preventDefault();vm.Activate(this,Artist)" ng-class="vm.IsActive(Artist) ? 'active' : ''">
+                    <img src="{{URLRoot}}/{{Artist.Logo}}.img?&thumb=true&width=30&height=30" class="img" />
+                    <span>{{Artist.Name}}</span>
+                </a>
+            </li>
+        </ul>
+        <div class="no-result" ng-if="SysArtists.length == 0">
+            <p>Artist {{ArtistSearchKey}} is not found. Would you like to create the artist?</p>
+            <a href="#" class="btn btn-default" theme="button,button-hover" style="padding:4px;" ng-click="$event.preventDefault();vm.DoCreateArtist()">
+                <i class="fa fa-plus-circle"></i>
+                <span>Create new {{ArtistSearchKey}}</span>
+            </a>
+        </div>
+        <div class="col-sm-12" ng-if="IsArtistCreating && SysArtists.length == 0">
+            <ng-include src="'/Scripts/Modules/Artists/Views/create-artist-frm.html'"></ng-include>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" theme="button" ng-click="vm.Save(vm.$scope,'MediaPickerArtistImgSaved')" ng-if="vm.$scope.SelectedMediaItem; $scope.model.Image = vm.$scope.SelectedMediaItem.MediaID;">Save</button>
+    <button class="btn btn-default" type="button" theme="button" ng-click="vm.Cancel()">Cancel</button>
+</div>-->

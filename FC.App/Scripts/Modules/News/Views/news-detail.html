@@ -1,0 +1,176 @@
+﻿<div class="row">
+    <div class="fc-panel col-lg-2 hidden-xs hidden-sm hidden-md">
+        <div class="fc-panel-header" theme="header">
+            <i class="fa fa-newspaper-o"></i>Advertisement
+        </div>
+        <div class="fc-panel-body">
+            <center>
+                <img class="HyExIvHq" src="http://static.voetbalzone.nl/images/bw_1/24_9_2015_gghilmpacs.gif" alt="https://betweterschallenge.nl/?ref=voetbalzone" title="BTWCH_SKY_ongoing" style="cursor: pointer;"><input type="hidden" class="fwd_url" value="https://betweterschallenge.nl/?ref=voetbalzone"><input type="hidden" class="fwd_title" value="BTWCH_SKY_ongoing">
+            </center>
+        </div>
+        <div class="fc-panel-header" theme="header">
+            <i class="fa fa-star"></i> Sponsors
+        </div>
+        <div class="fc-panel-body">
+            <div class="ListItemBG">
+
+            </div>
+            <div class="ListItem col-xs-12 col-md-12 newsitem" ng-repeat="newsItem in FCtr.News" theme="list-item">
+                <a href="{{newsItem.Link}}" class="click-wrapper">
+                    <div class="inner">
+                        <div class="logo hidden-xs" backImg="$0$.img?&height=65" watch="{{newsItem.Thumbnail}}"></div>
+                        <div class="txt">
+                            <span class="date" theme="header">
+                                {{newsItem.DisplayDate}}
+                            </span>
+                            <span class="title">{{newsItem.Title}}</span><br />
+                            <span class="subtext">{{newsItem.ActiveFestival.Genre.Name}}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 col-lg-6 col-xs-12 fc-panel" id="FestivalDetailPanel">
+        <div class="fc-panel-header" theme="header">
+            <i class="fa fa-newspaper-o"></i>{{NewsCtr.NewsItem.Title}}
+        </div>
+        <div class="fc-panel-body">
+            <div class="ListItem NewsItem col-xs-12 col-md-12" ng-if="NewsCtr.NewsItem">
+                <div class="txt">
+                    <div class="logo hidden-xs" id="FestivalLogoImg" backImg="$0$.img?&height=120" watch="{{NewsCtr.NewsItem.Img}}"></div>
+                    <span ng-bind-html="NewsCtr.NewsItem.Text"></span>
+                </div>
+                <div class="controls">
+                    <div class="rating" theme="rating">
+                        <span class="count" theme="count">100K</span>
+                        <span class="glyphicon glyphicon-star star active"></span>
+                        <span class="glyphicon glyphicon-star star active"></span>
+                        <span class="glyphicon glyphicon-star star active"></span>
+                        <span class="glyphicon glyphicon-star star active"></span>
+                        <span class="glyphicon glyphicon-star star"></span>
+                    </div>
+                    <div class="social">
+                        <a ng-href="{{FCtr.ActiveFestival.YoutubeURL}}" target="_blank" ng-if="FCtr.ActiveFestival.YoutubeURL.length > 0">
+                            <i class="fa fa-youtube-square" theme="text-default"></i>
+                        </a>
+                        <a ng-href="{{FCtr.ActiveFestival.FacebookURL}}" target="_blank" ng-if="FCtr.ActiveFestival.FacebookURL.length > 0">
+                            <i class="fa fa-facebook-square" theme="text-default"></i>
+                        </a>
+                        <a ng-href="{{FCtr.ActiveFestival.TwitterURL}}" target="_blank" ng-if="FCtr.ActiveFestival.TwitterURL.length > 0">
+                            <i class="fa fa-twitter-square" theme="text-default"></i>
+                        </a>
+                        <a ng-href="{{FCtr.ActiveFestival.SpotifyURL}}" target="_blank" ng-if="FCtr.ActiveFestival.SpotifyURL.length > 0">
+                            <i class="fa fa-spotify" theme="text-default"></i>
+                        </a>
+                        <a ng-href="{{FCtr.ActiveFestival.InstagramURL}}" target="_blank" ng-if="FCtr.ActiveFestival.InstagramURL.length > 0">
+                            <i class="fa fa-instagram" theme="text-default"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row default-padding">
+            <div class="fc-panel col-sm-6">
+                <div class="fc-panel-header" theme="header">
+                    <i class="fa fa-user"></i>Artists
+                </div>
+                <div class="fc-panel-body">
+                    <div class="ListItem col-xs-6 col-lg-6 artist-list" ng-repeat="Artist in FCtr.ArtistsLeft" theme="list-item">
+                        <a class="click-wrapper">
+                            <div class="logo" backImg="$0$.img?&width=65" style="width:65px;height:65px;" watch="{{Artist.Image}}"></div>
+                            <div class="txt">
+                                <span class="title" theme="text-default">{{Artist.Name}}</span><br />
+                                <span class="region"><i theme="text-default" class="fa fa-map-marker"></i>{{Artist.Country.Name}}</span><br />
+                                <span class="subtext">
+                                    <i theme="text-default" class="fa fa-tags"></i><span class="genre" theme="button" ng-repeat="Genre in Artist.Genres">{{Genre.Name}}</span>
+                                </span>
+                            </div>
+                        </a>
+                        <div class="controls">
+                            <div class="social">
+                                <a ng-href="{{Artist.YoutubeURL}}" target="_blank" ng-if="Artist.YoutubeURL.length > 0">
+                                    <i class="fa fa-youtube-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.FacebookURL}}" target="_blank" ng-if="Artist.FacebookURL.length > 0">
+                                    <i class="fa fa-facebook-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.TwitterURL}}" target="_blank" ng-if="Artist.TwitterURL.length > 0">
+                                    <i class="fa fa-twitter-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.SpotifyURL}}" target="_blank" ng-if="Artist.SpotifyURL.length > 0">
+                                    <i class="fa fa-spotify" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.InstagramURL}}" target="_blank" ng-if="Artist.InstagramURL.length > 0">
+                                    <i class="fa fa-instagram" theme="text-default"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fc-panel col-sm-6">
+                <div class="fc-panel-header" theme="header">
+                    <i class="fa fa-user"></i>Artists
+                </div>
+                <div class="fc-panel-body">
+                    <div class="ListItem col-xs-6 col-lg-6 artist-list" ng-repeat="Artist in FCtr.ArtistsRight" theme="list-item">
+                        <a class="click-wrapper">
+                            <div class="logo" backImg="$0$.img?&width=65" style="width:65px;height:65px;" watch="{{Artist.Image}}"></div>
+                            <div class="txt">
+                                <span class="title" theme="text-default">{{Artist.Name}}</span><br />
+                                <span class="region"><i theme="text-default" class="fa fa-map-marker"></i>{{Artist.Country.Name}}</span><br />
+                                <span class="subtext">
+                                    <i theme="text-default" class="fa fa-tags"></i><span class="genre" theme="button" ng-repeat="Genre in Artist.Genres">{{Genre.Name}}</span>
+                                </span>
+                            </div>
+                        </a>
+                        <div class="controls">
+                            <div class="social">
+                                <a ng-href="{{Artist.YoutubeURL}}" target="_blank" ng-if="Artist.YoutubeURL.length > 0">
+                                    <i class="fa fa-youtube-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.FacebookURL}}" target="_blank" ng-if="Artist.FacebookURL.length > 0">
+                                    <i class="fa fa-facebook-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.TwitterURL}}" target="_blank" ng-if="Artist.TwitterURL.length > 0">
+                                    <i class="fa fa-twitter-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.SpotifyURL}}" target="_blank" ng-if="Artist.SpotifyURL.length > 0">
+                                    <i class="fa fa-spotify" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.InstagramURL}}" target="_blank" ng-if="Artist.InstagramURL.length > 0">
+                                    <i class="fa fa-instagram" theme="text-default"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-4 col-xs-12 fc-panel">
+        <div class="fc-panel-header" theme="header">
+            <i class="fa fa-newspaper-o"></i>News
+        </div>
+        <div class="fc-panel-body">
+            <div class="ListItemBG">
+
+            </div>
+            <div class="ListItem col-xs-12 col-md-12 newsitem" ng-repeat="newsItem in FCtr.News" theme="list-item">
+                <a ng-href="/#/{{newsItem.Link.toLowerCase()}}/{{FCtr.ActiveGenreID}}" class="click-wrapper">
+                    <div class="inner">
+                        <div class="logo" backImg="$0$.img?&height=65" watch="{{newsItem.Thumbnail}}"></div>
+                        <div class="txt">
+                            <span class="date" theme="header">
+                                {{newsItem.DisplayDate}}
+                            </span>
+                            <span class="title">{{newsItem.Title}}</span><br />
+                            <span class="subtext">{{newsItem.ShortText}}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

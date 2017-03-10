@@ -1,0 +1,1 @@
+//# sourceMappingURL=IArtistModalScope.js.map

@@ -1,0 +1,27 @@
+﻿<form class="festival-form" role="form" ng-if="IsMediaDirEditing || IsMediaDirCreating">
+    <h4 ng-if="IsMediaDirCreating">Create new directory</h4>
+    <h4 ng-if="IsMediaDirEditing">Edit directory {{ActiveDir.Name}}</h4>
+    <p>Enter a directory name with max. 50 characters.</p>
+    <div class="form-group">
+        <input id="ParentID" name="ParentID" type="hidden" ng-model="DirectoryModel.DirectoryID" ng-if="IsMediaDirEditing" />
+        <input id="AuthorID" name="ParentID" type="hidden" ng-model="UserID" />
+        <input type="text" name="Name" class="form-control" ng-model="DirectoryModel.Name" placeholder="Directory name" />
+    </div>
+    <div class="form-group">
+        <a href="#" class="btn btn-success" ng-click="$event.preventDefault();DoSaveCreateMediaDir(this, DirectoryModel)"  ng-if="IsMediaDirCreating">
+            <i class="fa fa-save">
+            </i>
+            <span> Save</span>
+        </a>
+        <a href="#" class="btn btn-success" ng-click="$event.preventDefault();DoSaveEditMediaDir(this, DirectoryModel)"  ng-if="IsMediaDirEditing">
+            <i class="fa fa-save">
+            </i>
+            <span> Edit</span>
+        </a>
+        <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();DoCancelCRUD(this)">
+            <i class="fa fa-times-circle">
+            </i>
+            <span> Cancel</span>
+        </a>
+    </div>
+</form>

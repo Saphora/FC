@@ -1,0 +1,296 @@
+﻿@model FC.Shared.Entities.UNews
+@using FC.Shared.Entities
+@{
+    ViewBag.Title = Model.Title;
+
+    List<UNews> newsList = ViewBag.NewsList as List<UNews>;
+    if (Model.ThumbnailID == null)
+    {
+        ViewBag.Thumbnail = FC.Shared.Config.FCConfig.API+"/427af3b3-995f-4df7-a62d-c53ad4518f52.img?&width=800&height=272&crop=true";
+    }
+    else
+    {
+        ViewBag.Thumbnail = FC.Shared.Config.FCConfig.API+"/"+Model.ThumbnailID+".img?&width=800&height=272&crop=true";
+    }
+
+}
+@section META {
+    <title>FESTIVAL CALENDAR | @Model.Title</title>
+    <meta property="og:url" content="http://festival-calendar.nl/news/@Model.NewsID" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FESTIVAL CALENDAR - @Model.Title" />
+    <meta property="og:description" content="@Model.MetaDescription" />
+    <meta property="og:image" content="@ViewBag.Thumbnail" />
+    <meta name="keywords" content="@Model.MetaKeys" />
+    <meta name="description" content="@Model.MetaDescription" />
+}
+<div class="row news-detail">
+    <div class="col-sm-24 col-md-14 col-lg-14 col-xl-16">
+        <div class="navigation-bar">
+            <a href="/news" class="btn btn-danger">
+                <i class="fa fa-angle-left"></i> BACK
+            </a>
+            <div class="crumb">
+                <a href="/news">
+                    NEWS
+                </a>
+
+                <i class="fa fa-angle-right"></i>
+
+                <a href="/news/@Model.NewsID">
+                    @Model.Title.ToUpper()
+                </a>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <span class="h5">
+                    @Model.Title
+                </span>
+            </div>
+            <div class="card-block no-margin no-padding">
+                <div class="news-header-image">
+                    <img src="@ViewBag.Thumbnail" alt="@Model.Title" />
+                </div>
+                <div class="date-time">
+                    <i class="fa fa-clock-o"></i><span> @Model.CreateDate.ToLocalTime()</span>
+                </div>
+                <div class="news-text-wrapper">
+                    <p>
+                        <strong>@Model.MetaDescription</strong>
+                    </p>
+                    @Html.Raw(Model.Text)
+                </div>
+                <div class="share-social-controls">
+                    <label>SHARE THIS ARTICLE:</label>
+                    <a href="#" class="share-social-btn" id="shareBtn">
+                        <i class="fa fa-facebook-square"></i> FACEBOOK
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-24 col-md-10 col-lg-10 col-xl-8" ng-controller="FC.Modules.News.Controllers.NewsOverviewController as vm">
+        @foreach (UNews model in newsList)
+        {
+            @Html.Partial("NewsCard", model)
+        }
+    </div>
+</div>
+<script>
+    document.getElementById('shareBtn').onclick = function (e) {
+        e.preventDefault();
+        FB.ui({
+            method: 'share',
+            display: 'popup',
+            href: 'https://festival-calendar.nl/news/@Model.NewsID',
+        }, function (response) { });
+    }
+</script>
+@*
+
+    <h2>Details</h2>
+
+    <div>
+        <h4>UNews</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ModifiedDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ModifiedDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IsPublished)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IsPublished)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.SortOrder)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.SortOrder)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.URL)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.URL)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.UpdateDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreateDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.AuthorID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AuthorID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Date)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Date)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ArchiveDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ArchiveDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MediaDirectoryID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MediaDirectoryID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Deleted)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Deleted)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Text)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Text)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.SourceURL)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.SourceURL)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.SourceName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.SourceName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ThumbnailID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ThumbnailID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MetaKeys)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MetaKeys)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MetaDescription)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MetaDescription)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OrderDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DisplayDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DisplayDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ShortText)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ShortText)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DetailText)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DetailText)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Link)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Link)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.RatingScore)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.RatingScore)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.NewsID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+*@

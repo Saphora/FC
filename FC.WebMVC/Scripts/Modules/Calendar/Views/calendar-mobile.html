@@ -1,0 +1,42 @@
+﻿<div class="block-item-mobile col-sm-12" ng-repeat="Festival in vm.Festivals">
+    <a href="{{vm.GetFestivalURL(Festival)}}" class="link-wrapper">
+        <div class="header navigation" theme="header" ng-model="Festival">
+            <h1>
+                <span class="fc-icon small"></span>
+                <i class="fa fa-chevron-circle-right"></i>
+                <span class="title">{{Festival.Name}}</span>
+            </h1>
+        </div>
+        <div class="body">
+            <div class="inner">
+                <div class="logo logo-lg visible-lg visible-md hidden-sm hidden-xs" backImg="$0$.img?&height=100" watch="{{Festival.Logo}}"></div>
+                <div class="logo logo-sm hidden-md hidden-lg visible-sm visible-xs" backImg="$0$.img?&height=60" watch="{{Festival.Logo}}"></div>
+                <div class="body">
+                    <div class="iconvalue-item">
+                        <i theme="text-default" class="fa fa-map-marker"></i>
+                        <span class="txt">
+                            <span>{{Festival.City}},</span><span>{{Festival.Country.Name}}</span>
+                        </span>
+                    </div>
+                    <div class="iconvalue-item" ng-model="Festival.Genres">
+                        <i theme="text-default" class="fa fa-tags"></i>
+                        <span class="txt">
+                            <span class="bg-label" ng-if="Key < 2" theme="button" ng-repeat="(Key,Genre) in Festival.Genres">
+                                {{Genre.Name}}
+                            </span>
+                            <span class="bg-label" ng-if="Festival.Genres.length > 3" theme="button">
+                                +{{Festival.Genres.length-2}}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="iconvalue-item" ng-if="Festival.DayCount >= 1">
+                        <i theme="text-default" class="fa fa-flag-checkered"></i>
+                        <span class="txt">
+                            {{Festival.CultureStartDate}} - {{Festival.CultureEndDate}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>

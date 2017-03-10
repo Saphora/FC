@@ -1,0 +1,23 @@
+﻿<div class="modal-header block-item" theme="header">
+    <div class="header" theme="header">
+        <h1>
+            <i class="fa fa-heart"></i>
+            <span class="title">Genres</span>
+        </h1>
+    </div>
+</div>
+<div class="modal-body" ng-controller="FC.Modules.Filtering.Controllers.FilterController as fctr">
+    <ul ng-if="SysGenres" class="modal-select-blocks" >
+        <li id="modal-select-item-{{child.GenreID}}" class="col-lg-3 col-md-4 col-sm-12" ng-repeat="child in SysGenres">
+            <a href="#" ng-class="fctr.IsActive(child,this) || activated ? 'active' : ''" ng-click="activated=!activated; ToggleState(child,this);$event.preventDefault();">
+                <i class="fa fa-heart"></i>
+                <span class="title">{{child.Name}}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" theme="button" ng-click="vm.Remember()">Remember</button>
+    <button class="btn btn-default" type="button" theme="button" ng-click="vm.Reset()">Reset</button>
+    <button class="btn btn-default" type="button" theme="button" ng-click="vm.Cancel()">Cancel</button>
+</div>

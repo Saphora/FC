@@ -1,0 +1,22 @@
+﻿<div class="col-sm-12 block-item hidden-xs" ng-controller="FC.Modules.Filtering.Controllers.FilterController as FilterCtr">
+    <div class="header" theme="header">
+        <h1>
+            <i class="fa fa-heart"></i>
+            <span class="title">Pick genres</span>
+        </h1>
+    </div>
+    <div class="body min-block-height">
+        <div class="inner active-genres" ng-if="ActiveGenres">
+            <a href="#" class="btn btn-default" theme="button,button-hover" ng-repeat="(Key,Genre) in ActiveGenres" ng-if="Genre && Key <= 5" ng-click="$event.preventDefault(); FilterCtr.OpenModal(400)">
+                <i class="fa fa-heart"></i>
+                {{Genre.Name}}
+            </a>
+        </div>
+        <div class="inner active-genres" ng-if="!ActiveGenres">
+            <a href="#" class="btn btn-default" theme="button,button-hover">
+                <i class="fa fa-heart"></i>
+                Pick your favorite genres!
+            </a>
+        </div>
+    </div>
+</div>

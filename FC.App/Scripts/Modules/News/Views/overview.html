@@ -1,0 +1,42 @@
+﻿<div class="row overview-wrapper">
+    <div class="col-xs-16">
+        <div class="card overview news-overview">
+            <div class="card-header">
+                <span class="h5">NEWS</span>
+            </div>
+            <div class="card-block">
+                <!--<div class="col-xs-24 no-padding no-margin header-controls">
+                    <a href="/#/news/create/1" class="btn btn-success">
+                        CREATE
+                    </a>
+                </div>-->
+                <ng-include src="'/Scripts/Shared/views/loader.html'" ng-if="IsLoading"></ng-include>
+                <ul class="news-list" ng-if="!IsLoading">
+                    <li class="news-item" ng-if="n.Title" ng-repeat="(i,n) in model">
+                        <img ng-src="{{MediaURLRoot}}/{{n.ThumbnailID}}.img?&thumb=true" ng-if="n.ThumbnailID" />
+                        <a href="/news/edit/{{n.NewsID}}" class="edit-ctrl"><i class="fa fa-edit"></i></a>
+                        <a href="/#/news/detail/{{n.NewsID}}" class="title-link"><h5>{{n.Title.toUpperCase()}}</h5></a>
+                        <span class="subtitle" ng-class="n.ThumbnailID ? 'img':''"><strong>AUTHOR: </strong><a href="#">WMeer</a>, <strong>DATE: </strong>{{vm.FormatDate(Date)}}</span>
+                        <a href="#" ng-click="$event.preventDefault();" class="subtxt">{{n.MetaDescription}}</a>
+                        <!--<div class="txt" ng-bind-html="vm.HtmlSafe($sce, n.Text)"></div>-->
+                        <div class="keywords" ng-bind-html="vm.ExplodeTagString($sce,n.MetaKeys)"></div>
+                        <a href="{{n.SourceURL}}" target="_blank" class="source">SOURCE: {{n.SourceName}}</a>
+                    </li>
+                </ul>
+                <div class="col-xs-24" ng-if="ShowMore && !IsLoading">
+                    <a href="{{ShowMoreURL}}" class="btn btn-danger" name="#bottom" style="width:252px;">SHOW OLDER</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-8">
+
+        <ng-include src="'/scripts/modules/menu/views/quickmenu.html'" ng-controller="FC.Modules.Menu.Controllers.QuickMenuController as vm" ng-init="vm.init('news')"/>
+        <!--<div class="row">
+            
+            <div class="col-xs-24" ng-repeat="Festival in UpcomingEvents">
+                <ng-include src="'/Scripts/Modules/Festival/Views/festival-card.html'"></ng-include>
+            </div>
+        </div>-->
+    </div>
+</div>

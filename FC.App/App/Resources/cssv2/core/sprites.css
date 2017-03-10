@@ -1,0 +1,40 @@
+.icon {
+  float: left;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 30px 30px; }
+  .icon.larger {
+    width: 40px;
+    height: 40px;
+    background-size: 40px 40px; }
+  .icon.fb, .icon.facebook {
+    background-image: url("/Resources/images/Icons/fb.png"); }
+  .icon.youtube, .icon.yt {
+    background-image: url("/Resources/images/Icons/yt.png"); }
+  .icon.vimeo {
+    background-image: url("/Resources/images/Icons/vimeo.png"); }
+  .icon.twitter {
+    background-image: url("/Resources/images/Icons/twitter.png"); }
+  .icon.deezer {
+    background-image: url("/Resources/images/Icons/deezer.png"); }
+  .icon.myspace {
+    background-image: url("/Resources/images/Icons/myspace.png"); }
+  .icon.soundcloud {
+    background-image: url("/Resources/images/Icons/soundcloud.png"); }
+  .icon.instagram {
+    background-image: url("/Resources/images/Icons/instagram.png"); }
+  .icon.pinterest {
+    background-image: url("/Resources/images/Icons/pinterest.png"); }
+  .icon.spotify {
+    background-image: url("/Resources/images/Icons/spotify.png"); }
+  .icon.website {
+    background-image: url("/Resources/images/Icons/website.png"); }
+  .icon.linkedin {
+    background-image: url("/Resources/images/Icons/linkedin.png"); }
+  .icon.twitch {
+    background-image: url("/Resources/images/Icons/twitch.png"); }
+  .icon.google {
+    background-image: url("/Resources/images/Icons/google.png"); }

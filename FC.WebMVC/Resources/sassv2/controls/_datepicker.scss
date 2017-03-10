@@ -1,0 +1,29 @@
+﻿.std-datepicker {
+    padding: 0 !important;
+    .separator {
+        float:left;
+        font-size: 20px;
+        text-align:center;
+        font-weight:bold;
+        i {        
+            float:left;
+            font-size: 25px;
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+    }
+    i {
+        float:left;
+        font-size: 25px;
+        margin-right: 5px;
+        margin-top: 5px;
+    }
+    select {
+        float:left;
+        width: auto;
+        margin-right: 5px;
+    }
+    div {
+        padding-left: 0 !important;
+    }
+}

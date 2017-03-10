@@ -1,0 +1,34 @@
+﻿<div class="row">
+    <div class="col-xl-18 col-lg-18 col-md-16 col-sm-24 col-xs-24">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5" ng-if="IsEditing==false">CREATE NEW MENU SECTION</span>
+                <span class="h5" ng-if="IsEditing==true">EDIT MENU SECTION</span>
+            </div>
+            <div class="card-block">
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'Name')" ng-blur="SaveFieldState(this, 'Name', model.Name)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Name" placeholder="Section name" type="text" /></div>
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'PageKey')" ng-blur="SaveFieldState(this, 'PageKey', model.PageKey)" ng-model-options="{updateOn: 'blur'}" ng-model="model.PageKey" placeholder="Page key vm.init('pagekey')" type="text" /></div>
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'FAIcon')" ng-blur="SaveFieldState(this, 'FAIcon', model.FAIcon)" ng-model-options="{updateOn: 'blur'}" ng-model="model.FAIcon" placeholder="Font awesome icon class" type="text" /></div>
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'SortOrder')" ng-blur="SaveFieldState(this, 'SortOrder', model.SortOrder)" ng-model-options="{updateOn: 'blur'}" ng-model="model.SortOrder" placeholder="Sort order(0 / 1000)" type="text" /></div>
+                <div class="form-group">
+                    <role-picker ng-model="Roles"></role-picker>
+                </div>
+                <div class="form-group">
+                    <a href="#" class="btn btn-success" ng-if="IsCreating==true" ng-click="$event.preventDefault();DoSaveCreate(this);">
+                        SAVE
+                    </a>
+                    <a href="#" class="btn btn-success" ng-if="IsEditing==true" ng-click="$event.preventDefault();DoSaveEdit(this);">
+                        EDIT
+                    </a>
+                    <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();DoCancelCRUD(this);">
+                        CANCEL
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 col-xs-24">
+        <ng-include src="'/scripts/modules/menu/views/quickmenu.html'" ng-controller="FC.Modules.Menu.Controllers.QuickMenuController as vm" ng-init="vm.init()" />
+    </div>
+</div>

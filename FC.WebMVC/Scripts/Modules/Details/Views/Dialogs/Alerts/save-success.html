@@ -1,0 +1,17 @@
+﻿<md-dialog aria-label="SAVE SUCCESS" flex="30">
+    <div class="card">
+        <div class="card-header">
+            <span class="h5">SAVE SUCCESS</span>
+        </div>
+        <div class="card-block">
+            <center>
+                {{ServerMsg}}
+                <br />
+                <br />
+                <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();Close(this)">
+                    OK
+                </a>
+            </center>
+        </div>
+    </div>
+</md-dialog>

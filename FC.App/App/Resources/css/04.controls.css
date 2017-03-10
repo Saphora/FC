@@ -1,0 +1,695 @@
+@charset "UTF-8";
+.money .format {
+  font-size: 110%;
+  margin-right: 3px; }
+
+.default-padding {
+  padding: 10px; }
+
+header {
+  background-color: #000 !important; }
+  header .logo {
+    background-image: url(/Resources/images/logoc.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 45px;
+    width: 200px;
+    background-size: 160px 45px;
+    margin-top: 2px; }
+  header li .menu-item {
+    color: #FFF !important;
+    font-family: GothamBold;
+    font-size: 16px;
+    background-color: #000 !important; }
+    header li .menu-item:hover {
+      background-color: #000 !important; }
+    header li .menu-item i {
+      color: #FFF;
+      font-size: 20px;
+      float: left;
+      margin-right: 10px;
+      margin-top: 1px;
+      display: block; }
+  header li.open {
+    background-color: #000 !important; }
+    header li.open .menu-item {
+      color: #FFF !important; }
+      header li.open .menu-item i {
+        color: #FFF; }
+  header li .dropdown-menu {
+    border-radius: 0 !important;
+    background-color: #000 !important; }
+    header li .dropdown-menu li > a {
+      color: #fff;
+      font-size: 14px; }
+      header li .dropdown-menu li > a:hover {
+        color: #FFF;
+        background-color: #000; }
+
+.logo {
+  background-image: url(/Resources/images/logoc.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 35px;
+  width: 200px;
+  background-size: 160px 35px;
+  margin-top: 7px; }
+
+.logo-color-0 {
+  background-color: #4ED7FF; }
+
+.logo-color-1 {
+  background-color: #FF0000; }
+
+.logo-color-2 {
+  background-color: #FE0089; }
+
+.logo-color-3 {
+  background-color: #AE3CE3; }
+
+.logo-color-4 {
+  background-color: #EDEA03; }
+
+.logo-color-5 {
+  background-color: #0D7C05; }
+
+.logo-color-6 {
+  background-color: #A6EA03; }
+
+.font-color-0 {
+  color: #4ED7FF; }
+
+.font-color-1 {
+  color: #FF0000; }
+
+.font-color-2 {
+  color: #FE0089; }
+
+.font-color-3 {
+  color: #AE3CE3; }
+
+.font-color-4 {
+  color: #EDEA03; }
+
+.font-color-5 {
+  color: #0D7C05; }
+
+.font-color-6 {
+  color: #A6EA03; }
+
+.row-fluid {
+  float: left;
+  -webkit-transition: min-height 0.5s;
+  /* Safari */
+  -moz-transition: min-height 0.5s;
+  transition: min-height 0.5s; }
+
+.FC-hidden {
+  height: 0px;
+  visibility: hidden;
+  overflow: hidden; }
+
+.FC-visible {
+  height: auto;
+  visibility: visible; }
+
+.fcmodal {
+  top: 100px;
+  width: calc(100% - 100px);
+  box-sizing: border-box;
+  margin: 50px; }
+
+.collapsepanel {
+  float: left;
+  width: 100%;
+  font-family: GothamBold; }
+
+.collapsepanelcontrols {
+  float: left;
+  width: 100%;
+  border-bottom: 1px solid #999;
+  margin: 0px 0 10px 0; }
+  .collapsepanelcontrols .btn.btn-default {
+    float: right;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 14px;
+    font-family: GothamBold; }
+
+.rte b {
+  font-family: GothamBold; }
+
+.rte h1, .rte h2, .rte h3, .rte h4, .rte h5, .rte h6 {
+  margin: 0;
+  padding: 5px 5px 5px 10px;
+  font-family: GothamBold; }
+
+.rte p {
+  padding: 10px;
+  font-family: GothamBold; }
+
+.rte h1 {
+  font-size: 22px; }
+
+.rte h2 {
+  font-size: 18px; }
+
+.rte h3 {
+  font-size: 16px; }
+
+.rte h4 {
+  font-size: 14px; }
+
+.rte h5 {
+  font-size: 14px; }
+
+.rte h6 {
+  font-size: 14px; }
+
+.money .format {
+  font-size: 110%;
+  margin-right: 3px; }
+
+.default-padding {
+  padding: 10px; }
+
+header {
+  background-color: #000 !important; }
+  header .logo {
+    background-image: url(/Resources/images/logoc.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 45px;
+    width: 200px;
+    background-size: 160px 45px;
+    margin-top: 2px; }
+  header li .menu-item {
+    color: #FFF !important;
+    font-family: GothamBold;
+    font-size: 16px;
+    background-color: #000 !important; }
+    header li .menu-item:hover {
+      background-color: #000 !important; }
+    header li .menu-item i {
+      color: #FFF;
+      font-size: 20px;
+      float: left;
+      margin-right: 10px;
+      margin-top: 1px;
+      display: block; }
+  header li.open {
+    background-color: #000 !important; }
+    header li.open .menu-item {
+      color: #FFF !important; }
+      header li.open .menu-item i {
+        color: #FFF; }
+  header li .dropdown-menu {
+    border-radius: 0 !important;
+    background-color: #000 !important; }
+    header li .dropdown-menu li > a {
+      color: #fff;
+      font-size: 14px; }
+      header li .dropdown-menu li > a:hover {
+        color: #FFF;
+        background-color: #000; }
+
+.logo {
+  background-image: url(/Resources/images/logoc.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 35px;
+  width: 200px;
+  background-size: 160px 35px;
+  margin-top: 7px; }
+
+.logo-color-0 {
+  background-color: #4ED7FF; }
+
+.logo-color-1 {
+  background-color: #FF0000; }
+
+.logo-color-2 {
+  background-color: #FE0089; }
+
+.logo-color-3 {
+  background-color: #AE3CE3; }
+
+.logo-color-4 {
+  background-color: #EDEA03; }
+
+.logo-color-5 {
+  background-color: #0D7C05; }
+
+.logo-color-6 {
+  background-color: #A6EA03; }
+
+.font-color-0 {
+  color: #4ED7FF; }
+
+.font-color-1 {
+  color: #FF0000; }
+
+.font-color-2 {
+  color: #FE0089; }
+
+.font-color-3 {
+  color: #AE3CE3; }
+
+.font-color-4 {
+  color: #EDEA03; }
+
+.font-color-5 {
+  color: #0D7C05; }
+
+.font-color-6 {
+  color: #A6EA03; }
+
+.row-fluid {
+  float: left;
+  -webkit-transition: min-height 0.5s;
+  /* Safari */
+  -moz-transition: min-height 0.5s;
+  transition: min-height 0.5s; }
+
+.FC-hidden {
+  height: 0px;
+  visibility: hidden;
+  overflow: hidden; }
+
+.FC-visible {
+  height: auto;
+  visibility: visible; }
+
+.fcmodal {
+  top: 100px;
+  width: calc(100% - 100px);
+  box-sizing: border-box;
+  margin: 50px; }
+
+.collapsepanel {
+  float: left;
+  width: 100%;
+  font-family: GothamBold; }
+
+.collapsepanelcontrols {
+  float: left;
+  width: 100%;
+  border-bottom: 1px solid #999;
+  margin: 0px 0 10px 0; }
+  .collapsepanelcontrols .btn.btn-default {
+    float: right;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 14px;
+    font-family: GothamBold; }
+
+.rte b {
+  font-family: GothamBold; }
+
+.rte h1, .rte h2, .rte h3, .rte h4, .rte h5, .rte h6 {
+  margin: 0;
+  padding: 5px 5px 5px 10px;
+  font-family: GothamBold; }
+
+.rte p {
+  padding: 10px;
+  font-family: GothamBold; }
+
+.rte h1 {
+  font-size: 22px; }
+
+.rte h2 {
+  font-size: 18px; }
+
+.rte h3 {
+  font-size: 16px; }
+
+.rte h4 {
+  font-size: 14px; }
+
+.rte h5 {
+  font-size: 14px; }
+
+.rte h6 {
+  font-size: 14px; }
+
+.fnt-white {
+  color: #fff; }
+
+.fnt-dg {
+  color: #333; }
+
+a, p, div, body, html, button, .btn {
+  font-size: 14px;
+  font-family: Gotham;
+  line-height: 20px; }
+
+@font-face {
+  font-family: 'Gotham';
+  src: url("/Resources/fonts/Gotham Book.eot");
+  src: local("☺"), url("/Resources/fonts/Gotham Book.woff") format("woff"), url("/Resources/fonts/Gotham Book.ttf") format("truetype"), url("Resources/fonts/Gotham Book.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'GothamBlack';
+  src: url("/Resources/fonts/GOTHAM-BLACK.eot");
+  src: local("☺"), url("/Resources/fonts/GOTHAM-BLACK.woff") format("woff"), url("/Resources/fonts/GOTHAM-BLACK.ttf") format("truetype"), url("Resources/fonts/GOTHAM-BLACK.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'GothamBold';
+  src: url("/Resources/fonts/GOTHAM-BOLD.eot");
+  src: local("☺"), url("/Resources/fonts/GOTHAM-BOLD.woff") format("woff"), url("/Resources/fonts/GOTHAM-BOLD.ttf") format("truetype"), url("Resources/fonts/GOTHAM-BOLD.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'GothamLight';
+  src: url("/Resources/fonts/GOTHAM-LIGHT.eot");
+  src: local("☺"), url("/Resources/fonts/GOTHAM-LIGHT.woff") format("woff"), url("/Resources/fonts/GOTHAM-LIGHT.ttf") format("truetype"), url("Resources/fonts/GOTHAM-LIGHT.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'GothamMedium';
+  src: url("/Resources/fonts/GOTHAM-MEDIUM.eot");
+  src: local("☺"), url("/Resources/fonts/GOTHAM-MEDIUM.woff") format("woff"), url("/Resources/fonts/GOTHAM-MEDIUM.ttf") format("truetype"), url("Resources/fonts/GOTHAM-MEDIUM.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Picto';
+  src: url("Resources/fonts/pictos-web.eot");
+  /* IE9 Compat Modes */
+  src: url("Resources/fonts/pictos-web.eot?#iefix") format("embedded-opentype"), url("Resources/fonts/pictos-web.woff") format("woff"), url("Resources/fonts/pictos-web.ttf") format("truetype"), url("Resources/fonts/pictos-web.svg#svgFontName") format("svg");
+  /* Legacy iOS */ }
+
+[data-icon]:before {
+  font-family: 'Picto';
+  content: attr(data-icon); }
+
+#FestivalDetailPanel .FestivalDetailPanelBody .inner {
+  float: left;
+  padding: 15px !important; }
+  #FestivalDetailPanel .FestivalDetailPanelBody .inner .logo {
+    border: 1px solid #333;
+    float: left;
+    width: 120px;
+    height: 120px; }
+  #FestivalDetailPanel .FestivalDetailPanelBody .inner .txt {
+    font-family: GothamBold;
+    float: left;
+    margin-top: 0;
+    font-size: 14px;
+    margin-left: 10px; }
+    #FestivalDetailPanel .FestivalDetailPanelBody .inner .txt .line {
+      height: 25px;
+      font-family: GothamBold;
+      float: left;
+      width: 100%; }
+      #FestivalDetailPanel .FestivalDetailPanelBody .inner .txt .line.subtext {
+        font-size: 14px; }
+      #FestivalDetailPanel .FestivalDetailPanelBody .inner .txt .line.region {
+        font-size: 14px; }
+      #FestivalDetailPanel .FestivalDetailPanelBody .inner .txt .line.visitors {
+        font-size: 14px; }
+      #FestivalDetailPanel .FestivalDetailPanelBody .inner .txt .line.title {
+        font-family: GothamBlack; }
+      #FestivalDetailPanel .FestivalDetailPanelBody .inner .txt .line.days {
+        font-size: 14px; }
+      #FestivalDetailPanel .FestivalDetailPanelBody .inner .txt .line .genre {
+        padding: 5px; }
+      #FestivalDetailPanel .FestivalDetailPanelBody .inner .txt .line i.fa {
+        width: 30px;
+        font-size: 18px !important; }
+
+.CollapsePanel {
+  float: left;
+  width: 100%;
+  margin-top: 15px; }
+  .CollapsePanel .title {
+    float: left;
+    width: 100%;
+    padding: 8px; }
+    .CollapsePanel .title i {
+      font-size: 25px;
+      float: left;
+      margin-right: 10px; }
+    .CollapsePanel .title h2 {
+      float: left;
+      font-family: GothamBlack;
+      font-size: 16px; }
+
+.reel-ctrl .animate-enter,
+.reel-ctrl .animate-leave {
+  -webkit-transition: 300ms cubic-bezier(0.25, 0.25, 0.75, 0.75) all;
+  -moz-transition: 300ms cubic-bezier(0.25, 0.25, 0.75, 0.75) all;
+  -ms-transition: 300ms cubic-bezier(0.25, 0.25, 0.75, 0.75) all;
+  -o-transition: 300ms cubic-bezier(0.25, 0.25, 0.75, 0.75) all;
+  transition: 300ms cubic-bezier(0.25, 0.25, 0.75, 0.75) all; }
+
+.reel-ctrl .animate-enter {
+  left: 100%; }
+
+.reel-ctrl .animate-enter.animate-enter-active {
+  left: 0; }
+
+.reel-ctrl .animate-leave {
+  left: 0; }
+
+.active-genres-modal {
+  padding: 0 !important; }
+
+ul.modal-select {
+  position: relative;
+  float: left;
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0; }
+  ul.modal-select li {
+    padding: 0;
+    margin-bottom: 5px;
+    float: left;
+    width: 100%;
+    display: block; }
+    ul.modal-select li.blocks {
+      width: 200px;
+      height: 200px; }
+    ul.modal-select li a {
+      float: left;
+      padding: 10px;
+      width: 100%;
+      display: block;
+      min-height: 30px;
+      font-size: 16px;
+      font-family: GothamBold; }
+      ul.modal-select li a i {
+        font-size: 20px;
+        width: 25px;
+        display: block;
+        float: left; }
+      ul.modal-select li a .title {
+        display: block;
+        float: left; }
+    ul.modal-select li.open ul {
+      display: block; }
+    ul.modal-select li ul {
+      margin-top: 5px;
+      -webkit-padding-start: 0;
+      float: left;
+      width: 100%;
+      display: none; }
+      ul.modal-select li ul li {
+        padding: 0;
+        margin-bottom: 5px;
+        float: left;
+        width: 100%;
+        display: block; }
+        ul.modal-select li ul li a {
+          float: left;
+          width: 100%;
+          display: block; }
+          ul.modal-select li ul li a i {
+            width: 25px;
+            display: block;
+            float: left; }
+          ul.modal-select li ul li a .text {
+            display: block;
+            float: left; }
+
+ul.modal-select-blocks {
+  width: 100%;
+  display: block; }
+
+.artist-list .artist-list-item {
+  float: left;
+  width: 100%;
+  clear: right;
+  margin-bottom: 10px; }
+  .artist-list .artist-list-item .inner {
+    float: left;
+    -webkit-border-radius: 10px !important;
+    -moz-border-radius: 10px !important;
+    border-radius: 10px !important;
+    border: 1px solid #999;
+    border-top: 0;
+    background-image: url("../images/trans.png");
+    width: 100%; }
+    .artist-list .artist-list-item .inner .header {
+      float: left;
+      width: 100%;
+      height: 30px;
+      padding: 7px;
+      margin-bottom: 5px; }
+      .artist-list .artist-list-item .inner .header h1 {
+        float: left;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 16px;
+        font-family: GothamBold; }
+        .artist-list .artist-list-item .inner .header h1 i.right {
+          float: right; }
+      .artist-list .artist-list-item .inner .header.navigation h1 i {
+        float: right; }
+    .artist-list .artist-list-item .inner .wrapper {
+      width: 100%;
+      padding: 5px; }
+      .artist-list .artist-list-item .inner .wrapper .logo.logo-lg {
+        width: 60px !important;
+        height: 60px !important; }
+      .artist-list .artist-list-item .inner .wrapper .logo.logo-sm {
+        width: 30px !important;
+        height: 30px !important; }
+      .artist-list .artist-list-item .inner .wrapper .body .iconvalue-item {
+        width: 100%;
+        display: block;
+        margin-top: 3px;
+        margin-bottom: 0; }
+        .artist-list .artist-list-item .inner .wrapper .body .iconvalue-item .txt.txt-large {
+          font-size: 16px !important; }
+      .artist-list .artist-list-item .inner .wrapper .controls {
+        float: left;
+        zoom: 0.8;
+        margin-top: 5px;
+        background-image: none;
+        padding: 5px 0 5px 0;
+        background-color: transparent !important; }
+
+.fc-list {
+  float: left;
+  width: 100%;
+  margin: 0;
+  padding: 0; }
+  .fc-list li {
+    float: left;
+    width: 100%;
+    display: block;
+    padding: 0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #333; }
+    .fc-list li:last-child {
+      border-bottom: 0; }
+    .fc-list li .inner {
+      float: left;
+      width: 100%;
+      display: block; }
+      .fc-list li .inner:visited {
+        color: #333;
+        text-decoration: none; }
+      .fc-list li .inner .logo {
+        float: left;
+        border: 1px solid #333;
+        width: 65px;
+        height: 65px; }
+        .fc-list li .inner .logo.x-small {
+          width: 30px;
+          height: 30px; }
+        .fc-list li .inner .logo.small {
+          width: 65px;
+          height: 65px; }
+        .fc-list li .inner .logo.medium {
+          width: 80px;
+          height: 80px; }
+        .fc-list li .inner .logo.large {
+          width: 100px;
+          height: 100px; }
+        .fc-list li .inner .logo.x-large {
+          width: 150px;
+          height: 150px; }
+      .fc-list li .inner .text {
+        float: left;
+        margin-left: 10px;
+        width: calc(100% - 75px);
+        color: #333333; }
+        .fc-list li .inner .text .title {
+          float: left;
+          width: 100%;
+          font-family: GothamBold; }
+        .fc-list li .inner .text .separator {
+          display: block;
+          height: 20px;
+          width: 10px;
+          float: left; }
+        .fc-list li .inner .text .date {
+          float: left;
+          padding: 2px;
+          font-family: GothamBold; }
+        .fc-list li .inner .text .subtext {
+          float: left;
+          width: 100%; }
+
+.search-control h1.index {
+  padding: 0 0 5px 0;
+  margin: 0;
+  margin-bottom: 5px;
+  font-family: GothamBold;
+  font-size: 16px;
+  border-bottom: 2px solid #333; }
+
+.search-control .country-control .location {
+  float: left;
+  width: 100%;
+  font-size: 14px; }
+
+.search-control .active-genres {
+  padding: 10px; }
+  .search-control .active-genres .btn {
+    float: left;
+    padding: 4px;
+    font-size: 14px;
+    font-family: Gotham; }
+
+.search-control .form-group input[type=text] {
+  border: 1px solid #333 !important; }
+
+.search-control .search-form .go-btn {
+  position: relative;
+  top: -1px; }
+  .search-control .search-form .go-btn i {
+    font-size: 22px; }
+
+.search-control .search-form .search-box {
+  width: calc(100%-50px);
+  float: left; }
+
+.search-control .search-form .search-btn {
+  float: left;
+  width: 50px; }
+
+.search-control .date-control {
+  padding: 10px; }
+  .search-control .date-control .btn {
+    padding: 4px;
+    font-size: 14px;
+    margin-right: 10px; }
+
+.search-control .active-countries {
+  padding: 10px; }
+  .search-control .active-countries .btn {
+    padding: 4px;
+    font-size: 14px;
+    margin-right: 10px; }

@@ -1,0 +1,28 @@
+﻿@import "var.scss";
+.card-footer, .card-header {
+    .rating {
+        float:left;
+        border: 1px solid $BGDark;
+        .count {
+            font-size: 10px;
+            float:left;
+            background-color: $BGDark;
+            color: $BGLight;
+            padding:5px;
+        }
+        a {
+            float:left;
+            text-align:center;
+            i.star {
+                padding: 3px;
+                color: #888; 
+                &.active {
+                    color:#f1c40f;   
+                }
+                &:hover {
+                    color:#858200;
+                }
+            }
+        }
+    }
+}

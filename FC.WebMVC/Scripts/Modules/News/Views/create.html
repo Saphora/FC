@@ -1,0 +1,91 @@
+﻿<div class="col-xs-14">
+    <div class="card">
+        <div class="card-header">
+            <span class="h5">
+                CREATE NEW HEADLINE
+            </span>
+        </div>
+        <div class="card-block">
+            <!--<div class="form-group">
+                <std-date-picker ng-model="model.Date" label="Date" id="Date" time-visible="false">
+                </std-date-picker>
+            </div>-->
+            <div class="form-group"><input class="form-control" ng-blur="SaveFieldState(this, 'Title', model.Title)" ng-model="model.Title" placeholder="Title" type="text" /></div>
+            <div class="form-group"><input class="form-control" ng-blur="SaveFieldState(this, 'SourceURL', model.SourceURL)" ng-model="model.SourceURL" placeholder="http://SourceURL.com" type="text" /></div>
+            <div class="form-group"><input class="form-control" ng-blur="SaveFieldState(this, 'SourceName', model.SourceName)" ng-model="model.SourceName" placeholder="Source name" type="text" /></div>
+            <div class="form-group">
+                <textarea class="form-control" placeholder="Description (max 2 lines)" ng-model="model.MetaDescription"></textarea>
+            </div>
+            <div class="form-group">
+                
+                <textarea class="form-control" ng-init="GetFieldState(this, 'MetaKeys')" ng-blur="SaveFieldState(this, 'MetaKeys', model.MetaKeys)"  ng-model-options="{updateOn: 'blur'}" placeholder="Keywords (Keyword1, Keyword2)" ng-model="model.MetaKeys"></textarea>
+            </div>
+            <div class="form-group">
+                <textarea ui-tinymce="TinymceOptions" ng-model="model.Text"></textarea>
+            </div>
+
+            <div class="form-group media-picker" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span class="preview">
+                            <img ng-src="{{MediaURLRoot}}/{{model.ThumbnailID}}.img?&width=272" class="ct-logo" ng-if="model.ThumbnailID" />
+                            <i class="fa fa-ban" ng-if="!model.ThumbnailID"></i>
+                            <br ng-if="!model.ThumbnailID" />
+                            <span ng-if="!model.ThumbnailID">Not specified</span>
+                        </span>
+                    </div>
+                    <div class="col-xs-12">
+                        <a href="#" class="btn btn-default" ng-click="$event.preventDefault();mmc.OpenMediaModal(760,'NewsImageSaved', ENV.NEWS_DIR_ROOT_ID)">
+                            <i class="fa fa-hand-rock-o" aria-hidden="true"></i>Thumbnail
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <a href="#" class="btn btn-success" ng-if="IsCreating==true" ng-click="$event.preventDefault();vm.DoSave('c',this);">
+                    SAVE
+                </a>
+                <a href="#" class="btn btn-success" ng-if="IsEditing==true" ng-click="$event.preventDefault();vm.DoSave('e',this);">
+                    EDIT
+                </a>
+                <a href="/#/news" class="btn btn-danger">
+                    CANCEL
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xs-10">
+    <div class="card">
+        <div class="card-header">
+            <span class="h5">
+                PREVIEW
+            </span>
+        </div>
+        <div class="card-block">
+            <ul class="news-list">
+                <li class="news-item" ng-if="model.Title">
+                    <img ng-src="{{MediaURLRoot}}/{{model.ThumbnailID}}.img?&thumb=true" ng-if="model.ThumbnailID" />
+                    <a href="#" ng-click="$event.preventDefault();"><h5>{{model.Title.toUpperCase()}}</h5></a>
+                    <span class="subtitle" ng-class="model.ThumbnailID ? 'img':''"><strong>AUTHOR: </strong><a href="#">WMeer</a>, <strong>DATE: </strong>{{vm.FormatDate(Date)}}</span>
+                    <a href="#" ng-click="$event.preventDefault();" class="subtxt">{{model.MetaDescription}}</a>
+                    <!--<div class="txt" ng-bind-html="vm.HtmlSafe($sce, n.Text)"></div>-->
+                    <div class="keywords" ng-bind-html="vm.ExplodeTagString($sce,model.MetaKeys)"></div>
+                    <a href="{{model.SourceURL}}" target="_blank" class="source">SOURCE: {{model.SourceName}}</a>
+                </li>
+                <li class="news-item" ng-if="model.Title">
+                    <img ng-src="{{MediaURLRoot}}/{{model.ThumbnailID}}.img?&thumb=true" ng-if="model.ThumbnailID" />
+                    <h5>{{model.Title.toUpperCase()}}</h5>
+                    <span class="subtitle" ng-class="model.ThumbnailID ? 'img':''"><strong>AUTHOR: </strong><a href="#">WMeer</a>, <strong>DATE: </strong>{{vm.FormatDate(Date)}}</span>
+                    <div class="nolink-subtxt">{{model.MetaDescription}}</div>
+                    <div class="txt" ng-bind-html="vm.HtmlSafe($sce, model.Text)"></div>
+                    <div class="keywords" ng-bind-html="vm.ExplodeTagString($sce,model.MetaKeys)"></div>
+                    <a href="{{model.SourceURL}}" target="_blank" class="source">SOURCE: {{model.SourceName}}</a>
+                </li>
+            </ul>
+            <p ng-if="!model.Title">
+                Please enter first the title and date to preview this item.
+            </p>
+        </div>
+    </div>
+</div>

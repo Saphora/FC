@@ -1,0 +1,152 @@
+﻿<div class="row">
+    <div class="col-lg-12" ng-controller="FC.Modules.Filtering.Controllers.MonthModalController as  mmc">
+        <h1 style="float:left; width:100%; display:block; font-family: GothamBold; padding: 10px;" theme="header" class="hidden-xs">
+            <span class="fc-icon medium"></span>
+            <span style="float:left;">Festivals {{ActiveMonthName}} {{ActiveYear}}</span>
+            <span class="title-menu-item" style="float:right; font-size:30px; margin-top: 5px;margin-right:15px; color:#FFF;" ng-controller="FC.Modules.Filtering.Controllers.FilterController as FilterCtr">
+                <a href="#" style="font-size:30px; color:#FFF;" ng-click="$event.preventDefault(); FilterCtr.OpenModal(400)">
+                    <i class="fa fa-heart"></i>
+                </a>
+            </span>
+            <span class="title-menu-item" style="float:right; font-size:30px; margin-top: 5px;margin-right:15px; color:#FFF;" ng-controller="FC.Modules.Filtering.Controllers.CountryModalController as cmctr">
+                <a href="#" style="font-size:30px; color:#FFF;" ng-click="$event.preventDefault();cmctr.OpenCountryModal(400)">
+                    <i class="fa fa-globe"></i>
+                </a>
+            </span>
+            <span class="title-menu-item" style="float:right; font-size:30px; margin-top: 5px;margin-right:15px; color:#FFF;">
+                <a href="#" style="font-size:30px; color:#FFF;" ng-click="$event.preventDefault();mmc.OpenMonthModal(400)">
+                    <i class="fa fa-calendar"></i>
+                </a>
+            </span>
+        </h1>
+        <h1 style="float:left; clear:right;width:100%; display:block; font-family: GothamBold; font-size:18px; padding: 10px;" theme="header" class="visible-xs">
+            <span class="fc-icon small"></span>
+            <span style="float:left;">Festivals {{ActiveMonthName}} {{ActiveYear}}</span>
+        </h1>
+    </div>
+    <div class="block-item col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="header" theme="header,button-hover">
+            <h1>
+                <span class="title">Search your festival!</span>
+                <span class="fc-icon small"></span>
+                <i class="fa fa-search right"></i>
+            </h1>
+        </div>
+        <div class="body">
+            <div class="inner">
+                <form class="col-md-12 search-form" role="search" ng-controller="FC.Modules.Search.Controllers.SearchController as vm" ng-submit="DoSearch(vm)">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search by artist, genre, festival name, city" ng-model="Keyword">
+                            <span class="input-group-btn go-btn">
+                                <button class="btn btn-default" type="submit" theme="button,button-hover">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="block-item  col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="header navigation" theme="header,button-hover">
+            <h1>
+                <span class="fc-icon small"></span>
+                <i class="fa fa-chevron-circle-right"></i>
+                <span class="title">Filters</span>
+            </h1>
+        </div>
+        <div class="body">
+            <div class="inner">
+                <span class="DateTimeFilter" ng-controller="FC.Modules.Filtering.Controllers.MonthModalController as  mmc">
+                    <a class="btn btn-default" theme="button,button-hover" id="dropdownMenu1" ng-click="$event.preventDefault();mmc.OpenMonthModal(400)">
+                        <i class="fa fa-calendar"></i> {{ActiveMonthName}}  {{ActiveYear}}
+                    </a>
+                </span>
+                <span class="CountryFilter" ng-controller="FC.Modules.Filtering.Controllers.CountryModalController as cmctr">
+                    <a href="#" class="btn btn-default CounterBtn" theme="button,button-hover" ng-click="$event.preventDefault();cmctr.OpenCountryModal(400)">
+                        <i class="fa fa-map-marker"></i> Select countries
+                        <span class="counter">5</span>
+                    </a>
+                </span>
+                <span class="GenreFilter" ng-controller="FC.Modules.Filtering.Controllers.FilterController as FilterCtr">
+                    <a href="#" class="btn btn-default CounterBtn" style="" theme="button,button-hover" ng-click="$event.preventDefault(); FilterCtr.OpenModal(400)">
+                        <i class="fa fa-heart"></i>
+                        Select genres
+                        <span class="counter">{{fctr.scope.ActiveGenres.length}}</span>
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+</div>
+<div class="row no-results" ng-if="SearchNoResults">
+    <div class="col-sm-12">
+        <div class="block-item col-sm-12">
+            <div class="header navigation" theme="header,button-hover">
+                <h1>
+                    <span class="fc-icon small"></span>
+                    <span class="title">No festivals where found</span>
+                </h1>
+            </div>
+            <div class="body">
+                <div class="inner">
+                    <p>
+                        We are so sorry, but is your festival not listed? But you can help us to enlarge our database. Create an account by clicking the following buttons.
+
+                        <a href="#" class="btn btn-default" style="padding:4px;" theme="button,button-hover">Create account as festival publisher</a>
+                        <a href="#" class="btn btn-default" style="padding:4px;" theme="button,button-hover">Create account as artist publisher</a>
+                        <a href="#" class="btn btn-default" style="padding:4px;" theme="button,button-hover">Create account as artist</a>
+                        <a href="#" class="btn btn-default" style="padding:4px;" theme="button,button-hover">Create account as festival organizer</a>
+                        Want to help us? send a e-mail with motivation and interests to <a href="mailto://join@festival-calendar.nl">join@festival-calendar</a>
+                    </p>
+                    <a class="btn btn-default" theme="button, button-hover" href="/#/calendar/">
+                        Back to calendar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row search-result-control" ng-if="HasSearchResults">
+    <div class="col-sm-12">
+        <div class="block-item col-sm-12">
+            <div class="header" theme="header,button-hover">
+                <h1>
+                    <span class="fc-icon small"></span>
+                    <span class="title">{{Festivals.length}} Festivals found</span>
+                </h1>
+            </div>
+            <div class="body">
+                <div class="inner">
+                    <a class="btn btn-default" style="padding:4px;" theme="button, button-hover" href="/#/calendar/">
+                        <i class="fa fa-chevron-circle-left"></i> Back to calendar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row calendarcols hidden-xs">
+    <div class="col-sm-12 loading" ng-if="IsFestivalsLoading && !SearchNoResults">
+        <div class="col-sm-12">
+            <ng-include src="'/Scripts/Modules/Loading/Views/loading-large.html'"></ng-include>
+        </div>
+    </div>
+        <ng-include src="'/Scripts/Modules/Calendar/Views/col_1.html'"></ng-include>
+</div>
+<div class="row calendarcols visible-xs">
+    <div class="col-xs-12 col-sm-12 loading" ng-if="IsFestivalsLoading && !SearchNoResults">
+        <div class="col-xs-12 col-sm-12">
+            <ng-include src="'/Scripts/Modules/Loading/Views/loading-large.html'"></ng-include>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <ng-include src="'/Scripts/Modules/Calendar/Views/calendar-mobile.html'"></ng-include>
+    </div>
+</div>

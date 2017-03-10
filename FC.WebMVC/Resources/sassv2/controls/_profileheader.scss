@@ -1,0 +1,79 @@
+﻿.card {
+    &.profile-header {
+        .card-header {
+            .rating {
+                float:right;
+            }
+        }
+        .card-block {
+            min-height:232px;
+            max-height:232px;
+            background-repeat: no-repeat;
+          
+            &.festival-header {
+                background-image: url('/Resources/images/default_festival.png');
+            }
+            &.artist-header {
+                background-image: url('/Resources/images/default_artist.png') !important;
+            }
+            &.location-header {
+                background-image: url('/Resources/images/default_venue.png');
+            }
+            .logo-wrapper {
+                float:left;
+                margin-top: 55px;
+                margin-left: 55px;
+                
+                &:hover {
+                    .mask {
+                        display:block !important;
+                    }
+                }
+
+                .mask {
+                    position:absolute;
+                    display:none !important;
+                    z-index:950;
+                    width:110px;
+                    height:110px;
+                    transition: all 0.5s ease;
+                    opacity: 0.6;
+                    background-color: #000;
+                    color: #FFF;
+                    text-align:center;
+                    margin-top: 5px;
+                    cursor: pointer;
+                    margin-left:5px;
+                    i {
+                        margin-top: 35px;
+                        color: #FFF;
+                        font-size: 40px;
+                    }
+                }
+
+                .ct-logo {
+                    z-index:900;
+                    position:relative;
+                    width: 120px;
+                    height: 120px;
+                    border: 5px solid #FFF;
+                }
+            }
+        }
+    }
+
+    .controls {
+        float:left;
+        width:100%;
+        position: relative;
+        margin-top: -50px;
+        right: 0;
+        padding: 10px;
+        margin-right: 5px;
+        background-color: transparent;
+        a {
+            margin-left: 5px;
+            float:right;
+        }
+    }
+}

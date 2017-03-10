@@ -1,0 +1,78 @@
+﻿<div class="row navigation">
+    <div class="col-lg-8">
+        <div class="block-item col-sm-12">
+            <div class="header" theme="header">
+                <h1>
+                    <i class="fa fa-bars"></i>
+                    <span class="title">Navigation</span>
+                </h1>
+            </div>
+            <div class="body">
+                <div class="inner">
+                    <a ng-href="/#/calendar" class="btn btn-default" theme="button,button-hover">Back to calendar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="block-item col-sm-12">
+            <div class="header" theme="header">
+                <h1>
+                    <i class="fa fa-bars"></i>
+                    <span class="title">Announcements</span>
+                </h1>
+            </div>
+            <div class="body">
+                <div class="inner">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row calendarcols">
+    <!-- large desktop 3 6 3 -->
+    <div class="col-lg-2 visible-lg hidden-md hidden-sm hidden-xs">
+        <ng-include src="'/Scripts/Modules/Festival/Views/col_1.html'"></ng-include>
+    </div>
+    <div class="col-lg-6 hidden-md hidden-sm hidden-xs">
+        <ng-include src="'/Scripts/Modules/Festival/Views/col_2.html'"></ng-include>
+        <ng-include src="'/Scripts/Modules/News/Views/news-list.html'"></ng-include>
+    </div>
+    <div class="col-lg-4 hidden-md hidden-sm hidden-xs">
+        <div class="block-item col-sm-12" ng-if="ShowMovie">
+            <div class="header" theme="header">
+                <h1>
+                    <i class="fa fa-video-camera"></i>
+                    <span class="title">Aftermovie</span>
+                </h1>
+            </div>
+            <div class="body">
+                <iframe class="col-sm-12" height="150" ng-src="{{TrustMovieURL}}" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+        <ng-include src="'/Scripts/Modules/Artist/Views/artist-list.html'"></ng-include>
+    </div>
+    <!-- medium tablet /desktop-->
+    <div class="col-md-8 hidden-lg hidden-sm hidden-xs">
+        <ng-include src="'/Scripts/Modules/Festival/Views/col_2.html'"></ng-include>
+        <ng-include src="'/Scripts/Modules/News/Views/news-list.html'"></ng-include>
+    </div>
+    <div class="col-md-4 hidden-lg hidden-sm hidden-xs">
+        <ng-include src="'/Scripts/Modules/Artist/Views/artist-list.html'"></ng-include>
+    </div>
+    <!-- small devices -->
+    <div class="col-sm-12 hidden-lg hidden-md hidden-xs">
+        <ng-include src="'/Scripts/Modules/Festival/Views/col_2.html'"></ng-include>
+    </div>
+    <div class="col-sm-12 hidden-lg hidden-md hidden-xs">
+        <ng-include src="'/Scripts/Modules/Artist/Views/artist-list.html'"></ng-include>
+    </div>
+    <!--x small devices -->
+    <div class="col-xs-12 hidden-lg hidden-md hidden-sm">
+        <ng-include src="'/Scripts/Modules/Festival/Views/col_2.html'"></ng-include>
+    </div>
+    <div class="col-xs-12 hidden-lg hidden-md hidden=sm">
+        <ng-include src="'/Scripts/Modules/Artist/Views/artist-list.html'"></ng-include>
+        <ng-include src="'/Scripts/Modules/News/Views/news-list.html'"></ng-include>
+    </div>
+</div>

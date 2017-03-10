@@ -1,0 +1,74 @@
+﻿<md-dialog aria-label="SELECT LOCATION" flex="50">
+    <div class="card mediabrowser">
+        <div class="card-header">
+            <span class="h5">Pick media</span>
+        </div>
+        <div class="card-block ">
+            <div class="alert alert-danger" id="MediaAlert" role="alert" ng-if="(!IsMediaItemDeleted && !IsMediaItemCreated && !IsMediaDirCreated && !IsMediaDirModified && !IsMediaDirDeleted) && ServerMsg">
+                {{ServerMsg}}
+            </div>
+            <div class="alert alert-success" id="MediaAlert" role="alert" ng-if="(IsMediaItemDeleted || IsMediaItemCreated || IsMediaDirCreated || IsMediaDirModified || IsMediaDirDeleted) && ServerMsg">
+                {{ServerMsg}}
+            </div>
+            <script ng-if="((!IsMediaItemDeleted && !IsMediaItemCreated && !IsMediaDirCreated && !IsMediaDirModified && !IsMediaDirDeleted) && ServerMsg != null) || ((IsMediaItemDeleted || IsMediaItemCreated || IsMediaDirCreated || IsMediaDirModified || IsMediaDirDeleted) && ServerMsg != null) ">
+                window.setTimeout(function () {
+                    $('#MediaAlert').fadeOut();
+                }, 5000);
+            </script>
+            <div class="headercontrols" ng-if="SelectedMediaItem && !IsDeleting && !IsMediaItemCreating && !IsMediaItemDeleting && !IsMediaDirDeleting">
+                <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();DoCancelCRUD(this)">
+                    <i class="fa fa-save"></i>
+                    <span> Cancel</span>
+                </a>
+                <a href="#" class="btn btn-success" ng-click="$event.preventDefault();Save(this)">
+                    <i class="fa fa-save"></i>
+                    <span> Choose</span>
+                </a>
+            </div>
+            <ng-include src="'/Scripts/Shared/Views/loader.html'" ng-if="IsLoading" />
+            <div class="create-selector" ng-if="IsCreating==true && !IsMediaItemCreating && !IsMediaDirEditing && !IsMediaDirDeleting && !IsMediaDirCreating">
+                <ul class="results">
+                    <!--<li class="media-item">
+                        <a href="#" ng-click="$event.preventDefault();DoCreateMediaDir(this,ActiveDir)">
+                            <i class="fa fa-folder"></i>
+                        </a>
+                    </li>-->
+                    <li class="media-item">
+                        <a href="#" ng-click="$event.preventDefault();DoCreateMediaItem(this,ActiveDir)">
+                            <i class="fa fa-file"></i>
+                        </a>
+                    </li>
+                </ul>
+                <a href="#" ng-click="$event.preventDefault();DoCancelCRUD(this)" class="btn btn-danger">
+                    <i class="fa fa-times"></i> Cancel
+                </a>
+            </div>
+            <ul class="results" ng-if="!IsMediaDirEditing && !IsMediaDirCreating && !IsMediaItemDeleting && !IsMediaDirDeleting && !IsLoading">
+                <li class="media-item">
+                    <a href="#" ng-click="$event.preventDefault();DoCreateMediaItem(this,ActiveDir)">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </li>
+                <li ng-repeat="d in ActiveDir.Children" class="media-item">
+                    <a href="#" ng-click="$event.stopPropagation();$event.preventDefault();Activate(this,d)">
+                        <i class="fa fa-folder" style="font-size: 60px"></i>
+                        <br />
+                        <span class="title" ng-if="d.Name.length > 10">{{d.Name.substr(0,10)}}...</span>
+                        <span class="title" ng-if="d.Name.length < 10">{{d.Name}}</span>
+                    </a>
+                </li>
+                <li ng-repeat="m in ActiveDir.Media" class="media-item" ng-class="vm.$scope.SelectedMediaItem.MediaID == m.MediaID ? 'active' : ''">
+                    <a href="#" ng-class="vm.$scope.SelectedMediaItem.MediaID == m.MediaID ? 'active' : ''" ng-click="$event.preventDefault(); $event.stopPropagation();ActivateMediaItem(vm.$scope,m)">
+                        <span class="img" style="background-image:url('{{URLRoot}}/{{m.MediaID}}.img?&thumb=true')"> </span>
+                    </a>
+                    <span class="controls" ng-class="vm.$scope.SelectedMediaItem.MediaID == m.MediaID ? 'active' : ''" ng-click="$event.preventDefault();DoDeleteMediaItem(this,m)">
+                        <i class="fa fa-trash"></i>
+                    </span>
+                </li>
+            </ul>
+            <ng-include src="'/Scripts/Modules/Media/Views/create-media-item.html'"></ng-include>
+            <ng-include src="'/Scripts/Modules/Media/Views/delete-media-dir.html'"></ng-include>
+            <ng-include src="'/Scripts/Modules/Media/Views/delete-media-item.html'"></ng-include>
+        </div>
+    </div>
+</md-dialog>

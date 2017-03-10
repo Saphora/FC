@@ -1,0 +1,52 @@
+﻿<div class="card-header">
+    <span class="h5">TICKETS</span>
+    <a href="#" ng-click="$event.preventDefault();DoStartEdit('festival-tickets', this, $event)" for-roles="ADMIN">
+        <i class="fa fa-edit"></i>
+    </a>
+</div>
+<div class="card-block" ng-if="IsLoading==false">
+    <ul>
+        <li>
+            <span class="title">
+                3 DAY VIP
+            </span>
+            <span class="ticketprice">
+                <i class="fa fa-money"></i>
+                <span class="price">
+                    199.95
+                </span>
+                <span class="currency">
+                    EUR
+                </span>
+            </span>
+            <a href="#">
+                Order now!
+            </a>
+        </li>
+        <li>
+            <span class="title">
+                DAILY TICKET
+            </span>
+            <span class="ticketprice">
+                <i class="fa fa-money"></i>
+                <span class="price">
+                    50.95
+                </span>
+                <span class="currency">
+                    EUR
+                </span>
+            </span>
+            <a href="#">
+                Order now!
+            </a>
+        </li>
+    </ul>
+    <div class="image-wrapper">
+        <a href="#">
+            <img src="#" />
+        </a>
+    </div>
+</div>
+<div class="card-block" ng-if="IsLoading==true">
+    <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+</div>

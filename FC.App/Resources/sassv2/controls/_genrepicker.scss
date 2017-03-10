@@ -1,0 +1,98 @@
+﻿@import "../core/var.scss";
+.no-spacing {
+    padding: 0;
+    margin: 0;
+}
+.genrepicker {
+    .card-block {
+        .headercontrols {
+            float:left;
+            background-color:#efefef;
+            position:relative;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            .btn {
+                width: 150px;
+                &.btn-success {
+                    float:right;
+                    position:relative;
+                    right: -12px;
+                }
+                &.btn-danger {
+                    float:left;
+                    
+                    position:relative;
+                    left: -12px;
+                }
+            }
+        }
+        .selectedgenres {
+            .h5 {
+                width: 100%;
+                display:block;
+                float:left;
+            }
+            ul.selected {
+                float:left;
+                list-style: none;
+                li {
+                    float:left;
+                    margin: 0 5px 0 0;
+                }
+            }
+        }
+        ul.results {
+            display: block;
+            list-style:none;
+            padding: 12px;
+            margin: 0;
+            li {
+                width: 100%;
+                border-bottom: 1px solid #999999;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                display: inline-block;
+                &:last-child {
+                    border-bottom:0;
+                }
+                a {
+                    font-size: 12px;
+                    font-family: Arial;
+                    &.active {
+                        i.fa-heart {
+                            color:#e74c3c;
+                        }
+                    }
+                    &:visited, &:active {
+                        color: $FontColorDark;
+                        text-decoration:none;
+                    }
+                    color: $FontColorDark;
+               
+                    &:hover {
+                        color: $ButtonBGHoverColor;
+                    }
+                    i {
+                        float:left;
+                        font-size: 20px;
+                        margin-right: 12px;
+                    }
+                   
+                    span, .text {
+                        float:left;
+                        margin-top: 3px;
+                    }
+                }
+                span.controls {
+                    float:right;
+                    a {
+                        float:left;
+                    }
+                }
+            }
+        }
+    }
+    
+}  
+

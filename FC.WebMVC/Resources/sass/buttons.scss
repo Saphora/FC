@@ -1,0 +1,49 @@
+﻿@import "00.vars.scss";
+a.CounterBtn {
+    .counter {
+        position:absolute;
+        padding:3px;
+        text-align:center;
+        vertical-align:middle;
+        min-width:25px;
+        max-height:25px;
+        margin: -10px 5px 5px 5px;
+        background-color: #FF0000;
+        font-weight:bold;
+        font-family:GothamBold;
+        font-size: $fontSizeExtraSmall;
+        @include border-radius(12px);
+    }
+    .hasCount {
+        margin-right:25px;
+    }
+    .hasNoCount {
+        margin-right: auto;
+    }
+}
+
+//main menu btn
+a.HeaderCounterBtn {
+        .counter {
+        position:absolute;
+        padding:3px;
+        text-align:center;
+        vertical-align:middle;
+        min-width:25px;
+        max-height:25px;
+        margin: -10px 5px 5px 5px;
+        background-color: #FF0000;
+        font-weight:bold;
+        font-family:GothamBold;
+        font-size: $fontSizeExtraSmall;
+        @include border-radius(12px);
+    }
+    .hasCount {
+        margin-right:25px;
+    }
+    .hasNoCount {
+        margin-right: auto;
+    }
+}
+
+//QuickMenu btn

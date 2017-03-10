@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" ng-app="FC">
+<head ng-controller="FC.Core.Controllers.HeadController as vm">
+    <!-- Meta tags -->
+    <meta charset="utf-8" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
+    <meta name="theme-color" content="#333333" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Festival Calendar" />
+    <meta name="author" content="WM-Development - Wesley van der Meer" />
+    <script type="text/javascript" src="modernizr.js"></script>
+    <title>FESTIVAL CALENDAR | {{META.PageTitle}}</title>
+    <base href="/" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-194x194.png" sizes="194x194" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+    <link rel="stylesheet" href="node_modules/angular-bootstrap-datetimepicker/src/css/datetimepicker.css" />
+    <link rel="stylesheet" type="text/css" href="/App/Resources/cssv2/core/fc.css" />
+    <!-- You can use Open Graph tags to customize link previews.
+    Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
+    <meta property="og:url" content="http://festival-calendar.com/#/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Festival Calendar - {{META.PageTitle}}" />
+    <meta property="og:description" content="{{META.PageDescription}}" />
+    <meta property="og:image" content="{{META.PageImage}}" />
+</head>
+<body>
+
+    <div id="fb-root"></div>
+    <img src="Resources/images/bg.jpg" id="bg" />
+    <div id="MainOverlay" class="overlay ctx-hidden"></div>
+    <div class="menu-mobile visible-xs-down visible-sm-down visible-md-down hidden-xl-up" ng-controller="FC.Modules.Menu.Controllers.MenuController as mctr">
+        <div class="container">
+            <div class="left visible-sm-up">
+                <ul>
+                    <li>
+                        <a href="https://www.facebook.com/Festival-Calendar-523659261065735/?fref=ts" target="_blank"><span class="icon fb"></span></a>
+                        <a href="https://www.youtube.com/" target="_blank"><span class="icon youtube"></span></a>
+                        <a href="https://www.vimeo.com/" target="_blank"><span class="icon vimeo"></span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="middle">
+                <div class="wrp-logo">
+                    <img class="logo" src="/App/Resources/images/logoc.png" title="Festival-Calendar.com" />
+                </div>
+            </div>
+            <div class="right">
+                <a href="#" ng-click="$event.preventDefault();ToggleMobile()">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+            <div id="MenuMobile" class="mobile-menu-context ctx-hidden">
+                <div class="container">
+                    <ul>
+                        <li>
+                            <a href="/#/calendar">Festivals</a>
+                        </li>
+                        <li><span class="separator">/</span></li>
+                        <li>
+                            <a href="/#/artists">Artists</a>
+                        </li>
+                        <li><span class="separator">/</span></li>
+                        <li ng-click="$event.preventDefault();ToggleCountryFilter(this);">
+                            <a href="/#/countries">Countries</a>
+                        </li>
+                        <li><span class="separator">/</span></li>
+                        <li>
+                            <a href="/#/genres">Genres</a>
+                        </li>
+                        <li><span class="separator">/</span></li>
+                        <li not-for-roles="ALL">
+                            <a href="/#/register">Register</a>
+                        </li>
+                        <li><span class="separator">/</span></li>
+                        <li not-for-roles="ALL">
+                            <a href="/#/login" ng-click="$event.preventDefault();OpenLoginModal(this)">Login</a>
+                        </li>
+                        <li for-roles="ALL">
+                            <a href="/#/login" ng-click="$event.preventDefault();OpenMyProfileModal(this)">My profile</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="menu hidden-sm-down hidden-lg-down" ng-controller="FC.Modules.Menu.Controllers.MenuController as mctr">
+        <div class="container">
+            <div class="left">
+                <ul>
+                    <li>
+                        <a href="https://www.facebook.com/Festival-Calendar-523659261065735/?fref=ts" target="_blank"><span class="icon fb"></span></a>
+                        <a href="https://www.youtube.com/" target="_blank"><span class="icon youtube"></span></a>
+                        <a href="https://www.vimeo.com/" target="_blank"><span class="icon vimeo"></span></a>
+                    </li>
+                </ul>
+                <span class="slogan">DISCOVER THE MOST AMAZING FESTIVALS!</span>
+            </div>
+            <div class="middle">
+                <div class="wrp-logo">
+                    <img class="logo" src="/App/Resources/images/logoc.png" title="Festival-Calendar.com" />
+                </div>
+            </div>
+            <div class="right">
+                <ul class="visible-xl visible-l">
+                    <li>
+                        <a href="/#/calendar">Festivals</a>
+                    </li>
+                    <li><span class="separator">/</span></li>
+                    <li>
+                        <a href="/#/artists">Artists</a>
+                    </li>
+                    <li><span class="separator">/</span></li>
+                    <li>
+                        <a href="/#/countries" ng-click="$event.preventDefault();ToggleCountryFilter(this);">
+                            Countries
+                            <span class="count" ng-if="CountryCount && CountryCount != 0">
+                                {{CountryCount}}
+                            </span>
+                        </a>
+                    </li>
+                    <li><span class="separator">/</span></li>
+                    <li>
+                        <a href="/#/genres">Genres</a>
+                        <span class="count" ng-if="CountryCount && CountryCount != 0">
+                            {{CountryCount}}
+                        </span>
+                    </li>
+                    <li><span class="separator">/</span></li>
+                    <li>
+                        <a href="/#/settings">Settings</a>
+                    </li>
+                    <li>
+                        <span class="separator">/</span>
+                    </li>
+                    <li not-for-roles="ALL">
+                        <a href="/#/login" ng-click="$event.preventDefault();OpenLoginModal(this)">Login</a>
+                    </li>
+                    <li for-roles="ALL">
+                        <a href="/#/login" ng-click="$event.preventDefault();OpenMyProfileModal(this)">My profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="main" class="main container" ng-view=ng-view>
+
+    </div>
+    <div class="footer">
+
+    </div>
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="sha384-VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>-->
+    <!--<ng-include src="'/Scripts/Modules/Menu/Views/menu-desktop.html'"></ng-include>-->
+    <!--<div class="navbar-header header navbar navbar-default navbar-fixed-top navbar-inner">
+
+            <button type="button" class="navbar-toggle" ng-click="mainCtr.ToggleOverlay({VisibleClass: 'maxWidth', HiddenClass: 'minWidth', Selector: '#menu'},false)" aria-expanded="true" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/#/home" id="cnt-logo" class="navbar-brand">
+                <img ng-src="/Resources/images/logo_white.png" />
+            </a>
+            <ul class="nav navbar-nav" ng-controller="TilesController as Nav">
+                <li class="dropdown">
+                    <a currenturl=currenturl class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Genres <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="Genre in Nav.Tiles">
+                            <a href="/#/calendar/{{Genre.UmbracoID}}">{{Genre.Name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search" />
+                </div>
+                <button type="submit" class="btn btn-default" theme="button">Search</button>
+            </form>
+    </div>-->
+    <!--<div class="container  main" ng-view=ng-view>
+        <div theme="background" for="body" ng-if="!IsPartial"></div>
+    </div>-->
+    <script>
+  window.fbAsyncInit = function() {
+    FB.init({
+        appId: '1829782037310162',
+      xfbml      : true,
+      version    : 'v1.0'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <script src="phone-countries.js"></script>
+    <script src="/App/deps.min.js"></script>
+    <script src="/App/festival-calendar.js"></script>
+</body>
+</html>

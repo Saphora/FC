@@ -1,0 +1,123 @@
+﻿@import "fonts.scss";
+$imgDir: "/resources/images/";
+$fontsDir: "/app/resources/fonts";
+
+$grid-columns:      24;
+$grid-gutter-width: 14px;
+$card-spacer-x:  .75rem !default;
+$card-spacer-y: .75rem !default;
+
+.no-gutter > [class*='col-'] {
+    padding-right:0;
+    padding-left:0;
+}
+
+@import "bower_components/bootstrap/scss/bootstrap.scss";
+$LinkColor: #E06246;
+$logoGreen: #0D7C05;
+$logoPurple: #AE3CE3;
+$logoYellow: #EDEA03;
+$logoLime: #A6EA03;
+$logoBlue: #4ED7FF;
+$logoPink: #FE0089;
+$logoRed: #FF0000;
+//midnightblue - flatuicolors
+$BGDark:#333;
+$BGInput:#EEEEEE;
+$BGInputBorder:#DDDDDD;
+$BGYellow: #f1c40f;
+$BGLight: #EEEEEE;
+$ButtonBGColor:#333333;
+$ButtonBGHoverColor: #E06246;
+$LinkColorDefault: #E06246;
+$LinkColorHover: #333;
+$FontColorLight: #ecf0f1;
+$FontColorDark: #333;
+$SelectedColor: #c0392b;
+
+.invalid-msg {
+    padding: 5px;
+    font-size: 12px;
+    color: #FF0000;
+}
+.invalid {
+    background-color: #ffbcad !important;
+    border: 1px solid $LinkColor !important;
+}
+.valid {
+    background-color: #afffbb !important;
+    border: 1px solid $logoGreen !important;
+}
+
+@mixin font-light() {    
+    color: $FontColorLight;
+    background-color: $BGDark !important;
+}
+
+@mixin font-dark() {
+    color: $FontColorDark;
+    background-color: $BGLight;
+}
+@mixin theme-yellow() {
+    background-color: $BGYellow !important;
+    color: $FontColorDark;
+    font-weight:bold !important;
+    i.fc-icon {
+       background-color: #333;
+       padding: 10px;
+       
+    }
+}
+.theme-yellow {
+    @include theme-yellow();
+}
+@mixin theme-dark() {
+    background-color: $BGDark !important;
+    color: $BGLight;
+    font-weight:bold !important;
+    i.fc-icon {
+       background-color: #333;
+       padding: 10px;
+       
+    }
+}
+.theme-dark {
+    @include theme-dark();
+}
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  border-radius: $radius;
+  background-clip: padding-box;  /* stops bg color from leaking outside the border: */
+}
+
+// Single side border-radius
+
+@mixin border-top-radius($radius) {
+  -webkit-border-top-right-radius: $radius;
+  border-top-right-radius: $radius;
+   -webkit-border-top-left-radius: $radius;
+   border-top-left-radius: $radius;
+   background-clip: padding-box;
+}
+@mixin border-right-radius($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+     -webkit-border-top-right-radius: $radius;
+     border-top-right-radius: $radius;
+     background-clip: padding-box;
+}
+@mixin border-bottom-radius($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+   -webkit-border-bottom-left-radius: $radius;
+   border-bottom-left-radius: $radius;
+   background-clip: padding-box;
+}
+@mixin border-left-radius($radius) {
+  -webkit-border-bottom-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+     -webkit-border-top-left-radius: $radius;
+     border-top-left-radius: $radius;
+     background-clip: padding-box;
+}

@@ -1,0 +1,10 @@
+.form-group label {
+  text-align: left !important; }
+
+.form-group .validation {
+  display: block;
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #FF0000;
+  background-color: #FFcccc;
+  color: #333; }

@@ -1,0 +1,121 @@
+﻿@model FC.Shared.Entities.ApplicationUser
+@section META {
+    <title>FESTIVAL CALENDAR | Discover the most amazing festivals world wide!</title>
+    <meta property="og:url" content="http://festival-calendar.nl/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FESTIVAL CALENDAR | Discover the most amazing festivals world wide!" />
+    <meta property="og:description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+    <meta property="og:image" content="~/Resources/images/fc-icon.png" />
+    <meta name="keywords" content="Festival,Calendar,Events,Artists,Social,Platform,Manage,Profile,Agenda" />
+    <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+}
+<div class="row">
+    <div class="col-md-24">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5">REGISTER AT FESTIVAL CALENDAR!</span>
+            </div>
+            <div class="card-block">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>WHAT ARE OUR BENEFITS?</h5>
+                        <ul>
+                            <li>
+                                <i class="fa fa-heart"></i> <span class="h5">PERSONALIZE SETTINGS PERMANENTLY</span>
+                                <span class="description">Mark genres and artists as favorite, so that you only see content of your taste.</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-heart"></i> <span class="h5">SIGN UP YOUR FESTIVAL</span>
+                                <span class="description">Let us know if you organize a festival / concert / event! Manage lineups and many more!</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-heart"></i> <span class="h5">SIGN UP YOUR VENUE</span>
+                                <span class="description">Connect with festivals / artists / retailers etc. And create your own personal calendar.</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-heart"></i> <span class="h5">SIGN UP AS ARTIST</span>
+                                <span class="description">Connect with festivals and other artists. Create your own profile to promote yourself. View the festivals were you play at.</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-heart"></i> <span class="h5">REQUEST ADVERTISEMENT</span>
+                                <span class="description">Connect with festivals and other artists. Create your own profile to promote yourself. View the festivals were you play at.</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-heart"></i> <span class="h5">JOIN OUR RETAILER PROGRAM</span>
+                                <span class="description">If you want to sell tickets or other cool festival related stuff.</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-heart"></i> <span class="h5">SIGN UP AS TRAVEL AGENCY</span>
+                                <span class="description">Provide all in one festival travels!</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            @*if (ViewBag.Message != null)
+                            {
+                                <div class="alert alert-danger">
+                                    @ViewBag.Message
+                                </div>
+                            }*@
+                            <div class="form-horizontal">
+                                <h4>CREATE AN ACCOUNT</h4>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    @Html.Label("E-mail", htmlAttributes: new { @class = "control-label col-md-24" })
+                                    <div class="col-md-24">
+                                        @Html.EditorFor(model => model.UserEmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.UserEmailAddress, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.Label("Password", htmlAttributes: new { @class = "control-label col-md-24" })
+                                    <div class="col-md-24">
+                                        <input type="password" class="form-control" name="UserPassword" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Password repeat", htmlAttributes: new { @class = "control-label col-md-24" })
+                                    <div class="col-md-24">
+                                        <input type="password" class="form-control" name="UserPassword_Repeat" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-24" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.UserFirstname, new { htmlAttributes = new { @class = "form-control", placeholder = "Sur name" } })
+                                        @Html.ValidationMessageFor(model => model.UserFirstname, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.UserMiddlename, new { htmlAttributes = new { @class = "form-control", placeholder = "Middle name" } })
+                                        @Html.ValidationMessageFor(model => model.UserMiddlename, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.UserLastname, new { htmlAttributes = new { @class = "form-control", placeholder = "Last name" } })
+                                        @Html.ValidationMessageFor(model => model.UserLastname, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-24" style="padding-top:15px; padding-bottom:15px;">
+                                        @Html.Partial("~/Views/Forms/Recaptcha.cshtml")
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-20 col-md-4">
+                                        <input type="submit" value="REGISTER" class="btn btn-default" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

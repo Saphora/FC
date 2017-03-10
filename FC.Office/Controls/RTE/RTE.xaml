@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="FC.Office.Controls.RTE.RTE"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FC.Office.Controls.RTE"
+             mc:Ignorable="d" 
+             VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MaxHeight="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="Opener" Content="Edit news text" Click="Opener_Click" Grid.Row="0" Grid.Column="0" MaxWidth="120"></Button>
+        <!--<WebBrowser x:Name="RTEFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="0" ScrollViewer.IsDeferredScrollingEnabled="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Loaded="RTEFrame_Loaded"/>-->
+        <ProgressBar Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch"  MaxHeight="20" x:Name="loader" Margin="30"/>
+    </Grid>
+</UserControl>

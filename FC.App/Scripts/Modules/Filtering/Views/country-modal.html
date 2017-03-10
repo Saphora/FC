@@ -1,0 +1,31 @@
+﻿<div class="modal-header block-item" theme="header">
+    <div class="header" theme="header">
+        <h1>
+            <i class="fa fa-globe"></i>
+            <span class="title">Choose countries</span>
+        </h1>
+    </div>
+</div>
+<div class="modal-body">
+    <h4>
+        Select (max. 5) countries
+    </h4>
+    <ul>
+        <li ng-repeat="Country in ActiveCountries">
+            <a href="#">{{Country.Name}}</a>
+        </li>
+    </ul>
+    <ul class="modal-select countries">
+        <li id="modal-select-item-{{item.CountryID}}" ng-repeat="(key,item) in vm.CountryData">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(item.CountryID)">
+                <i class="fa fa-globe" ng-if="vm.IsOpen(item.CountryID)" theme="link-heart-active"></i>
+                <i class="fa fa-globe" ng-if="!vm.IsOpen(item.CountryID)" theme="link-heart-inactive"></i>
+                <span class="title">{{item.Name}}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" theme="button" ng-click="vm.Remember()">Remember</button>
+    <button class="btn btn-default" type="button" theme="button" ng-click="vm.Cancel()">Cancel</button>
+</div>

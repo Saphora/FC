@@ -1,0 +1,41 @@
+﻿.location-card {
+    .img-wrapper {
+        width: 100%;
+        top: 40px;
+        left:0;
+        position:absolute;
+        overflow:hidden;
+        img {
+            background-position:center;
+        }
+    }
+        .buttons {
+            right: 0;
+            top: 180px;
+            max-width: 200px;
+            font-family: 'Oswald' !important;
+            font-weight: 700;
+            font-size: 14px;
+            position:absolute;
+        }
+    .content {
+        position:absolute;
+        top: 140px;
+        * {
+            font-size: 12px;
+        }
+    }
+}
+ .google-maps {
+    position: relative;
+    padding-bottom: 75%; // This is the aspect ratio
+    height: 0;
+    overflow: hidden;
+     iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+    }
+}

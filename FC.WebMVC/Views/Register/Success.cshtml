@@ -1,0 +1,34 @@
+﻿@model FC.Shared.Entities.ApplicationUser
+
+@section META {
+    <title>FESTIVAL CALENDAR | Discover the most amazing festivals world wide!</title>
+    <meta property="og:url" content="http://festival-calendar.nl/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FESTIVAL CALENDAR | Discover the most amazing festivals world wide!" />
+    <meta property="og:description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+    <meta property="og:image" content="~/Resources/images/fc-icon.png" />
+    <meta name="keywords" content="Festival,Calendar,Events,Artists,Social,Platform,Manage,Profile,Agenda" />
+    <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+}
+
+<div class="row">
+    <div class="col-md-24">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5">ACCOUNT ACTIVATION</span>
+            </div>
+            <div class="card-block">
+                <center>
+                    <h5>ACCOUNT VERIFICATION REQUIRED</h5>
+                    <p>
+                        An activation mail has been send to @Model.UserEmailAddress please click on the link in the verification e-mail to activate your account.
+                        Please make sure that you check your spambox to. 
+                        Did you not receive the e-mail? <a href="/Register/SendActivationMail">Click here</a> to send it again.
+                    </p>
+                    <a href="/" class="btn btn-danger">GO TO CALENDAR</a>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+

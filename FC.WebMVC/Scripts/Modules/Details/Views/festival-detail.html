@@ -1,0 +1,145 @@
+﻿
+<div class="row">
+    <div class="col-xl-18">
+        <div class="card profile-header">
+            <div class="card-header">
+                <span class="h5">
+                    {{Festival.Name.toUpperCase()}}
+                </span>
+                <div class="rating" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr" ng-init="rctr.GetRates(Festival.FestivalID,'festival')">
+                    <span class="count" theme="count" ng-if="Rating.DisplayCount == '0'">
+                        0
+                    </span>
+                    <span class="count" theme="count" ng-if="Rating.DisplayCount != '0'">
+                        {{Rating.DisplayCount}}
+                    </span>
+                    <a href="#" id="star_{{Festival.FestivalID}}_1" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',1)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star1Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star1Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Festival.FestivalID}}_2" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',2)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star2Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star2Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Festival.FestivalID}}_3" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',3)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star3Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star3Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Festival.FestivalID}}_4" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',4)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star4Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star4Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Festival.FestivalID}}_5" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',5)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star5Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star5Active"></i>
+                    </a>
+                </div>
+                <a href="#" ng-click="$event.preventDefault();DoStartEdit('festival-name', this, $event)" for-roles="ADMIN">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </div>
+            <div class="card-block no-padding festival-header">
+                <div class="logo-wrapper">
+                    <div class="mask" ng-click="$event.preventDefault();DoStartEdit('festival-logo', this, $event)" for-roles="ADMIN">
+                        <i class="fa fa-camera"></i>
+                    </div>
+                    <img ng-if="Festival.LogoID" ng-src="{{MediaURLRoot}}/{{Festival.LogoID}}.img?&thumb=true" class="ct-logo" />
+                </div>
+                <div class="controls" for-roles="ADMIN">
+                    <a href="#" ng-click="$event.preventDefault();DoStartEdit('profile-header', this, $event)">
+                        <i class="fa fa-camera"></i>
+                    </a>
+                    <!--<a href="/#/festival/delete/{{Festival.FestivalID}}" class="btn-sm btn-default">
+                    <i class="fa fa-trash"></i> Remove
+                </a>
+                <a href="/#/festival/publish/{{Festival.FestivalID}}" class="btn-sm btn-default">
+                    <i class="fa fa-globe"></i> Publish
+                </a>
+                <a href="/#/festival/edit/{{Festival.FestivalID}}" class="btn-sm btn-default">
+                    <i class="fa fa-edit"></i> Edit
+                </a>-->
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-24">
+                <div class="card static  no-padding when">
+                    <div class="card-header">
+                        <span class="h5">WHEN</span>
+                        <a href="#" ng-click="$event.preventDefault();DoStartEdit('festival-date', this, $event)" for-roles="ADMIN">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                    <div class="card-block" ng-if="IsLoading==true">
+                        <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+                    </div>
+                    <div class="card-block" ng-if="IsLoading==false">
+                        <div class="card-date">
+                            <span class="label">STARTS</span>
+                            <span class="hr top"></span>
+                            <div class="inner">
+                                <span class="day">{{Festival.StartDateExplosion.Day}}</span>
+                                <span class="month">{{Festival.StartDateExplosion.Month}}</span>
+                                <span class="year">
+                                    <span>{{Festival.StartDateExplosion.Y1}}</span>
+                                    <span>{{Festival.StartDateExplosion.Y2}}</span>
+                                    <span>{{Festival.StartDateExplosion.Y3}}</span>
+                                    <span>{{Festival.StartDateExplosion.Y4}}</span>
+                                </span>
+                                <span class="time">{{Festival.StartDateExplosion.Hour}}:{{Festival.StartDateExplosion.Minute}} (UTC +1)</span>
+                            </div>
+                            <span class="hr bottom"></span>
+                        </div>
+                        <div class="card-date">
+                            <span class="label">ENDS</span>
+                            <span class="hr top"></span>
+                            <div class="inner">
+                                <span class="day">{{Festival.EndDateExplosion.Day}}</span>
+                                <span class="month">{{Festival.EndDateExplosion.Month}}</span>
+                                <span class="year">
+                                    <span>{{Festival.EndDateExplosion.Y1}}</span>
+                                    <span>{{Festival.EndDateExplosion.Y2}}</span>
+                                    <span>{{Festival.EndDateExplosion.Y3}}</span>
+                                    <span>{{Festival.EndDateExplosion.Y4}}</span>
+                                </span>
+                                <span class="time">{{Festival.EndDateExplosion.Hour}}:{{Festival.EndDateExplosion.Minute}} (UTC +1)</span>
+                            </div>
+                            <span class="hr bottom"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-24 no-margin">
+                <div class="card  static no-padding location">
+                    <ng-include src="'/Scripts/modules/location/views/location-card.html'"></ng-include>
+                </div>
+            </div>
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-24 no-margin">
+                <div class="card static no-padding festival-tickets-list">
+                    <ng-include src="'/Scripts/modules/tickets/views/festival-tickets-list.html'"></ng-include>
+                </div>
+            </div>
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-24 no-margin">
+                <div class="card static artist-list">
+                    <ng-include src="'/Scripts/modules/artists/views/festival-artists-list.html'"></ng-include>
+                </div>
+            </div>
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-24 no-margin">
+
+                <div class="card static headlines-card  no-padding">
+                    <ng-include src="'/Scripts/modules/news/views/headlines-list.html'"></ng-include>
+                </div>
+            </div>
+            <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-24 no-margin">
+                <div class="card static social-card  no-padding">
+                    <ng-include src="'/Scripts/modules/social/views/connected.html'"></ng-include>
+                </div>
+            </div>
+        </div>
+        <!--left-->
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 col-xs-24">
+        <ng-include src="'/scripts/modules/menu/views/quickmenu.html'" ng-controller="FC.Modules.Menu.Controllers.QuickMenuController as vm" ng-init="vm.init('festival')"/>
+    </div>
+</div>
+

@@ -1,0 +1,248 @@
+﻿<md-dialog aria-label="SAVE SUCCESS" flex="50">
+    <div class="card genrepicker genric-picker">
+        <div class="card-header">
+            <span class="h5">SELECT GENRES</span>
+        </div>
+        <div class="card-block ">
+            <div class="alert alert-danger" role="alert" ng-if="(!IsCreated && !IsModified && !IsDeleted) && ServerMsg">
+                {{ServerMsg}}
+            </div>
+            <div class="alert alert-success" role="alert" ng-if="(IsDeleted || IsModified|| IsCreated) && ServerMsg">
+                {{ServerMsg}}
+            </div>
+
+
+            <div class="col-xs-24 no-margin no-padding selectedgenres" ng-if="SelectedGenres.length >0 && !IsCreating && !IsEditing && !IsDeleting">
+                <span class="h5">Your selected genres</span>
+                <ul class="selected">
+                    <li ng-repeat="g in SelectedGenres">
+                        <a href="/#/genre/delete/{{g.GenreID}}" class="btn-sm btn-danger" ng-click="$event.preventDefault();Activate(this,g)">
+                            <i class="fa fa-trash"></i> {{g.Name}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-24">
+                <div class="form-group">
+                    <label><i class="fa fa-search"></i></label><input type="text" class="form-control" placeholder="Genre name" ng-change="DoSearch(this)" ng-model="SearchKey" />
+                </div>
+            </div>
+            <ul ng-if="SearchKey && SearchResult.length > 0 && !IsCreating && !IsEditing && !IsDeleting" class="results">
+                <li class="genre-list-item" ng-repeat="Genre in SearchResult">
+                    <a href="#" ng-click="$event.preventDefault();Activate(vm.$scope,Genre)" ng-class="IsActive(this,Genre) ? 'active' : ''">
+                        <i class="fa fa-square-o" ng-if="!IsActive(this,Genre)"></i>
+                        <i class="fa fa-check-square-o" ng-if="IsActive(this,Genre)"></i>
+                        <span>{{Genre.Name}}</span>
+                    </a>
+                    <span class="controls">
+                    </span>
+                </li>
+            </ul>
+            <div class="col-xs-24" ng-if="SearchResult.length ==0 && !IsCreating && !IsEditing && !IsDeleting">
+                <a href="#" class="btn-sm btn-success" ng-click="$event.preventDefault();DoCreate(this)">CREATE</a>
+                <a href="#" class="btn-sm btn-danger" ng-click="$event.preventDefault();DoCancelSearch(this)">CANCEL</a>
+            </div>
+            <div class="headercontrols" ng-if="!IsCreating && !IsEditing && !IsDeleting">
+                <a href="#" class="btn btn-success" ng-click="$event.preventDefault();Close(this);">
+                    SAVE
+                </a>
+                <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();Close(this);">
+                    CANCEL
+                </a>
+                <!--<a href="#" class="btn btn-danger" ng-click="$event.preventDefault();DoCreate(this);">
+            <i class="fa fa-plus"></i>
+            <span> New</span>
+        </a>
+        <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();Save(this);">
+            <i class="fa fa-save"></i>
+            <span> Save</span>
+        </a>-->
+            </div>
+            <ng-include src="'/Scripts/Modules/Genres/Views/genre-create.html'"></ng-include>
+            <ng-include src="'/Scripts/Modules/Genres/Views/delete-genre.html'"></ng-include>
+
+            <!--<ul class="results">
+
+
+                <li ng-repeat="Artist in SysArtists">
+                    <a href="#" ng-click="$event.preventDefault();vm.Activate(this,Artist);">
+                        <i class="fa fa-square-o" ng-if="!IsActive(this,Artist)"></i>
+                        <i class="fa fa-check-square-o" ng-if="IsActive(this,Artist)"></i>
+
+                        <span ng-if="MediaIsObsolete(Artist.Logo)" class="logo" style="background-image:url('{{URLRoot}}/?action=getimg&Width=50&IsObsolete=true&MediaID={{Artist.Logo}}')"> </span>
+                        <span ng-if="!MediaIsObsolete(Artist.Logo)" class="logo" style="background-image:url('{{URLRoot}}/?action=getimg&Width=50&IsObsolete=false&MediaID={{Artist.Logo}}')"> </span>
+                        <span class="text">{{Artist.Name}}</span>
+                    </a>
+                </li>
+            </ul>-->
+            <!--<div
+            class="no-result" ng-if="SysArtists.length == 0">
+                <p>Artist {{GenreSearchKey}} is not found. Would you like to create the artist?</p>
+                <a href="#" class="btn btn-default" theme="button,button-hover" style="padding:4px;" ng-click="$event.preventDefault();vm.DoCreateArtist()">
+                    <i class="fa fa-plus-circle"></i>
+                    <span>Create new {{GenreSearchKey}}</span>
+                </a>
+            </div>-->
+        </div>
+    </div>
+</md-dialog>
+
+    <!--<div class="row">
+        <div class="col-sm-12">
+            <span class="crumb">
+                <span class="folder" ng-repeat="d in Crumb" ng-if="d.Name">
+                    <a href="#" ng-click="$event.stopPropagation();$event.preventDefault();Activate(this,d)">
+                        <i class="fa fa-folder"></i>
+                        <span class="title">{{d.Name}}</span>
+                    </a>
+                    <span class="separator">
+                        /
+                    </span>
+                </span>
+
+            </span>
+        </div>
+
+        <div class="col-sm-12">
+            <ul class="folder-picker col-sm-12" ng-if="ActiveDir">
+                <li ng-if="ShowFolderUp">
+                    <a href="#" ng-click="$event.stopPropagation();$event.preventDefault();Activate(this,ParentDir)">
+                        <i class="fa fa-ellipsis-h"></i>
+                        <span class="title">
+                            Back to {{ParentDir.Name}}
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" ng-click="$event.stopPropagation();$event.preventDefault();vm.$scope.ToggleFileForm=!vm.$scope.ToggleFileForm;vm.$scope.ToggleDirForm=false;">
+                        <i class="fa fa-upload"></i>
+                        <span class="title">
+                            Upload
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" ng-click="$event.stopPropagation();$event.preventDefault();vm.$scope.ToggleDirForm=!vm.$scope.ToggleDirForm;vm.$scope.ToggleFileForm=false;">
+                        <i class="fa fa-plus"></i>
+                        <span class="title">
+                            Add folder
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" ng-if="ActiveDir.Media.length == 0 && Directories.length == 0" ng-click="$event.stopPropagation();$event.preventDefault();vm.$scope.ToggleDirForm=!vm.$scope.ToggleDirForm;vm.$scope.ToggleFileForm=false;">
+                        <i class="fa fa-trash"></i>
+                        <span class="title">
+                            Delete folder
+                        </span>
+                    </a>
+                </li>
+                <li ng-repeat="d in Directories" class="directory-item">
+                    <a href="#" ng-click="$event.stopPropagation();$event.preventDefault();Activate(this,d)">
+                        <i class="fa fa-folder"></i>
+                        <span class="title">{{d.Name}}</span>
+                    </a>
+                </li>
+                <li ng-repeat="m in ActiveDir.Media" class="media-item">
+                    <a href="#" class="active" ng-if="vm.$scope.SelectedMediaItem.MediaID == m.MediaID"  ng-click="$event.preventDefault(); $event.stopPropagation();ActivateMediaItem(vm.$scope,m)">
+                        <img ng-src="{{URLRoot}}/?&action=getimg&MediaID={{m.MediaID}}&Width=75&IsObsolete=false" />
+                        <span>{{m.Name}}</span>
+                    </a>
+                    <a href="#" ng-if="vm.$scope.SelectedMediaItem.MediaID != m.MediaID" ng-click="$event.preventDefault(); $event.stopPropagation();ActivateMediaItem(vm.$scope,m)">
+                        <img ng-src="{{URLRoot}}/?&action=getimg&MediaID={{m.MediaID}}&Width=75&IsObsolete=false"/>
+                        <span>{{ShortenFileName(m.Name)}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-12"  ng-if="vm.$scope.ToggleFileForm">
+
+            <iframe src="/Scripts/Modules/Media/Views/files.html" id="UploadCtrl" name="files_frame" onload="window.dispatchEvent(new Event('iframeSrcChanged'));" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc" style="width:0;height:0;visibility:hidden;"></iframe>
+            <form enctype="multipart/form-data" action="{{getUploadURL(ActiveDir.DirectoryID)}}" target="files_frame" method="post">
+                <div class="row">
+                    <div class="form-group">
+                        <input type="hidden" name="DirectoryID" value="{{ActiveDir.DirectoryID}}" />
+                        <label for="Media" class="control-label col-sm-12">File </label>
+                        <div class="col-md-12">
+                            <input type="file" name="Media[]" ng-text-change="vm.SetFileName()" ng-model="FileName" class="form-control col-md-12" />
+                        </div>
+                        <input type="submit" theme="button,button-hover" value="Upload" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12" ng-if="vm.$scope.ToggleDirForm">
+
+            <form >
+                <div class="form-group">
+                    <div class="col-12-12">
+                        <label for="Media" class="control-label col-sm-12">Directory name </label>
+                        <input type="text" name="Media" ng-model="NewDirName" class="form-control col-md-12" placeholder="Directory name" />
+                    </div>
+                    <div class="col-sm-12">
+                        <a href="#" class="btn btn-default" theme="button,button-hover" style="padding:4px;" ng-click="$event.stopPropagation();$event.preventDefault();vm.DoAddDirectory(this)">
+                            <i class="fa fa-plus"></i>
+                            <span>Save</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="col-sm-12">
+
+        </div>
+    </div>-->
+    <!--<div class="col-sm-24">
+        <div class="card">
+            <div class="card-header">
+                <i class="fc-icon"></i>
+                <span class="h5">Select genres</span>
+                <i class="fa fa-heart"></i>
+            </div>
+            <div class="card-block">
+                <ng-include src="'/Scripts/Modules/Loading/Views/loading-small.html'" ng-if="!SysGenres"></ng-include>
+                <div class="col-sm-12 selected-artist-list">
+                    <span class="title">
+                        Selected genres
+                    </span>
+                    <ul>
+                        <li class="artist-list-item" ng-repeat="Genre in SelectedGenres">
+                            <a href="#" ng-click="vm.DeActivate(this,Genre)">
+                                <i class="fa fa-remove"></i>
+                                <span>{{Genre.Name}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-12 artist-list">
+                    <div class="form-group">
+                        <label for="GenreSearch" class="control-label col-sm-12">Search by genre name</label>
+                        <input type="text" class="form-control col-sm-12" ng-model="GenreGenreSearchKey" ng-change="vm.Filter()" />
+                    </div>
+                    <ul ng-if="SysGenres">
+                        <li class="artist-list-item" ng-repeat="Genre in SysGenres">
+                            <a href="#" ng-click="$event.preventDefault();vm.Activate(this,Genre)" ng-class="vm.IsActive(Genre) ? 'active' : ''">
+                                <i class="fa fa-heart"></i>
+                                <span>{{Genre.Name}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="no-result" ng-if="SysGenres.length == 0">
+                        <p>Genre {{GenreGenreSearchKey}} is not found. Would you like to create the artist?</p>
+                        <a href="#" class="btn btn-default" theme="button,button-hover" style="padding:4px;" ng-click="$event.preventDefault();vm.DoCreateGenre()">
+                            <i class="fa fa-plus-circle"></i>
+                            <span>Create genre {{GenreGenreSearchKey}}</span>
+                        </a>
+                    </div>
+                    <div class="col-sm-12" ng-if="IsGenreCreating && SysArtists.length == 0">
+                        <ng-include src="'/Scripts/Modules/Genres/Views/genre-create.html'"></ng-include>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-default" type="button" theme="button" ng-click="vm.Save(vm.$scope,'GenrePickerSaved')" ng-if="vm.$scope.SelectedGenres;">Save</button>
+            <button class="btn btn-default" type="button" theme="button" ng-click="vm.Cancel()">Cancel</button>
+        </div>
+    </div>-->

@@ -1,0 +1,58 @@
+﻿<div class="row">
+    <div class="col-xs-16">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5">
+                    {{Detail.Title.toUpperCase()}}
+                    <a href="#" ng-click="$event.preventDefault();vm.DoDelete()" class="pull-right">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </span>
+            </div>
+            <div class="card-block">
+                <ul class="news-list">
+                    <li class="news-item" ng-if="Detail.Title">
+                        <img ng-src="{{MediaURLRoot}}/{{Detail.ThumbnailID}}.img?&thumb=true" ng-if="Detail.ThumbnailID" />
+                        <h5>{{Detail.Title.toUpperCase()}}</h5>
+                        <span class="subtitle" ng-class="Detail.ThumbnailID ? 'img':''"><strong>AUTHOR: </strong><a href="#">WMeer</a>, <strong>DATE: </strong>{{vm.FormatDate(Date)}}</span>
+                        <div class="nolink-subtxt">{{Detail.MetaDescription}}</div>
+                        <div class="txt" ng-bind-html="vm.HtmlSafe($sce, Detail.Text)"></div>
+                        <div class="keywords" ng-bind-html="vm.ExplodeTagString($sce,Detail.MetaKeys)"></div>
+                        <a href="{{Detail.SourceURL}}" target="_blank" class="source">SOURCE: {{Detail.SourceName}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-8">
+        <div class="card overview news-overview">
+            <div class="card-header">
+                <span class="h5">HEADLINES</span>
+            </div>
+            <div class="card-block">
+                <!--<div class="col-xs-24 no-padding theme-border">
+                    <div class="pull-right">
+                        <a href="/#/news/create/1" class="btn btn-success">
+                            CREATE NEWS
+                        </a>
+                    </div>
+                </div>-->
+                <ng-include src="'/Scripts/Shared/views/loader.html'" ng-if="IsLoading"></ng-include>
+                <ul class="news-list" ng-if="!IsLoading">
+                    <li class="news-item" ng-if="n.Title" ng-repeat="(i,n) in model">
+                        <img ng-src="{{MediaURLRoot}}/{{n.ThumbnailID}}.img?&thumb=true" ng-if="n.ThumbnailID" />
+                        <a href="/news/edit/{{n.NewsID}}"><i class="fa fa-edit"></i></a><a href="/#/news/detail/{{n.NewsID}}"><h5>{{n.Title.toUpperCase()}}</h5></a>
+                        <span class="subtitle" ng-class="n.ThumbnailID ? 'img':''"><strong>AUTHOR: </strong><a href="#">WMeer</a>, <strong>DATE: </strong>{{vm.FormatDate(Date)}}</span>
+                        <a href="#" ng-click="$event.preventDefault();" class="subtxt">{{n.MetaDescription}}</a>
+                        <!--<div class="txt" ng-bind-html="vm.HtmlSafe($sce, n.Text)"></div>-->
+                        <div class="keywords" ng-bind-html="vm.ExplodeTagString($sce,n.MetaKeys)"></div>
+                        <a href="{{n.SourceURL}}" target="_blank" class="source">SOURCE: {{n.SourceName}}</a>
+                    </li>
+                </ul>
+                <div class="col-xs-24" ng-if="ShowMore && !IsLoading">
+                    <a href="{{ShowMoreURL}}" class="btn btn-danger" name="#bottom" style="width:252px;">SHOW OLDER</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

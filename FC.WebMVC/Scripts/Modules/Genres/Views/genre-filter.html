@@ -1,0 +1,47 @@
+﻿
+<div class="card complex-filter">
+    <div class="card-header">
+        <span class="h5">
+            SELECT GENRES
+        </span>
+    </div>
+    <div class="card-block" ng-if="IsLoading==true">
+        <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+    </div>
+    <div class="card-block" ng-if="IsLoading==false">
+        <div class="row">
+            <div class="col-xs-24 content">
+                <div class="h5">
+                    MOST POPULAR GENRES
+                </div>
+                <div class="list popular-list">
+                    <ul>
+                        <li ng-repeat="Genre in SysGenres" class="filter-item" ng-if="Genre.IsPopular==true">
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleGenre(Genre)">
+                                <i ng-class="{'fa fa-square-o': vm.IsActive(Genre) == false, 'fa fa-check-square-o':vm.IsActive(Genre)==true}"></i><span>{{Genre.Name.toUpperCase()}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="h5">
+                    OTHER GENRES
+                </div>
+                <div class="list other-list">
+                    <ul>
+                        <li ng-repeat="Genre in SysGenres" class="filter-item" ng-if="Genre.IsPopular==false">
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleGenre(Genre)">
+                                <i ng-class="{'fa fa-square-o': vm.IsActive(Genre) == false, 'fa fa-check-square-o':vm.IsActive(Genre) == true}"></i><span>{{Genre.Name.toUpperCase()}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-24 footer-controls no-margin no-padding">
+                <a href="#" ng-click="$event.preventDefault(); vm.Close()" class="btn btn-danger pull-right">CANCEL</a>
+                <a href="#" ng-click="$event.preventDefault(); vm.Save()" class="btn btn-success pull-right">SAVE</a>
+            </div>
+        </div>
+    </div>
+</div>

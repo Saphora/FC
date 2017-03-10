@@ -1,0 +1,311 @@
+﻿<div class="block-item col-sm-12">
+    <div class="header navigation" theme="header">
+        <h1>
+            <span class="fc-icon small"></span>
+            <i class="fa fa-music right"></i>
+            <span class="title">Add your festival</span>
+        </h1>
+    </div>
+    <div class="body add-festival-form">
+
+        <form enctype="multipart/form-data" ng-model="model" ng-controller="FC.Modules.Festival.Controllers.FestivalCRUDController as fctr">
+
+            <div class="form-horizontal">
+                <h4>Add a festival</h4>
+
+                <div class="form-group">
+                    <label for="CountryID" class="control-label col-sm-12">Country </label>
+                    <select name="CountryID" class="form-control col-sm-12" ng-model="model.CountryID">
+                        <option ng-repeat="Country in SysCountries" value="{{Country.CountryID}}">
+                            {{Country.Name}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Artists" class="control-label col-md-12">Artists</label>
+                    <div class="col-md-12" ng-controller="FC.Modules.Artists.Controllers.ArtistModalController as amctr">
+                        <button class="btn btn-default" theme="button,button-hover" style="padding:4px" ng-click="$event.preventDefault();amctr.OpenArtistPicker(760)">Pick artists</button>
+                        <input id="Artists" name="Logo" type="hidden"  ng-model="model.Artists" class="form-control" placeholder="Browse logo">
+                        <span class="validation" ng-if="!IsValid(model.Artists)">Festival logo is required.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Name" class="control-label col-md-12">Festival name (*)</label>
+                    <div class="col-md-12">
+                        <input id="Name" name="Name" type="text"  ng-model="model.Name" class="form-control" placeholder="Festival name">
+                        <span id="helpBlock2" class="help-block">The name of the festival whitout year number.</span>
+                        <span class="validation" ng-if="!IsValid(model.Name)">Festival name is required.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Logo" class="control-label col-md-12">Festival logo (*){.model.LogoID}}</label>
+                    <div class="col-md-12" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc" ng-init="">
+                        <img src="{{FestivalLogoPath}}" />
+                        <button class="btn btn-default" theme="button,button-hover" style="padding:4px"  ng-click="$event.preventDefault();mmc.OpenMediaModal(760,'FestivalLogoSaved')">Pick logo</button>
+                        <input id="Logo" name="Logo" type="hidden" ng-change="Validate.model.LogoID)" ng-model=.model.LogoID" class="form-control" placeholder="Browse logo">
+                        <span id="helpBlock2" class="help-block">Festival logo 150x150</span>
+                        <span class="validation" ng-if="!IsValid.model.LogoID)">Festival logo is required.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="IndoorOutdoor" class="control-label col-md-12">Indoor / outdoor / both </label>
+                    <select name="IndoorOutdoor" id="IndoorOutdoor" class="form-control" ng-model="model.IndoorOutdoor">
+                        <option value="Both" selected="selected">
+                            Both
+                        </option>
+                        <option value="Indoor">
+                            Indoor
+                        </option>
+                        <option value="Outdoor">
+                            Outdoor
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="City" class="control-label col-md-12">City (*)</label>
+                    <div class="col-md-12">
+                        <input id="City" name="City" type="text"  ng-model="model.City" class="form-control" placeholder="City">
+                        <span id="helpBlock2" class="help-block">The name of the city in english format.</span>
+                        <span class="validation" ng-if="!IsValid(model.City)">City is required.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Location" class="control-label col-md-12">Location (*)</label>
+                    <div class="col-md-12">
+                        <input id="Location" name="Location" type="text"  ng-model="model.Location" class="form-control" placeholder="Festival Location">
+                        <span id="helpBlock2" class="help-block">Describe in max. 10 words the location.</span>
+                        <span class="validation" ng-if="!IsValid(model.Location)">Festival location is required.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="DailyTicketPrice" class="control-label col-md-12">Daily ticket price</label>
+                    <div class="col-md-12">
+                        <input id="DailyTicketPrice" name="TicketPrice" type="text"  ng-model="model.DailyTicketPrice" class="form-control" placeholder="Festival Location">
+                        <span id="helpBlock2" class="help-block">Euro format ex(95 or 95.50)</span>
+                        <span class="validation" ng-if="!IsValid(model.DailyTicketPrice)">Format is invalid.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="TicketPrice" class="control-label col-md-12">Ticket price (*)</label>
+                    <div class="col-md-12">
+                        <input id="TicketPrice" name="TicketPrice" type="text"  ng-model="model.TicketPrice" class="form-control" placeholder="">
+                        <span id="helpBlock2" class="help-block">Euro format ex(95 or 95.50)</span>
+                        <span class="validation" ng-if="!IsValid(model.TicketPrice)">Format is invalid.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Visitors" class="control-label col-md-12">Visitors (*)</label>
+                    <div class="col-md-12">
+                        <select name="Visitors" id="Visitors" class="form-control" ng-model="model.Visitors">
+                            <option value="100_500" selected="selected">
+                                100 - 500
+                            </option>
+                            <option value="500_1000">
+                                500 - 1000
+                            </option>
+                            <option value="1000_5000">
+                                1000 - 5000
+                            </option>
+                            <option value="5000_1000">
+                                5000 - 10000
+                            </option>
+                            <option value="1000_25000">
+                                10000 - 25000
+                            </option>
+                            <option value="25000_50000">
+                                25000 - 50000
+                            </option>
+                            <option value="50000_100000">
+                                50000+
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="StartDate" class="control-label col-md-12">Start date (*)</label>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" uib-datepicker-popup ng-model="model.StartDate" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                        <span id="helpBlock2" class="help-block">Start date of festival.</span>
+                        <span class="validation" ng-if="!IsValid(model.StartDate)">Start date is required.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="EndDate" class="control-label col-md-12">End date (*)</label>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" uib-datepicker-popup ng-model="model.EndDate" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                        <span id="helpBlock2" class="help-block">End date of festival.</span>
+                        <span class="validation" ng-if="!IsValid(model.EndDate)">End date is required.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="CampingAvailable" class="control-label col-md-12">Camping available? (*)</label>
+                    <div class="col-md-12">
+                        <select name="CampingAvailable" id="Visitors" class="form-control" ng-model="model.CampingAvailable">
+                            <option value="Yes" selected="selected">
+                                Yes
+                            </option>
+                            <option value="No">
+                                No
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Description" class="control-label col-md-12">Description (*)</label>
+                    <div class="col-md-12">
+                        <textarea name="Description" id="Description" ng-model="model.Description" class="form-control col-md-12"></textarea>
+                        <span id="helpBlock2" class="help-block">Tell something about your festival in max. 20 lines.</span>
+                        <span class="validation" ng-if="!IsValid(model.Description)">Festival description is required.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Address" class="control-label col-md-12">Address (*)</label>
+                    <div class="col-md-12">
+                        <input id="Address" name="Address" type="text"  ng-model="model.Address" class="form-control" placeholder="Address">
+                        <span id="helpBlock2" class="help-block">Tell something about your festival in max. 20 lines.</span>
+                        <span class="validation" ng-if="!IsValid(model.Address)">Address is required.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ZIPCode" class="control-label col-md-12">Postcode (*)</label>
+                    <div class="col-md-12">
+                        <input id="ZIPCode" name="ZIPCode" type="text"  ng-model="model.ZIPCode" class="form-control" placeholder="Postcode">
+                        <span class="validation" ng-if="!IsValid(model.ZIPCode)">Postcode is required.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Website" class="control-label col-md-12">Website (*)</label>
+                    <div class="col-md-12">
+                        <input id="Wesbite" name="Website" type="text"  ng-model="model.Website" class="form-control" placeholder="Website">
+                        <span id="helpBlock2" class="help-block">
+                            Enter an valid Festival URL it can be a Facebook page or some other site which should tell something (start / enddate / artists etc) about the festival.
+                        </span>
+                        <span class="validation" ng-if="!IsValid(model.Website)">Website is required.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Stages" class="control-label col-md-12">Stages (*)</label>
+                    <div class="col-md-12">
+                        <select name="Stages" id="Stages" class="form-control" ng-model="model.Stages">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="InstagramURL" class="control-label col-md-12">Instagram URL</label>
+                    <div class="col-md-12">
+                        <input id="InstagramURL" name="FlickrURL" type="text"  ng-model="model.InstagramURL" class="form-control" placeholder="Instagram URL">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="FacebookURL" class="control-label col-md-12">Facebook URL</label>
+                    <div class="col-md-12">
+                        <input id="FacebookURL" name="FacebookURL" type="text"  ng-model="model.FacebookURL" class="form-control" placeholder="Facebook URL">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="TwitterURL" class="control-label col-md-12">Twitter URL</label>
+                    <div class="col-md-12">
+                        <input id="TwitterURL" name="TwitterURL" type="text"  ng-model="model.TwitterURL" class="form-control" placeholder="Twitter URL">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="YoutubeURL" class="control-label col-md-12">Youtube URL</label>
+                    <div class="col-md-12">
+                        <input id="YoutubeURL" name="YoutubeURL" type="text"  ng-model="model.YoutubeURL" class="form-control" placeholder="Youtube URL">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="FlickrURL" class="control-label col-md-12">Flickr URL</label>
+                    <div class="col-md-12">
+                        <input id="FlickrURL" name="FlickrURL" type="text"  ng-model="model.FlickrURL" class="form-control" placeholder="Flickr URL">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="SpotifyURL" class="control-label col-md-12">Spotify URL</label>
+                    <div class="col-md-12">
+                        <input id="SpotifyURL" name="SpotifyURL" type="text"  ng-model="model.SpotifyURL" class="form-control" placeholder="Spotify URL">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="DeezerURL" class="control-label col-md-12">Deezer URL</label>
+                    <div class="col-md-12">
+                        <input id="DeezerURL" name="SpotifyURL" type="text"  ng-model="model.DeezerURL" class="form-control" placeholder="Deezer URL">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="SpotifyURL" class="control-label col-md-12">Spotify URL</label>
+                    <div class="col-md-12">
+                        <input id="SpotifyURL" name="SpotifyURL" type="text"  ng-model="model.SpotifyURL" class="form-control" placeholder="Spotify URL">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="AfterMovieYouTubeURL" class="control-label col-md-12">Spotify URL</label>
+                    <div class="col-md-12">
+                        <input id="AfterMovieYouTubeURL" name="AfterMovieYouTubeURL" type="text"  ng-model="model.AfterMovieYouTubeURL" class="form-control" placeholder="After Movie YouTube URL">
+                        <span id="helpBlock2" class="help-block">
+                            The aftermovie URL of last year. This URL should be the embedded youtube URL (in Youtube select -> share -> embedded -> copy iframe source URL).
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <a ng-click="$event.preventDefault();vm.SaveTmp();" theme="button,button-hover" value="Save temporary" class="btn btn-default">
+                        <i class="fa fa-save"></i>
+                        <span>Save temporary</span>
+                    </a>
+                    <a ng-click="$event.preventDefault();vm.DoAddFestival();" theme="button,button-hover" class="btn btn-default">
+                        <i class="fa fa-save"></i>
+                        <span>Save</span>
+                    </a>
+                    <a ng-click="$event.preventDefault();vm.CancelAddFestival();" theme="button,button-hover" class="btn btn-default">
+                        <i class="fa fa-times-circle"></i>
+                        <span>Cancel</span>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

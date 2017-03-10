@@ -1,0 +1,40 @@
+﻿<md-dialog aria-label="EDIT FESTIVAL DATE" flex="50">
+    <div class="card">
+        <div class="card-header">
+            <span class="h5"></span>EDIT FESTIVAL DATE
+        </div>
+        <div class="card-block" ng-if="IsLoading==true">
+            <ng-include src="'/Scripts/Shared/Views/loader.html'" ng-if="IsLoading==true"></ng-include>
+        </div>
+        <div class="card-block" ng-if="IsLoading==false">
+            <div class="form-group">
+                <label>Start date</label>
+                <std-date-picker ng-model="model.StartDate" std-label="Starts" id="StartDate">
+                </std-date-picker>
+            </div>
+            <div class="form-group">
+                <label>End date</label>
+                <std-date-picker ng-model="model.EndDate" std-label="Ends" id="EndDate">
+                </std-date-picker>
+            </div>
+            <!--<div flex="100">
+            <md-datepicker ng-model="model.StartDate" md-placeholder="Start date"
+            md-min-date="minDate" md-max-date="maxDate"></md-datepicker>
+            <input class="form-control" type="text" ng-model="StartTime" ng-init="GetFieldState(this, 'StartTime')" ng-blur="SaveFieldState(this, 'StartTime', model.StartTime)" placeholder="00:00" />
+        </div>
+        <div flex="100">
+            <md-datepicker ng-model="model.EndDate" md-placeholder="End date"
+                           md-min-date="minDate" md-max-date="maxDate"></md-datepicker>
+            <input class="form-control" type="text" ng-model="EndTime" ng-init="GetFieldState(this, 'EndTime')" ng-blur="SaveFieldState(this, 'EndTime', model.EndTime)" placeholder="00:00" />
+        </div>-->
+
+            <a href="#" class="btn btn-danger pull-right" ng-click="$event.preventDefault();DoCancelCRUD(this)">
+                CANCEL
+            </a>
+            <a href="#" class="btn btn-success pull-right" ng-click="$event.preventDefault();DoSaveEdit(this)">
+                SAVE
+            </a>
+        </div>
+    </div>
+
+</md-dialog>

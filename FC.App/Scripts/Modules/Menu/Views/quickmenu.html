@@ -1,0 +1,22 @@
+﻿<div class="card quickmenu">
+    <div class="card-header">
+        <span class="h5">ACTIONS</span>
+    </div>
+    <div class="card-block">
+        <ul>
+            <li ng-repeat="s in MenuSections">
+                <span class="h5">{{s.Name}}</span>
+                <ul>
+                    <li ng-repeat="mi in s.MenuItems">
+                        <a href="/#{{mi.URL}}" ng-if="!mi.OnClick">
+                            <i class="fa {{mi.FAIcon}}"></i> {{mi.Name}}
+                        </a>
+                        <a href="#" ng-if="mi.OnClick" ng-click="$event.preventDefault();vm.HandleMIClick(mi.OnClick)">
+                            <i class="fa {{mi.FAIcon}}"></i> {{mi.Name}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

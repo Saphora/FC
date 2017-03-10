@@ -1,0 +1,81 @@
+﻿module FC.Shared.Models {
+    import CM = FC.Core.CoreModel;
+    import INT = FC.Shared.Interfaces;
+    import MODELS = FC.Shared.Models;
+    import MODULES = FC.Modules;
+    import UTIL = FC.Shared.Util;
+    export class UFestival  implements INT.IBaseModel {        
+        public constructor() {
+        }
+
+       public DateExplosion: FC.Shared.ViewModels.DateVM;
+       public MediaDirectoryID: string;
+       public Album: MediaDirectory;
+       public SocialProfiles: Array<SocialProfile>;
+       public Tickets: Array<FestivalTicket>;
+       public ProfileImageID: string;
+       public ProfileImage: Media;
+       public Thumbnail: Media;
+       public ThumbnailID: string;
+       public FestivalLocationID: string;
+       public FestivalLocation: Location;
+       public FestivalID: string;
+       public CountryID: string;
+       public ContentType: string;
+       public MetaKeys: string;
+       public MetaDescription: string;
+       public Author: string;
+       public Title: string;
+       public OrderDate: number;
+       public DisplayDate: string;
+       public ShortText: string;
+       public DetailText: string;
+       public Link: string;
+       public ShowReadMore: boolean;
+       public SortOrder: number;
+       public IsSoldOut: string;
+       public Rating: string;
+       public Name: string;
+       public LogoID: string;
+       public IndoorOutdoor: string;
+       public Country: INT.IUCountry;
+       public City: string;
+       public Location: string;
+       public TicketPrice: number;
+       public DailyTicketPrice: number;
+       public Visitors: string;
+       public StartDate: Date;
+       public StartTime: string;
+       public EndDate: Date;
+       public EndTime: string;
+       public CampingAvailable: string;
+       public Genres: Array<number>;
+       public IsTopFestival: boolean;
+       public FacebookURL: string;
+       public TwitterURL: string;
+       public YoutubeURL: string;
+       public FlickrURL: string;
+       public DeezerURL: string;
+       public MySpaceURL: string;
+       public SoundCloudURL: string;
+       public InstagramURL: string;
+       public Description: string;
+       public Artists: Array<UArtist>;
+       public Address: string;
+       public ZIPCode: string;
+       public Website: string;
+       public Stages: number;
+       public StageList: List<Stage>;
+       public AftermovieYoutubeURL: string;
+       public CarInfo: string;
+       public BikeInfo: string;
+       public TaxiInfo: string;
+       public CultureStartDate: string;
+       public CultureEndDate: string;
+       public CalcPrice: string;
+       public CalcDailyPrice: string;
+       public FriendlyStartDate: SimpleDateTime;
+       public FriendlyEndDate: SimpleDateTime;
+       public SafeLocation: string;
+    }  
+}

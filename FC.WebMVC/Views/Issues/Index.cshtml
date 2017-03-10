@@ -1,0 +1,27 @@
+﻿@model FC.Shared.Entities.GenericMessage
+
+@section META {
+    <title>FESTIVAL CALENDAR | Discover the most amazing festivals world wide!</title>
+    <meta property="og:url" content="http://festival-calendar.nl/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FESTIVAL CALENDAR | Discover the most amazing festivals world wide!" />
+    <meta property="og:description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+    <meta property="og:image" content="~/Resources/images/fc-icon.png" />
+    <meta name="keywords" content="Festival,Calendar,Events,Artists,Social,Platform,Manage,Profile,Agenda" />
+    <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+}
+
+<div class="center-block">
+    <div class="card">
+        <div class="card-header">
+            <span class="h5">LET US KNOW</span>
+        </div>
+        <div class="card-block">
+            <p>
+                It is possible that some functionality is missing or currently not working, by the lack of resources and time.
+                We are aiming to deploy a new version of Festival Calendar every three weeks. Please report your problem or idea by using the form below.
+            </p>
+            @Html.Partial("Create", Model)
+        </div>
+    </div>
+</div>

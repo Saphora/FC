@@ -1,0 +1,39 @@
+﻿<div class="card-header">
+    <span class="h5">WHERE</span>
+    <a href="#" ng-click="$event.preventDefault();DoStartEdit('location', this, $event)" for-roles="ADMIN">
+        <i class="fa fa-edit"></i>
+    </a>
+</div>
+<div class="card-block location-card" ng-if="IsLoading==false">
+    <div class="img-wrapper">
+        <img ng-src="{{MediaURLRoot}}/{{Location.ThumbnailID}}.img?&Width=372" ng-if="Location.ThumbnailID" />
+        <span class="preview full-width" ng-if="!Location.ThumbnailID">
+            <i class="fa fa-ban" ng-if="!Location.ThumbnailID"></i>
+            <br ng-if="!Location.ThumbnailID" />
+            <span ng-if="!Location.ThumbnailID">Image not set.</span>
+        </span>
+    </div>
+    <div class="buttons">
+        <a href="/#/details/location/{{Location.LocationID}}" class="btn-sm btn-danger">
+            MORE INFO
+        </a>
+    </div>
+    <div class="content">
+        <div class="text">
+            <span class="title">
+                <b>{{Location.LocationName.toUpperCase()}}</b>
+            </span>
+            <br />
+            <span class="address">
+                {{Location.Address.toUpperCase()}}<br />
+                {{Location.ZIPCode.toUpperCase()}}, {{Location.City.toUpperCase()}}<br />
+                {{Location.Country.Name.toUpperCase()}}<br />
+                [T] - {{Location.Phone}}<br />
+                [E] - <a href="mailto://{{Location.Email}}">{{Location.Email}}</a>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="card-block location-card" ng-if="IsLoading==true">
+    <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+</div>

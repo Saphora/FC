@@ -1,0 +1,37 @@
+﻿<md-dialog aria-label="EDIT FESTIVAL DATE" flex="80">
+    <div class="card" id="GenreFilterControl" ng-controller="FC.Modules.Genres.Controllers.GenreFilterController as filterCtr">
+        <div class="card-header">
+            <span class="h5">
+                Select your favorite genres
+            </span>
+        </div>
+        <div class="card-block" ng-if="IsLoading==true">
+            <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+        </div>
+        <div class="card-block" ng-if="IsLoading==false">
+            <div class="col-xs-24 h5">Most popular genres</div>
+            <ul>
+                <li ng-repeat="Genre in SysGenres" class="col-xs-24 col-sm-12 col-md-12 col-lg-4 col-xl-4" ng-if="Genre.IsPopular==true">
+                    <a href="#" ng-click="$event.preventDefault();ToggleGenre(this, Genre)">
+                        <i ng-class="{'fa fa-square-o': IsActive(Genre) == false, 'fa fa-check-square-o':IsActive(Genre)==true}"></i><span>{{Genre.Name}}</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="col-xs-24 h5">Other genres</div>
+            <ul>
+                <li ng-repeat="Genre in SysGenres" class="col-xs-24 col-sm-12 col-md-12 col-lg-4 col-xl-4" ng-if="Genre.IsPopular==false">
+                    <a href="#" ng-click="$event.preventDefault();ToggleGenre(this, Genre)">
+                        <i ng-class="{'fa fa-square-o': IsActive(Genre) == false, 'fa fa-check-square-o':IsActive(Genre) == true}"></i><span>{{Genre.Name}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-footer">
+            <div class="pull-right">
+                <a href="#" class="btn-sm btn-info" ng-click="$event.preventDefault();Reset(this)"><i class="fa fa-refresh"></i> Reset</a>
+                <a href="#" class="btn-sm btn-danger" ng-click="$event.preventDefault();Close(this)"><i class="fa fa-remove"></i> Cancel</a>
+                <a href="#" class="btn-sm btn-success" ng-click="$event.preventDefault();Save(this)"><i class="fa fa-save"></i> Save</a>
+            </div>
+        </div>
+    </div>
+</md-dialog>

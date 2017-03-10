@@ -1,0 +1,107 @@
+﻿<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5">Add festival - step 2</span>
+            </div>
+            <div class="card-block">
+                <form class="form" role="form">
+                    <div class="form-group">
+                        <label for="Visitors" class="col-xs-24 dpgroup-label">Visitor range</label>
+                        <select class="form-control" ng-model="model.Visitors"  ng-init="GetFieldState(this, 'Visitors')" ng-blur="SaveFieldState(this, 'Visitors', model.Visitors)">
+                            <option value="Unknown" selected="selected">Select visitor range</option>
+                            <option value="100-500">100-500</option>
+                            <option value="500-1K">500 - 1K</option>
+                            <option value="1K-5K">1K - 5K</option>
+                            <option value="5K-10K">5K - 10K</option>
+                            <option value="10K-50K">10K - 50K</option>
+                            <option value="50K-100K">50K - 100K</option>
+                            <option value="100K+">100K+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Stages" class="col-xs-24 dpgroup-label">How many stages?</label>
+                        <input class="form-control" type="number" value="1" ng-model="model.Stages">
+                        <!--<select class="form-control" ng-model="model.Stages"  ng-init="GetFieldState(this, 'Stages')" ng-blur="SaveFieldState(this, 'Stages', model.Stages)">
+                            <option value="0" selected="selected">Select stages</option>
+
+                        </select>-->
+                    </div>
+                    <div class="form-group">
+                        <label for="Stages" class="col-xs-24 dpgroup-label">Indoor / outdoor</label>
+                        <select class="form-control" ng-model="model.IndoorOutdoor"  ng-init="GetFieldState(this, 'IndoorOutdoor')" ng-blur="SaveFieldState(this, 'IndoorOutdoor', model.IndoorOutdoor)">
+                            <option value="Indoor">Indoor</option>
+                            <option value="Outdoor">Outdoor</option>
+                            <option value="Both" selected="selected">Both</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group media-picker" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <span class="preview">
+                                    <img ng-src="{{FestivalLogoPath}}" ng-if="FestivalLogoPath" />
+                                    <i class="fa fa-ban" ng-if="!FestivalLogoPath"></i>
+                                    <br ng-if="!FestivalLogoPath" />
+                                    <span ng-if="!FestivalLogoPath">Not specified</span>
+                                </span>
+                            </div>
+                            <div class="col-xs-12">
+                                <a href="#" class="btn btn-default" ng-click="$event.preventDefault();mmc.OpenMediaModal(760,'FestivalLogoSaved')">
+                                    <i class="fa fa-hand-rock-o" aria-hidden="true"></i>Logo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group generic-picker" ng-controller="FC.Modules.Artists.Controllers.ArtistModalController as amctr">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <a href="#" class="btn btn-default" ng-click="$event.preventDefault();amctr.OpenArtistPicker(this, 760,'ArtistPickerSaved', vm.$scope.model.Artists);">
+                                    <i class="fa fa-hand-rock-o" aria-hidden="true"></i> Performers
+                                </a>
+                                <a href="#" class="btn btn-danger" ng-if="SelectedHidden==true" ng-click="$event.preventDefault();ToggleSelected(this,false)">
+                                    <i class="fa fa-eye" aria-hidden="true"></i> Show
+                                </a>
+
+                                <a href="#" class="btn btn-danger" ng-if="SelectedHidden==false" ng-click="$event.preventDefault();ToggleSelected(this,true)">
+                                    <i class="fa fa-eye-slash" aria-hidden="true"></i> Hide
+                                </a>
+                            </span>
+                            <input type="text" class="form-control" disabled="disabled" placeholder="{{vm.$scope.model.Artists.length}} selected" ng-if="vm.$scope.model.Artists">
+                            <input type="text" class="form-control" disabled="disabled" placeholder="0 Selected" ng-if="!vm.$scope.model.Artists">
+                        </div>
+                        <ul ng-if="SelectedHidden==false">
+                            <li ng-repeat="artist in vm.$scope.model.Artists">
+                                <a class="btn btn-default btn-sm" href="#" ng-click="$event.preventDefault();amctr.Deactivate(this, artist, 'ArtistPickerSaved', vm.$scope.model.Artists)">
+                                    <i class="fa fa-trash"></i> {{artist.Name}}
+                                </a>
+                            </li>
+                        </ul>
+                        <input id="Artists" name="Artists" type="hidden" ng-change="Validate(vm.$scope.model.Artists)" ng-model="vm.$scope.model.Artists" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="Description" name="Description" type="text"  ng-model="vm.$scope.model.Description" ng-init="GetFieldState(this, 'Description')" ng-blur="SaveFieldState(this, 'Description', model.Description)" class="form-control" placeholder="Tell about the festival in max. 20 lines.">
+                        </textarea>
+                    </div>
+                    <a href="/#/festival/add/3" class="btn btn-danger next" ng-if="IsCreating" ng-click="SaveFormState(this)">
+                        Next
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                    <a href="/#/festival/edit/{{model.FestivalID}}/3" class="btn btn-danger next" ng-if="IsEditing" ng-click="SaveFormState(this)">
+                        Next
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                    <a href="/#/festival/add/1" class="btn btn-danger next" ng-if="IsCreating" ng-click="SaveFormState(this)">
+                       Back
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+                    <a href="/#/festival/edit/{{model.FestivalID}}/1" class="btn btn-danger next" ng-if="IsEditing" ng-click="SaveFormState(this)">
+                        Back
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <ng-include src="'/Scripts/Modules/Festival/Views/wizard/FestivalPreview.html'"></ng-include>
+</div>

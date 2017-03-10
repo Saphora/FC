@@ -1,0 +1,51 @@
+﻿<!--<div class="file-container" ng-init="vm.initAdvancedUpload(this)" ng-if="IsAdvancedUpload==true &&  !IsLoading">
+    <h4>Upload media</h4>
+    <p>Drag your file(s) to the box below.</p>
+    <form enctype="multipart/form-data" class="dropzone">
+        <p>
+            <i class="fa fa-upload"></i><br />
+            Choose file or drop them here.
+        </p>
+    </form>
+    <a href="#" ng-click="$event.preventDefault();DoCancelCRUD(this)" class="btn btn-danger">
+        <i class="fa fa-times-circle"></i>
+        <span> Cancel</span>
+    </a>
+</div>-->
+
+<iframe src="/Scripts/Modules/Media/Views/files.html" id="UploadCtrl" name="files_frame" onload="window.dispatchEvent(new Event('iframeSrcChanged'));" onchange="window.dispatchEvent(new Event('iframeChanged'))" style="width:0;height:0;visibility:hidden;"></iframe>
+<form enctype="multipart/form-data" id="MediaModalForm" action="{{getUploadURL(DirectoryID)}}" target="files_frame" method="post">
+
+        <input type="hidden" name="Author" ng-model="CurrentUserID" />
+        <input type="hidden" name="DirectoryID" ng-model="model.DirectoryID" />
+        <input id="fileUploader" type="file" name="Media[]" ng-change="DoSubmit()" ng-model="FileName" class="fake-hidden" placeholder="Select file" />
+
+</form>
+
+<!--<form class="festival-form" role="form" ng-if="!IsDeleting && !IsCreating && (IsMediaDirCreating || IsMediaDirEditing)">
+    <h4 ng-if="IsMediaDirCreating">Create new directory</h4>
+    <h4 ng-if="IsMediaDirEditing">Edit directory {{ActiveDir.Name}}</h4>
+    <p>Enter a directory name with max. 50 characters.</p>
+    <div class="form-group">
+        <input id="ParentID" name="ParentID" type="hidden" ng-model="DirectoryModel.DirectoryID" ng-if="IsMediaDirEditing" />
+        <input id="AuthorID" name="ParentID" type="hidden" ng-model="UserID" />
+        <input type="text" name="Name" class="form-control" ng-model="DirectoryModel.Name" placeholder="Directory name" />
+    </div>
+    <div class="form-group">
+        <a href="#" class="btn btn-success" ng-click="$event.preventDefault();DoSaveCreateMediaDir(this, DirectoryModel)" ng-if="IsMediaDirCreating">
+            <i class="fa fa-save">
+            </i>
+            <span> Save</span>
+        </a>
+        <a href="#" class="btn btn-success" ng-click="$event.preventDefault();DoSaveEditMediaDir(this, DirectoryModel)" ng-if="IsMediaDirEditing">
+            <i class="fa fa-save">
+            </i>
+            <span> Edit</span>
+        </a>
+        <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();DoCancelCRUD(this)">
+            <i class="fa fa-times-circle">
+            </i>
+            <span> Cancel</span>
+        </a>
+    </div>
+</form>-->

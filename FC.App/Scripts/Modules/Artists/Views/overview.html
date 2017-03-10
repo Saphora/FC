@@ -1,0 +1,158 @@
+﻿<div class="row overview-wrapper">
+    <div class="col-xl-18 col-lg-18 col-md-16 col-sm-24 col-xs-24">
+        <div class="card overview">
+            <div class="card-header">
+                <span class="h5">ARTISTS OVERVIEW</span>
+            </div>
+            <div class="card-block">
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="key" ng-change="vm.DoSort(key)" placeholder="Search by artist name" />
+                    </div>
+                </form>
+                <div class="sorting">
+                    <span>
+                        <a href="/#/artists/filter/0-9" ng-click="$event.preventDefault();vm.DoSort('0-9')">#</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/a" ng-click="$event.preventDefault();vm.DoSort('A')">A</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/b" ng-click="$event.preventDefault();vm.DoSort('B')">B</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/c" ng-click="$event.preventDefault();vm.DoSort('C')">C</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/d" ng-click="$event.preventDefault();vm.DoSort('D')">D</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/e" ng-click="$event.preventDefault();vm.DoSort('E')">E</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/f"  ng-click="$event.preventDefault();vm.DoSort('F')">F</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/g"  ng-click="$event.preventDefault();vm.DoSort('G')">G</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/h" ng-click="$event.preventDefault();vm.DoSort('H')">H</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/i" ng-click="$event.preventDefault();vm.DoSort('I')">I</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/j" ng-click="$event.preventDefault();vm.DoSort('J')">J</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/k" ng-click="$event.preventDefault();vm.DoSort('K')">K</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/l" ng-click="$event.preventDefault();vm.DoSort('L')">L</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/m" ng-click="$event.preventDefault();vm.DoSort('M')">M</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/n" ng-click="$event.preventDefault();vm.DoSort('N')">N</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/o" ng-click="$event.preventDefault();vm.DoSort('O')">O</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/p" ng-click="$event.preventDefault();vm.DoSort('P')">P</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/q" ng-click="$event.preventDefault();vm.DoSort('Q')">Q</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/r" ng-click="$event.preventDefault();vm.DoSort('R')">R</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/s" ng-click="$event.preventDefault();vm.DoSort('S')">S</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/t" ng-click="$event.preventDefault();vm.DoSort('T')">T</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/u" ng-click="$event.preventDefault();vm.DoSort('U')">U</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/v" ng-click="$event.preventDefault();vm.DoSort('V')">V</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/w" ng-click="$event.preventDefault();vm.DoSort('W')">W</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/x" ng-click="$event.preventDefault();vm.DoSort('X')">X</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/y" ng-click="$event.preventDefault();vm.DoSort('Y')">Y</a>
+                    </span>
+                    <span>
+                        <a href="/#/artists/filter/z" ng-click="$event.preventDefault();vm.DoSort('Z')">Z</a>
+                    </span>
+                </div>
+                <table class="scrollable" ng-if="IsLoading==false">
+                    <thead>
+                        <tr>
+                            <th for-roles="ALL"></th>
+                            <th></th>
+                            <th>NAME</th>
+                            <th class="hidden-xs">COUNTRY</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="Artist in Artists">
+                            <td for-roles="ALL">
+                                <a href="#" class="fav inactive" ng-if="vm.IsFavorite(Artist.ArtistID, 'ArtistID')==false" ng-click="$event.preventDefault();vm.DoMarkFavorite(Artist.ArtistID,'artist')" title="Mark {{Artist.ArtistName.toUpperCase()}} as favorite."><i class="fa fa-heart"></i></a>
+                                <a href="#" class="fav active" ng-if="vm.IsFavorite(Artist.ArtistID, 'ArtistID')==true" ng-click="$event.preventDefault();vm.DoUnMarkFavorite(Artist.ArtistID)" title="Mark {{Artist.ArtistName.toUpperCase()}} as favorite."><i class="fa fa-heart"></i></a>
+                            </td>
+                            <td>
+                                <a href="#" title="Modify profile picture of {{Artist.ArtistName.toUpperCase()}}" ng-click="$event.preventDefault();vm.DoEdit('logo', this, Artist)" for-roles="ADMIN">
+                                    <img ng-src="{{MediaURLRoot}}/{{Artist.LogoID}}.img?thumb=true" ng-if="Artist.LogoID" />
+                                    <span class="no-image-defined small" ng-if="!Artist.LogoID">
+                                        <i class="fa fa-ban"></i>
+                                    </span>
+                                </a>
+                                <a href="/#/details/artist/{{Artist.ArtistID}}" title="Go to details of artist {{Artist.ArtistName.toUpperCase()}}" not-for-roles="ADMIN">
+                                    <img ng-src="{{MediaURLRoot}}/{{Artist.LogoID}}.img?thumb=true" ng-if="Artist.LogoID" />
+                                    <span class="no-image-defined small" ng-if="!Artist.LogoID">
+                                        <i class="fa fa-ban"></i>
+                                    </span>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/#/details/artist/{{Artist.ArtistID}}" title="Go to details of artist {{Artist.ArtistName.toUpperCase()}}.">{{Artist.ArtistName.toUpperCase()}}</a>
+                            </td>
+                            <td class="hidden-xs">
+                                {{Artist.CountryName}}
+                            </td>
+                            <td>
+                                <a for-roles="ADMIN" ng-click="$event.preventDefault();vm.DoDelete(Artist)"  title="Remove artist {{Artist.ArtistName.toUpperCase()}}." class="control-icon delete" href="/delete/artist/{{Artist.ArtistID}}">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <a for-roles="ADMIN" ng-click="$event.preventDefault();vm.DoUnPublish(Artist)"  title="Take artist {{Artist.ArtistName.toUpperCase()}} offline." href="/publish/artist/{{Artist.ArtistID}}"  class="control-icon unpublish"  ng-if="Artist.IsPublished==true">
+                                    <i class="fa fa-globe"></i>
+                                </a>
+                                <a for-roles="ADMIN" ng-click="$event.preventDefault();vm.DoPublish(Artist)"  title="Bring artist {{Artist.ArtistName.toUpperCase()}} online." href="/publish/artist/{{Artist.ArtistID}}"  class="control-icon publish"  ng-if="Artist.IsPublished==false">
+                                    <i class="fa fa-globe"></i>
+                                </a>
+                                <a for-roles="ADMIN" href="/#/details/artist/{{Artist.ArtistID}}" title="Edit {{Artist.ArtistName.toUpperCase()}}"  class="control-icon edit" >
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-xs-24" ng-if="ShowMore && !IsLoading">
+                    <a href="{{ShowMoreURL}}" class="btn btn-danger" name="#bottom" style="width:252px;" title="Show more artists">SHOW MORE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 col-xs-24">
+        <ng-include src="'/scripts/modules/menu/views/quickmenu.html'" ng-controller="FC.Modules.Menu.Controllers.QuickMenuController as vm" ng-init="vm.init('artist')"/>
+    </div>
+</div>

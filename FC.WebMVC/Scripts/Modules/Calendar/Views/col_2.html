@@ -1,0 +1,125 @@
+﻿<div class="block-item col-sm-12" ng-repeat="(FestivalKey,Festival) in Festivals_COL2">
+
+    <a href="{{vm.GetFestivalURL(Festival)}}" class="festival has-controls link-wrapper">
+        <div class="header navigation" theme="header,button-hover">
+            <h1>
+                <span class="fc-icon small"></span>
+                <i class="fa fa-chevron-circle-right"></i>
+                <span class="title">{{Festival.Name}}</span>
+            </h1>
+        </div>
+        <div class="body">
+            <div class="inner">
+                <div class="logo logo-lg visible-lg  hidden-md hidden-sm hidden-xs" backImg="$0$.img?&thumb=true" watch="{{Festival.Logo}}"></div>
+                <div class="logo logo-sm visible-md hidden-lg visible-sm visible-xs" backImg="$0$.img?&thumb=true" watch="{{Festival.Logo}}"></div>
+                <div class="body">
+                    <div class="iconvalue-item">
+                        <i theme="text-default" class="fa fa-map-marker"></i>
+                        <span class="txt">
+                            <span>{{Festival.City}},</span><span>{{Festival.Country.Name}}</span>
+                        </span>
+                    </div>
+                    <div class="iconvalue-item" ng-model="Festival.Genres">
+                        <i theme="text-default" class="fa fa-heart"></i>
+                        <span class="txt">
+                            <span class="bg-label" ng-if="Key <= 1 && Genre.Name != 'Default'" theme="button" ng-repeat="(Key,Genre) in Festival.Genres">
+                                {{Genre.Name}}
+                            </span>
+                            <span class="bg-label" ng-if="Festival.Genres.length >2" theme="button">
+                                +{{Festival.Genres.length-2}}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="iconvalue-item" ng-if="Festival.DayCount >= 1">
+                        <i theme="text-default" class="fa fa-calendar"></i>
+                        <span class="txt">
+                            {{Festival.CultureStartDate}} - {{Festival.CultureEndDate}}
+                        </span>
+                    </div>
+                    <div class="iconvalue-item">
+                        <i theme="text-default" class="fa fa-clock-o"></i>
+                        <span class="txt" ng-if="Festival.DayCount == 1">
+                            {{Festival.DayCount}} Day
+                        </span>
+                        <span class="txt" ng-if="Festival.DayCount > 1">
+                            {{Festival.DayCount}} Days
+                        </span>
+                    </div>
+                    <div class="iconvalue-item" ng-if="Festival.Visitors != 0">
+                        <i theme="text-default" class="fa fa-group"></i>
+                        <span class="txt">
+                            {{Festival.Visitors}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <div class="controls" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr" ng-init="rctr.GetRates(Festival.FestivalID,'festival')">
+        <div class="rating" theme="rating">
+            <span class="count" theme="count" ng-if="Rating.DisplayCount == '0'">
+                -
+            </span>
+            <span class="count" theme="count" ng-if="Rating.DisplayCount != '0'">
+                {{Rating.DisplayCount}}
+            </span>
+            <a href="#" id="star_{{Festival.FestivalID}}_1" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',1)">
+                <i class="star active fa fa-star" ng-if="Rating.Star1Active"></i>
+                <i class="star inactive fa fa-star" ng-if="!Rating.Star1Active"></i>
+            </a>
+            <a href="#" id="star_{{Festival.FestivalID}}_2" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',2)">
+                <i class="star active fa fa-star" ng-if="Rating.Star2Active"></i>
+                <i class="star inactive fa fa-star" ng-if="!Rating.Star2Active"></i>
+            </a>
+            <a href="#" id="star_{{Festival.FestivalID}}_3" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',3)">
+                <i class="star active fa fa-star" ng-if="Rating.Star3Active"></i>
+                <i class="star inactive fa fa-star" ng-if="!Rating.Star3Active"></i>
+            </a>
+            <a href="#" id="star_{{Festival.FestivalID}}_4" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',4)">
+                <i class="star active fa fa-star" ng-if="Rating.Star4Active"></i>
+                <i class="star inactive fa fa-star" ng-if="!Rating.Star4Active"></i>
+            </a>
+            <a href="#" id="star_{{Festival.FestivalID}}_5" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',5)">
+                <i class="star active fa fa-star" ng-if="Rating.Star5Active"></i>
+                <i class="star inactive fa fa-star" ng-if="!Rating.Star5Active"></i>
+            </a>
+            <!--Example of star
+            Example of star-half
+            Example of star-half-empty (alias)
+            Example of star-half-full (alias)
+            Example of star-half-o
+            Example of star-o-->
+        </div>
+        <div class="social">
+            <a ng-href="{{Festival.YoutubeURL}}" target="_blank" ng-if="Festival.YoutubeURL.length > 0">
+                <i class="fa fa-youtube-square" theme="text-default"></i>
+            </a>
+            <a ng-href="{{Festival.FacebookURL}}" target="_blank" ng-if="Festival.FacebookURL.length > 0">
+                <i class="fa fa-facebook-square" theme="text-default"></i>
+            </a>
+            <a ng-href="{{Festival.TwitterURL}}" target="_blank" ng-if="Festival.TwitterURL.length > 0">
+                <i class="fa fa-twitter-square" theme="text-default"></i>
+            </a>
+            <a ng-href="{{Festival.SpotifyURL}}" target="_blank" ng-if="Festival.SpotifyURL.length > 0">
+                <i class="fa fa-spotify" theme="text-default"></i>
+            </a>
+            <a ng-href="{{Festival.InstagramURL}}" target="_blank" ng-if="Festival.InstagramURL.length > 0">
+                <i class="fa fa-instagram" theme="text-default"></i>
+            </a>
+        </div>
+    </div>
+    <div class="block-item col-sm-12" ng-if="Col2BannerKey == FestivalKey" style="padding:0;">
+        <div class="header navigation" theme="header,button-hover">
+            <h1>
+                <i class="fa fa-chevron-circle-right"></i>
+                <span class="title">Advertisement</span>
+            </h1>
+        </div>
+        <div class="body campaign" style="padding:0;margin:0">
+            <div class="inner">
+                <div class="banner" ng-if="Col1Banner.ImageURL" backImg="{{Col1Banner.ImageURL}}.img?origin=true" style="height: 243px; width: 100%; text-align:center; font-family:GothamBlack; font-size: 24px;vertical-align:middle;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

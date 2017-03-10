@@ -1,0 +1,36 @@
+﻿<md-dialog aria-label="EDIT FESTIVAL NAME" flex="50">
+    <form ng-cloak>
+        <md-toolbar class="dialog-header">
+            <div class="md-toolbar-tools">
+                <span class="h5">EDIT FESTIVAL NAME</span>
+                <span flex></span>
+                <md-button class="md-icon-button" aria-label="Hide edit festival name." ng-click="Close(this)">
+                    <i class="fa fa-close"></i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content layout-padding>
+            <div class="md-padding">
+                <div layout="row">
+                    <div flex="100">
+                        <div class="form-group">
+                            <input id="Name" name="Name" type="text"  ng-model="model.Name" ng-init="GetFieldState(this, 'Name')" ng-blur="SaveFieldState(this, 'Name', model.Name)" class="form-control" placeholder="Festival name">
+                        </div>
+                    </div>
+                </div>
+                <div layout="row">
+                    <div flex="100" no-padding>
+                        <a href="#" class="btn btn-default absolute-cancel" ng-click="$event.preventDefault();DoCancelCRUD(this)">
+                            <i class="fa fa-save"></i>
+                            CANCEL
+                        </a>
+                        <a href="#" class="btn btn-default absolute-save" ng-click="$event.preventDefault();DoSaveEdit(this)">
+                            <i class="fa fa-save"></i>
+                            SAVE
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

@@ -1,0 +1,16 @@
+﻿<div class="col-sm-12 block-item hidden-xs active-genres-modal" ng-controller="FC.Modules.Filtering.Controllers.FilterController as FilterCtr">
+    <div class="header" theme="header">
+        <h1>
+            <span class="fc-icon small"></span>
+            <span class="title">Your genres</span>
+        </h1>
+    </div>
+    <div class="body min-block-height">
+        <div class="inner active-genres">
+            <a href="#" class="btn btn-default" theme="button,button-hover" ng-repeat="(Key,Genre) in ActiveGenres" ng-click="$event.preventDefault();">
+                {{Genre.Name}}
+                <i class="fa fa-remove"></i>
+            </a>
+        </div>
+    </div>
+</div>

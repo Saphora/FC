@@ -1,0 +1,88 @@
+﻿<!--<ng-include src="'/Scripts/Modules/Countries/Views/country-filter.html'"></ng-include>
+<ng-include src="'/Scripts/Modules/Genres/Views/genre-filter.html'"></ng-include>-->
+<ng-include src="'/Scripts/Shared/Views/loader.html'" ng-if="IsLoading==true"></ng-include>
+
+<div class="row" ng-if="IsLoading == false">
+    <div class="col-xl-18">
+        <div class="card profile-header">
+            <div class="card-header">
+                <span class="h5">
+                    {{Location.LocationName.toUpperCase()}}
+                </span>
+                <div class="rating" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr" ng-init="rctr.GetRates(Location.LocationID,'location')">
+                    <span class="count" theme="count" ng-if="Rating.DisplayCount == '0'">
+                        0
+                    </span>
+                    <span class="count" theme="count" ng-if="Rating.DisplayCount != '0'">
+                        {{Rating.DisplayCount}}
+                    </span>
+                    <a href="#" id="star_{{Location.LocationID}}_1" ng-click="$event.preventDefault();rctr.Rate(Location.LocationID,'location',1)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star1Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star1Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Location.LocationID}}_2" ng-click="$event.preventDefault();rctr.Rate(Location.LocationID,'location',2)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star2Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star2Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Location.LocationID}}_3" ng-click="$event.preventDefault();rctr.Rate(Location.LocationID,'location',3)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star3Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star3Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Location.LocationID}}_4" ng-click="$event.preventDefault();rctr.Rate(Location.LocationID,'location',4)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star4Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star4Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Location.LocationID}}_5" ng-click="$event.preventDefault();rctr.Rate(Location.LocationID,'location',5)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star5Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star5Active"></i>
+                    </a>
+                </div>
+                <a href="#" ng-click="$event.preventDefault();DoEdit('location-name', this, $event)">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </div>
+            <div class="card-block no-padding location-header" backimg="{{ProfileHeaderImg}}">
+                <div class="logo-wrapper" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc">
+                    <div class="mask" ng-click="mmc.OpenMediaModal(760,'LocationLogoSaved',Location.MediaDirectoryID)" for-roles="ADMIN">
+                        <i class="fa fa-camera"></i>
+                    </div>
+                    <img ng-src="{{URLRoot}}/{{Location.ProfileImageID}}.img?thumb=true" class="ct-logo" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-24 col-sm-12 col-md-12 col-lg-8">
+                <div class="card  static no-padding location">
+                    <ng-include src="'/Scripts/modules/location/views/location-card.html'"></ng-include>
+                </div>
+            </div>
+            <div class="col-xs-24 col-sm-12 col-md-8 col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h5">
+                            LOCATION INFO
+                        </span>
+                    </div>
+                    <iframe ng-src="{{Location.MapsURL}}" width="272" height="272" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="row no-margin no-padding">
+            <div class="col-xs-24 col-sm-12 col-md-12 col-lg-8">
+                <div class="card static festival-artist-list  no-padding">
+                    <ng-include src="'/Scripts/modules/artists/views/festival-artists-list.html'"></ng-include>
+                </div>
+            </div>
+            <div class="col-xs-24 col-sm-12 col-md-12 col-lg-8">
+                <div class="card static headlines-list  no-padding">
+                    <ng-include src="'/Scripts/modules/headlines/views/headlines-list.html'"></ng-include>
+                </div>
+            </div>
+        </div>
+        <!--left-->
+    </div>
+    <div class="col-xl-6">
+        <!--right-->
+    </div>
+
+</div>

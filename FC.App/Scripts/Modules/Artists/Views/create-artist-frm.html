@@ -1,0 +1,109 @@
+﻿<div class="col-xs-24" ng-if="IsCreating || IsEditing">
+    <form enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="CountryID">Country </label>
+            <select name="CountryID" class="form-control" ng-model="model.CountryID" ng-init="GetFieldState(this, 'CountryID')" ng-blur="SaveFieldState(this, 'CountryID', model.CountryID)" placeholder="Country">
+                <option ng-repeat="Country in SysCountries" value="{{Country.CountryID}}">
+                    {{Country.Name}}
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input id="Name" name="Name" placeholder="Artist name e.g. Iron Maiden" type="text"  ng-model="model.Name" class="form-control" ng-init="GetFieldState(this, 'Name')" ng-blur="SaveFieldState(this, 'Name', model.Name)">
+        </div>
+        <div class="form-group media-picker" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc">
+            <div class="row">
+                <div class="col-xs-12">
+                    <span class="preview">
+                        <input id="Image" name="Image" type="hidden"  ng-model="model.Image">
+                        <img ng-src="{{ArtistImagePath}}" ng-if="ArtistImagePath && ArtistImagePath.length > 0" />
+                        <i class="fa fa-ban" ng-if="!ArtistImagePath && !ArtistImagePath.length > 0"></i>
+                        <br ng-if="!ArtistImagePath && !ArtistImagePath.length > 0" />
+                        <span ng-if="!ArtistImagePath && !ArtistImagePath.length > 0">Not specified</span>
+                    </span>
+                </div>            
+                <div class="col-xs-12">
+                    <a href="#" class="btn btn-default" ng-click="$event.preventDefault();mmc.OpenMediaModal(760,'ArtistLogoSaved')">
+                        <i class="fa fa-hand-rock-o" aria-hidden="true"></i>Image
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group generic-picker">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <a href="#" class="btn btn-default" ng-click="$event.preventDefault();vm.OpenGenrePicker(this, 760, 'ArtistGenrePickerSaved', model.Genres)">
+                        <i class="fa fa-hand-rock-o" aria-hidden="true"></i> Genres
+                    </a>
+                    <a href="#" class="btn btn-danger" ng-if="SelectedHidden==true" ng-click="$event.preventDefault();ToggleSelected(this,false)">
+                        <i class="fa fa-eye" aria-hidden="true"></i> Show
+                    </a>
+
+                    <a href="#" class="btn btn-danger" ng-if="SelectedHidden==false" ng-click="$event.preventDefault();ToggleSelected(this,true)">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i> Hide
+                    </a>
+                </span>
+
+                <input type="text" class="form-control" disabled="disabled" placeholder="{{model.Genres.length}} selected" ng-if="model.Genres">
+                <input type="text" class="form-control" disabled="disabled" placeholder="0 Selected" ng-if="!model.Genres">
+            </div>
+            <ul ng-if="SelectedHidden==false">
+                <li ng-repeat="Genre in model.Genres">
+                    <a class="btn btn-default btn-sm" href="#" ng-click="$event.preventDefault();gpctr.Deactivate(this, Genre, 'ArtistGenrePickerSaved',model.Genres)">
+                        <i class="fa fa-trash"></i> {{Genre.Name}}
+                    </a>
+                </li>
+            </ul>
+            <input id="Genres" name="Genres" type="hidden" ng-change="Validate(vm.$scope.model.Genres)" ng-model="vm.$scope.model.Genres" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <textarea name="Description" placeholder="Tell in max. 20 lines about the artist." id="Description" ng-model="model.Description" class="form-control" ng-init="GetFieldState(this, 'Description')" ng-blur="SaveFieldState(this, 'Description', model.Description)"></textarea>
+        </div>
+        <div class="form-group">
+            <input id="SoundCloudURL" name="SoundCloudURL" type="text"  ng-model="model.SoundCloudURL" ng-init="GetFieldState(this, 'SoundCloudURL')" ng-blur="SaveFieldState(this, 'SoundCloudURL', model.SoundCloudURL)" class="form-control" placeholder="https://soundcloud.com/*/*">
+        </div>
+        <div class="form-group">
+            <input id="Website" name="Website" type="text"  ng-model="model.Website" ng-init="GetFieldState(this, 'Website')" ng-blur="SaveFieldState(this, 'Website', model.Website)" class="form-control" placeholder="http://website.com">
+        </div>
+        <div class="form-group">
+            <input id="FacebookURL" name="FacebookURL" type="text"  ng-model="model.FacebookURL" ng-init="GetFieldState(this, 'FacebookURL')" ng-blur="SaveFieldState(this, 'FacebookURL', model.FacebookURL)" class="form-control" placeholder="https://facebook.com/*">
+        </div>
+        <div class="form-group">
+            <input id="InstagramURL" name="InstagramURL" type="text"  ng-model="model.InstagramURL" ng-init="GetFieldState(this, 'InstagramURL')" ng-blur="SaveFieldState(this, 'InstagramURL', model.InstagramURL)" class="form-control" placeholder="https://instagram.com/*">
+        </div>
+        <div class="form-group">
+            <input id="Website" name="TwitterURL" type="text"  ng-model="model.TwitterURL" ng-init="GetFieldState(this, 'TwitterURL')" ng-blur="SaveFieldState(this, 'TwitterURL', model.TwitterURL)" class="form-control" placeholder="https://twitter.com/*">
+        </div>
+        <div class="form-group">
+            <input id="YoutubeURL" name="YoutubeURL" type="text"  ng-model="model.YoutubeURL" ng-init="GetFieldState(this, 'YoutubeURL')" ng-blur="SaveFieldState(this, 'YoutubeURL', model.YoutubeURL)" class="form-control" placeholder="https://youtube.com/*">
+        </div>
+        <div class="form-group">
+            <input id="FlickrURL" name="FlickrURL" type="text"  ng-model="model.FlickrURL" ng-init="GetFieldState(this, 'FlickrURL')" ng-blur="SaveFieldState(this, 'FlickrURL', model.FlickrURL)" class="form-control" placeholder="https://flickr.com/*">
+        </div>
+        <div class="form-group">
+            <input id="DeezerURL" name="DeezerURL" type="text"  ng-model="model.DeezerURL" ng-init="GetFieldState(this, 'DeezerURL')" ng-blur="SaveFieldState(this, 'DeezerURL', model.DeezerURL)" class="form-control" placeholder="https://deezer.com/*">
+        </div>
+        <div class="form-group">
+            <input id="MySpaceURL" name="MySpaceURL" type="text"  ng-model="model.MySpaceURL" ng-init="GetFieldState(this, 'MySpaceURL')" ng-blur="SaveFieldState(this, 'MySpaceURL', model.MySpaceURL)" class="form-control" placeholder="https://myspace.com/*">
+        </div>
+        <div class="form-group">
+            <input id="SpotifyURL" name="SpotifyURL" type="text"  ng-model="model.SpotifyURL" ng-init="GetFieldState(this, 'SpotifyURL')" ng-blur="SaveFieldState(this, 'SoundCloudURL', model.SoundCloudURL)" class="form-control" placeholder="https://open.spotify.com/*/*">
+        </div>
+        <div class="col-sm-12">
+            <a ng-click="$event.preventDefault();DoSaveCreate(this);" theme="button,button-hover" class="btn btn-default">
+                <i class="fa fa-save"></i>
+                <span> Save</span>
+            </a>
+            <a ng-click="$event.preventDefault();DoSaveEdit(this);" theme="button,button-hover" class="btn btn-default">
+                <i class="fa fa-save"></i>
+                <span> Edit</span>
+            </a>
+            <a ng-click="$event.preventDefault();DoCancelCRUD(this);" theme="button,button-hover" class="btn btn-default">
+                <i class="fa fa-times-circle"></i>
+                <span> Cancel</span>
+            </a>
+        </div>
+    </form>
+</div>

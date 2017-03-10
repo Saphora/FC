@@ -1,0 +1,62 @@
+﻿@import "../core/var.scss";
+
+.artist-list {
+    float:left;
+    width:100%;
+    *{
+        font-size: 12px;
+    }
+    ul {
+        float:left;
+        list-style:none;
+        margin: 0;
+        padding: 0;
+        border-bottom: 2px solid white;
+        max-height: 180px;
+        overflow-y:hidden;
+        li {
+            float:left;
+            margin-top: 1px;
+            border-bottom: 1px solid $BGInputBorder;
+            padding-bottom: 2px;
+            padding-top: 2px;
+            width:100%;
+            display:block;
+
+            a {
+                font-weight:bold;
+                text-decoration:none;
+                &:hover {
+                    color: #E06246 !important;
+                }
+                color: #333 !important;
+                img {
+                    float:left;
+                    margin-right: 5px;
+                    position:relative;
+                    left: 0;
+                    top: 0;
+                    display:block;
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+            .rating {
+                i.star {
+                    color: #888; 
+                    &.active {
+                        color:#f1c40f;   
+                    }
+                    &:hover {
+                        color:#858200;
+                    }
+                }
+            }
+        }
+    }
+    .btn-sm {
+        text-align:center;
+        display:inline-block;
+        width: 249px !important;
+    }
+}

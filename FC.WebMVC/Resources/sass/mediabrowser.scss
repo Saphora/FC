@@ -1,0 +1,76 @@
+﻿@import "00.vars.scss";
+.mediabrowser {
+    .folder-picker {
+        list-style:none;
+        border: 1px solid #333;
+        padding:10px;
+
+        .media-item {
+            min-width: 120px;
+            min-height:120px;
+            max-width: 120px;
+            max-height:120px;
+            margin-top: 5px;
+            overflow:hidden;
+            img {
+                text-align:center;
+                vertical-align:middle;
+                min-height:75px;
+                max-height:75px;
+                margin: 0;
+                
+            }
+            a {
+                padding-top: 5px;
+                &.active {
+                    height:100%;
+                    width:100%;
+                }
+            }
+        }
+        li {
+            float:left;
+            display:block;
+            width:auto;
+            height:auto;
+            padding: 0;
+            margin-right:10px;
+            margin-top: 10px;
+            a {
+                display:block;
+                text-align:center;
+
+                span {
+                    display:block;
+                    clear:both;
+                    text-align:center;
+                }
+                i {
+                    font-size: 60px;
+                }
+                &.active {
+                    background-color:#999;
+                    color:#fff;
+                }
+                color:#333;
+                &:hover {
+                    text-decoration:none;
+                }
+            }
+            ul {
+                list-style:none;
+            }
+        }
+    
+    }
+
+    .crumb{
+
+        float:left;
+        display:block;
+        width:100%;
+        border: 1px solid #333;
+        @include border-radius(5px);
+        padding:5px;
+    }
+}

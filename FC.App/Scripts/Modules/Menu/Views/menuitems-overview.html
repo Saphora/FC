@@ -1,0 +1,42 @@
+﻿<div class="row overview-wrapper" ng-if="IsAuthorized">
+    <div class="col-xl-18 col-lg-18 col-md-16 col-sm-24 col-xs-24">
+        <div class="card overview">
+            <div class="card-header">
+                <span class="h5">MENU ITEMS OVERVIEW</span>
+            </div>
+            <div class="card-block">
+                <table class="scrollable">
+                    <thead>
+                        <tr>
+                            <th>NAME</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="MenuItem in MenuItems">
+                            <td>
+                                <a href="/#/menus/menuitems/edit/{{MenuItem.MenuItemID}}" title="Go to details of menu item {{MenuItem.Name.toUpperCase()}}.">{{MenuItem.Name.toUpperCase()}}</a>
+                            </td>
+                            <td>{{MenuItem.PageKey}}</td>
+                            <td>
+                                <a for-roles="ADMIN" ng-click="$event.preventDefault();vm.DoDeleteMenuItem(MenuItem)" title="Remove menu item {{MenuItem.Name.toUpperCase()}}." class="control-icon delete" href="#">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <a for-roles="ADMIN" href="/#/menus/menuitems/edit/{{MenuItem.MenuItemID}}" title="Edit {{MenuItem.Name.toUpperCase()}}" class="control-icon edit">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-xs-24" ng-if="ShowMore && !IsLoading">
+                    <a href="{{ShowMoreURL}}" class="btn btn-danger" name="#bottom" style="width:252px;" title="Show more menu items">SHOW MORE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 col-xs-24">
+        <ng-include src="'/scripts/modules/menu/views/quickmenu.html'" ng-controller="FC.Modules.Menu.Controllers.QuickMenuController as vm" ng-init="vm.init()" />
+    </div>
+</div>

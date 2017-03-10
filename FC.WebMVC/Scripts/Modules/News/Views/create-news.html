@@ -1,0 +1,106 @@
+﻿<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="fc-icon"></i>
+                <span class="h5">Add new news item.</span>
+                <i class="fa fa-circle-plus"></i>
+            </div>
+            <div class="card-block">
+                <form class="form" role="form">
+                    <div class="form-group">
+                        <input id="Title" name="Title" type="text"  ng-model="model.Title" ng-init="GetFieldState(this, 'Title')" ng-blur="SaveFieldState(this, 'Title', model.Title)" class="form-control" placeholder="Title">
+                    </div>
+                    <div class="form-group media-picker" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <span class="preview">
+                                    <img ng-src="{{FestivalLogoPath}}" ng-if="FestivalLogoPath" />
+                                    <i class="fa fa-ban" ng-if="!FestivalLogoPath"></i>
+                                    <br ng-if="!FestivalLogoPath" />
+                                    <span ng-if="!FestivalLogoPath">Not specified</span>
+                                </span>
+                            </div>
+                            <div class="col-xs-12">
+                                <a href="#" class="btn btn-default" ng-click="$event.preventDefault();mmc.OpenMediaModal(760,'NewsImageSaved')">
+                                    <i class="fa fa-hand-rock-o" aria-hidden="true"></i>Logo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group generic-picker" ng-controller="FC.Modules.Genres.Controllers.GenrePickerController as gpctr">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <a href="#" class="btn btn-default" ng-click="$event.preventDefault();gpctr.OpenGenrePicker(this,760,'GenrePickerSaved', vm.$scope.model.Genres)">
+                                    <i class="fa fa-hand-rock-o" aria-hidden="true"></i> Genres
+                                </a>
+                                <a href="#" class="btn btn-danger" ng-if="SelectedHidden==true" ng-click="$event.preventDefault();ToggleSelected(this,false)">
+                                    <i class="fa fa-eye" aria-hidden="true"></i> Show
+                                </a>
+
+                                <a href="#" class="btn btn-danger" ng-if="SelectedHidden==false" ng-click="$event.preventDefault();ToggleSelected(this,true)">
+                                    <i class="fa fa-eye-slash" aria-hidden="true"></i> Hide
+                                </a>
+                            </span>
+
+                            <input type="text" class="form-control" disabled="disabled" placeholder="{{model.Genres.length}} selected" ng-if="model.Genres">
+                            <input type="text" class="form-control" disabled="disabled" placeholder="0 Selected" ng-if="!model.Genres">
+                        </div>
+                        <ul ng-if="SelectedHidden==false">
+                            <li ng-repeat="Genre in model.Genres">
+                                <a class="btn btn-default btn-sm" href="#" ng-click="$event.preventDefault();gpctr.Deactivate(this, Genre,'GenrePickerSaved',model.Genres)">
+                                    <i class="fa fa-trash"></i> {{Genre.Name}}
+                                </a>
+                            </li>
+                        </ul>
+                        <input id="Genres" name="Genres" type="hidden" ng-change="Validate(vm.$scope.model.Genres)" ng-model="vm.$scope.model.Genres" class="form-control">
+                    </div>
+                    <div class="form-group datepicker col-xl-24 col-md-24 dpgroup">
+                        <label for="EndDate" class="dpgroup-label">End date</label><br />
+                        <div class="col-xs-8 dpgroup">
+                            <select class="form-control" ng-model="EndYear" ng-change="DoEndDateBlur(this);GetDaysInMonthEnd(this,  EndYear, EndMonth)">
+                                <option value="{{Now.getFullYear()-1}}">{{Now.getFullYear()-1}}</option>
+                                <option value="{{Now.getFullYear()}}">{{Now.getFullYear()}}</option>
+                                <option value="{{Now.getFullYear()+1}}">{{Now.getFullYear()+1}}</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-8 dpgroup">
+                            <select class="form-control" ng-model="EndMonth" ng-change="DoEndDateBlur(this);GetDaysInMonthEnd(this,  EndYear, EndMonth)">
+                                <option value="1">jan</option>
+                                <option value="2">feb</option>
+                                <option value="3">mar</option>
+                                <option value="4">apr</option>
+                                <option value="5">may</option>
+                                <option value="6">jun</option>
+                                <option value="7">jul</option>
+                                <option value="8">aug</option>
+                                <option value="9">sep</option>
+                                <option value="10">oct</option>
+                                <option value="11">nov</option>
+                                <option value="12">dec</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-8 dpgroup">
+                            <select class="form-control" ng-model="EndDay" ng-change="DoEndDateBlur(this)">
+                                <option ng-repeat="(k,d) in SelectedEndMonthDays">{{d}}</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="EndDate" ng-model="model.EndDate" ng-init="GetFieldState(this, 'EndDate')" />
+                    </div>
+                    <div class="form-group">
+                        <textarea id="Description" name="Description" type="text"  ng-model="model.Description" ng-init="GetFieldState(this, 'Description')" ng-blur="SaveFieldState(this, 'Description', model.Description)" class="form-control" placeholder="News item text here..."></textarea>
+                    </div>
+                    <a href="/#/festival/add/1" class="btn btn-danger back" ng-click="SaveFormState(this)">
+                        <i class="fa fa-chevron-left"></i>
+                        Back
+                    </a>
+                    <a href="/#/festival/add/3" class="btn btn-danger next" ng-click="SaveFormState(this)">
+                        Next
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <ng-include src="'/Scripts/Modules/Festival/Views/wizard/FestivalPreview.html'"></ng-include>
+</div>

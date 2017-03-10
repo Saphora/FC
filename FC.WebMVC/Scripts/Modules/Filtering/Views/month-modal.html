@@ -1,0 +1,102 @@
+﻿<div class="modal-header block-item" theme="header">
+    <div class="header" theme="header">
+        <h1>
+            <i class="fa fa-globe"></i>
+            <span class="title">Select month</span>
+        </h1>
+    </div>
+</div>
+<div class="modal-body">
+    <h4>
+        Select month
+    </h4>
+    <ul class="modal-select countries">
+        <li id="modal-select-item-1">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(1)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(1)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(1)" theme="link-heart-inactive"></i>
+                <span class="title">January</span>
+            </a>
+        </li>
+        <li id="modal-select-item-2">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(2)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(2)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(2)" theme="link-heart-inactive"></i>
+                <span class="title">February</span>
+            </a>
+        </li>
+        <li id="modal-select-item-3">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(3)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(3)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(3)" theme="link-heart-inactive"></i>
+                <span class="title">March</span>
+            </a>
+        </li>
+        <li id="modal-select-item-4">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(4)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(4)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(4)" theme="link-heart-inactive"></i>
+                <span class="title">April</span>
+            </a>
+        </li>
+        <li id="modal-select-item-5">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(5)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(5)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(5)" theme="link-heart-inactive"></i>
+                <span class="title">May</span>
+            </a>
+        </li>
+        <li id="modal-select-item-6">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(6)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(6)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(6)" theme="link-heart-inactive"></i>
+                <span class="title">June</span>
+            </a>
+        </li>
+        <li id="modal-select-item-7">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(7)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(7)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(7)" theme="link-heart-inactive"></i>
+                <span class="title">July</span>
+            </a>
+        </li>
+        <li id="modal-select-item-8">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(8)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(8)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(8)" theme="link-heart-inactive"></i>
+                <span class="title">August</span>
+            </a>
+        </li>
+        <li id="modal-select-item-9">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(9)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(9)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(9)" theme="link-heart-inactive"></i>
+                <span class="title">September</span>
+            </a>
+        </li>
+        <li id="modal-select-item-10">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(10)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(10)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(10)" theme="link-heart-inactive"></i>
+                <span class="title">October</span>
+            </a>
+        </li>
+        <li id="modal-select-item-11">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(11)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(11)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(11)" theme="link-heart-inactive"></i>
+                <span class="title">November</span>
+            </a>
+        </li>
+        <li id="modal-select-item-12">
+            <a href="#" theme="header,button-hover" ng-click="$event.preventDefault();$event.stopPropagation();vm.ToggleItem(12)">
+                <i class="fa fa-calendar" ng-if="vm.IsOpen(12)" theme="link-heart-active"></i>
+                <i class="fa fa-calendar" ng-if="!vm.IsOpen(12)" theme="link-heart-inactive"></i>
+                <span class="title">December</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" theme="button" ng-click="vm.Cancel()">Cancel</button>
+</div>

@@ -1,0 +1,83 @@
+﻿@import "../core/var.scss";
+.btn {
+    font-family: 'Oswald' !important;
+    &.btn-default {
+        background-color: $ButtonBGColor !important;
+        color: $FontColorLight !important;
+        &:hover {
+            background-color: $BGLight !important;
+            color: $FontColorDark !important;
+        }
+    }
+    &.btn-danger {    
+        font-family: 'Oswald' !important;
+        border-color: #E06246;
+        background-color: #E06246;
+        color: #FFF !important;
+    }
+    
+    &.btn-success {
+        color: #FFF !important;
+        span {
+            color: #FFF !important;
+        }
+        i {
+            color: #FFF !important;
+
+        }
+    }
+    &.absolute-cancel {
+        float:left;
+        position:relative;
+        left:-20px;
+        min-width: 250px;
+    }
+    &.absolute-save {
+        float:right;
+        right:-20px;
+        min-width: 250px;
+    }
+} 
+
+.btn-sm {
+    font-family: 'Oswald' !important;
+    border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    -webkit-border-radius: 0 !important;
+    &.btn-default {
+        font-family: 'Oswald' !important;
+        background-color: $ButtonBGColor !important;
+        color: $FontColorLight !important;
+        &:hover {
+            background-color: $BGLight !important;
+            color: $FontColorDark !important;
+        }
+    }
+
+    &.btn-danger {
+        background-color: #E06246;
+        color: #FFF !important;
+    }
+    
+    &.btn-success {
+        color: #FFF !important;
+        span {
+            color: #FFF !important;
+        }
+        i {
+            color: #FFF !important;
+
+        }
+    }
+    &.absolute-cancel {
+        float:left;
+        position:relative;
+        left:-20px;
+        min-width: 250px;
+    }
+    &.absolute-save {
+        float:right;
+        right:-20px;
+        min-width: 250px;
+    }
+}

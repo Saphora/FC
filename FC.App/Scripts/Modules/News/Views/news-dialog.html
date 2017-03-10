@@ -1,0 +1,40 @@
+﻿<md-dialog aria-label="MANAGE NEWS" flex="80">
+    <div class="card">
+        <div class="card-header">
+            <span class="h5">MANAGE HEADLINES</span>
+        </div>
+        <div class="card-block">
+            <div class="col-xs-24 no-padding no-margin">
+                <a href="#" class="btn btn-success" ng-click="$event.preventDefault();DoCreate(this);" ng-if="!IsCreating">
+                    CREATE
+                </a>
+            </div>
+            <ng-include src="'/Scripts/modules/news/views/create.html'" ng-if="IsCreating==true || IsEditing==true"></ng-include>
+            <ng-include src="'/Scripts/modules/news/views/delete.html'" ng-if="IsDeleting==true && !IsEditing && !IsCreating"></ng-include>
+            <ng-include ng-if="IsLoading==true" src="'/scripts/shared/views/loader.html'"></ng-include>
+            <div class="col-xs-24" ng-if="News.length == 0 && !IsCreating && !IsDeleting && !IsEditing" >
+                <div class="alert alert-info">
+                    No news in the system.
+                </div>
+            </div>
+            <ul ng-if="News.length > 0 && !IsCreating && !IsDeleting && !IsEditing">
+                <li ng-repeat="n in News">
+                    <span class="title">
+                        {{n.Title}}
+                    </span>
+                    <p>
+                        {{n.Text.substr(0,160)}}
+                    </p>
+                    <span class="controls">
+                        <a href="#"><i class="fa fa-edit"></i></a>
+                        <a href="#"><i class="fa fa-delete"></i></a>
+                        <a href="#"><i class="fa fa-globe"></i></a>
+                    </span>
+                </li>
+            </ul>
+            <a href="#" class="btn btn-success" ng-click="$event.preventDefault();GetPaged(PageNum)" ng-if="!IsCreating && !IsDeleting && !IsEditing">
+                SHOW MORE
+            </a>
+        </div>
+    </div>
+</md-dialog>

@@ -1,0 +1,24 @@
+﻿.headlines-card {
+    ul {
+        position:absolute;
+        left: 0;
+        list-style: none;
+        margin: 0;
+        padding: 0 !important;
+
+        li {
+            float:left;
+            width: 100%;
+            background-color: #e8e8e8;
+            margin-top: 10px;
+            padding: 10px;
+            a {
+                span {
+                    font-family: 'Oswald';
+                    font-weight: 700;
+                    color: #333;
+                }
+            }
+        }
+    }   
+}

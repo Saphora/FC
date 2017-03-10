@@ -1,0 +1,378 @@
+<!--<div class="row">
+    <div class="col-md-12 fc-panel banner">
+        <div class="fc-panel-header" theme="header">
+            <i class="fa fa-star" />Advertisement
+        </div>
+        <div class="fc-panel-body">
+            <div class="carousel slide" id="AnnouncementReel" data-ride="carousel">
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <img src="/dist/resources/images/banner.jpg" />
+                        <span class="date">
+                            <span class="monthday">
+                                <span class="month">
+                                    AUG
+                                </span>
+                                <span class="day">
+                                    23
+                                </span>
+                            </span>
+                            <span class="year">
+                                2016
+                            </span>
+                        </span>
+                        <span class="tip">
+                            LINEUP MYSTERYLAND DEFINITIEF!
+                        </span>
+                    </div>
+                    <div class="item">
+                        <img src="/dist/resources/images/banner2.jpg" />
+                        <span class="date">
+                            <span class="monthday">
+                                <span class="month">
+                                    SEP
+                                </span>
+                                <span class="day">
+                                    14
+                                </span>
+                            </span>
+                            <span class="year">
+                                2016
+                            </span>
+                        </span>
+                        <span class="tip">
+                            DEF# TIESTO @ BEAT THE BRIDGE
+                        </span>
+                    </div>
+                    <div class="item">
+                        <img src="/dist/resources/images/banner.jpg" />
+                        <span class="date">
+                        </span>
+                        <span class="tip">
+                            KANE IS BACK!!!
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<div class="row">
+    <div class="fc-panel col-lg-2 hidden-xs hidden-sm hidden-md">
+        <div class="fc-panel-header" theme="header">
+            <i class="fa fa-newspaper-o"></i>Advertisement
+        </div>
+        <div class="fc-panel-body">
+            <center>
+                <img class="HyExIvHq" src="http://static.voetbalzone.nl/images/bw_1/24_9_2015_gghilmpacs.gif" alt="https://betweterschallenge.nl/?ref=voetbalzone" title="BTWCH_SKY_ongoing" style="cursor: pointer;"><input type="hidden" class="fwd_url" value="https://betweterschallenge.nl/?ref=voetbalzone"><input type="hidden" class="fwd_title" value="BTWCH_SKY_ongoing">
+            </center>
+        </div>
+        <div class="fc-panel-header" theme="header">
+            <i class="fa fa-star"></i> Sponsors
+        </div>
+        <div class="fc-panel-body">
+            <div class="ListItemBG">
+
+            </div>
+            <div class="ListItem col-xs-12 col-md-12 newsitem" ng-repeat="News in FCtr.News" theme="list-item">
+                <a href="{{News.Link}}" class="click-wrapper">
+                    <div class="inner" ng-if="News.Type=='sys'">
+                        <div class="logo" backImg="$0$.img?&height=65" watch="News.Img"></div>
+                        <div class="txt">
+                            <span class="date" theme="header">
+                                {{News.DisplayDate}}
+                            </span>
+                            <span class="title">{{News.Title}}</span><br />
+                            <span class="subtext">{{FCtr.ActiveFestival.Genre.Name}}</span>
+                        </div>
+                    </div>
+                    <div class="inner" ng-if="News.Type=='user'">
+                        <div class="logo" backImg="$0$.img?&height=65" watch="News.Img"></div>
+                        <div class="txt">
+                            <span class="date" theme="header">
+                                {{News.DisplayDate}}
+                            </span>
+                            <span class="title">{{News.Title}}</span><br />
+                            <span class="subtext">{{News.Content}}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 col-lg-6 col-xs-12 fc-panel" id="FestivalDetailPanel">
+        <div class="fc-panel-header" theme="header">
+            <i class="fa fa-newspaper-o"></i>{{FCtr.ActiveFestival.Name}}
+        </div>
+        <div class="fc-panel-body">
+            <div class="ListItem col-xs-12 col-md-12">
+                <div class="logo" backImg="$0$.img?&height=120" watch="FCtr.ActiveFestival.Logo"></div>
+                <div class="txt">
+                    <span class="title" theme="text-themecolor">{{FCtr.ActiveFestival.Name}}</span><br />
+                    <span class="region" ng-if="FCtr.ActiveFestival.City"><i theme="text-themecolor" class="fa fa-map-marker"></i>{{FCtr.ActiveFestival.City}}, {{FCtr.ActiveFestival.Country.Name}}</span><br />
+                    <span class="subtext" ng-if="FCtr.ActiveFestival.Genres">
+                        <i theme="text-themecolor" class="fa fa-tags"></i><span class="genre" theme="button" ng-repeat="Genre in FCtr.ActiveFestival.Genres">{{Genre.Name}}</span>
+                    </span>
+                    <span class="days" ng-if="FCtr.ActiveFestival.DayCount > 1">
+                        <i theme="text-themecolor" class="fa fa-flag-checkered"></i>{{FCtr.ActiveFestival.CultureStartDate}} - {{FCtr.ActiveFestival.CultureEndDate}}, {{FCtr.ActiveFestival.DayCount}} Days
+                    </span>
+                    <span class="days" ng-if="FCtr.ActiveFestival.DayCount == 1">
+                        <i theme="text-themecolor" class="fa fa-flag-checkered"></i>{{FCtr.ActiveFestival.CultureStartDate}} - {{FCtr.ActiveFestival.CultureEndDate}}, {{FCtr.ActiveFestival.DayCount}} Day
+                    </span>
+                    <span class="subtext" ng-if="FCtr.ActiveFestival.Visitors > 10">
+                        <i class="fa fa-group" theme="text-themecolor"></i>
+                        <span class="">{{FCtr.ActiveFestival.Visitors}}</span>
+                    </span>
+                </div>
+
+
+                <!-- Table -->
+                <table class="table">
+                    <tr>
+                        <td class="lbl" theme="header">Camping available</td>
+                        <td class="val">
+                            <i theme="text-themecolor" class="fa fa-check" ng-if="FCtr.ActiveFestival.CampingAvailable=='Yes'"></i>
+                            <span class="icon-value" ng-if="FCtr.ActiveFestival.CampingAvailable=='Yes'">
+                                yes
+                            </span>
+                            <i theme="text-themecolor" class="fa fa-cross" ng-if="FCtr.ActiveFestival.CampingAvailable=='No'"></i>
+                            <span class="icon-value" ng-if="FCtr.ActiveFestival.CampingAvailable=='No'">
+                                no
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lbl" theme="header">Stages</td>
+                        <td class="val">
+                            {{FCtr.ActiveFestival.Stages}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lbl" theme="header">Combi ticket price</td>
+                        <td class="val" ng-bind-html="FCtr.ActiveFestival.CalcDailyPrice"></td>
+                    </tr>
+                    <tr>
+                        <td class="lbl" theme="header">Daily ticket price</td>
+                        <td class="val" ng-bind-html="FCtr.ActiveFestival.CalcDailyPrice"></td>
+                    </tr>
+                </table>
+                <div class="festival-description inner rte">
+                    <h4 ng-if="FCtr.ActiveFestival.Description" theme="header">Description</h4>
+                    <div ng-if="FCtr.ActiveFestival.Description" class="collapsepanel" collapsible="FCtr.ActiveFestival.Description" toggle-state="closed">
+                        <p></p>
+                    </div>
+                    <div ng-if="FCtr.ActiveFestival.Description" class="collapsepanelcontrols">
+                        <div class="btn btn-default" theme="button" toggle-text="Show more">Show less</div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <div class="rating" theme="rating">
+                        <span class="count" theme="count">100K</span>
+                        <span class="glyphicon glyphicon-star star active"></span>
+                        <span class="glyphicon glyphicon-star star active"></span>
+                        <span class="glyphicon glyphicon-star star active"></span>
+                        <span class="glyphicon glyphicon-star star active"></span>
+                        <span class="glyphicon glyphicon-star star"></span>
+                    </div>
+                    <div class="social">
+                        <a ng-href="{{FCtr.ActiveFestival.YoutubeURL}}" target="_blank" ng-if="FCtr.ActiveFestival.YoutubeURL.length > 0">
+                            <i class="fa fa-youtube-square" theme="text-default"></i>
+                        </a>
+                        <a ng-href="{{FCtr.ActiveFestival.FacebookURL}}" target="_blank" ng-if="FCtr.ActiveFestival.FacebookURL.length > 0">
+                            <i class="fa fa-facebook-square" theme="text-default"></i>
+                        </a>
+                        <a ng-href="{{FCtr.ActiveFestival.TwitterURL}}" target="_blank" ng-if="FCtr.ActiveFestival.TwitterURL.length > 0">
+                            <i class="fa fa-twitter-square" theme="text-default"></i>
+                        </a>
+                        <a ng-href="{{FCtr.ActiveFestival.SpotifyURL}}" target="_blank" ng-if="FCtr.ActiveFestival.SpotifyURL.length > 0">
+                            <i class="fa fa-spotify" theme="text-default"></i>
+                        </a>
+                        <a ng-href="{{FCtr.ActiveFestival.InstagramURL}}" target="_blank" ng-if="FCtr.ActiveFestival.InstagramURL.length > 0">
+                            <i class="fa fa-instagram" theme="text-default"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row default-padding">
+            <div class="fc-panel col-sm-6">
+                <div class="fc-panel-header" theme="header">
+                    <i class="fa fa-user"></i>Artists
+                </div>
+                <div class="fc-panel-body">
+                    <div class="ListItem col-xs-6 col-lg-6 artist-list" ng-repeat="Artist in FCtr.ArtistsLeft" theme="list-item">
+                        <a class="click-wrapper">
+                            <div class="logo" backImg="$0$.img?&width=65" style="width:65px;height:65px;" watch="Artist.Image"></div>
+                            <div class="txt">
+                                <span class="title" theme="text-default">{{Artist.Name}}</span><br />
+                                <span class="region"><i theme="text-default" class="fa fa-map-marker"></i>{{Artist.Country.Name}}</span><br />
+                                <span class="subtext">
+                                    <i theme="text-default" class="fa fa-tags"></i><span class="genre" theme="button" ng-repeat="Genre in Artist.Genres">{{Genre.Name}}</span>
+                                </span>
+                            </div>
+                        </a>
+                        <div class="controls">
+                            <div class="social">
+                                <a ng-href="{{Artist.YoutubeURL}}" target="_blank" ng-if="Artist.YoutubeURL.length > 0">
+                                    <i class="fa fa-youtube-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.FacebookURL}}" target="_blank" ng-if="Artist.FacebookURL.length > 0">
+                                    <i class="fa fa-facebook-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.TwitterURL}}" target="_blank" ng-if="Artist.TwitterURL.length > 0">
+                                    <i class="fa fa-twitter-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.SpotifyURL}}" target="_blank" ng-if="Artist.SpotifyURL.length > 0">
+                                    <i class="fa fa-spotify" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.InstagramURL}}" target="_blank" ng-if="Artist.InstagramURL.length > 0">
+                                    <i class="fa fa-instagram" theme="text-default"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fc-panel col-sm-6">
+                <div class="fc-panel-header" theme="header">
+                    <i class="fa fa-user"></i>Artists
+                </div>
+                <div class="fc-panel-body">
+                    <div class="ListItem col-xs-6 col-lg-6 artist-list" ng-repeat="Artist in FCtr.ArtistsRight" theme="list-item">
+                        <a class="click-wrapper">
+                            <div class="logo" backImg="$0$.img?&width=65" style="width:65px;height:65px;" watch="Artist.Image"></div>
+                            <div class="txt">
+                                <span class="title" theme="text-default">{{Artist.Name}}</span><br />
+                                <span class="region"><i theme="text-default" class="fa fa-map-marker"></i>{{Artist.Country.Name}}</span><br />
+                                <span class="subtext">
+                                    <i theme="text-default" class="fa fa-tags"></i><span class="genre" theme="button" ng-repeat="Genre in Artist.Genres">{{Genre.Name}}</span>
+                                </span>
+                            </div>
+                        </a>
+                        <div class="controls">
+                            <div class="social">
+                                <a ng-href="{{Artist.YoutubeURL}}" target="_blank" ng-if="Artist.YoutubeURL.length > 0">
+                                    <i class="fa fa-youtube-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.FacebookURL}}" target="_blank" ng-if="Artist.FacebookURL.length > 0">
+                                    <i class="fa fa-facebook-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.TwitterURL}}" target="_blank" ng-if="Artist.TwitterURL.length > 0">
+                                    <i class="fa fa-twitter-square" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.SpotifyURL}}" target="_blank" ng-if="Artist.SpotifyURL.length > 0">
+                                    <i class="fa fa-spotify" theme="text-default"></i>
+                                </a>
+                                <a ng-href="{{Artist.InstagramURL}}" target="_blank" ng-if="Artist.InstagramURL.length > 0">
+                                    <i class="fa fa-instagram" theme="text-default"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="fc-panel-header" theme="header" ng-if="FCtr.ShowTravelInfo">
+            <i class="fa fa-newspaper-o"></i>Travel info
+        </div>
+        <div class="fc-panel-body">
+            <div class="festival-description inner rte">
+                <div class="list-collapse-item" ng-if="FCtr.ActiveFestival.CarInfo">
+                    <h4 theme="header">Car / moto info</h4>
+                    <div class="collapsepanel" htmltext="true" collapsible="FCtr.ActiveFestival.CarInfo" toggle-state="closed">
+                        <p></p>
+                    </div>
+
+                    <div class="collapsepanelcontrols">
+                        <div class="btn btn-default" theme="button" toggle-text="Show less">Show more</div>
+                    </div>
+                </div>
+
+                <div class="list-collapse-item" ng-if="FCtr.ActiveFestival.TrainInfo">
+                    <h4 theme="header">Train info</h4>
+                    <div class="collapsepanel" htmltext="true" collapsible="FCtr.ActiveFestival.TrainInfo" toggle-state="closed">
+                        <p></p>
+                    </div>
+                    <div class="collapsepanelcontrols">
+                        <div class="btn btn-default" theme="button" toggle-text="Show less">Show more</div>
+                    </div>
+                </div>
+
+                <div class="list-collapse-item" ng-if="FCtr.ActiveFestival.BusInfo">
+                    <h4 theme="header">Bus info</h4>
+                    <div class="collapsepanel" htmltext="true" collapsible="FCtr.ActiveFestival.BusInfo" toggle-state="closed">
+                        <p></p>
+                    </div>
+                    <div class="collapsepanelcontrols">
+                        <div class="btn btn-default" theme="button" toggle-text="Show less">Show more</div>
+                    </div>
+                </div>
+                <div class="list-collapse-item" ng-if="FCtr.ActiveFestival.BikeInfo">
+                    <h4 theme="header">Bike info</h4>
+                    <div ng-if="FCtr.ActiveFestival.BikeInfo" class="collapsepanel" htmltext="true" collapsible="FCtr.ActiveFestival.BikeInfo" toggle-state="closed">
+                        <p></p>
+                    </div>
+                    <div ng-if="FCtr.ActiveFestival.BikeInfo" class="collapsepanelcontrols">
+                        <div class="btn btn-default" theme="button" toggle-text="Show less">Show more</div>
+                    </div>
+                </div>
+                <div class="list-collapse-item" ng-if="FCtr.ActiveFestival.AirPlaneInfo">
+                    <h4 theme="header">Flight info</h4>
+                    <div ng-if="FCtr.ActiveFestival.AirPlaneInfo" class="collapsepanel" htmltext="true" collapsible="FCtr.ActiveFestival.AirPlaneInfo" toggle-state="closed">
+                        <p></p>
+                    </div>
+                    <div ng-if="FCtr.ActiveFestival.AirPlaneInfo" class="collapsepanelcontrols">
+                        <div class="btn btn-default" theme="button" toggle-text="Show less">Show more</div>
+                    </div>
+                </div>
+
+                <div class="list-collapse-item" ng-if="FCtr.ActiveFestival.TaxiInfo">
+                    <h4 theme="header">Taxi info</h4>
+                    <div class="collapsepanel" htmltext="true" collapsible="FCtr.ActiveFestival.TaxiInfo" toggle-state="closed">
+                        <p></p>
+                    </div>
+                    <div class="collapsepanelcontrols">
+                        <div class="btn btn-default" theme="button" toggle-text="Show less">Show more</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-4 col-xs-12 fc-panel">
+        <div class="fc-panel-header" theme="header">
+            <i class="fa fa-newspaper-o"></i>News
+        </div>
+        <div class="fc-panel-body">
+            <div class="ListItemBG">
+
+            </div>
+            <div class="ListItem col-xs-12 col-md-12 newsitem" ng-repeat="News in FCtr.News" theme="list-item">
+                <a href="{{News.Link}}" class="click-wrapper">
+                    <div class="inner" ng-if="News.Type=='sys'">
+                        <div class="logo" backImg="$0$.img?&height=65" watch="News.Img"></div>
+                        <div class="txt">
+                            <span class="date" theme="header">
+                                {{News.DisplayDate}}
+                            </span>
+                            <span class="title">{{News.Title}}</span><br />
+                            <span class="subtext">{{FCtr.ActiveFestival.Genre.Name}}</span>
+                        </div>
+                    </div>
+                    <div class="inner" ng-if="News.Type=='user'">
+                        <div class="logo" backImg="$0$.img?&height=65" watch="News.Img"></div>
+                        <div class="txt">
+                            <span class="date" theme="header">
+                                {{News.DisplayDate}}
+                            </span>
+                            <span class="title">{{News.Title}}</span><br />
+                            <span class="subtext">{{News.Content}}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+

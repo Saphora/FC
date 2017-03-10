@@ -1,0 +1,26 @@
+﻿<md-dialog aria-label="SIGN ON" flex="50">
+    <div class="card">
+        <div class="card-header">
+            <span class="h5">SIGN ON</span>
+        </div>
+        <div class="card-block">
+            <div class="alert alert-danger" ng-if="ServerMsg">
+               {{ServerMsg}}
+            </div>
+            <form role="form" ng-if="!HasAuth">
+                <div class="form-group">
+                    <input id="Username" name="Username" type="text" ng-change="Validate(LoginFormVM.Username)" ng-model="LoginFormVM.Username" class="form-control" placeholder="E-mail">
+                </div>
+                <div class="form-group">
+                    <input id="Password" name="PassOrCode" type="password" ng-change="Validate(LoginFormVM.PassOrCode)" ng-model="LoginFormVM.PassOrCode" class="form-control" placeholder="Password">
+                </div>
+                <a href="#" class="btn btn-success" ng-click="$event.preventDefault();SubmitLoginForm(this)" theme="button,button-hover">
+                    <i class="fa fa-unlock"></i> SIGN IN
+                </a>
+                <a href="#" class="btn btn-default" ng-click="$event.preventDefault();SubmitLoginForm(this)" theme="button,button-hover">
+                    <i class="fa fa-question"></i> FORGOT PASSWORD
+                </a>
+            </form>
+        </div>
+    </div>
+</md-dialog>

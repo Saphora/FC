@@ -1,0 +1,39 @@
+﻿<md-dialog aria-label="SELECT ROLES" flex="50">
+    <div class="card artistbrowser">
+        <div class="card-header">
+            <span class="h5">SELECT ROLES</span>
+        </div>
+        <div class="card-block ">
+            <div class="col-xs-24 no-padding">
+                <form>
+                    <div class="form-group">
+                        <select ng-model="Activated" ng-change="vm.DoChange()" class="form-control">
+                            <option value="">SELECT ROLE</option>
+                            <option value="{{r.RoleID}}" ng-repeat="r in SysRoles" ng-if="r.Name != 'Developer' && r.Name != 'Admin'">{{r.Name}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-default" ng-click="vm.DoSelectAll();">SELECT ALL</button>
+                        <button class="btn btn-danger" ng-click="vm.DoClear();">CLEAR</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-24 no-padding">
+                <h5>ACTIVE ROLES</h5>
+                <ul class="list-table">
+                    <li class="li-tbl-row" ng-repeat="role in ActiveRoles" ng-click="vm.Deactivate(role)" ng-if="r.Name != 'Developer' && r.Name != 'Admin'">
+                        <a href="#">{{role.Name}} <i class="fa fa-times"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="headercontrols" ng-if="!IsCreating && !IsEditing && !IsDeleting">
+                <a href="#" class="btn btn-success" ng-click="$event.preventDefault();SaveModal(this);">
+                    SAVE
+                </a>
+                <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();Close(this);">
+                    CANCEL
+                </a>
+            </div>
+        </div>
+    </div>
+</md-dialog>

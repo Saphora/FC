@@ -1,0 +1,85 @@
+﻿<div class="row overview-wrapper">
+    <div class="col-xl-18 col-lg-18 col-md-16 col-sm-24 col-xs-24">
+        <div class="card overview">
+            <div class="card-header">
+                <span class="h5">LOCATIONS OVERVIEW</span>
+            </div>
+            <div class="card-block">
+                <form>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <select ng-model="CountrySortID" ng-change="vm.DoSort(Key)" class="form-control">
+                                <option value="">-- SELECT COUNTRY --</option>
+                                <option value="{{country.CountryID}}" ng-repeat="country in SysCountries">{{country.Name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <input type="text" class="form-control" ng-model="Key" ng-change="vm.DoSort(Key)" placeholder="Search by location name" />
+                        </div>
+                    </div>
+                </form>
+                <table class="scrollable" ng-if="IsLoading==false">
+                    <thead>
+                        <tr>
+                            <th for-roles="ALL"></th>
+                            <th></th>
+                            <th>NAME</th>
+                            <th class="hidden-xs">COUNTRY</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="Location in Locations">
+                            <td for-roles="ALL">
+                                <a href="#" class="fav inactive" ng-if="vm.IsFavorite(Location.LocationID)==false" ng-click="$event.preventDefault();vm.DoMarkFavorite(Location.LocationID,'Location')" title="Mark {{Location.LocationName.toUpperCase()}} as favorite."><i class="fa fa-heart"></i></a>
+                                <a href="#" class="fav active" ng-if="vm.IsFavorite(Location.LocationID)==true" ng-click="$event.preventDefault();vm.DoUnMarkFavorite(Location.LocationID)" title="Mark {{Location.LocationName.toUpperCase()}} as favorite."><i class="fa fa-heart"></i></a>
+                            </td>
+                            <td>
+                                <a href="#" title="Modify profile picture of {{Location.LocationName.toUpperCase()}}" ng-click="$event.preventDefault();vm.DoEdit('logo', this, Location)" for-roles="ADMIN">
+                                    <img ng-src="{{MediaURLRoot}}/{{Location.ProfileImageID}}.img?thumb=true" ng-if="Location.LogoID" />
+                                    <span class="no-image-defined small" ng-if="!Location.LogoID">
+                                        <i class="fa fa-ban"></i>
+                                    </span>
+                                </a>
+                                <a href="/#/details/location/{{Location.LocationID}}" title="Go to details of location {{Location.LocationName.toUpperCase()}}" not-for-roles="ADMIN">
+                                    <img ng-src="{{MediaURLRoot}}/{{Location.ProfileImageID}}.img?thumb=true" ng-if="Location.LogoID" />
+                                    <span class="no-image-defined small" ng-if="!Location.LogoID">
+                                        <i class="fa fa-ban"></i>
+                                    </span>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/#/details/location/{{Location.LocationID}}" title="Go to details of Location {{Location.LocationName.toUpperCase()}}.">{{Location.LocationName.toUpperCase()}}</a>
+                            </td>
+                            <td class="hidden-xs">
+                                {{Location.Country.CountryName}}
+                            </td>
+                            <td>
+                                <a for-roles="ADMIN" ng-click="$event.preventDefault();vm.DoDelete(Location)" title="Remove Location {{Location.LocationName.toUpperCase()}}." class="control-icon delete" href="/location/delete/{{Location.LocationID}}">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <a for-roles="ADMIN" ng-click="$event.preventDefault();vm.DoUnPublish(Location)" title="Take Location {{Location.LocationName.toUpperCase()}} offline." href="/location/publish/{{Location.LocationID}}" class="control-icon unpublish" ng-if="Location.IsPublished==true">
+                                    <i class="fa fa-globe"></i>
+                                </a>
+                                <a for-roles="ADMIN" ng-click="$event.preventDefault();vm.DoPublish(Location)" title="Bring Location {{Location.LocationName.toUpperCase()}} online." href="/location/publish/{{Location.LocationID}}" class="control-icon publish" ng-if="Location.IsPublished==false">
+                                    <i class="fa fa-globe"></i>
+                                </a>
+                                <a for-roles="ADMIN" href="/#/locations/edit/{{Location.LocationID}}" title="Edit {{Location.LocationName.toUpperCase()}}" class="control-icon edit">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-xs-24" ng-if="ShowMore && !IsLoading">
+                    <a href="{{ShowMoreURL}}" class="btn btn-danger" name="#bottom" style="width:252px;" title="Show more Locations">SHOW MORE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 col-xs-24">
+        <ng-include src="'/scripts/modules/menu/views/quickmenu.html'" ng-controller="FC.Modules.Menu.Controllers.QuickMenuController as vm" />
+    </div>
+</div>

@@ -1,0 +1,24 @@
+﻿<form class="form" role="form" ng-if="IsDeleting && IsMediaDirDeleting">
+    <h4>Delete directory {{DirectoryModel.Name}}</h4>
+    <p>
+        Are you sure that you want to delete this directory?
+    </p>
+    <table>
+        <tr>
+            <td>Directory</td><td>{{DirectoryModel.Name}}</td>
+        </tr>
+    </table>
+    <a href="#" class="btn btn-success" ng-click="$event.preventDefault();DoSaveDeleteMediaDir(this,DirectoryModel,false)">
+        <i class="fa fa-save"></i> Delete
+    </a>
+    <a href="#" class="btn btn-danger" for-roles="developer,admin" ng-click="$event.preventDefault();DoSaveDeleteMediaDir(this,DirectoryModel,true)">
+        <i class="fa fa-save"></i> Force delete
+    </a>
+    <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();DoCancelCRUD(this)">
+        <i class="fa fa-times-circle"></i> Cancel
+    </a>
+
+    <div class="form-group">
+        <input id="DirectoryID" name="DirectoryID" type="hidden" ng-change="Validate(DirectoryModel.DirectoryID)" ng-model="DirectoryModel.DirectoryID">
+    </div>
+</form>

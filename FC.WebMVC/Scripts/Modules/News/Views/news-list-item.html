@@ -1,0 +1,12 @@
+﻿<a ng-href="/#/{{newsItem.Link.toLowerCase()}}/{{FCtr.ActiveGenreID}}" class="click-wrapper">
+    <div class="inner">
+        <div class="logo hidden-xs" backImg="$0$.img?&height=65" watch="{{newsItem.Thumbnail}}"></div>
+        <div class="txt">
+            <span class="date" theme="header">
+                {{newsItem.DisplayDate}}
+            </span>
+            <span class="title">{{newsItem.Title}}</span><br />
+            <span class="subtext">{{newsItem.ShortText}}</span>
+        </div>
+    </div>
+</a>

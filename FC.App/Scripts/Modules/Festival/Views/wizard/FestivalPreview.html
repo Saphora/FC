@@ -1,0 +1,50 @@
+﻿<div class="col-xl-8 col-lg-8 col-md-6 col-sm-24">
+    <div class="card">
+        <div class="card-header">
+            <i class="fc-icon"></i>
+            <span class="h5">Selected performers</span>
+            <i class="fa fa-group"></i>
+        </div>
+        <div class="card-block">
+            <p ng-if="!model.Artists">
+                There are currently no artists chosen. Go to step 2 to select them.
+            </p>
+            <ul>
+                <li ng-repeat="a in model.Artists">
+                    <a href="#" ng-click="RemoveArtist(a.ArtistID)" class="btn btn-default btn-sm">
+                        <i class="fa fa-trash"></i>
+                        {{a.Name}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="col-xl-8 col-lg-8 col-md-6 col-sm-24">
+    <div class="card">
+        <div class="card-header">
+            <i class="fc-icon"></i>
+            <span class="h5">Selected Genres</span>
+            <i class="fa fa-group"></i>
+        </div>
+        <div class="card-block">
+            <p ng-if="!model.Artists">
+                There are currently no genres chosen. Go to step 2 to select them.
+            </p>
+            <ul>
+                <li ng-repeat="g in model.Genres">
+                    <a href="#" ng-click="RemoveGenre(g.GenreID)" class="btn btn-default btn-sm">
+                        <i class="fa fa-trash"></i>
+                        {{g.Name}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="col-xs-8">
+    <div class="card festival-card">
+
+    </div>
+</div>

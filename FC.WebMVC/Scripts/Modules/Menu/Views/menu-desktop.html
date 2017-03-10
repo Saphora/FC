@@ -1,0 +1,53 @@
+﻿<header class="navbar navbar-default navbar-fixed-top navbar-inner" ng-controller="FC.Modules.Menu.Controllers.MenuController as MenuCtr">
+    <div class="container">
+        <nav class="hidden-xs">
+            <a href="https://festival-calendar.nl" role="button" class="navbar-brand logo navbar-left">
+
+            </a>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a role="button" class="menu-item genrebtn" ng-click="MenuCtr.OpenModal(400)">
+                        <i class="fa fa-heart"></i> Genres
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown" uib-dropdown="">
+                    <a role="button" class="dropdown-toggle menu-item" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-gear"></i> Settings
+                    </a>
+                    <ul class="dropdown-menu dd-large">
+                        <li class="list-item">
+                            <a class="value" href="/#/manage/">Add your festival</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!--<a role="button" class="menu-item genrebtn" ng-click="MenuCtr.RestoreToDefaults()">
+                <i class="fa fa-heart"></i> Reset
+            </a>-->
+        </nav>
+        <nav class="visible-xs">
+            <a href="https://festival-calendar.nl" role="button" class="navbar-brand logo navbar-left" style="display:block; margin:15px; zoom:0.8; height:30px; width:125px;">
+
+            </a>
+            <span class="wrapper" style="float:right; margin:10px;">
+                <span class="title-menu-item" style="float:right; font-size:22px; margin-top: 5px;margin-right:15px; color:#FFF;" ng-controller="FC.Modules.Filtering.Controllers.FilterController as FilterCtr">
+                    <a href="#" style="font-size:22px; color:#FFF;" ng-click="$event.preventDefault(); FilterCtr.OpenModal(400)">
+                        <i class="fa fa-heart"></i>
+                    </a>
+                </span>
+                <span class="title-menu-item" style="float:right; font-size:22px; margin-top: 5px;margin-right:15px; color:#FFF;" ng-controller="FC.Modules.Filtering.Controllers.CountryModalController as cmctr">
+                    <a href="#" style="font-size:22px; color:#FFF;" ng-click="$event.preventDefault();cmctr.OpenCountryModal(400)">
+                        <i class="fa fa-globe"></i>
+                    </a>
+                </span>
+                <span class="title-menu-item" style="float:right; font-size:22px; margin-top: 5px;margin-right:15px; color:#FFF;" ng-controller="FC.Modules.Filtering.Controllers.MonthModalController as mmc">
+                    <a href="#" style="font-size:22px; color:#FFF;" ng-click="$event.preventDefault();mmc.OpenMonthModal(400)">
+                        <i class="fa fa-calendar"></i>
+                    </a>
+                </span>
+            </span>
+        </nav>
+    </div>
+</header>

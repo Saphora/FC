@@ -1,0 +1,284 @@
+<ng-include src="'App/templates/Filter.html'"></ng-include>
+<div class="modal fade " tabindex="-1" role="dialog" id="GenreModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" ng-controller="FlexSelectController as FSC">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Selecteer genres</h4>
+            </div>
+            <div class="modal-body FlexSelectOptions">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuleren</button>
+                <button type="button" class="btn btn-primary" id="save">Opslaan</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="row">
+    <div class="col-sm-12">
+        <div class="calendar-title" ng-controller="FlexSelectController as FSC">
+            <div class="FlexSelect" ng-init="FSC.SetFlexSelectOptions('genres')" id="GenreSelectControl">
+                <div class="FlexSelectedValue">
+                    <a class="btn btn-default select-genre-btn" data-toggle="modal" data-target="#GenreModal">Genre<span class="icon  glyphicon glyphicon-plus-sign"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-include src="'dist/templates/Loader.html'"></ng-include>
+<div class="row" id="Calendar" ng-if="CCtr.IsLoading == false">
+    <div class="col-sm-12 ">
+        <div class="panel panel-default week-calendar">
+            <div class="panel-heading main-heading dark">
+                <div class="dropdown filter-dd">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {{CCtr.ActiveMonthName.toUpperCase()}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li ng-repeat="(Key,Month) in CCtr.YearMonths"><a href="{{CCtr.GetMonthURL(Key)}}">{{Month}}</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown filter-dd">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {{CCtr.CurrentYear}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li ng-repeat="(Key,Year) in CCtr.YearCollection"><a href="{{CCtr.GetYearURL(Year)}}">{{Year}}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-heading">
+                <a href="{{CCtr.WeekBackURL}}" class="glyphicon glyphicon-chevron-left back"></a>
+                <h3 class="panel-title">Week {{CCtr.CurrentWeekNum}}</h3>
+                <a href="{{CCtr.WeekNextURL}}" class="glyphicon glyphicon-chevron-right next"></a>
+            </div>
+            <div class="panel-body festival-week-view">
+                <div class="fc-panel col-md-4" ng-repeat="(Key, Day) in CCtr.CurrentWeek">
+                    <div class="fc-panel-header logo-color-{{Key}}">
+                        <i class="fa fa-calendar"></i>{{Day.DayName.substr(0,2).toUpperCase()}}, {{Day.DayNum}} {{Day.MonthName}}
+                    </div>
+                    <div class="fc-panel-body">
+                        <div class="ListItem col-xs-12 col-md-4">
+                            <div class="logo">
+                                <img src="/dist/resources/images/geel150150.png" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <span class="title">Reggae Geel</span><br />
+                                <span class="region">Geel, Belgie</span><br />
+                                <span class="subtext">Reggae, World music</span>
+                            </div>
+                            <div class="controls">
+                                <div class="visitors">
+                                    <span class="glyphicon glyphicon-user icon"></span>
+                                    <span class="">20.000</span>
+                                </div>
+                                <div class="rating">
+                                    <span class="count">(70)</span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ListItem col-xs-12">
+                            <div class="logo">
+                                <img src="/dist/resources/images/pinkpop150150.png" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <span class="title">Pinkpop</span><br />
+                                <span class="region">Landgraaf, The Netherlands</span><br />
+                                <span class="subtext">Dance, Hiphop, Electronic</span>
+                            </div>
+                            <div class="controls">
+                                <div class="visitors">
+                                    <span class="glyphicon glyphicon-user icon"></span>
+                                    <span class="">20.000</span>
+                                </div>
+                                <div class="rating">
+                                    <span class="count">(70)</span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="WeekNews col-md-8 fc-panel" ng-if="CCtr.CurrentWeekDayCount == 7">
+                    <div class="fc-panel-header">
+                        <i class="fa fa-newspaper-o"></i>Nieuws
+                    </div>
+                    <div class="fc-panel-body">
+                        <div class="ListItemBG">
+
+                        </div>
+                        <div class="ListItem col-xs-12 col-md-4">
+                            <div class="logo">
+                                <img src="/dist/resources/images/rihanna150x150.jpg" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <span class="title">Rihanna kondigt aan te spelen op Pinkpop!</span><br />
+                                <span class="region">Rihanna lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum eu erat eu eleifend...</span><br />
+                                <span class="subtext">Reggae, World music</span>
+                            </div>
+                            <div class="controls">
+                                <div class="visitors">
+                                    <span class="glyphicon glyphicon-user icon"></span>
+                                    <span class="">20.000</span>
+                                </div>
+                                <div class="rating">
+                                    <span class="count">(70)</span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ListItem col-xs-12 col-md-4">
+                            <div class="logo">
+                                <img src="/dist/resources/images/rihanna150x150.jpg" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <span class="title">Rihanna kondigt aan te spelen op Pinkpop!</span><br />
+                                <span class="region">Rihanna lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum eu erat eu eleifend...</span><br />
+                                <span class="subtext">Reggae, World music</span>
+                            </div>
+                            <div class="controls">
+                                <div class="visitors">
+                                    <span class="glyphicon glyphicon-user icon"></span>
+                                    <span class="">20.000</span>
+                                </div>
+                                <div class="rating">
+                                    <span class="count">(70)</span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ListItem col-xs-12 col-md-4">
+                            <div class="logo">
+                                <img src="/dist/resources/images/rihanna150x150.jpg" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <span class="title">Rihanna kondigt aan te spelen op Pinkpop!</span><br />
+                                <span class="region">Rihanna lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum eu erat eu eleifend...</span><br />
+                                <span class="subtext">Reggae, World music</span>
+                            </div>
+                            <div class="controls">
+                                <div class="visitors">
+                                    <span class="glyphicon glyphicon-user icon"></span>
+                                    <span class="">20.000</span>
+                                </div>
+                                <div class="rating">
+                                    <span class="count">(70)</span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ListItem col-xs-12 col-md-4">
+                            <div class="logo">
+                                <img src="/dist/resources/images/rihanna150x150.jpg" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <span class="title">Rihanna kondigt aan te spelen op Pinkpop!</span><br />
+                                <span class="region">Rihanna lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum eu erat eu eleifend...</span><br />
+                                <span class="subtext">Reggae, World music</span>
+                            </div>
+                            <div class="controls">
+                                <div class="visitors">
+                                    <span class="glyphicon glyphicon-user icon"></span>
+                                    <span class="">20.000</span>
+                                </div>
+                                <div class="rating">
+                                    <span class="count">(70)</span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ListItem col-xs-12 col-md-4">
+                            <div class="logo">
+                                <img src="/dist/resources/images/rihanna150x150.jpg" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <span class="title">Rihanna kondigt aan te spelen op Pinkpop!</span><br />
+                                <span class="region">Rihanna lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum eu erat eu eleifend...</span><br />
+                                <span class="subtext">Reggae, World music</span>
+                            </div>
+                            <div class="controls">
+                                <div class="visitors">
+                                    <span class="glyphicon glyphicon-user icon"></span>
+                                    <span class="">20.000</span>
+                                </div>
+                                <div class="rating">
+                                    <span class="count">(70)</span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star active"></span>
+                                    <span class="glyphicon glyphicon-star star"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fc-panel col-md-4">
+                    <div class="fc-panel-header logo-color-{{Key}}">
+                        <i class="fa fa-heart"></i>Sponsors
+                    </div>
+                    <div class="fc-panel-body">
+                        <div class="ListItem col-xs-12 col-md-4">
+                            <div class="logo">
+                                <img src="/dist/resources/images/cola150x150.jpg" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <h3>Coca cola</h3>
+                            </div>
+                        </div>
+                        <div class="ListItem col-xs-12">
+                            <div class="logo">
+                                <img src="/dist/resources/images/durex150x150.png" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <h3>Durex</h3>
+                            </div>
+                        </div>
+                        <div class="ListItem col-xs-12">
+                            <div class="logo">
+                                <img src="/dist/resources/images/ryanair150x150.jpg" />
+                            </div>
+                            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                            <div class="txt">
+                                <h3>Ryanair</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

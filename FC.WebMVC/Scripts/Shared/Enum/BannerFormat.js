@@ -1,0 +1,78 @@
+var FC;
+(function (FC) {
+    var Shared;
+    (function (Shared) {
+        var Enums;
+        (function (Enums) {
+            //width * height
+            (function (BannerFormat) {
+                BannerFormat[BannerFormat["Multi_FlexBanner"] = 921600] = "Multi_FlexBanner";
+                BannerFormat[BannerFormat["Desktop_FlexBanner"] = 1115520] = "Desktop_FlexBanner";
+                BannerFormat[BannerFormat["Mobile_FlexBanner"] = 786432] = "Mobile_FlexBanner";
+                BannerFormat[BannerFormat["Desktop_Banner_A_172_x_500"] = 86000] = "Desktop_Banner_A_172_x_500";
+                BannerFormat[BannerFormat["Desktop_Banner_A_172_x_400"] = 68800] = "Desktop_Banner_A_172_x_400";
+                BannerFormat[BannerFormat["Desktop_Banner_A_172_x_300"] = 51600] = "Desktop_Banner_A_172_x_300";
+                BannerFormat[BannerFormat["Desktop_Banner_A_172_x_250"] = 43000] = "Desktop_Banner_A_172_x_250";
+                BannerFormat[BannerFormat["Desktop_Banner_A_172_x_200"] = 34400] = "Desktop_Banner_A_172_x_200";
+                BannerFormat[BannerFormat["Desktop_Banner_A_172_x_150"] = 25800] = "Desktop_Banner_A_172_x_150";
+                BannerFormat[BannerFormat["Desktop_Banner_A_172_x_100"] = 17200] = "Desktop_Banner_A_172_x_100";
+                BannerFormat[BannerFormat["Desktop_Banner_A_172_x_50"] = 8600] = "Desktop_Banner_A_172_x_50";
+                BannerFormat[BannerFormat["Desktop_Banner_B_556_x_50"] = 27800] = "Desktop_Banner_B_556_x_50";
+                BannerFormat[BannerFormat["Desktop_Banner_B_556_x_100"] = 55600] = "Desktop_Banner_B_556_x_100";
+                BannerFormat[BannerFormat["Desktop_Banner_B_556_x_150"] = 83400] = "Desktop_Banner_B_556_x_150";
+                BannerFormat[BannerFormat["Desktop_Banner_B_556_x_200"] = 111200] = "Desktop_Banner_B_556_x_200";
+                BannerFormat[BannerFormat["Desktop_Banner_B_556_x_250"] = 139000] = "Desktop_Banner_B_556_x_250";
+                BannerFormat[BannerFormat["Desktop_Banner_B_556_x_300"] = 166800] = "Desktop_Banner_B_556_x_300";
+                BannerFormat[BannerFormat["Desktop_Banner_C_336_x_50"] = 16800] = "Desktop_Banner_C_336_x_50";
+                BannerFormat[BannerFormat["Desktop_Banner_C_336_x_100"] = 33600] = "Desktop_Banner_C_336_x_100";
+                BannerFormat[BannerFormat["Desktop_Banner_C_336_x_150"] = 50400] = "Desktop_Banner_C_336_x_150";
+                BannerFormat[BannerFormat["Desktop_Banner_C_336_x_200"] = 67200] = "Desktop_Banner_C_336_x_200";
+                BannerFormat[BannerFormat["Desktop_Banner_D_364_x_50"] = 18200] = "Desktop_Banner_D_364_x_50";
+                BannerFormat[BannerFormat["Desktop_Banner_D_364_x_150"] = 54600] = "Desktop_Banner_D_364_x_150";
+                BannerFormat[BannerFormat["Desktop_Banner_D_364_x_200"] = 72800] = "Desktop_Banner_D_364_x_200";
+                BannerFormat[BannerFormat["Desktop_Banner_D_364_x_250"] = 91000] = "Desktop_Banner_D_364_x_250";
+                BannerFormat[BannerFormat["Desktop_Banner_D_364_x_300"] = 109200] = "Desktop_Banner_D_364_x_300";
+                BannerFormat[BannerFormat["Mobile_Banner_A_740_x_300"] = 222000] = "Mobile_Banner_A_740_x_300";
+                BannerFormat[BannerFormat["Mobile_Banner_A_740_x_350"] = 259000] = "Mobile_Banner_A_740_x_350";
+                BannerFormat[BannerFormat["Mobile_Banner_A_740_x_100"] = 74000] = "Mobile_Banner_A_740_x_100";
+                BannerFormat[BannerFormat["Mobile_Banner_A_740_x_150"] = 111000] = "Mobile_Banner_A_740_x_150";
+                BannerFormat[BannerFormat["Mobile_Banner_A_740_x_200"] = 148000] = "Mobile_Banner_A_740_x_200";
+                BannerFormat[BannerFormat["Mobile_Banner_A_740_x_250"] = 185000] = "Mobile_Banner_A_740_x_250";
+                BannerFormat[BannerFormat["Mobile_Banner_A_740_x_400"] = 296000] = "Mobile_Banner_A_740_x_400";
+                BannerFormat[BannerFormat["Mobile_Banner_B_320_x_50"] = 16000] = "Mobile_Banner_B_320_x_50";
+                BannerFormat[BannerFormat["Mobile_Banner_B_320_x_100"] = 32000] = "Mobile_Banner_B_320_x_100";
+                BannerFormat[BannerFormat["Mobile_Banner_B_320_x_150"] = 48000] = "Mobile_Banner_B_320_x_150";
+                BannerFormat[BannerFormat["Mobile_Banner_B_320_x_200"] = 64000] = "Mobile_Banner_B_320_x_200";
+                BannerFormat[BannerFormat["Mobile_Banner_B_320_x_250"] = 80000] = "Mobile_Banner_B_320_x_250";
+                BannerFormat[BannerFormat["Mobile_Banner_B_320_x_320"] = 102400] = "Mobile_Banner_B_320_x_320";
+                BannerFormat[BannerFormat["Mobile_Banner_C_636_x_50"] = 31800] = "Mobile_Banner_C_636_x_50";
+                BannerFormat[BannerFormat["Mobile_Banner_C_636_x_100"] = 63600] = "Mobile_Banner_C_636_x_100";
+                BannerFormat[BannerFormat["Mobile_Banner_C_636_x_150"] = 95400] = "Mobile_Banner_C_636_x_150";
+                BannerFormat[BannerFormat["Mobile_Banner_C_636_x_200"] = 127200] = "Mobile_Banner_C_636_x_200";
+                BannerFormat[BannerFormat["Mobile_Banner_C_636_x_250"] = 159000] = "Mobile_Banner_C_636_x_250";
+                BannerFormat[BannerFormat["Mobile_Banner_C_636_x_320"] = 203520] = "Mobile_Banner_C_636_x_320";
+                BannerFormat[BannerFormat["Mobile_Banner_D_313_x_50"] = 15650] = "Mobile_Banner_D_313_x_50";
+                BannerFormat[BannerFormat["Mobile_Banner_D_313_x_100"] = 31300] = "Mobile_Banner_D_313_x_100";
+                BannerFormat[BannerFormat["Mobile_Banner_D_313_x_150"] = 46950] = "Mobile_Banner_D_313_x_150";
+                BannerFormat[BannerFormat["Mobile_Banner_D_313_x_200"] = 62600] = "Mobile_Banner_D_313_x_200";
+                BannerFormat[BannerFormat["Mobile_Banner_D_313_x_250"] = 78250] = "Mobile_Banner_D_313_x_250";
+                BannerFormat[BannerFormat["Mobile_Banner_D_313_x_320"] = 100160] = "Mobile_Banner_D_313_x_320";
+                BannerFormat[BannerFormat["Mobile_Banner_E_365_x_50"] = 18250] = "Mobile_Banner_E_365_x_50";
+                BannerFormat[BannerFormat["Mobile_Banner_E_365_x_100"] = 36500] = "Mobile_Banner_E_365_x_100";
+                BannerFormat[BannerFormat["Mobile_Banner_E_365_x_150"] = 54750] = "Mobile_Banner_E_365_x_150";
+                BannerFormat[BannerFormat["Mobile_Banner_E_365_x_200"] = 73000] = "Mobile_Banner_E_365_x_200";
+                BannerFormat[BannerFormat["Mobile_Banner_E_365_x_250"] = 91250] = "Mobile_Banner_E_365_x_250";
+                BannerFormat[BannerFormat["Mobile_Banner_E_365_x_320"] = 116800] = "Mobile_Banner_E_365_x_320";
+                BannerFormat[BannerFormat["Mobile_Banner_F_370_x_50"] = 18250] = "Mobile_Banner_F_370_x_50";
+                BannerFormat[BannerFormat["Mobile_Banner_F_370_x_100"] = 36500] = "Mobile_Banner_F_370_x_100";
+                BannerFormat[BannerFormat["Mobile_Banner_F_370_x_150"] = 54750] = "Mobile_Banner_F_370_x_150";
+                BannerFormat[BannerFormat["Mobile_Banner_F_370_x_200"] = 73000] = "Mobile_Banner_F_370_x_200";
+                BannerFormat[BannerFormat["Mobile_Banner_F_370_x_250"] = 91250] = "Mobile_Banner_F_370_x_250";
+                BannerFormat[BannerFormat["Mobile_Banner_F_370_x_300"] = 109500] = "Mobile_Banner_F_370_x_300";
+                BannerFormat[BannerFormat["Mobile_Banner_F_370_x_370"] = 135050] = "Mobile_Banner_F_370_x_370";
+            })(Enums.BannerFormat || (Enums.BannerFormat = {}));
+            var BannerFormat = Enums.BannerFormat;
+        })(Enums = Shared.Enums || (Shared.Enums = {}));
+    })(Shared = FC.Shared || (FC.Shared = {}));
+})(FC || (FC = {}));
+//# sourceMappingURL=BannerFormat.js.map

@@ -1,0 +1,18 @@
+﻿<div class="col-xs-24">
+    <h4 ng-if="IsCreated">Festival {{model.Name}} created.</h4>
+    <h4 ng-if="IsEdited">Festival {{model.Name}} modified.</h4>
+    <p>
+        <span ng-if="IsCreated">Your festival is successfully created.</span>
+        <span ng-if="IsEdited">Your festival is successfully modified.</span>
+        <span ng-if="model.IsPublished == false" not-for-roles="ROOT">
+            This festival is not published yet. The festival shall be reviewed by our moderators. It can take up to 24 hours before your festival is visible at the calendar.
+        </span>
+    </p>
+    <br />
+    <a href="/#/" class="btn btn-success">
+        <i class="fa fa-save"></i> View calendar
+    </a>
+    <a href="/#/festival/add" class="btn btn-danger">
+        <i class="fa fa-plus"></i> Add another
+    </a>
+</div>

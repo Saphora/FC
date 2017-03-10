@@ -1,0 +1,6 @@
+﻿<a href="#" class="btn btn-danger">
+    SIMILAR EVENTS
+</a>
+<div ng-if="IsLoading == false" class="col-xl-6 col-lg-8 col-md-10 col-sm-12 col-xs-24" ng-repeat="(FestivalKey,Festival) in SimilarEvents">
+    <ng-include src="'/Scripts/Modules/Festival/Views/festival-card.html'"></ng-include>
+</div>

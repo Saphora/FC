@@ -1,0 +1,18 @@
+﻿<div class="col-xs-24" ng-if="IsEditing||IsCreating">
+    <h5>IS THIS CORRECT?</h5>
+    <p>Please make sure you don't have any typos.</p>
+    <form enctype="multipart/form-data">
+        <div class="form-group">
+            <input id="Name" name="Name" type="text" placeholder="Name e.g Reggae or Heavy Metal" class="form-control" ng-model="model.Name" ng-init="GetFieldState(this, 'Name')" ng-blur="SaveFieldState(this, 'Name', model.Name)">
+        </div>
+    </form>
+    <a ng-click="$event.preventDefault();DoSaveCreate(this);" ng-if="IsCreating" class="btn btn-success">
+        SAVE
+    </a>
+    <a ng-click="$event.preventDefault();DoSaveEdit(this);" ng-if="IsEditing" class="btn btn-success">
+        EDIT
+    </a>
+    <a ng-click="$event.preventDefault();DoCancelCRUD(this);" class="btn btn-danger">
+        CANCEL
+    </a>
+</div>

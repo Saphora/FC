@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+    <!-- Meta tags -->
+    <meta charset="utf-8" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
+    <meta name="theme-color" content="#333333" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="author" content="WM-Development" />
+    <meta name="copyright" content="WM-Development" />
+    <script type="text/javascript" src="/modernizr.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <base href="/" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-194x194.png" sizes="194x194" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+    <link rel="stylesheet" href="node_modules/angular-bootstrap-datetimepicker/src/css/datetimepicker.css" />
+    <link rel="stylesheet" type="text/css" href="/App/Resources/cssv2/core/fc.css" />
+    @RenderSection("META")
+</head>
+<body ng-app="FC">
+    <div id="fb-root"></div>
+    <img alt="festival calendar background" src="Resources/images/bg.jpg" id="bg" />
+    <div id="MainOverlay" class="overlay ctx-hidden"></div>
+    <div class="menu-mobile visible-xs-down visible-sm-down visible-md-down hidden-xl-up" ng-controller="FC.Modules.Menu.Controllers.MenuController as mctr">
+        <div class="container">
+            <div class="left visible-sm-up">
+                <ul>
+                    <li>
+                        <a href="https://www.facebook.com/Festival-Calendar-523659261065735/?fref=ts" target="_blank"><span class="icon fb"></span></a>
+                        <a href="https://www.youtube.com/" target="_blank"><span class="icon youtube"></span></a>
+                        <a href="https://www.vimeo.com/" target="_blank"><span class="icon vimeo"></span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="middle">
+                <div class="wrp-logo">
+                    <img class="logo" src="/Resources/images/logoc.png" title="Festival-Calendar.com" />
+                </div>
+            </div>
+            <div class="right">
+                <a href="#" ng-click="$event.preventDefault();ToggleMobile()">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="menu hidden-sm-down hidden-lg-down" ng-controller="FC.Modules.Menu.Controllers.MenuController as mctr">
+        <div class="container">
+            <div class="left">
+                <ul>
+                    <li>
+                        <a href="https://www.facebook.com/Festival-Calendar-523659261065735/?fref=ts" target="_blank"><span class="icon fb"></span></a>
+                        <a href="https://www.youtube.com/" target="_blank"><span class="icon youtube"></span></a>
+                        <a href="https://www.vimeo.com/" target="_blank"><span class="icon vimeo"></span></a>
+                    </li>
+                </ul>
+                <span class="slogan hidden-sm">DISCOVER THE MOST AMAZING FESTIVALS!</span>
+            </div>
+            <div class="middle">
+                <div class="wrp-logo">
+                    <a href="https://festival-calendar.nl" title="Festival Calendar - Discover the most amazing festivals">
+                        <img class="logo" src="/Resources/images/logoc.png" title="Festival-Calendar.com" />
+                    </a>
+                </div>
+            </div>
+            <div class="right">
+                <ul class="visible-xl visible-l">
+                    <li>
+                        <a href="/" title="Festivals @DateTime.Now.Month/@DateTime.Now.Year">CALENDAR</a>
+                    </li>
+                    <li><span class="separator">/</span></li>
+                    <li>
+                        <a href="/news" title="NEWS">NEWS</a>
+                    </li>
+                    <li><span class="separator">/</span></li>
+                    <li>
+                        <a href="/register" title="SIGN UP AT FESTIVAL CALENDAR">SIGN UP</a>
+                    </li>
+                </ul>
+                @*<ul>
+                        <li><span class="separator">/</span></li>
+                        <li>
+                            <a href="/#/countries" ng-click="$event.preventDefault();ToggleCountryFilter(this);">
+                                Countries
+                                <span class="count" ng-if="CountryCount && CountryCount != 0">
+                                    {{CountryCount}}
+                                </span>
+                            </a>
+                        </li>
+                        <li><span class="separator">/</span></li>
+                        <li>
+                            <a href="/#/genres">Genres</a>
+                            <span class="count" ng-if="CountryCount && CountryCount != 0">
+                                {{CountryCount}}
+                            </span>
+                        </li>
+                        <li><span class="separator">/</span></li>
+                        <li>
+                            <a href="/#/settings">Settings</a>
+                        </li>
+                        <li>
+                            <span class="separator">/</span>
+                        </li>
+                        <li not-for-roles="ALL">
+                            <a href="/#/login" ng-click="$event.preventDefault();OpenLoginModal(this)">Login</a>
+                        </li>
+                        <li for-roles="ALL">
+                            <a href="/#/login" ng-click="$event.preventDefault();OpenMyProfileModal(this)">My profile</a>
+                        </li>
+                    </ul>*@
+            </div>
+        </div>
+    </div>
+    <div id="main" class="main container">
+        @RenderBody()
+    </div>
+
+    <footer class="footer" ng-controller="FC.Modules.Menu.Controllers.MenuController as mctr">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8 left">
+                    <a href="https://festival-calendar.nl" title="Festival Calendar - Discover the most amazing festivals">
+                        <img class="logo" src="/Resources/images/logoc.png" title="Festival-Calendar.com" />
+                    </a>
+                </div>
+                <div class="col-xs-8 middle">
+
+                </div>
+                <div class="col-xs-8 right">
+                    <h5 style="color:#FFF; font-size: 12px; margin-top: 10px; float:right;">&copy; FESTIVAL CALENDAR | VERSION BETA 1.0</h5>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1829782037310162',
+                xfbml: true,
+                version: 'v1.0'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <script src="phone-countries.js"></script>
+    <script src="/App/deps.min.js"></script>
+    <script src="festival-calendar.js"></script>
+
+</body>
+</html>

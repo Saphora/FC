@@ -1,0 +1,94 @@
+﻿<!--<ng-include src="'/Scripts/Modules/Countries/Views/country-filter.html'"></ng-include>
+<ng-include src="'/Scripts/Modules/Genres/Views/genre-filter.html'"></ng-include>-->
+<ng-include src="'/Scripts/Shared/Views/loader.html'" ng-if="IsLoading==true"></ng-include>
+
+<div class="row" ng-if="IsLoading == false">
+    <div class="col-xl-18">
+        <div class="card profile-header">
+            <div class="card-header">
+                <span class="h5">
+                    {{Artist.Name.toUpperCase()}}
+                </span>
+                <div class="rating" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr" ng-init="rctr.GetRates(Artist.ArtistID,'artist')">
+                    <span class="count" theme="count" ng-if="Rating.DisplayCount == '0'">
+                        0
+                    </span>
+                    <span class="count" theme="count" ng-if="Rating.DisplayCount != '0'">
+                        {{Rating.DisplayCount}}
+                    </span>
+                    <a href="#" id="star_{{Artist.ArtistID}}_1" ng-click="$event.preventDefault();rctr.Rate(Artist.ArtistID,'artist',1)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star1Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star1Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Artist.ArtistID}}_2" ng-click="$event.preventDefault();rctr.Rate(Artist.ArtistID,'artist',2)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star2Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star2Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Artist.ArtistID}}_3" ng-click="$event.preventDefault();rctr.Rate(Artist.ArtistID,'artist',3)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star3Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star3Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Artist.ArtistID}}_4" ng-click="$event.preventDefault();rctr.Rate(Artist.ArtistID,'artist',4)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star4Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star4Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Artist.ArtistID}}_5" ng-click="$event.preventDefault();rctr.Rate(Artist.ArtistID,'artist',5)">
+                        <i class="star active fa fa-star" ng-if="Rating.Star5Active"></i>
+                        <i class="star fa fa-star" ng-if="!Rating.Star5Active"></i>
+                    </a>
+                </div>
+                <a href="#" ng-click="$event.preventDefault();DoEdit('artist-name', this, $event)">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </div>
+            <div class="card-block no-padding artist-header" backimg="{{ProfileHeaderImg}}">
+                <div class="logo-wrapper">
+                    <div class="mask" ng-click="$event.preventDefault();vm.DoEdit('logo', this, $event)" for-roles="ADMIN">
+                        <i class="fa fa-camera"></i>
+                    </div>
+                    <img ng-if="Artist.LogoID" ng-src="{{MediaURLRoot}}/{{Artist.LogoID}}.img?thumb=true" class="ct-logo" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-24 col-sm-12 col-md-12 col-lg-8">
+                <div class="card  static no-padding artist">
+                    <ng-include src="'/Scripts/modules/details/views/about-card.html'"></ng-include>
+                </div>
+            </div>
+            <div class="col-xs-24 col-sm-12 col-md-12 col-lg-8">
+                <div class="card  static no-padding artist">
+                    <ng-include src="'/Scripts/modules/genres/views/genre-card.html'"></ng-include>
+                </div>
+            </div>
+            <div class="col-xs-24 col-sm-12 col-md-8 col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h5">
+                            SOCIAL
+                        </span>
+                    </div>
+                    <div class="card-block">
+                        <ul>
+                            <li>
+                                Facebook
+                            </li>
+                            <li>
+                                MySpace
+                            </li>
+                            <li>
+                                SoundCloud
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--left-->
+    </div>
+
+    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 col-xs-24">
+        <ng-include src="'/scripts/modules/menu/views/quickmenu.html'" ng-controller="FC.Modules.Menu.Controllers.QuickMenuController as vm" ng-init="vm.init('artist')" />
+    </div>
+
+</div>

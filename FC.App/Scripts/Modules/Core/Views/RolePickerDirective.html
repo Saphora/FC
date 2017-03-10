@@ -1,0 +1,12 @@
+﻿<div class="role-picker">
+    <div class="header">
+        <a href="#" class="btn-sm btn-default" ng-click="$event.preventDefault();vm.OpenRolesModal();">ADD ROLE(S)</a>
+    </div>
+    <div class="selected">
+        <ul>
+            <li ng-repeat="role in value" val="{{role.RoleID}}">
+                {{role.Name}}
+            </li>
+        </ul>
+    </div>
+</div>

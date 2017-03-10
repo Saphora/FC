@@ -1,0 +1,87 @@
+﻿
+<div class="form-group">
+    <label for="CountryID" class="dpgroup-label">Country</label><br />
+    <select name="CountryID" class="form-control" ng-model="model.CountryID" ng-init="GetFieldState(this, 'CountryID')" ng-blur="SaveFieldState(this, 'CountryID', model.CountryID)" placeholder="Country">
+        <option ng-repeat="Country in SysCountries" value="{{Country.CountryID}}">
+            {{Country.Name}}
+        </option>
+    </select>
+</div>
+<div ng-if="!IsCreated || IsEditing==true">
+    <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'LocationName')" ng-blur="SaveFieldState(this, 'LocationName', model.LocationName)" ng-model-options="{updateOn: 'blur'}" ng-model="model.LocationName" placeholder="Name of the location" type="text" /></div>
+    <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'Address')" ng-blur="SaveFieldState(this, 'Address', model.Address)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Address" placeholder="Streetname 28" type="text" /></div>
+    <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'ZIPCode')" ng-blur="SaveFieldState(this, 'ZIPCode', model.ZIPCode)" ng-model-options="{updateOn: 'blur'}" ng-model="model.ZIPCode" placeholder="(ZIP e.g: 999AA)" type="text" /></div>
+    <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'City')" ng-blur="SaveFieldState(this, 'City', model.City)" ng-model-options="{updateOn: 'blur'}" ng-model="model.City" placeholder="Place" type="text" /></div>
+    <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'Website')" ng-blur="SaveFieldState(this, 'Website', model.Website)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Website" placeholder="http://www.website.com" type="text" /></div>
+    <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'Email')" ng-blur="SaveFieldState(this, 'Email', model.Email)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Email" placeholder="info@festivalname.nl" type="text" /></div>
+    <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'Phone')" ng-blur="SaveFieldState(this, 'Phone', model.Phone)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Phone" placeholder="{{PhoneCode}}611223344" type="text" /></div>
+</div>
+<div ng-if="IsCreated || IsEditing==true">
+    <div ng-if="IsEditing == false">
+        <h5>Successfully created location {{model.Name}}</h5>
+        <p>You can now personalize this location with a thumbnail and profile header image.</p>
+    </div>
+    <div class="form-group media-picker" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc">
+        <div class="row">
+            <div class="col-xs-12">
+                <span class="preview">
+                    <img ng-src="{{MediaURLRoot}}/{{model.ThumbnailID}}.img?&width=272" class="ct-logo" ng-if="model.ThumbnailID" />
+                    <i class="fa fa-ban" ng-if="!model.ThumbnailID"></i>
+                    <br ng-if="!model.ThumbnailID" />
+                    <span ng-if="!model.ThumbnailID">Not specified</span>
+                </span>
+            </div>
+            <div class="col-xs-12">
+                <a href="#" class="btn btn-default" ng-click="$event.preventDefault();mmc.OpenMediaModal(760,'LocationThumbSaved', model.MediaDirectoryID)">
+                    <i class="fa fa-hand-rock-o" aria-hidden="true"></i>Thumbnail
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="form-group media-picker" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc">
+        <div class="row">
+            <div class="col-xs-12">
+                <span class="preview">
+                    <img ng-src="{{MediaURLRoot}}/{{model.ProfileImageID}}.img?&width=272" class="ct-logo" ng-if="model.ProfileImageID" />
+                    <i class="fa fa-ban" ng-if="!model.ProfileImageID"></i>
+                    <br ng-if="!model.ProfileImageID" />
+                    <span ng-if="!model.ProfileImageID">Not specified</span>
+                </span>
+            </div>
+            <div class="col-xs-12">
+                <a href="#" class="btn btn-default" ng-click="$event.preventDefault();mmc.OpenMediaModal(760,'ProfileImageSaved', model.MediaDirectoryID)">
+                    <i class="fa fa-hand-rock-o" aria-hidden="true"></i>Profile image
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="form-group media-picker" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc">
+        <div class="row">
+            <div class="col-xs-12">
+                <span class="preview">
+                    <img ng-src="{{MediaURLRoot}}/{{model.ProfileHeaderImageID}}.img?&width=272" class="ct-logo" ng-if="model.ProfileHeaderImageID" />
+                    <i class="fa fa-ban" ng-if="!model.ProfileHeaderImageID"></i>
+                    <br ng-if="!model.ProfileHeaderImageID" />
+                    <span ng-if="!model.ProfileHeaderImageID">Not specified</span>
+                </span>
+            </div>
+            <div class="col-xs-12">
+                <a href="#" class="btn btn-default" ng-click="$event.preventDefault();mmc.OpenMediaModal(760,'ProfileHeaderImageSaved', model.MediaDirectoryID)">
+                    <i class="fa fa-hand-rock-o" aria-hidden="true"></i>Profile header image
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="form-group"><textarea class="form-control" ng-model-options="{updateOn: 'blur'}" ng-model="model.MapsHTML" placeholder="Place the Google Maps HTML embedded code in here."></textarea></div>
+</div>
+<div class="form-group">
+    <a href="#" class="btn btn-success" ng-if="IsCreating==true" ng-click="$event.preventDefault();DoSaveCreate(this);">
+        <i class="fa fa-save"></i> SAVE
+    </a>
+    <a href="#" class="btn btn-success" ng-if="IsEditing==true" ng-click="$event.preventDefault();DoSaveEdit(this);">
+        <i class="fa fa-save"></i> EDIT
+    </a>
+    <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();DoCancelCRUD(this);">
+        <i class="fa fa-times"></i> CANCEL
+    </a>
+</div>

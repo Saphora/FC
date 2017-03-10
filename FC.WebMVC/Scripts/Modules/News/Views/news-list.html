@@ -1,0 +1,32 @@
+﻿<div class="block-item col-sm-12" ng-controller="FC.Modules.News.Controllers.NewsController as newsCtr">
+
+        <div class="header" theme="header">
+            <h1>
+                <span class="fc-icon small"></span>
+                <span class="title">News</span>
+                <i class="fa fa-microphone right"></i>
+            </h1>
+        </div>
+        <div class="body">
+            <div class="inner">
+                <ul class="fc-list content-detail">
+                    <li ng-repeat="newsItem in News">
+                        <a href="{{newsItem.Link.toLowerCase()}}" class="inner">
+                            <div class="logo hidden-xs" backImg="$0$.img?&thumb=true" watch="{{newsItem.Thumbnail}}">
+                            </div>
+                            <div class="text">
+                                <span class="date" theme="header">
+                                    {{newsItem.DisplayDate}}
+                                </span>
+                                <span class="separator">
+
+                                </span>
+                                <span class="title">{{newsItem.Title}}</span><br />
+                                <span class="subtext">{{newsItem.ShortText}}</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+</div>

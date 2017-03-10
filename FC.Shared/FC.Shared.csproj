@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{825EBABE-4B92-48DD-8696-CFCE263E2153}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FC.Shared</RootNamespace>
+    <AssemblyName>FC.Shared</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'LocalRelease|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\LocalRelease\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework6.Npgsql, Version=3.1.1.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework6.Npgsql.3.1.1\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.1.1.0\lib\netstandard1.1\Microsoft.Extensions.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.1.1.0\lib\netstandard1.1\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.2.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.3.2.0\lib\net451\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attribs\ValidationAttribute.cs" />
+    <Compile Include="Config\FCConfig.cs" />
+    <Compile Include="Config\RepositoryConfig.cs" />
+    <Compile Include="Entities\Adv2Visibility.cs" />
+    <Compile Include="Entities\Advertisement.cs" />
+    <Compile Include="Entities\CalendarCardAd.cs" />
+    <Compile Include="Entities\CarouselAd.cs" />
+    <Compile Include="Entities\Favorite.cs" />
+    <Compile Include="Entities\LineupItem.cs" />
+    <Compile Include="Entities\Materialized\MaterializedFestivalListVM.cs" />
+    <Compile Include="Entities\Materialized\MaterializedArtistListVM.cs" />
+    <Compile Include="Entities\Materialized\MaterializedNews.cs" />
+    <Compile Include="Entities\MenuItem.cs" />
+    <Compile Include="Entities\MenuSection.cs" />
+    <Compile Include="Entities\MenuSection2Roles.cs" />
+    <Compile Include="Entities\MimeType2MediaType.cs" />
+    <Compile Include="Entities\NewsListLineAd.cs" />
+    <Compile Include="Entities\Plugin.cs" />
+    <Compile Include="Entities\Product.cs" />
+    <Compile Include="Entities\Product2Reseller.cs" />
+    <Compile Include="Entities\Reseller2Tickets.cs" />
+    <Compile Include="Entities\Stage.cs" />
+    <Compile Include="Entities\ProfileHeaderAd.cs" />
+    <Compile Include="Entities\SponsorAd.cs" />
+    <Compile Include="Entities\UNews2UCountry.cs" />
+    <Compile Include="Enum\AdvertisementType.cs" />
+    <Compile Include="Entities\ApplicationUser.cs" />
+    <Compile Include="Entities\AppUserSession.cs" />
+    <Compile Include="Entities\ContentDetail.cs" />
+    <Compile Include="Entities\Location.cs" />
+    <Compile Include="Entities\Ticket.cs" />
+    <Compile Include="Entities\Ticket2UFestival.cs" />
+    <Compile Include="Entities\GenericMessage.cs" />
+    <Compile Include="Entities\Language.cs" />
+    <Compile Include="Entities\Media.cs" />
+    <Compile Include="Entities\MediaDirectory.cs" />
+    <Compile Include="Entities\MediaType.cs" />
+    <Compile Include="Entities\MimeType.cs" />
+    <Compile Include="Entities\Permission.cs" />
+    <Compile Include="Entities\Permission2Role.cs" />
+    <Compile Include="Entities\Rating.cs" />
+    <Compile Include="Entities\Reseller.cs" />
+    <Compile Include="Entities\ResellerGenre.cs" />
+    <Compile Include="Entities\ResellerGenre2ResellerType.cs" />
+    <Compile Include="Entities\ResellerType.cs" />
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\SeedVersion.cs" />
+    <Compile Include="Entities\ServiceMessage.cs" />
+    <Compile Include="Entities\ServiceResponse.cs" />
+    <Compile Include="Entities\SocialProfile.cs" />
+    <Compile Include="Entities\SocialProfileType.cs" />
+    <Compile Include="Entities\SystemHeaders.cs" />
+    <Compile Include="Entities\Translation.cs" />
+    <Compile Include="Entities\Translation2Language.cs" />
+    <Compile Include="Entities\UArtist.cs" />
+    <Compile Include="Entities\UArtist2UFestival.cs" />
+    <Compile Include="Entities\BaseModel.cs" />
+    <Compile Include="Entities\Calendar.cs" />
+    <Compile Include="Entities\UCountry.cs" />
+    <Compile Include="Entities\UFestival.cs" />
+    <Compile Include="Entities\SimpleDateTime.cs" />
+    <Compile Include="Entities\UGenre2UArtist.cs" />
+    <Compile Include="Entities\UGenre2UFestival.cs" />
+    <Compile Include="Entities\UGenre2UNews.cs" />
+    <Compile Include="Entities\UNews.cs" />
+    <Compile Include="Entities\User2Role.cs" />
+    <Compile Include="Entities\UserLocalization.cs" />
+    <Compile Include="Entities\UVisibility.cs" />
+    <Compile Include="EntityMapper\EntityMapper.cs" />
+    <Compile Include="EntityMapper\UmbracoDataType.cs" />
+    <Compile Include="EntityMapper\UmbracoField.cs" />
+    <Compile Include="EntityMapper\UmbracoNavigationProperty.cs" />
+    <Compile Include="Entities\UGenre.cs" />
+    <Compile Include="Enum\AuthMode.cs" />
+    <Compile Include="Enum\BannerFormat.cs" />
+    <Compile Include="Enum\CarouselType.cs" />
+    <Compile Include="Enum\CurrencyBase.cs" />
+    <Compile Include="Enum\InternalContentType.cs" />
+    <Compile Include="Enum\Roles.cs" />
+    <Compile Include="Enum\Exceptions\NotAuthorizedException.cs" />
+    <Compile Include="Enum\SocialMediaBindableType.cs" />
+    <Compile Include="ServerMessages\BannerFilter.cs" />
+    <Compile Include="ServerMessages\FestivalFilter.cs" />
+    <Compile Include="ServerMessages\GenreFilter.cs" />
+    <Compile Include="ServerMessages\HTTPFile.cs" />
+    <Compile Include="ServerMessages\IsAuthMsg.cs" />
+    <Compile Include="ServerMessages\LoginMsg.cs" />
+    <Compile Include="ServerMessages\LogoutMsg.cs" />
+    <Compile Include="ServerMessages\MediaDirectoryMsg.cs" />
+    <Compile Include="ServerMessages\NewsFilter.cs" />
+    <Compile Include="ServerMessages\RatingMsg.cs" />
+    <Compile Include="ServerMessages\SearchFilter.cs" />
+    <Compile Include="ServerMessages\SocialProfileMsg.cs" />
+    <Compile Include="ServerMessages\UploadMediaMsg.cs" />
+    <Compile Include="Helpers\CalendarHelper.cs" />
+    <Compile Include="Helpers\PGHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Umbraco\UContent.cs" />
+    <Compile Include="Umbraco\UDirectory.cs" />
+    <Compile Include="Umbraco\UDocumentType.cs" />
+    <Compile Include="Umbraco\UNode.cs" />
+    <Compile Include="Umbraco\UPropertyData.cs" />
+    <Compile Include="Umbraco\UPropertyType.cs" />
+    <Compile Include="ViewModels\Artist\ArtistListVm.cs" />
+    <Compile Include="ViewModels\Calendar\Calendar.cs" />
+    <Compile Include="ViewModels\Date\DateVM.cs" />
+    <Compile Include="ViewModels\Festival\FestivalCRUD.cs" />
+    <Compile Include="ViewModels\Festival\FestivalDetailScope.cs" />
+    <Compile Include="ViewModels\Festival\FestivalMonthItem.cs" />
+    <Compile Include="ViewModels\Festival\FestivalVM.cs" />
+    <Compile Include="ViewModels\Rating\RatingVm.cs" />
+    <Compile Include="ViewModels\Search\ArtistSearchResult.cs" />
+    <Compile Include="ViewModels\Search\FestivalSearchResult.cs" />
+    <Compile Include="ViewModels\Search\GenreSearchResult.cs" />
+    <Compile Include="ViewModels\Search\NewsSearchResult.cs" />
+    <Compile Include="ViewModels\Search\SearchResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FC.Interfaces\FC.Interfaces.csproj">
+      <Project>{b0873d31-0f3c-49fa-80d5-6ca748b0e1d8}</Project>
+      <Name>FC.Interfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

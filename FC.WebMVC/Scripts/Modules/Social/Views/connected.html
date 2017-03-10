@@ -1,0 +1,39 @@
+﻿<div class="card-header">
+    <span class="h5">
+        STAY CONNECTED
+        <a href="#" ng-click="$event.preventDefault();DoStartEdit('social', this)" for-roles="ADMIN">
+            <i class="fa fa-edit"></i>
+        </a>
+    </span>
+</div>
+<div class="card-block no-padding" ng-if="IsLoading==false">
+    <div class="block-row">
+        <div class="center">
+            <a href="{{social.URL}}" target="_blank" ng-repeat="(key,social) in model.SocialProfiles" ng-if="key <=5" class="larger {{social.ProfileType.CssClass}} count_{{key}}">
+            </a>
+        </div>
+    </div>
+    <div class="block-row">
+        <div class="center">
+            <a href="{{social.URL}}" target="_blank" ng-repeat="(key,social) in model.SocialProfiles" ng-if="key > 5" class="larger {{social.ProfileType.CssClass}} count_{{key}}">
+            </a>
+        </div>
+    </div>
+    <script>
+        document.getElementById('shareBtn').onclick = function() {
+            FB.ui({
+                method: 'share',
+                display: 'popup',
+                href: 'https://developers.facebook.com/docs/',
+          }, function(response){});
+        }
+    </script>
+
+    <!-- Your share button code -->
+    <a class="btn btn-danger" id="shareBtn">
+        <i class="fa fa-facebook-square"></i> SHARE FESTIVAL
+    </a>
+</div>
+<div class="card-block no-padding" ng-if="IsLoading==true">
+    <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+</div>

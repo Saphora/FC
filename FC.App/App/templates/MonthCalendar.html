@@ -1,0 +1,61 @@
+<ng-include src="'App/templates/Filter.html'"></ng-include>
+<div class="modal fade " tabindex="-1" role="dialog" id="GenreModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" ng-controller="FlexSelectController as FSC">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Selecteer genres</h4>
+            </div>
+            <div class="modal-body FlexSelectOptions" >
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuleren</button>
+                <button type="button" class="btn btn-primary" id="save">Opslaan</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="row">
+    <div class="col-sm-12" id="calendar">
+        <div class="calendar-title col-sm-12" ng-controller="FlexSelectController as FSC">
+            <div class="FlexSelect" ng-init="FSC.SetFlexSelectOptions('genres')" id="GenreSelectControl">
+                <div class="FlexSelectedValue">
+                    <a class="btn btn-default select-genre-btn" data-toggle="modal" data-target="#GenreModal">Genre<span class="icon  glyphicon glyphicon-plus-sign"></span></a>
+                </div>
+            </div>
+        </div>
+        <ul class="calendar-items" ng-repeat="(Year,Month) in Ctr.FestivalYears" ng-if="Ctr.CurrentYear == Year">
+            <li class="month" ng-click="Ctr.ToggleChildren()" ng-repeat="(MonthName, Days) in Month" ng-if="Ctr.IsActiveMonth($index)">
+                <div class="inner">
+                    <ng-switch on="($index-1)">
+                        <a ng-switch-when="-1" href="calendar/{{Ctr.GenreID}}/{{Ctr.PrevYearValue}}/{{(11)}}" class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true" aria-label="Arrow left" ng-if="Ctr.CalendarBackEnabled">
+                        </a>
+                        <a ng-switch-default href="calendar/{{Ctr.GenreID}}/{{Ctr.CurrentYear}}/{{($index-1)}}" class="glyphicon glyphicon-circle-arrow-left" aria-hidden="true" aria-label="Arrow left" ng-if="Ctr.CalendarBackEnabled">
+                        </a>
+                    </ng-switch>
+                    <span class="title" ng-click="Ctr.ShowYearMonthPicker()">{{MonthName}} - {{Year}}</span>
+                    <ng-switch on="($index +1)">
+                        <a ng-switch-default href="calendar/{{Ctr.GenreID}}/{{Ctr.CurrentYear}}/{{($index+1)}}" class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true" aria-label="Arrow right" ng-if="Ctr.CalendarNextEnabled">
+                        </a>
+                        <a ng-switch-when="12" href="calendar/{{Ctr.GenreID}}/{{(Ctr.NextYearValue)}}/{{(0)}}" class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true" aria-label="Arrow right" ng-if="Ctr.CalendarNextEnabled">
+                            <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+                        </a>
+                    </ng-switch>
+                </div>
+                <ul class="festivals active">
+                    <li class="child" ng-class="{active: Ctr.GetCurrentDay() == Day}" ng-repeat="(DayNum, Day) in Days">
+                        <div class="inner">
+                            <span class="title">
+                                <span class="blue">
+                                    {{DayNum}}
+                                </span>
+                                <br />
+                            </span>
+                            <span class="count">25</span>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

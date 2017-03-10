@@ -1,0 +1,189 @@
+﻿@import "../core/var.scss";
+.card {
+    &.festival-card {
+        max-height: 272px !important;
+        min-height:272px !important;
+        height: 272px !important;
+        max-width: 272px !important;
+        width: 272px !important;
+        overflow:hidden;
+        @include border-radius(0); 
+        border:0;
+        .card-header {
+            width:272px;
+            max-width:272px;
+            height: 40px;
+            text-align:center;   
+            a {
+                color: #FFF !important;
+            }
+            &.link {
+            }
+            .h5 {
+                line-height: 20px;
+            }
+        }
+        .card-block {
+            .top {
+                float:left;
+                position:relative;
+                width:100%;
+                height:50%;
+                .card-img {
+                    width: calc(50% - 5px) !important;
+                    height: calc(50% - 5px) !important;
+                }
+                .card-date {
+                    height: calc(50% - 5px)!important;
+                    width: calc(50% - 5px)!important;
+                    .hr {
+                        float:left;
+                        position:relative;
+                        display:block;
+                        background-color:$BGDark;
+                        width:100%;
+                        max-width:110px;
+                        height:5px;
+                        &.top {
+                            top: 0;
+                        }
+                        &.bottom {
+                            bottom:0;
+                        }
+
+                    }
+                    .inner {
+                        float:left;
+                        max-width:110px;
+                        max-height:100px;
+                        min-height:100px;
+                        min-width:110px;
+                        span {    
+                            font-family: "Oswald";
+                            display:block;
+                            padding:0;
+                            margin: 0;
+                            &.day {
+                                display:block;
+                                float:left;
+                                margin-top: 7px;
+                                margin-left: 7px;
+                                width:70px;
+                                font-size: 50px;
+                                font-weight: 700;
+                                height:auto;
+                                line-height:50px;
+                                text-align:center;
+                            }
+                            &.month {
+                                float:left;
+                                font-size:35px;
+                                display:block;
+                                font-weight: 700;
+                                width:70px;
+                                line-height:35px;
+                                height:auto;
+                                margin-left: 7px;
+                                text-align:center;
+                            }
+                            &.year {
+                                margin-top: 10px;
+                                display:block;
+                                overflow:hidden;
+                                max-height:110px;
+                                width:20px;
+                                span {
+                                    float:left;
+                                    display:block;
+                                    line-height:20px;
+                                    width:20px;
+                                    
+                                    font-size:20px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .bottom {
+                float:left;
+                position:relative;
+                width:100%;
+                height:auto;
+                div {
+                    margin-top: 10px;
+                    float:left;
+                    font-family: Arial;
+                    font-weight:bold;
+                    font-size:12px; 
+                    width:calc(50%) !important;
+                    .txt {
+                        float:left;
+                        width:calc(100% - 20px);
+                        display:block;
+                    }
+                    i {
+                        float:left;
+                        display:block;
+                        width:20px;
+                        height: auto;
+                        padding-top: 2px;
+
+                    }
+                    &.genres{
+                        float:left;
+                        line-height:10px;
+                        margin-top: 0;
+                        width: 100% !important;
+                        i {
+                            color: red;
+                            font-size: 15px;
+                            margin-right: 2px;
+                        }
+                        .g {
+                            width:auto !important;
+                            float:left;
+                            font-size: 10px;
+                            font-weight:bold;
+                            padding: 2px;
+                            background-color: #333;
+                            color:#FFF;
+                            margin-top: 3px;
+                            margin-right: 3px;
+                        }
+                    }
+                }
+            }
+            .rating {
+                float:left;
+                width: 100%;
+                text-align:center;
+                margin-top: 10px;
+                background-color: #DDD;
+                span.count {
+                    background-color: transparent;
+                    font-size: 12px;
+                    font-weight:bold;
+                    padding: 2px;
+                }
+                .star {
+                    text-decoration:none;
+                    color: #999;
+                    &:hover {
+                        text-decoration:none;
+                        color: #BFA80C;
+                    }
+                    &.active {
+                        color: #BFA80C;
+                        &:hover {
+                            text-decoration:none;
+                            color: #B88F00;
+                        }
+                        text-decoration:none;
+                    }
+
+                }
+            }
+        }
+    }
+}

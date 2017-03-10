@@ -1,0 +1,18 @@
+﻿<div class="col-sm-12 block-item hidden-xs" ng-controller="FC.Modules.Filtering.Controllers.MonthModalController as  mmc">
+    <div class="header" theme="header">
+        <h1>
+            <i class="fa fa-calendar"></i>
+            <span class="title">Pick date</span>
+        </h1>
+    </div>
+    <div class="body min-block-height" style="padding-top: 20px; text-align:center;">
+        <div class="inner">
+            <a class="btn btn-default" theme="button,button-hover" id="dropdownMenu1" ng-click="$event.PreventDefault();mmc.OpenMonthModal(400)">
+                <i class="fa fa-calendar"></i> {{ActiveMonthName}}
+            </a>
+            <a class="btn btn-default" theme="button,button-hover" id="dropdownMenu2" ng-click="$event.PreventDefault();mmc.OpenMonthModal(400)">
+                <i class="fa fa-calendar"></i> {{ActiveYear}}
+            </a>
+        </div>
+    </div>
+</div>

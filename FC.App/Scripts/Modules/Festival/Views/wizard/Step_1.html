@@ -1,0 +1,65 @@
+﻿<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="fc-icon"></i>
+                <span class="h5">Add festival - step 1</span>
+                <i class="fa fa-circle-plus"></i>
+            </div>
+            <div class="card-block">
+                <form class="form" role="search" ng-submit="DoSearch(vm)">
+                    <input id="FestivalID" type="hidden" name="FestivalID" ng-model="model.FestivalID" ng-load="GetFieldState(this, 'FestivalID');SaveFieldState(this, 'FestivalID', model.FestivalID)" />
+                    <div class="form-group">
+                        <input id="Name" name="Name" type="text"  ng-model="model.Name" ng-init="GetFieldState(this, 'Name')" ng-blur="SaveFieldState(this, 'Name', model.Name)" class="form-control" placeholder="Festival name">
+                    </div>
+                    <div class="form-group">
+                        <input id="Address" name="Address" type="text"  ng-model="model.Address" ng-init="GetFieldState(this, 'Address')" ng-blur="SaveFieldState(this, 'Address', model.Address)" class="form-control" placeholder="Addres e.g. Mainstreet 943A">
+                    </div>
+                    <div class="form-group">
+                        <input id="ZIPCode" name="ZIPCode" type="text"  ng-model="model.ZIPCode" ng-init="GetFieldState(this, 'ZIPCode')" ng-blur="SaveFieldState(this, 'ZIPCode', model.ZIPCode)" class="form-control" placeholder="ZIP code e.g. 6666AA">
+                    </div>
+
+                    <div class="form-group">
+                        <input id="City" name="City" type="text"  ng-model="model.City" ng-init="GetFieldState(this, 'City')" ng-blur="SaveFieldState(this, 'City', model.City)" class="form-control" placeholder="City(EN) e.g. London, Berlin, Madrid">
+                    </div>
+                    <div class="form-group">
+                        <input id="Location" name="Location" type="text"  ng-model="model.Location" ng-init="GetFieldState(this, 'Location')" ng-blur="SaveFieldState(this, 'Location', model.Location)" class="form-control" placeholder="Location e.g. Parking lot of x">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="CountryID" class="dpgroup-label">Country</label><br />
+                        <select name="CountryID" class="form-control" ng-model="model.CountryID" ng-init="GetFieldState(this, 'CountryID')" ng-blur="SaveFieldState(this, 'CountryID', model.CountryID)" placeholder="Country">
+                            <option ng-repeat="Country in SysCountries" value="{{Country.CountryID}}">
+                                {{Country.Name}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="StartDate">Start date</label><br />
+                        <md-datepicker ng-model="model.StartDate" ng-change="DoChangeStartDate(this)" ng-init="GetFieldState(this, 'StartDate')" ng-blur="SaveFieldState(this, 'StartDate', model.StartDate)"></md-datepicker>
+
+                        <!--<md-datepicker md-min-date="{{MinDateStart}}" md-max-date="{{MaxDateStart}}" ng-model="model.StartDate"  ng-change="DoChangeStartDate(this)"  ng-init="GetFieldState(this, 'StartDate')" ng-blur="SaveFieldState(this, 'StartDate', model.StartDate)"></md-datepicker>-->
+                        <!--todo make an datepicker directive..-->
+                        <!-- <datetimepicker data-ng-model="model.StartDate"></datetimepicker>-->
+                        <!--<input id="StartDate" data-date-format="yyyy-mm-dd" data-date="{{model.StartDate}}" ng-model="model.StartDate" name="StartDate" type="text" ng-init="GetFieldState(this, 'StartDate')" ng-change="SaveFieldState(this, 'StartDate', model.StartDate)" class="form-control" placeholder="Select start date">-->
+                    </div>
+                    <div class="form-group">
+                        <label for="EndDate">End date</label><br />
+                        <md-datepicker ng-model="model.EndDate" ng-init="GetFieldState(this, 'EndDate')" ng-blur="SaveFieldState(this, 'EndDate', model.EndDate)"></md-datepicker>
+                        <!--<input id="EndDate" data-date-format="yyyy-mm-dd" data-date="{{model.EndDate}}" ng-model="model.EndDate" name="EndDate" type="text" ng-init="GetFieldState(this, 'EndDate')" ng-change="SaveFieldState(this, 'EndDate', model.EndDate)" class="form-control" placeholder="Select end date">-->
+                    </div>
+                    <a href="/#/festival/add/2" class="btn btn-danger next" ng-if="IsCreating" ng-click="SaveFormState(this)">
+                        Next
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                    <a href="/#/festival/edit/{{model.FestivalID}}/2" class="btn btn-danger next" ng-if="IsEditing" ng-click="SaveFormState(this)">
+                        Next
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <ng-include src="'/Scripts/Modules/Festival/Views/wizard/FestivalPreview.html'"></ng-include>
+</div>

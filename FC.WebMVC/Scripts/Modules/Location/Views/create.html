@@ -1,0 +1,125 @@
+﻿<div class="col-xs-18">
+    <div class="card">
+        <div class="card-header">
+            <span class="h5">
+                ADD NEW LOCATION
+            </span>
+        </div>
+        <div class="card-block" ng-if="IsLoading==false">
+            <div class="form-group">
+                <label for="CountryID" class="dpgroup-label">Country</label><br />
+                <select name="CountryID" id="CountryID" class="form-control" ng-model="model.CountryID" ng-init="GetFieldState(this, 'CountryID')" ng-blur="SaveFieldState(this, 'CountryID', model.CountryID)" placeholder="Country">
+                    <option value="">-- SELECT COUNTRY --</option>
+                    <option ng-repeat="Country in SysCountries" value="{{Country.CountryID}}">
+                        {{Country.Name}}
+                    </option>
+                </select>
+            </div>
+            <div ng-if="!IsCreated || IsEditing==true">
+                <div class="form-group"><input id="LocationName" class="form-control" ng-init="GetFieldState(this, 'LocationName')" ng-blur="SaveFieldState(this, 'LocationName', model.LocationName)" ng-model-options="{updateOn: 'blur'}" ng-model="model.LocationName" placeholder="Name of the location" type="text" /></div>
+                <div class="form-group"><input id="ZIPCode" class="form-control" ng-init="GetFieldState(this, 'ZIPCode')" ng-blur="vm.AutoFill();SaveFieldState(this, 'ZIPCode', model.ZIPCode)" ng-model-options="{updateOn: 'blur'}" ng-model="model.ZIPCode" placeholder="(ZIP e.g: 999AA)" type="text" /></div>
+                <div class="form-group"><input id="Address" class="form-control" ng-init="GetFieldState(this, 'Address')" ng-blur="SaveFieldState(this, 'Address', model.Address)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Address" placeholder="Streetname 28" type="text" /></div>
+                <div class="form-group"><input id="City" class="form-control" ng-init="GetFieldState(this, 'City')" ng-blur="SaveFieldState(this, 'City', model.City)" ng-model-options="{updateOn: 'blur'}" ng-model="model.City" placeholder="Place" type="text" /></div>
+                <div class="form-group"><input id="Website" class="form-control" ng-init="GetFieldState(this, 'Website')" ng-blur="SaveFieldState(this, 'Website', model.Website)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Website" placeholder="http://www.website.com" type="text" /></div>
+                <div class="form-group"><input id="Email" class="form-control" ng-init="GetFieldState(this, 'Email')" ng-blur="SaveFieldState(this, 'Email', model.Email)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Email" placeholder="info@festivalname.nl" type="text" /></div>
+                <div class="form-group"><input id="Phone" class="form-control" ng-init="GetFieldState(this, 'Phone')" ng-blur="SaveFieldState(this, 'Phone', model.Phone)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Phone" placeholder="{{PhoneCode}}XXXXXXXXX" type="text" /></div>
+                <div class="form-group" for-roles="Developer">
+                    <input id="Latitude" class="form-control" ng-init="GetFieldState(this, 'Latitude')" ng-blur="SaveFieldState(this, 'Latitude', model.Latitude)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Latitude" placeholder="Latitude" type="text" />
+                </div>
+                <div class="form-group" for-roles="Developer">
+                    <input id="Longitude" class="form-control" ng-init="GetFieldState(this, 'Longitude')" ng-blur="SaveFieldState(this, 'Longitude', model.Longitude)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Longitude" placeholder="Longitude" type="text" />
+                </div>
+            </div>
+            <div class="form-group">
+                <a href="#" ng-class="ModelIsValid ? 'pull-right btn btn-success':'pull-right btn btn-success disabled'" ng-if="IsCreating==true" ng-click="$event.preventDefault();vm.DoSaveCreate(this);">
+                    SAVE
+                </a>
+                <a href="#" ng-class="ModelIsValid ? 'pull-right btn btn-success':'pull-right btn btn-success disabled'" ng-if="IsEditing==true" ng-click="$event.preventDefault();vm.DoSaveEdit(this);">
+                    EDIT
+                </a>
+            </div>
+        </div>
+        <div class="card-block" ng-if="IsLoading==true">
+            <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+        </div>
+    </div>
+</div>
+<div class="col-xs-6">
+    <div class="card quickmenu">
+        <div class="card-header">
+            <span class="h5">ACTIONS</span>
+        </div>
+        <div class="card-block">
+            <ul>
+                <li>
+                    <a href="/#/locations">
+                        <i class="fa fa-list"></i> OVERVIEW
+                    </a>
+                </li>
+                <li>
+                    <a href="/#/advertisement">
+                        <i class="fa fa-bullhorn"></i> ADVERTISEMENT
+                    </a>
+                </li>
+                <li>
+                    <a href="/#/recycle-bin">
+                        <i class="fa fa-trash"></i> RECYCLE BIN
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="card static location">
+        <div class="card-header">
+            <span class="h5">PREVIEW WHERE</span>
+        </div>
+        <div class="card-block location-card" ng-if="IsLoading==false">
+            <div class="img-wrapper">
+                <span class="preview full-width" ng-if="!model.ThumbnailID">
+                    <i class="fa fa-ban" ng-if="!FestivalLogoPath"></i>
+                    <br ng-if="!FestivalLogoPath" />
+                    <span ng-if="!FestivalLogoPath">Image not set.</span>
+                </span>
+            </div>
+            <div class="buttons">
+                <a href="#" class="btn-sm btn-danger">
+                    MORE INFO
+                </a>
+            </div>
+            <div class="content">
+                <div class="text">
+                    <span class="title">
+                        <b>{{model.LocationName.toUpperCase()}}</b>
+                    </span>
+                    <br />
+                    <span class="address">
+                        {{model.Address.toUpperCase()}}<br />
+                        {{model.ZIPCode.toUpperCase()}},{{model.City.toUpperCase()}}<br />
+                        {{model.Country.Name.toUpperCase()}}<br />
+                        [T] - {{model.Phone}}<br />
+                        [E] - <a href="mailto://{{model.Email}}">{{model.Email}}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="card-block" ng-if="IsLoading==true">
+            <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+        </div>
+    </div>
+    <div class="card maps">
+        <div class="card-header">
+            <span class="h5">ROUTE INFO</span>
+        </div>
+        <div class="card-block" ng-if="MapsReady==true && IsLoading==false">
+            <div class="google-maps">
+                <iframe ng-src="{{MapsURL}}" width="272" height="272" frameborder="0" style="border:0" allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="card-block" ng-if="IsLoading==true && MapsReady == false">
+            <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+        </div>
+        <div class="card-block" ng-if="IsLoading==false && MapsReady==false">
+            Please enter all the fields,
+        </div>
+    </div>
+</div>

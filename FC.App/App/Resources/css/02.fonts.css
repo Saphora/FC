@@ -1,0 +1,224 @@
+@charset "UTF-8";
+.money .format {
+  font-size: 110%;
+  margin-right: 3px; }
+
+.default-padding {
+  padding: 10px; }
+
+header {
+  background-color: #000 !important; }
+  header .logo {
+    background-image: url(/Resources/images/logoc.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 45px;
+    width: 200px;
+    background-size: 160px 45px;
+    margin-top: 2px; }
+  header li .menu-item {
+    color: #FFF !important;
+    font-family: GothamBold;
+    font-size: 16px;
+    background-color: #000 !important; }
+    header li .menu-item:hover {
+      background-color: #000 !important; }
+    header li .menu-item i {
+      color: #FFF;
+      font-size: 20px;
+      float: left;
+      margin-right: 10px;
+      margin-top: 1px;
+      display: block; }
+  header li.open {
+    background-color: #000 !important; }
+    header li.open .menu-item {
+      color: #FFF !important; }
+      header li.open .menu-item i {
+        color: #FFF; }
+  header li .dropdown-menu {
+    border-radius: 0 !important;
+    background-color: #000 !important; }
+    header li .dropdown-menu li > a {
+      color: #fff;
+      font-size: 14px; }
+      header li .dropdown-menu li > a:hover {
+        color: #FFF;
+        background-color: #000; }
+
+.logo {
+  background-image: url(/Resources/images/logoc.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 35px;
+  width: 200px;
+  background-size: 160px 35px;
+  margin-top: 7px; }
+
+.logo-color-0 {
+  background-color: #4ED7FF; }
+
+.logo-color-1 {
+  background-color: #FF0000; }
+
+.logo-color-2 {
+  background-color: #FE0089; }
+
+.logo-color-3 {
+  background-color: #AE3CE3; }
+
+.logo-color-4 {
+  background-color: #EDEA03; }
+
+.logo-color-5 {
+  background-color: #0D7C05; }
+
+.logo-color-6 {
+  background-color: #A6EA03; }
+
+.font-color-0 {
+  color: #4ED7FF; }
+
+.font-color-1 {
+  color: #FF0000; }
+
+.font-color-2 {
+  color: #FE0089; }
+
+.font-color-3 {
+  color: #AE3CE3; }
+
+.font-color-4 {
+  color: #EDEA03; }
+
+.font-color-5 {
+  color: #0D7C05; }
+
+.font-color-6 {
+  color: #A6EA03; }
+
+.row-fluid {
+  float: left;
+  -webkit-transition: min-height 0.5s;
+  /* Safari */
+  -moz-transition: min-height 0.5s;
+  transition: min-height 0.5s; }
+
+.FC-hidden {
+  height: 0px;
+  visibility: hidden;
+  overflow: hidden; }
+
+.FC-visible {
+  height: auto;
+  visibility: visible; }
+
+.fcmodal {
+  top: 100px;
+  width: calc(100% - 100px);
+  box-sizing: border-box;
+  margin: 50px; }
+
+.collapsepanel {
+  float: left;
+  width: 100%;
+  font-family: GothamBold; }
+
+.collapsepanelcontrols {
+  float: left;
+  width: 100%;
+  border-bottom: 1px solid #999;
+  margin: 0px 0 10px 0; }
+  .collapsepanelcontrols .btn.btn-default {
+    float: right;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 14px;
+    font-family: GothamBold; }
+
+.rte b {
+  font-family: GothamBold; }
+
+.rte h1, .rte h2, .rte h3, .rte h4, .rte h5, .rte h6 {
+  margin: 0;
+  padding: 5px 5px 5px 10px;
+  font-family: GothamBold; }
+
+.rte p {
+  padding: 10px;
+  font-family: GothamBold; }
+
+.rte h1 {
+  font-size: 22px; }
+
+.rte h2 {
+  font-size: 18px; }
+
+.rte h3 {
+  font-size: 16px; }
+
+.rte h4 {
+  font-size: 14px; }
+
+.rte h5 {
+  font-size: 14px; }
+
+.rte h6 {
+  font-size: 14px; }
+
+.fnt-white {
+  color: #fff; }
+
+.fnt-dg {
+  color: #333; }
+
+a, p, div, body, html, button, .btn {
+  font-size: 14px;
+  font-family: Gotham;
+  line-height: 20px; }
+
+@font-face {
+  font-family: 'Gotham';
+  src: url("/Resources/fonts/Gotham Book.eot");
+  src: local("☺"), url("/Resources/fonts/Gotham Book.woff") format("woff"), url("/Resources/fonts/Gotham Book.ttf") format("truetype"), url("Resources/fonts/Gotham Book.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'GothamBlack';
+  src: url("/Resources/fonts/GOTHAM-BLACK.eot");
+  src: local("☺"), url("/Resources/fonts/GOTHAM-BLACK.woff") format("woff"), url("/Resources/fonts/GOTHAM-BLACK.ttf") format("truetype"), url("Resources/fonts/GOTHAM-BLACK.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'GothamBold';
+  src: url("/Resources/fonts/GOTHAM-BOLD.eot");
+  src: local("☺"), url("/Resources/fonts/GOTHAM-BOLD.woff") format("woff"), url("/Resources/fonts/GOTHAM-BOLD.ttf") format("truetype"), url("Resources/fonts/GOTHAM-BOLD.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'GothamLight';
+  src: url("/Resources/fonts/GOTHAM-LIGHT.eot");
+  src: local("☺"), url("/Resources/fonts/GOTHAM-LIGHT.woff") format("woff"), url("/Resources/fonts/GOTHAM-LIGHT.ttf") format("truetype"), url("Resources/fonts/GOTHAM-LIGHT.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'GothamMedium';
+  src: url("/Resources/fonts/GOTHAM-MEDIUM.eot");
+  src: local("☺"), url("/Resources/fonts/GOTHAM-MEDIUM.woff") format("woff"), url("/Resources/fonts/GOTHAM-MEDIUM.ttf") format("truetype"), url("Resources/fonts/GOTHAM-MEDIUM.svg") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Picto';
+  src: url("Resources/fonts/pictos-web.eot");
+  /* IE9 Compat Modes */
+  src: url("Resources/fonts/pictos-web.eot?#iefix") format("embedded-opentype"), url("Resources/fonts/pictos-web.woff") format("woff"), url("Resources/fonts/pictos-web.ttf") format("truetype"), url("Resources/fonts/pictos-web.svg#svgFontName") format("svg");
+  /* Legacy iOS */ }
+
+[data-icon]:before {
+  font-family: 'Picto';
+  content: attr(data-icon); }

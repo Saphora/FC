@@ -1,0 +1,54 @@
+﻿<div class="card-header">
+    <span class="h5">
+        HEADLINES
+        <a href="/#/news/" for-roles="ADMIN">
+            <i class="fa fa-edit"></i>
+        </a>
+    </span>
+</div>
+<div class="card-block" ng-if="IsLoading==true">
+    <ng-include src="'/Scripts/Shared/Views/loader.html'"></ng-include>
+</div>
+<div class="card-block" ng-if="IsLoading==false">
+    <ul>
+        <li ng-repeat="News in Headlines">
+            <a href="#">
+                <span class="date">
+                    27/12/16
+                </span>
+                <span class="separator">
+                    -
+                </span>
+                <span class="text">
+                    MYSTERYLAND GETS BIGGER AND BIGGGER!
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <span class="date">
+                    27/05/16
+                </span>
+                <span class="separator">
+                    -
+                </span>
+                <span class="text">
+                    JAH CURE COMES TO REGGAE GEEL!
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <span class="date">
+                    27/05/16
+                </span>
+                <span class="separator">
+                    -
+                </span>
+                <span class="text">
+                    NEW FESTIVAL REPORT - KnurrUM @ SummerJam!
+                </span>
+            </a>
+        </li>
+    </ul>
+</div>

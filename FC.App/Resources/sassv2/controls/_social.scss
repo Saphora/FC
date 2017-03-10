@@ -1,0 +1,48 @@
+﻿@import "../core/var.scss";
+.social-card {
+    .block-row {
+        position:relative;
+        text-align:center;
+        left: -10px;
+        margin: 10px;
+        width: 100%;
+        float:left;
+        padding: 5px;
+        height: 50px;
+        background-color: #e8e8e8;
+        .center {
+            position:relative;
+            max-width: 275px;
+            margin: auto;
+            .icon {
+                float:left;
+                margin-right: 5px;
+            }
+        }
+        .h3 {
+            color: $FontColorDark !important;
+            &:hover {
+                color: $LinkColor !important;
+            }
+        }
+    }
+
+}
+
+.social-dialog {
+    .selected {
+        > a {
+            margin-right: 8px;
+        }   
+    }
+}
+
+.social {
+    float:right;    
+    a {
+        padding: 3px;
+        i {
+            font-size: 22px;
+        }
+    }
+}

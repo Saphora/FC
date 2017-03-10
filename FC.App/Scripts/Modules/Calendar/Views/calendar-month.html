@@ -1,0 +1,226 @@
+﻿<ng-include src="'/Scripts/Modules/Filtering/Views/month-year.html'"></ng-include>
+
+<ng-include src="'App/templates/Loader.html'"></ng-include>
+<div class="fc-panel col-md-4" ng-repeat="Festival in vm.Festivals">
+    <div class="fc-panel-header" theme="header" ng-model="Festival">
+        <i class="fa fa-calendar"></i>{{Festival.CultureStartDate}}
+    </div>
+    <div class="fc-panel-body">
+        <div class="ListItem col-xs-12 col-md-12">
+            <a href="{{vm.GetFestivalURL(Festival)}}" class="click-wrapper">
+                <div class="logo" backImg="$0$.img?&height=120" watch="{{Festival.Logo}}"></div>
+                <div class="txt">
+                    <span class="title" ng-model="Festival.Name" theme="text-default">{{Festival.Name}}</span><br />
+                    <span class="region" ng-model="Festival.Region"><i theme="text-default" class="fa fa-map-marker"></i>{{Festival.City}}, {{Festival.Country.Name}}</span><br />
+                    <span class="subtext" ng-model="Festival.Genres">
+                        <i theme="text-default" class="fa fa-tags"></i>
+                        <span class="genre" ng-if="Key <= 1" theme="button" ng-repeat="(Key,Genre) in Festival.GenreList">
+                            {{Genre}}
+                        </span>
+                    </span>
+                    <span class="days" ng-model="Festival.DayCount" ng-if="Festival.DayCount > 1">
+                        <i theme="text-default" class="fa fa-flag-checkered"></i>{{Festival.CultureStartDate}} - {{Festival.CultureEndDate}}, {{Festival.DayCount}} Days
+                    </span>
+                    <span class="days" ng-model="Festival.DayCount" ng-if="Festival.DayCount == 1">
+                        <i theme="text-default" class="fa fa-flag-checkered"></i>{{Festival.CultureStartDate}} - {{Festival.CultureEndDate}}, {{Festival.DayCount}} Day
+                    </span>
+                    <span class="subtext" ng-model="Festival.Visitors" ng-if="Festival.Visitors != 0">
+                        <i class="fa fa-group" theme="text-default"></i>
+                        <span class="">{{Festival.Visitors}}</span>
+                    </span>
+                </div>
+            </a>
+            <div class="controls">
+                <div class="rating" theme="rating">
+                    <span class="count" theme="count">100K</span>
+                    <span class="glyphicon glyphicon-star star active"></span>
+                    <span class="glyphicon glyphicon-star star active"></span>
+                    <span class="glyphicon glyphicon-star star active"></span>
+                    <span class="glyphicon glyphicon-star star active"></span>
+                    <span class="glyphicon glyphicon-star star"></span>
+                </div>
+                <div class="social">
+                    <a ng-href="{{Festival.YoutubeURL}}" target="_blank" ng-if="Festival.YoutubeURL.length > 0">
+                        <i class="fa fa-youtube-square" theme="text-default"></i>
+                    </a>
+                    <a ng-href="{{Festival.FacebookURL}}" target="_blank" ng-if="Festival.FacebookURL.length > 0">
+                        <i class="fa fa-facebook-square" theme="text-default"></i>
+                    </a>
+                    <a ng-href="{{Festival.TwitterURL}}" target="_blank" ng-if="Festival.TwitterURL.length > 0">
+                        <i class="fa fa-twitter-square" theme="text-default"></i>
+                    </a>
+                    <a ng-href="{{Festival.SpotifyURL}}" target="_blank" ng-if="Festival.SpotifyURL.length > 0">
+                        <i class="fa fa-spotify" theme="text-default"></i>
+                    </a>
+                    <a ng-href="{{Festival.InstagramURL}}" target="_blank" ng-if="Festival.InstagramURL.length > 0">
+                        <i class="fa fa-instagram" theme="text-default"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="WeekNews col-md-6 col-lg-6 col-sm-12 fc-panel" ng-if="vm.CurrentWeekDayCount == 7">
+        <div class="fc-panel-header">
+            <i class="fa fa-newspaper-o"></i>Nieuws
+        </div>
+        <div class="fc-panel-body">
+            <div class="ListItemBG">
+
+            </div>
+            <div class="ListItem col-xs-12 col-md-12">
+                <div class="logo">
+                    <img src="/dist/resources/images/rihanna150x150.jpg" />
+                </div>
+                <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+                <div class="txt">
+                    <span class="date">
+                        <span class="day">
+                            28
+                        </span>
+                        <span class="month">
+                            SEP
+                        </span>
+                        <span class="year">
+                            2016
+                        </span>
+                        <span class="time">
+                            16:33
+                        </span>
+                    </span>
+                    <span class="title">Rihanna kondigt aan te spelen op Pinkpop!</span><br />
+                    <span class="region">Rihanna lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse elementum eu erat eu eleifend...</span><br />
+                    <span class="subtext">Reggae, World music</span>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="fc-panel col-sm-12 col-xs-12 col-md-6 col-lg-6">
+    <div class="fc-panel-header logo-color-{{Key}}">
+        <i class="fa fa-heart"></i>Sponsors
+    </div>
+    <div class="fc-panel-body">
+        <div class="ListItem col-xs-12 col-md-4">
+            <div class="logo">
+                <img src="/dist/resources/images/cola150x150.jpg" />
+            </div>
+            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+            <div class="txt">
+                <h3>Coca cola</h3>
+            </div>
+        </div>
+        <div class="ListItem col-xs-12">
+            <div class="logo">
+                <img src="/dist/resources/images/durex150x150.png" />
+            </div>
+            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+            <div class="txt">
+                <h3>Durex</h3>
+            </div>
+        </div>
+        <div class="ListItem col-xs-12">
+            <div class="logo">
+                <img src="/dist/resources/images/ryanair150x150.jpg" />
+            </div>
+            <span class="glyphicon glyphicon-chevron-right go-icon"></span>
+            <div class="txt">
+                <h3>Ryanair</h3>
+            </div>
+        </div>
+    </div>
+</div>-->
+<!--<div class="col-md-12 fc-panel banner">
+    <div class="fc-panel-header">
+        Kane @ Pinkpop
+    </div>
+    <div class="fc-panel-body">
+        <img src="/dist/resources/images/banner2.jpg" />
+    </div>
+</div>-->
+<!--<div class="fc-panel col-md-12">
+    <div class="fc-panel-header">
+        <i class="fa fa-spotify"></i> Pinkpop on Spotify
+    </div>
+    <div class="fc-panel-body">
+        <div class="ListItem col-md-12">
+            <div class="logo">
+                <img src="/dist/resources/images/rihanna150x150.jpg" />
+            </div>
+
+            <span class="glyphicon glyphicon-stop go-icon"></span>
+            <div class="txt">
+                <span class="title">Rihanna</span><br />
+                <span class="region">Man down</span><br />
+            </div>
+        </div>
+        <div class="ListItem col-md-12">
+            <div class="logo">
+                <img src="/dist/resources/images/racoon150.png" />
+            </div>
+
+            <span class="glyphicon glyphicon-play go-icon"></span>
+            <div class="txt">
+                <span class="title">Racoon</span><br />
+                <span class="region">Weet ik veel</span><br />
+            </div>
+        </div>
+    </div>
+</div>-->
+<!--<div class="col-md-12 fc-panel banner">
+    <div class="fc-panel-header">
+        <i class="fa fa-star"/>Announcements
+    </div>
+    <div class="fc-panel-body">
+        <div class="carousel slide" id="AnnouncementReel" data-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                    <img src="/dist/resources/images/banner.jpg" />
+                    <span class="date">
+                        <span class="monthday">
+                            <span class="month">
+                                AUG
+                            </span>
+                            <span class="day">
+                                23
+                            </span>
+                        </span>
+                        <span class="year">
+                            2016
+                        </span>
+                    </span>
+                    <span class="tip">
+                        LINEUP MYSTERYLAND DEFINITIEF!
+                    </span>
+                </div>
+                <div class="item">
+                    <img src="/dist/resources/images/banner2.jpg" />
+                    <span class="date">
+                        <span class="monthday">
+                            <span class="month">
+                                SEP
+                            </span>
+                            <span class="day">
+                                14
+                            </span>
+                        </span>
+                        <span class="year">
+                            2016
+                        </span>
+                    </span>
+                    <span class="tip">
+                        DEF# TIESTO @ BEAT THE BRIDGE
+                    </span>
+                </div>
+                <div class="item">
+                <img src="/dist/resources/images/banner.jpg" />
+                <span class="date">
+                </span>
+                <span class="tip">
+                    KANE IS BACK!!!
+                </span>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>-->

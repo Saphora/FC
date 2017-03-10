@@ -1,0 +1,88 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Oswald:300,400,700');
+
+$FontSizeNormal: '12px';
+$FontSizeSmall: '10px';
+$FontSizeMedium: '16px';
+$FontSizeLarge: '18px';
+$FontSizeLarge: '20px';
+$FontSizeXLarge: '22px';
+
+@mixin fnt-default() {
+    font-family: 'Arial', sans-serif;
+    font-size: $FontSizeNormal !important;
+}
+
+* {
+    @include fnt-default();
+}
+
+@mixin fnt-header-default() {
+    font-family: 'Oswald', sans-serif !important;
+    font-size: $FontSizeMedium !important;
+}
+
+@mixin fnt-header-small() {
+    font-family: 'Oswald', sans-serif !important;
+    font-size: $FontSizeSmall !important;
+}
+@mixin fnt-header-large() {
+    font-family: 'Oswald', sans-serif !important;
+    font-size: $FontSizeXLarge !important;
+}
+@mixin fnt-header-medium() {
+    font-family: 'Oswald', sans-serif !important;
+    font-size: $FontSizeLarge !important;
+}
+
+h1 {
+    @include fnt-header-large();
+}
+.h1 {
+    @include fnt-header-large();
+    padding: 5px;
+    margin: 0;
+}
+h2 {
+    @include fnt-header-medium();
+}
+.h2 {
+    @include fnt-header-medium();
+    padding: 5px;
+    margin: 0;
+}
+h3 {
+    @include fnt-header-small();
+}
+.h3 {
+    @include fnt-header-small();
+    padding: 5px;
+    margin: 0;
+}
+h4 {
+    @include fnt-header-default();
+}
+.h4 {
+    @include fnt-header-default();
+    padding: 5px;
+    margin: 0;
+}
+
+h5{
+    @include fnt-header-default();
+}
+.h5{
+    @include fnt-header-default();
+    font-weight:bold;
+    padding: 5px;
+    margin: 0;
+}
+h6 {
+    @include fnt-header-default();
+}
+.h6 {
+    @include fnt-header-default();
+    padding: 5px;
+    margin: 0;
+}
+
+ 

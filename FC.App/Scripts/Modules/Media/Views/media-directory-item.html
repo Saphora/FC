@@ -1,0 +1,11 @@
+﻿<li class="directory-item">
+    <a href="#" ng-click="$event.stopPropagation();$event.preventDefault();Activate(this,d)" ng-if="d.DirectoryID == ActiveDir.DirectoryID" class="active">
+        <i class="fa fa-folder"></i>
+        <span class="title">{{d.Name}}</span>
+    </a>
+    <a href="#" ng-click="$event.stopPropagation();$event.preventDefault();Activate(this,d)" ng-if="d.DirectoryID != ActiveDir.DirectoryID">
+        <i class="fa fa-folder"></i>
+        <span class="title">{{d.Name}}</span>
+    </a>
+    <ul class="children" ng-bind-html="ChildHTML"></ul>
+</li>

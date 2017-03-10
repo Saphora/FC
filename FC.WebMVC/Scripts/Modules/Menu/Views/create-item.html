@@ -1,0 +1,61 @@
+﻿<div class="row">
+    <div class="col-xl-18 col-lg-18 col-md-16 col-sm-24 col-xs-24">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5" ng-if="IsEditing==false">CREATE NEW MENU ITEM</span>
+                <span class="h5" ng-if="IsEditing==true">EDIT MENU ITEM</span>
+            </div>
+            <div class="card-block">
+                <div class="form-group">
+
+                    <select ng-model="model.SectionID" class="form-control">
+                        <option value="">SELECT SECTION</option>
+                        <option ng-repeat="ms in MenuSections" value="{{ms.SectionID}}">
+                            {{ms.Name}} {{ms.PageKey ? '['+ms.PageKey+']' : ''}}
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+
+                    <select ng-model="model.OpositeID" class="form-control">
+
+                        <option value="">SELECT OPOSITE</option>
+                        <optgroup ng-repeat="ms in MenuSections" label="{{ms.Name}} - {{ms.PageKey}}">
+                            <option value="{{mi.MenuItemID}}" ng-repeat="mi in ms.MenuItems">
+                                {{mi.Name}}
+                            </option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'Name')" ng-blur="SaveFieldState(this, 'Name', model.Name)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Name" placeholder="Item name" type="text" /></div>
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'Title')" ng-blur="SaveFieldState(this, 'Title', model.Title)" ng-model-options="{updateOn: 'blur'}" ng-model="model.Title" placeholder="Title (link tip title)" type="text" /></div>
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'FAIcon')" ng-blur="SaveFieldState(this, 'FAIcon', model.FAIcon)" ng-model-options="{updateOn: 'blur'}" ng-model="model.FAIcon" placeholder="Font awesome icon class" type="text" /></div>
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'SortOrder')" ng-blur="SaveFieldState(this, 'SortOrder', model.SortOrder)" ng-model-options="{updateOn: 'blur'}" ng-model="model.SortOrder" placeholder="Sort order(0 / 1000)" type="text" /></div>
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'OnClick')" ng-blur="SaveFieldState(this, 'OnClick', model.OnClick)" ng-model-options="{updateOn: 'blur'}" ng-model="model.OnClick" placeholder="Click function name" type="text" /></div>
+                <div class="form-group"><input class="form-control" ng-init="GetFieldState(this, 'URL')" ng-blur="SaveFieldState(this, 'SortOrder', model.URL)" ng-model-options="{updateOn: 'blur'}" ng-model="model.URL" placeholder="URL" type="text" /></div>
+                <div class="form-group">
+                    <select ng-model="model.IsSpecific" class="form-control">
+                        <option value="">IS PAGE SPECIFIC?</option>
+                        <option value="true">YES</option>
+                        <option value="false">NO</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <a href="#" class="btn btn-success" ng-if="IsCreating==true" ng-click="$event.preventDefault();vm.DoSave('c','item');">
+                        <i class="fa fa-save"></i> SAVE
+                    </a>
+                    <a href="#" class="btn btn-success" ng-if="IsEditing==true" ng-click="$event.preventDefault();vm.DoSave('e','item');">
+                        <i class="fa fa-save"></i> EDIT
+                    </a>
+                    <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();vm.GoNativeBack()">
+                        <i class="fa fa-times"></i> CANCEL
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 col-xs-24">
+        <ng-include src="'/scripts/modules/menu/views/quickmenu.html'" ng-controller="FC.Modules.Menu.Controllers.QuickMenuController as vm" ng-init="vm.init()" />
+    </div>
+</div>

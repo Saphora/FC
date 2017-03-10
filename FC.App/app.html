@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" ng-app="FC">
+<head>
+    <!-- Meta tags -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="@CurrentPage.siteDescription" />
+    <title>Festival Calendar - Your guide for your festival!</title>
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="/App/Resources/css/01.base.css" />
+
+    <base href="/" />
+</head>
+
+<body ng-controller="MainController as mainCtr" class="pre-scrollable">
+    <header class="navbar navbar-default navbar-fixed-top navbar-inner" ng-controller="TilesController as Nav">
+        <div class="container">
+            <nav class="hidden-xs">
+                <a href="#top" role="button" class="navbar-brand logo navbar-left">
+
+                </a>
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" />
+                    </div>
+                    <button type="submit" class="btn btn-default" theme="button">Submit</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="dropdown" uib-dropdown="">
+                        <a role="button" class="dropdown-toggle menu-item" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-heart"></i> Genres
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="Genre in Nav.Tiles">
+                                <a href="/#/calendar/{{Genre.UmbracoID}}">{{Genre.Name}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="dropdown" uib-dropdown="">
+                        <a role="button" class="dropdown-toggle menu-item" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-gear"></i> Settings
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="Genre in Nav.Tiles">
+                                <a href="/#/manage/">Manage</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+    </header>
+    <div class="raster"></div>
+
+    <!--<div class="navbar-header header navbar navbar-default navbar-fixed-top navbar-inner">
+
+            <button type="button" class="navbar-toggle" ng-click="mainCtr.ToggleOverlay({VisibleClass: 'maxWidth', HiddenClass: 'minWidth', Selector: '#menu'},false)" aria-expanded="true" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/#/home" id="cnt-logo" class="navbar-brand">
+                <img ng-src="/Resources/images/logo_white.png" />
+            </a>
+            <ul class="nav navbar-nav" ng-controller="TilesController as Nav">
+                <li class="dropdown">
+                    <a currenturl=currenturl class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Genres <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="Genre in Nav.Tiles">
+                            <a href="/#/calendar/{{Genre.UmbracoID}}">{{Genre.Name}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search" />
+                </div>
+                <button type="submit" class="btn btn-default" theme="button">Search</button>
+            </form>
+    </div>-->
+    <div class="container  main" ng-view=ng-view>
+        <div theme="background" for="body"></div>
+    </div>
+    <script src="bower_components/money/money.min.js"></script>
+    <script src="bower_components/accounting/accounting.min.js"></script>
+    <!--<script src="http://jsconsole.com/js/remote.js?234afcea-4694-4d2f-93b7-27c6342070dc"></script>-->
+    <script src="/App/themes.js"></script>
+    <script src="/App/deps.js"></script>
+    <script src="/App/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+﻿<div class="card complex-filter">
+    <div class="card-header">
+        <span class="h5">SELECT DATE {{Year}}</span>
+    </div>
+    <div class="card-block content">
+        <div class="row">
+            <div class="inner col-xs-24">
+                <div class="form-group">
+                    <select class="form-control" ng-model="Year" ng-change="vm.DoChangeYear()">
+                        <option value="{{PrevYear}}">{{PrevYear}}</option>
+                        <option value="{{CurrentYear}}">{{CurrentYear}}</option>
+                        <option value="{{NextYear}}">{{NextYear}}</option>
+                    </select>
+                </div>
+                <div class="list popular-list">
+                    <ul>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault(); vm.ToggleMonth(1);">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(1) == false, 'fa fa-check-circle-o':vm.IsActive(1)==true}"></i><span>JANUARY</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(2);">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(2) == false, 'fa fa-check-circle-o':vm.IsActive(2)==true}"></i><span>FEBRUARY</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(3)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(3) == false, 'fa fa-check-circle-o':vm.IsActive(3)==true}"></i><span>MARCH</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(4)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(4) == false, 'fa fa-check-circle-o':vm.IsActive(4)==true}"></i><span>APRIL</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(5)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(5) == false, 'fa fa-check-circle-o':vm.IsActive(5)==true}"></i><span>MAY</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(6)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(6) == false, 'fa fa-check-circle-o':vm.IsActive(6)==true}"></i><span>JUNE</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(7)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(7) == false, 'fa fa-check-circle-o':vm.IsActive(7)==true}"></i><span>JULY</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(8)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(8) == false, 'fa fa-check-circle-o':vm.IsActive(8)==true}"></i><span>AUGUST</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(9)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(9) == false, 'fa fa-check-circle-o':vm.IsActive(9)==true}"></i><span>SEPTEMBER</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(10)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(10) == false, 'fa fa-check-circle-o':vm.IsActive(10)==true}"></i><span>OCTOBER</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(11)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(11) == false, 'fa fa-check-circle-o':vm.IsActive(11)==true}"></i><span>NOVEMBER</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="$event.preventDefault();vm.ToggleMonth(12)">
+                                <i ng-class="{'fa fa-circle-o': vm.IsActive(12) == false, 'fa fa-check-circle-o':vm.IsActive(12)==true}"></i><span>DECEMBER</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-24 footer-controls no-margin no-padding">
+                <a href="#" ng-click="$event.preventDefault(); vm.Close()" class="btn btn-danger pull-right">CANCEL</a>
+            </div>
+        </div>
+    </div>
+</div>

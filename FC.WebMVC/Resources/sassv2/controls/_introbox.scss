@@ -1,0 +1,37 @@
+﻿.introbox {
+    h1 {
+        display:block;
+        width: auto;
+        color: #FFF !important;
+        border-bottom: 5px solid white;
+        padding: 15px;
+    }
+    h2 {
+        margin-top: 15px;
+        color: #FFF;
+    }
+}
+.introbox-social {
+    margin-top: 15px;
+    .inner {
+        position:relative;
+        left:50%;
+        margin-left: -175px;
+        a {
+            float:left;
+        }
+        ul {
+            float:left;
+            li {
+            color:transparent !important;
+                .icon {
+                    height: 40px;
+                    width: 40px;
+                    background-size: 40px 40px;
+                }
+            }
+        }
+        max-width: 300px;
+        overflow:hidden;
+    }
+}

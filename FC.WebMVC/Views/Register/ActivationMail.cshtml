@@ -1,0 +1,89 @@
+﻿@{
+    Layout = "~/Views/Shared/_MailLayout.cshtml";
+    string name = ViewData["Name"].ToString();
+    string token = ViewData["Token"].ToString();
+}
+
+@section STYLE {
+    <title>FESTIVAL CALENDAR | Discover the most amazing festivals world wide!</title>
+    <meta property="og:url" content="http://festival-calendar.nl/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FESTIVAL CALENDAR | Discover the most amazing festivals world wide!" />
+    <meta property="og:description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+    <meta property="og:image" content="~/Resources/images/fc-icon.png" />
+    <meta name="keywords" content="Festival,Calendar,Events,Artists,Social,Platform,Manage,Profile,Agenda" />
+    <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+    <style>
+        body {
+            background-color: #eeeeee;
+        }
+
+        .logo {
+            width: 230px;
+            height: 70px;
+            margin-left: auto;
+            margin-top: 15px;
+            margin-right: auto;
+        }
+        .logo > img {
+            width: 230px;
+            height: 70px;
+        }
+
+        .fc-container {
+            background-color: #ffffff;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+        }
+
+        .fc-container > .header {
+            height: 40px;
+            color: #ffffff;
+            font-size: 22px;
+        }
+
+        .fc-container > .header > h1 {
+            font-size: 20px;
+            color: #333;
+            font-family: Arial, Verdana, Tahoma;
+        }
+    </style>
+}
+
+<div class="logo">
+    <img src="https://festival-calendar.nl/Resources/images/logo_black.png" alt="Festival calendar logo" />
+</div>
+<div class="fc-container">
+    <div class="header">
+        <h1>
+            Please verify your account
+        </h1>
+    </div>
+    <div class="body">
+        <p>
+            Dear @name,
+            <br />
+            <br />
+            Please verify your account by clicking on the link below. (Or copy the link address into a browser)
+            You shall be redirected to the profile creation screen,
+            there you have the ability to sign up your festival / venue / artist profile.
+            <br />
+            <br />
+            <center>
+                <a href="https://festival-calendar.nl/Register/Activate/@token" class="btn btn-danger">https://festival-calendar.nl/Register/Activate/@token</a>
+            </center>
+            <br />
+            <br />
+            Kind Regards,<br />
+            Team Festival Calendar<br />
+            [E] - <a href="mailto://info@festival-calendar.nl">info@festival-calendar.nl</a>
+            <br />
+            <br />
+            <img src="https://festival-calendar.nl/Resources/images/logo_black.png" alt="Festival calendar logo" width="230" height="70"/>
+            <br/>
+            <br/>
+            <a href="https://festival-calendar.nl/" title="Festival Calendar website">Festival Calendar - Discover the most amazing festivals!</a>
+        </p>
+    </div>
+</div>

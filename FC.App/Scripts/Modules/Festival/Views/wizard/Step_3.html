@@ -1,0 +1,79 @@
+﻿<div class="row">
+    <div class="col-lg-16">
+        <div class="card">
+            <div class="card-header">
+                <i class="fc-icon"></i>
+                <span class="h5">Add festival - step 1</span>
+                <i class="fa fa-circle-plus"></i>
+            </div>
+            <div class="card-block">
+                <form class="festival-form" role="form" ng-if="!IsCreated && !IsEdited">
+                    <div class="form-group">
+                        <input id="SoundCloudURL" name="SoundCloudURL" type="text"  ng-model="model.SoundCloudURL" ng-init="GetFieldState(this, 'SoundCloudURL')" ng-blur="SaveFieldState(this, 'SoundCloudURL', model.SoundCloudURL)" class="form-control" placeholder="https://soundcloud.com/*/*">
+                    </div>
+                    <div class="form-group">
+                        <input id="Website" name="Website" type="text"  ng-model="model.Website" ng-init="GetFieldState(this, 'Website')" ng-blur="SaveFieldState(this, 'Website', model.Website)" class="form-control" placeholder="http://website.com">
+                    </div>
+                    <div class="form-group">
+                        <input id="FacebookURL" name="FacebookURL" type="text"  ng-model="model.FacebookURL" ng-init="GetFieldState(this, 'FacebookURL')" ng-blur="SaveFieldState(this, 'FacebookURL', model.FacebookURL)" class="form-control" placeholder="https://facebook.com/*">
+                    </div>
+                    <div class="form-group">
+                        <input id="InstagramURL" name="InstagramURL" type="text"  ng-model="model.InstagramURL" ng-init="GetFieldState(this, 'InstagramURL')" ng-blur="SaveFieldState(this, 'InstagramURL', model.InstagramURL)" class="form-control" placeholder="https://instagram.com/*">
+                    </div>
+                    <div class="form-group">
+                        <input id="Website" name="TwitterURL" type="text"  ng-model="model.TwitterURL" ng-init="GetFieldState(this, 'TwitterURL')" ng-blur="SaveFieldState(this, 'TwitterURL', model.TwitterURL)" class="form-control" placeholder="https://twitter.com/*">
+                    </div>
+                    <div class="form-group">
+                        <input id="YoutubeURL" name="YoutubeURL" type="text"  ng-model="model.YoutubeURL" ng-init="GetFieldState(this, 'YoutubeURL')" ng-blur="SaveFieldState(this, 'YoutubeURL', model.YoutubeURL)" class="form-control" placeholder="https://youtube.com/*">
+                    </div>
+                    <div class="form-group">
+                        <input id="FlickrURL" name="FlickrURL" type="text"  ng-model="model.FlickrURL" ng-init="GetFieldState(this, 'FlickrURL')" ng-blur="SaveFieldState(this, 'FlickrURL', model.FlickrURL)" class="form-control" placeholder="https://flickr.com/*">
+                    </div>
+                    <div class="form-group">
+                        <input id="DeezerURL" name="DeezerURL" type="text"  ng-model="model.DeezerURL" ng-init="GetFieldState(this, 'DeezerURL')" ng-blur="SaveFieldState(this, 'DeezerURL', model.DeezerURL)" class="form-control" placeholder="https://deezer.com/*">
+                    </div>
+                    <div class="form-group">
+                        <input id="MySpaceURL" name="MySpaceURL" type="text"  ng-model="model.MySpaceURL" ng-init="GetFieldState(this, 'MySpaceURL')" ng-blur="SaveFieldState(this, 'MySpaceURL', model.MySpaceURL)" class="form-control" placeholder="https://myspace.com/*">
+                    </div>
+                    <div class="form-group">
+                        <input id="SpotifyURL" name="SpotifyURL" type="text"  ng-model="model.SpotifyURL" ng-init="GetFieldState(this, 'SpotifyURL')" ng-blur="SaveFieldState(this, 'SoundCloudURL', model.SoundCloudURL)" class="form-control" placeholder="https://open.spotify.com/*/*">
+                    </div>
+                    <!--<div class="form-group">
+                        <label for="Name" class="control-label">Festival name (*)</label>
+                        <div class="col-md-24">
+                            <input id="Name" name="Name" type="text"  ng-model="model.Name" ng-init="GetFieldState(this, 'Name')" ng-blur="SaveFieldState(this, 'Name', model.Name)" class="form-control" placeholder="Festival name">
+                            <span id="helpBlock2" class="help-block">The name of the festival whitout year number.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Logo" class="control-label">Festival logo (*)</label>
+                        <div class="col-sm-24" ng-controller="FC.Modules.Media.Controllers.MediaModalController as mmc" ng-init="GetMediaPickerFieldState(this, 'Logo')">
+                            <img src="{{FestivalLogoPath}}" style="max-height:100px; min-height:100px;min-width:100px;max-width:100px;" />
+                            <button class="btn btn-default" theme="button,button-hover" style="padding:4px" ng-click="$event.preventDefault();mmc.OpenMediaModal(960,'FestivalLogoSaved')">Pick logo</button>
+                            <input id="Logo" name="Logo" type="hidden" ng-change="Validate.model.LogoID)" ng-model=.model.LogoID" class="form-control" placeholder="Browse logo">
+                            <span id="helpBlock2" class="help-block">Festival logo 150x150</span>
+                        </div>
+                    </div>-->
+                    <a href="/#/festival/add/2" class="btn btn-danger next" ng-if="IsCreating" ng-click="SaveFormState(this)">
+                        Back
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+                    <a href="/#/festival/edit/{{model.FestivalID}}/2" class="btn btn-danger next" ng-if="IsEditing" ng-click="SaveFormState(this)">
+                        Back
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+                    <a href="#" class="btn btn-default" ng-if="IsCreating" ng-click="$event.preventDefault();SaveFormState(this);DoSaveCreate(this);">
+                        Create
+                        <i class="fa fa-save"></i>
+                    </a>
+                    <a href="#" class="btn btn-default" ng-if="IsEditing" ng-click="$event.preventDefault();SaveFormState(this);DoSaveEdit(this);">
+                        Edit
+                        <i class="fa fa-save"></i>
+                    </a>
+                </form>
+                <ng-include src="'/Scripts/Modules/Festival/Views/wizard/confirmation.html'"></ng-include>
+            </div>
+        </div>
+    </div>
+    <ng-include src="'/Scripts/Modules/Festival/Views/wizard/FestivalPreview.html'"></ng-include>
+</div>

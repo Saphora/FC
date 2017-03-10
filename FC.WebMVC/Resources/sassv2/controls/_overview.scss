@@ -1,0 +1,133 @@
+﻿@import "../core/var.scss";
+.quickmenu {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        li {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            a {
+                i {
+                    width: 20px;
+                }
+                font-size: 14px;
+                color: $FontColorDark !important;
+                &:hover {
+                    text-decoration: none;
+                    color: $LinkColor !important;
+                }
+            }
+           
+            border-bottom: 1px solid $BGInput;
+        }
+    }
+}
+
+.overview-wrapper {
+    .overview {
+        .header-controls {
+            margin-bottom: 10px !important;
+        }
+        .sorting {
+            width: 100%;
+            text-align:center;
+            span {
+                text-align:center;
+                padding: 2px;
+                a {
+                    background-color: $BGInput;
+                    color: $FontColorDark;
+                    padding: 2px;
+                    text-align:center;
+                    border: 1px solid $BGInputBorder;
+                }
+            }
+        }
+    }
+    table {
+        tr {
+            border-bottom: 1px solid $BGInputBorder;
+            height: 40px;
+            td {
+                .fav {
+                    &.inactive {
+                        i {
+                            color: $FontColorDark;
+                        }
+                    }
+                    &.active {
+                        i{
+                            color: #FF0000;
+                        }
+                    }
+                }
+                    font-size: 12px;
+                i {
+                    font-size: 20px;
+                }
+                a {
+                    font-size: 14px;
+                }
+                img {
+                    width: 30px;
+                    height: 30px;
+                }
+                a.control-icon {
+                    float:right;
+                    margin-right: 10px;
+                    &.delete {
+                        i {
+                            color: $FontColorDark;
+                        }                        
+                        &:hover {
+                            i {
+                                color: $LinkColor;
+                            }
+                        }
+                    }
+                    &.edit {
+                        i {
+                            color: $FontColorDark;
+                        }
+                        &:hover {
+                            i {
+                                color: $LinkColor;
+                            }
+                        }
+                    }
+                    &.publish {
+                        i {
+                            color: $FontColorDark;
+                        }
+                        &:hover {
+                            i {
+                                color: #00ad16;
+                            }
+                        }
+                    }
+                    &.unpublish {
+                        i {
+                            color:#00ad16;
+                        }
+                        &:hover {
+                            i {
+                                color: $FontColorDark;
+                            }
+                        }
+                    }
+                }
+            }
+            &:hover {
+                background-color: $BGInput;
+            }
+        }
+    }
+}
+.scrollable {
+    width:100%;
+    max-height: 400px;
+    overflow-y:scroll;
+    display: table;
+
+}

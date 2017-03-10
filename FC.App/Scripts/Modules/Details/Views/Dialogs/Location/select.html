@@ -1,0 +1,55 @@
+﻿<md-dialog aria-label="SELECT LOCATION" flex="50">
+
+
+    <div class="card">
+        <div class="card-header">
+            <span class="h5">SELECT LOCATION</span>
+        </div>
+        <div class="card-block">
+            <ng-include src="'/Scripts/modules/details/views/dialogs/location/create.html'" ng-if="IsCreating==true || IsEditing==true"></ng-include>
+            <ng-include ng-if="IsLoading==true" src="'/scripts/shared/views/loader.html'"></ng-include>
+            <form class="form" role="form" ng-if="IsCreating==false && IsEditing==false">
+                <!--<input id="FestivalID" type="hidden" name="FestivalID" ng-model="model.FestivalID" ng-load="GetFieldState(this, 'FestivalID');SaveFieldState(this, 'FestivalID', model.FestivalID)" />
+                <div class="form-group">
+                    <input id="Name" name="Name" type="text"  ng-model="model.Name" ng-init="GetFieldState(this, 'Name')" ng-blur="SaveFieldState(this, 'Name', model.Name)" class="form-control" placeholder="Festival name">
+                </div>
+                <div class="form-group">
+                    <input id="Address" name="Address" type="text"  ng-model="model.Address" ng-init="GetFieldState(this, 'Address')" ng-blur="SaveFieldState(this, 'Address', model.Address)" class="form-control" placeholder="Addres e.g. Mainstreet 943A">
+                </div>
+                <div class="form-group">
+                    <input id="ZIPCode" name="ZIPCode" type="text"  ng-model="model.ZIPCode" ng-init="GetFieldState(this, 'ZIPCode')" ng-blur="SaveFieldState(this, 'ZIPCode', model.ZIPCode)" class="form-control" placeholder="ZIP code e.g. 6666AA">
+                </div>
+
+                <div class="form-group">
+                    <input id="City" name="City" type="text"  ng-model="model.City" ng-init="GetFieldState(this, 'City')" ng-blur="SaveFieldState(this, 'City', model.City)" class="form-control" placeholder="City(EN) e.g. London, Berlin, Madrid">
+                </div>
+                <div class="form-group">
+                    <input id="Location" name="Location" type="text"  ng-model="model.Location" ng-init="GetFieldState(this, 'Location')" ng-blur="SaveFieldState(this, 'Location', model.Location)" class="form-control" placeholder="Location e.g. Parking lot of x">
+                </div>-->
+                <div class="form-group">
+                    <label for="CountryID" class="dpgroup-label">Country</label><br />
+                    <select name="CountryID" class="form-control" ng-model="model.CountryID" ng-init="GetFieldState(this, 'CountryID')" ng-blur="GetLocations(this, model.CountryID);SaveFieldState(this, 'CountryID', model.CountryID)" placeholder="Country">
+                        <option ng-repeat="Country in SysCountries" value="{{Country.CountryID}}">
+                            {{Country.Name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="LocationID" class="dpgroup-label">Location</label><br />
+                    <select name="LocationID" class="form-control" ng-model="model.LocationID" ng-init="GetFieldState(this, 'LocationID')" ng-blur="SaveFieldState(this, 'LocationID', model.LocationID)" placeholder="Location">
+                        <option ng-repeat="l in Locations" value="{{l.LocationID}}">
+                            {{l.LocationName}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <a href="#" ng-class="model.LocationID ? 'btn btn-success':'btn btn-success disabled'" ng-click="$event.preventDefault();DoSave(this, model)">
+                        <i class="fa fa-plus"></i> CHOOSE
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</md-dialog>

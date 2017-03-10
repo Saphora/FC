@@ -1,0 +1,119 @@
+﻿<md-dialog aria-label="SAVE SUCCESS" flex="50">
+    <div class="card artistbrowser">
+        <div class="card-header">
+            <span class="h5">SELECT ARTISTS</span>
+        </div>
+        <div class="card-block ">
+            <div class="alert alert-danger" role="alert" ng-if="!IsCreated && !IsDeleted && !IsEdited && ServerMsg">
+                {{ServerMsg}}
+            </div>
+            <div class="alert alert-success" role="alert" ng-if="(IsCreated || IsEdited || IsDeleted) && ServerMsg">
+                {{ServerMsg}}
+            </div>
+
+            <div class="col-xs-24 no-margin no-padding">
+                <p>Please enter the name of the artist that you want to select.</p>
+            </div>
+            <form class="col-xs-24 no-margin no-padding">
+                <div class="form-group">
+                    <input type="text" class="form-control" ng-if="!IsCreating" ng-model="ArtistSearchKey" ng-change="vm.Filter(this)" placeholder="Performer name" />
+                </div>
+            </form>
+            <ul class="results" ng-if="!IsCreating && !IsEditing && !IsDeleting">
+                <li ng-repeat="Artist in SysArtists" ng-if="SelectedArtists.indexOf(Artist)==-1">
+                    <a href="#" ng-click="$event.preventDefault();vm.Activate(this,Artist);">
+                        <i class="fa fa-square-o" ng-if="!IsActive(this,Artist)"></i>
+                        <i class="fa fa-check-square-o" ng-if="IsActive(this,Artist)"></i>
+                        <img ng-if="Artist.LogoID" ng-src="{{URLRoot}}/{{Artist.LogoID}}.img?thumb=true" class="logo" />
+                        <span class="text">{{Artist.ArtistName}}</span>
+                    </a>
+                </li>
+                <li ng-repeat="Artist in SelectedArtists">
+                    <a href="#" ng-click="$event.preventDefault();vm.Activate(this,Artist);">
+                        <i class="fa fa-check-square-o" ng-if="IsActive(this,Artist)"></i>
+                        <img ng-if="Artist.LogoID" ng-src="{{URLRoot}}/{{Artist.LogoID}}.img?thumb=true" class="logo" />
+                        <span class="text">{{Artist.ArtistName}}</span>
+                    </a>
+                </li>
+
+            </ul>
+            
+            <div class="col-xs-24 no-margin no-padding" ng-if="SysArtists.length == 0">
+                <div class="alert alert-info">No artists {{ArtistSearchKey}} found.</div>
+                <a href="/#/artist/create" class="btn-sm btn-success">
+                    CREATE
+                </a>
+            </div>
+            <div class="headercontrols" ng-if="!IsCreating && !IsEditing && !IsDeleting">
+                <a href="#" class="btn btn-success" ng-click="$event.preventDefault();SaveModal(this);">
+                    SAVE
+                </a>
+                <a href="#" class="btn btn-danger" ng-click="$event.preventDefault();Close(this);">
+                    CANCEL
+                </a>
+            </div>
+            <ng-include src="'/Scripts/Modules/Artists/Views/create-artist-frm.html'"></ng-include>
+            <ng-include src="'/Scripts/Modules/Artists/Views/delete-artist.html'"></ng-include>
+        </div>
+    </div>
+</md-dialog>
+
+    <!--<div class="modal-header block-item" theme="header">
+        <div class="header" theme="header">
+            <h1>
+                <i class="fa fa-group"></i>
+                <span class="title">Pick festival performers</span>
+            </h1>
+        </div>
+    </div>
+    <div class="modal-body artist-browser">
+        <div class="row">
+            <a href="#" class="btn btn-default" theme="button,button-hover">
+                <i class="fa fa-plus-circle"></i>
+                Create new
+            </a>
+        </div>
+        <ng-include src="'/Scripts/Modules/Loading/Views/loading-small.html'" ng-if="!SysArtists"></ng-include>
+        <div class="col-sm-12 selected-artist-list">
+            <span class="title">
+                Selected artists
+            </span>
+            <ul>
+                <li class="artist-list-item" ng-repeat="Artist in ActiveArtists">
+                    <a href="#" ng-click="vm.Activate(this,Artist)">
+                        <img src="{{URLRoot}}/{{Artist.Logo}}" class="img" />
+                        <span>{{Artist.Name}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-12 artist-list">
+            <div class="form-group">
+                <label for="ArtistSearch" class="control-label col-sm-12">Artist name</label>
+                <input type="text" class="form-control col-sm-12" ng-model="ArtistSearchKey" ng-change="vm.Filter()" />
+            </div>
+            <ul ng-if="SysArtists">
+                <li class="artist-list-item" ng-repeat="Artist in SysArtists">
+                    <a href="#" ng-click="$event.preventDefault();vm.Activate(this,Artist)" ng-class="vm.IsActive(Artist) ? 'active' : ''">
+                        <img src="{{URLRoot}}/{{Artist.Logo}}.img?&thumb=true&width=30&height=30" class="img" />
+                        <span>{{Artist.Name}}</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="no-result" ng-if="SysArtists.length == 0">
+                <p>Artist {{ArtistSearchKey}} is not found. Would you like to create the artist?</p>
+                <a href="#" class="btn btn-default" theme="button,button-hover" style="padding:4px;" ng-click="$event.preventDefault();vm.DoCreateArtist()">
+                    <i class="fa fa-plus-circle"></i>
+                    <span>Create new {{ArtistSearchKey}}</span>
+                </a>
+            </div>
+            <div class="col-sm-12" ng-if="IsArtistCreating && SysArtists.length == 0">
+                <ng-include src="'/Scripts/Modules/Artists/Views/create-artist-frm.html'"></ng-include>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" theme="button" ng-click="vm.Save(vm.$scope,'MediaPickerArtistImgSaved')" ng-if="vm.$scope.SelectedMediaItem; $scope.model.Image = vm.$scope.SelectedMediaItem.MediaID;">Save</button>
+        <button class="btn btn-default" type="button" theme="button" ng-click="vm.Cancel()">Cancel</button>
+    </div>-->

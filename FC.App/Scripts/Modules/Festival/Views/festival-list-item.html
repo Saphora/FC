@@ -1,0 +1,58 @@
+﻿<div class="fc-panel">
+    <div class="fc-panel-header" theme="header" ng-model="$scope.Festival">
+        <i class="fa fa-calendar"></i>{{Festival.Name}}
+    </div>
+    <div class="fc-panel-body">
+        <div class="ListItem col-xs-12 col-md-12">
+            <a href="{{vm.GetFestivalURL(Festival)}}" class="click-wrapper">
+                <div class="logo" backImg="$0$.img?&height=120" watch="{{Festival.Logo}}"></div>
+                <div class="txt">
+                    <span class="region" ng-model="Festival.Region"><i theme="text-default" class="fa fa-map-marker"></i>{{Festival.City}}, {{Festival.Country.Name}}</span><br />
+                    <span class="subtext" ng-model="Festival.Genres">
+                        <i theme="text-default" class="fa fa-tags"></i>
+                        <span class="genre" ng-if="Key < 1" theme="button" ng-repeat="(Key,Genre) in Festival.Genres">
+                            {{Genre.Name}}
+                        </span>
+                    </span>
+                    <span class="days" ng-model="Festival.DayCount" ng-if="Festival.DayCount > 1">
+                        <i theme="text-default" class="fa fa-flag-checkered"></i>{{Festival.CultureStartDate}} - {{Festival.CultureEndDate}}, {{Festival.DayCount}} Days
+                    </span>
+                    <span class="days" ng-model="Festival.DayCount" ng-if="Festival.DayCount == 1">
+                        <i theme="text-default" class="fa fa-flag-checkered"></i>{{Festival.CultureStartDate}} - {{Festival.CultureEndDate}}, {{Festival.DayCount}} Day
+                    </span>
+                    <span class="subtext" ng-model="Festival.Visitors" ng-if="Festival.Visitors != 0">
+                        <i class="fa fa-group" theme="text-default"></i>
+                        <span class="">{{Festival.Visitors}}</span>
+                    </span>
+                </div>
+            </a>
+            <div class="controls">
+                <div class="rating" theme="rating">
+                    <span class="count" theme="count">100K</span>
+                    <span class="glyphicon glyphicon-star star active"></span>
+                    <span class="glyphicon glyphicon-star star active"></span>
+                    <span class="glyphicon glyphicon-star star active"></span>
+                    <span class="glyphicon glyphicon-star star active"></span>
+                    <span class="glyphicon glyphicon-star star"></span>
+                </div>
+                <div class="social">
+                    <a ng-href="{{Festival.YoutubeURL}}" target="_blank" ng-if="Festival.YoutubeURL.length > 0">
+                        <i class="fa fa-youtube-square" theme="text-default"></i>
+                    </a>
+                    <a ng-href="{{Festival.FacebookURL}}" target="_blank" ng-if="Festival.FacebookURL.length > 0">
+                        <i class="fa fa-facebook-square" theme="text-default"></i>
+                    </a>
+                    <a ng-href="{{Festival.TwitterURL}}" target="_blank" ng-if="Festival.TwitterURL.length > 0">
+                        <i class="fa fa-twitter-square" theme="text-default"></i>
+                    </a>
+                    <a ng-href="{{Festival.SpotifyURL}}" target="_blank" ng-if="Festival.SpotifyURL.length > 0">
+                        <i class="fa fa-spotify" theme="text-default"></i>
+                    </a>
+                    <a ng-href="{{Festival.InstagramURL}}" target="_blank" ng-if="Festival.InstagramURL.length > 0">
+                        <i class="fa fa-instagram" theme="text-default"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

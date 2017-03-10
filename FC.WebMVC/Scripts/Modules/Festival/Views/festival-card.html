@@ -1,0 +1,121 @@
+﻿<div class="card festival-card">
+    <div class="card-header link">
+        <a class="h5" href="/#/details/festival/{{Festival.FestivalID}}">{{Festival.Name.toUpperCase()}}</a>
+    </div>
+    <div class="card-block">
+        <div class="top">
+            <div class="card-img pull-left">
+                <img ng-src="{{MediaURLRoot}}/{{Festival.IMG}}.img?&thumb=true" class="ct-logo" ng-if="Festival.IsMediaObsolete" />
+                <img ng-src="{{MediaURLRoot}}/{{Festival.IMG}}.img?&thumb=true" class="ct-logo" ng-if="!Festival.IsMediaObsolete" />
+            </div>
+            <div class="card-date pull-right">
+                <span class="hr top"></span>
+                <div class="inner">
+                    <span class="day">{{Festival.StartDateExplosion.Day}}</span>
+                    <span class="month">{{Festival.StartDateExplosion.Month}}</span>
+                    <span class="year">
+                        <span>{{Festival.StartDateExplosion.Y1}}</span>
+                        <span>{{Festival.StartDateExplosion.Y2}}</span>
+                        <span>{{Festival.StartDateExplosion.Y3}}</span>
+                        <span>{{Festival.StartDateExplosion.Y4}}</span>
+                    </span>
+                </div>
+                <span class="hr bottom"></span>
+            </div>
+        </div>
+        <div class="bottom">
+            <div>
+                <i class="fa fa-group"></i>
+                <span class="txt" ng-if="Festival.Visitors">{{Festival.Visitors.toUpperCase()}}</span>
+                <span class="txt" ng-if="!Festival.Visitors">Unknown</span>
+                <i class="fa fa-hourglass-end"></i>
+                <span class="txt">{{Festival.Daycount.toUpperCase()}}</span>
+            </div>
+            <div>
+                <i class="fa fa-map-marker"></i> {{Festival.City.toUpperCase()}}<br />
+                <i class="fa fa-map-marker" style="color:transparent;">
+                </i> {{Festival.CountryName.toUpperCase()}}
+            </div>
+            <div class="genres">
+                <i class="fa fa-heart"></i>
+                <span class="g" ng-repeat="(g,i) in Festival.Genres" ng-if="g < 2">{{i.Name.toUpperCase()}}</span>
+                <span class="g" ng-if="Festival.Genres.length > 2 && Festival.GenreCount">{{Festival.GenreCount}}</span>
+            </div>
+        </div>
+        <div class="rating" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr" ng-init="rctr.GetRates(Festival.FestivalID,'festival')">
+            <span class="count" theme="count" ng-if="Rating.DisplayCount == '0'">
+                0
+            </span>
+            <span class="count" theme="count" ng-if="Rating.DisplayCount != '0'">
+                {{Rating.DisplayCount}}
+            </span>
+            <a href="#" id="star_{{Festival.FestivalID}}_1" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',1)">
+                <i class="star active fa fa-star" ng-if="Rating.Star1Active"></i>
+                <i class="star fa fa-star" ng-if="!Rating.Star1Active"></i>
+            </a>
+            <a href="#" id="star_{{Festival.FestivalID}}_2" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',2)">
+                <i class="star active fa fa-star" ng-if="Rating.Star2Active"></i>
+                <i class="star fa fa-star" ng-if="!Rating.Star2Active"></i>
+            </a>
+            <a href="#" id="star_{{Festival.FestivalID}}_3" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',3)">
+                <i class="star active fa fa-star" ng-if="Rating.Star3Active"></i>
+                <i class="star fa fa-star" ng-if="!Rating.Star3Active"></i>
+            </a>
+            <a href="#" id="star_{{Festival.FestivalID}}_4" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',4)">
+                <i class="star active fa fa-star" ng-if="Rating.Star4Active"></i>
+                <i class="star fa fa-star" ng-if="!Rating.Star4Active"></i>
+            </a>
+            <a href="#" id="star_{{Festival.FestivalID}}_5" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',5)">
+                <i class="star active fa fa-star" ng-if="Rating.Star5Active"></i>
+                <i class="star fa fa-star" ng-if="!Rating.Star5Active"></i>
+            </a>
+            <!--Example of star
+            Example of star-half
+            Example of star-half-empty (alias)
+            Example of star-half-full (alias)
+            Example of star-half-o
+            Example of star-o-->
+        </div>
+    </div>
+
+    <!--<div class="card-footer">
+        <div class="social">
+            <a ng-href="{{Festival.YoutubeURL}}" target="_blank" ng-if="Festival.YoutubeURL.length > 0">
+                <i class="fa fa-youtube-square" theme="text-default"></i>
+            </a>
+            <a ng-href="{{Festival.FacebookURL}}" target="_blank" ng-if="Festival.FacebookURL.length > 0">
+                <i class="fa fa-facebook-square" theme="text-default"></i>
+            </a>
+            <a ng-href="{{Festival.TwitterURL}}" target="_blank" ng-if="Festival.TwitterURL.length > 0">
+                <i class="fa fa-twitter-square" theme="text-default"></i>
+            </a>
+            <a ng-href="{{Festival.SpotifyURL}}" target="_blank" ng-if="Festival.SpotifyURL.length > 0">
+                <i class="fa fa-spotify" theme="text-default"></i>
+            </a>
+            <a ng-href="{{Festival.InstagramURL}}" target="_blank" ng-if="Festival.InstagramURL.length > 0">
+                <i class="fa fa-instagram" theme="text-default"></i>
+            </a>
+        </div>
+    </div>-->
+</div>
+
+
+<!--<span class="text-line">
+    <i class="fa fa-map-marker" aria-hidden="true"></i>
+    {{Festival.Location}}
+</span>
+<span class="text-line">
+    <i class="fa fa-clock-o" aria-hidden="true"></i>
+    {{Festival.Daycount}}
+</span>
+<span class="text-line">
+    <i class="fa fa-calendar" aria-hidden="true"></i>
+    {{Festival.DateString}}
+</span>
+<span class="text-line">
+    <i class="fa fa-heart" aria-hidden="true"></i>
+    <span class="text-dark" ng-if="Key <= 1" ng-repeat="(Key,Genre) in Festival.Genres">{{Genre}}</span>
+    <span class="text-dark" ng-if="Festival.Genres.length > 2">
+        +{{Festival.Genres.length-2}}
+    </span>
+</span>-->
