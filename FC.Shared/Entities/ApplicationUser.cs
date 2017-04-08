@@ -36,19 +36,14 @@ namespace FC.Shared.Entities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password should contains between 8 and 40 characters")]
         public string UserPassword     { get; set;}
         public string UserCode         { get; set;}
-
-        [Validation(ValidationRule.Name, true)]
-        [Required(AllowEmptyStrings =false, ErrorMessage ="Sur name is required")]
         
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Sur name is mandatory")]
         public string UserFirstname    { get; set; }
-
-        [Validation(ValidationRule.Name, true)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Last name is required")]
+        
         [RegularExpression(Validation.NAME)]
+        [Required(AllowEmptyStrings =false, ErrorMessage ="Last name is mandatory")]
         public string UserLastname     { get; set; }
-
-        [Validation(ValidationRule.Name, false)]
-        [RegularExpression(Validation.NAME)]
+        
         public string UserMiddlename   { get; set;}
         
         public string UserAddress      { get; set; }
@@ -65,8 +60,8 @@ namespace FC.Shared.Entities
 
         [Index("UserEmail", IsUnique=true, IsClustered=true)]
         [Validation(ValidationRule.Email, true)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "E-mail address is required")]
         [RegularExpression(Validation.EMAIL, ErrorMessage ="E-mail address is not a valid format.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "E-mail address is mandatory")]
         public string UserEmailAddress { get; set;}
         public string UserProfileIMG   { get; set;}
 
@@ -90,17 +85,15 @@ namespace FC.Shared.Entities
         }
 
         public string UserPhoneNumber  { get; set;}
-        public virtual List<Role> Roles { get; set; }
         public Guid? MediaDirectoryID { get; set; }
 
-        public virtual List<SocialProfile> Social { get; set; }
-
-        public bool IsPublished { get; set; }
-        public bool IsDeleted { get; set; }
-
-        public DateTime? CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
+        [NotMapped]
+        public  List<SocialProfile> Social { get; set; }
+        [NotMapped]
+        public  List<Role> Roles { get; set; }
         public DateTime? DeletedDate { get; set; }
+
+
 
         [ForeignKey("MediaDirectoryID")]
         public MediaDirectory Album { get; set; }

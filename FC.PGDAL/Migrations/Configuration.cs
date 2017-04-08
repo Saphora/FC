@@ -30,7 +30,7 @@ namespace FC.PGDAL.Migrations
             //new SeedAnnouncements("529DF3E0-8EA1-44E3-B6E3-F925F869DC01", context);
             //new SeedMedia("4241F6B8-9FDD-4344-BC29-06D4EBFB0E80", context);
             //new SeedApplicationUsers("7381DFB7-B268-4D4A-8F23-EDF5F0223657", context);
-            //new SeedRoles("D91068A7-457B-417A-841B-9162BA71F9AD", context);
+            new SeedRoles("D51068A7-457B-417A-841B-9162BA71F9AD", context);
             //new SeedRefactorGenres("A10E4656-B636-418D-90DE-603948EF491D", context);
             //new SeedLanguage("0E2E8086-B957-4C76-987A-A69A45C0365A", context);
             //new SeedAddIsoCulture("A255C9BA-8213-47CE-921F-0C8F390F6EA0", context);

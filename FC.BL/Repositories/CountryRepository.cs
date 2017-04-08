@@ -18,17 +18,26 @@ namespace FC.BL.Repositories
 
         public UCountry GetByID(Guid? id)
         {
-            return Db.Countries.Find(id);
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
+                return Db.Countries.Find(id);
+            }
         }
 
         public List<UCountry> GetAll()
         {
-            return Db.Countries.OrderBy(o => o.Name).ToList();
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
+                return Db.Countries.OrderBy(o => o.Name).ToList();
+            }
         }
 
         public List<Guid?> GetAllIds()
         {
-            return Db.Countries.OrderBy(o => o.Name).Select(s => s.CountryID).ToList();
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
+                return Db.Countries.OrderBy(o => o.Name).Select(s => s.CountryID).ToList();
+            }
         }
 
         public UCountry GetByCode(string code)
@@ -40,10 +49,13 @@ namespace FC.BL.Repositories
             {
                 try
                 {
-                    RegionInfo info = new RegionInfo(code.ToUpper());
-                    if (info != null)
+                    using (Db = new PGDAL.PGModel.ContentModel())
                     {
-                        return Db.Countries.ToList().Where(w => w.CultureIsoName.Split('-').Last().ToLower() == code.ToLower()).FirstOrDefault();
+                        RegionInfo info = new RegionInfo(code.ToUpper());
+                        if (info != null)
+                        {
+                            return Db.Countries.ToList().Where(w => w.CultureIsoName.Split('-').Last().ToLower() == code.ToLower()).FirstOrDefault();
+                        }
                     }
                 } catch(Exception ex)
                 {
@@ -55,31 +67,46 @@ namespace FC.BL.Repositories
         
         public UCountry GetByCultureName(string cultureName)
         {
-            return Db.Countries.Where(w => w.CultureIsoName == cultureName).FirstOrDefault();
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
+                return Db.Countries.Where(w => w.CultureIsoName == cultureName).FirstOrDefault();
+            }
         }
 
+        public List<UCountry> Search(string name)
+        {
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
+                return Db.Countries.Where(w => w.Name.ToLower().Contains(name)).OrderBy(o => o.Name).Take(10).ToList();
+            }
+        }
 
         public RepositoryState Create(UCountry country)
         {
             try
             {
-                if (!Db.Countries.Where(w => w.Name == country.Name).Any())
+                using (Db = new PGDAL.PGModel.ContentModel())
                 {
-                    country.CountryID = Guid.NewGuid();
+                    if (!Db.Countries.Where(w => w.Name == country.Name).Any())
+                    {
+                        country.CountryID = Guid.NewGuid();
 
-                    List<IValidationError> errors = this.Validate<UCountry>(country);
-                    if (errors.Count() == 0)
-                    {
-                        Db.Countries.Add(country);
-                        Db.SaveChanges();
-                        return new RepositoryState { AffectedID = country.CountryID, SUCCESS = true, MSG = $"Country {country.Name} successfully created." };
-                    } else
-                    {
-                        return this.HandleValidationErrors(errors);
+                        List<IValidationError> errors = this.Validate<UCountry>(country);
+                        if (errors.Count() == 0)
+                        {
+                            Db.Countries.Add(country);
+                            Db.SaveChanges();
+                            return new RepositoryState { AffectedID = country.CountryID, SUCCESS = true, MSG = $"Country {country.Name} successfully created." };
+                        }
+                        else
+                        {
+                            return this.HandleValidationErrors(errors);
+                        }
                     }
-                } else
-                {
-                    return new RepositoryState { EXISTS = true, MSG = $"Country {country.Name} already exists." };
+                    else
+                    {
+                        return new RepositoryState { EXISTS = true, MSG = $"Country {country.Name} already exists." };
+                    }
                 }
             }
             catch (DbEntityValidationException ex)
@@ -96,25 +123,30 @@ namespace FC.BL.Repositories
         {
             try
             {
-                UCountry c = Db.Countries.Find(country.CountryID);
 
-                c.AuthorID = AuthorizationRepository.Current.CurrentUser.UserID;
-                c.Currency = country.Currency;
-                c.CultureIsoName = country.CultureIsoName;
-                c.IsPublished = false;
-                c.LanguageName = country.LanguageName;
-                c.ModifiedDate = DateTime.Now;
-                c.Name = country.Name;
+                using (Db = new PGDAL.PGModel.ContentModel())
+                {
+                    UCountry c = Db.Countries.Find(country.CountryID);
 
-                List<IValidationError> errors = this.Validate<UCountry>(c);
-                if (errors.Count() == 0)
-                {
-                    Db.Entry<UCountry>(country).State = System.Data.Entity.EntityState.Modified;
-                    Db.SaveChanges();
-                    return new RepositoryState { AffectedID = country.CountryID, SUCCESS = true, MSG = $"Country {c.Name} successfully modified." };
-                } else
-                {
-                    return this.HandleValidationErrors(errors);
+                    c.AuthorID = AuthorizationRepository.Current.CurrentUser.UserID;
+                    c.Currency = country.Currency;
+                    c.CultureIsoName = country.CultureIsoName;
+                    c.IsPublished = false;
+                    c.LanguageName = country.LanguageName;
+                    c.ModifiedDate = DateTime.Now;
+                    c.Name = country.Name;
+
+                    List<IValidationError> errors = this.Validate<UCountry>(c);
+                    if (errors.Count() == 0)
+                    {
+                        Db.Entry<UCountry>(country).State = System.Data.Entity.EntityState.Modified;
+                        Db.SaveChanges();
+                        return new RepositoryState { AffectedID = country.CountryID, SUCCESS = true, MSG = $"Country {c.Name} successfully modified." };
+                    }
+                    else
+                    {
+                        return this.HandleValidationErrors(errors);
+                    }
                 }
             }
             catch (DbEntityValidationException ex)
@@ -131,15 +163,18 @@ namespace FC.BL.Repositories
         {
             try
             {
-                UCountry c = Db.Countries.Find(country.CountryID);
-                c.ArchiveDate = DateTime.Now.AddDays(180);
-                c.AuthorID = AuthorizationRepository.Current.CurrentUser.UserID;
-                c.IsPublished = false;
-                c.ModifiedDate = DateTime.Now;
-                c.IsDeleted = true;
-                Db.Entry<UCountry>(country).State = System.Data.Entity.EntityState.Modified;
-                Db.SaveChanges();
-                return new RepositoryState { AffectedID = country.CountryID, SUCCESS = true, MSG = $"Country {c.Name} successfully modified." };
+                using (Db = new PGDAL.PGModel.ContentModel())
+                {
+                    UCountry c = Db.Countries.Find(country.CountryID);
+                    c.ArchiveDate = DateTime.Now.AddDays(180);
+                    c.AuthorID = AuthorizationRepository.Current.CurrentUser.UserID;
+                    c.IsPublished = false;
+                    c.ModifiedDate = DateTime.Now;
+                    c.IsDeleted = true;
+                    Db.Entry<UCountry>(country).State = System.Data.Entity.EntityState.Modified;
+                    Db.SaveChanges();
+                    return new RepositoryState { AffectedID = country.CountryID, SUCCESS = true, MSG = $"Country {c.Name} successfully modified." };
+                }
             }
             catch (DbEntityValidationException ex)
             {
@@ -155,16 +190,19 @@ namespace FC.BL.Repositories
         {
             try
             {
-                if (Db.Festivals.Where(w => w.CountryID == country.CountryID).Any() || Db.Artists.Where(w => w.CountryID == country.CountryID).Any())
+                using (Db = new PGDAL.PGModel.ContentModel())
                 {
-                    return new RepositoryState() { ERROR = true, MSG = "There are festivals and artists depending on this country. Please modify these first." };
-                }
-                else
-                {
-                    UCountry c = Db.Countries.Find(country.CountryID);
-                    Db.Countries.Remove(c);
-                    Db.SaveChanges();
-                    return new RepositoryState { AffectedID = country.CountryID, SUCCESS = true, MSG = $"Country {c.Name} successfully modified." };
+                    if (Db.Festivals.Where(w => w.CountryID == country.CountryID).Any() || Db.Artists.Where(w => w.CountryID == country.CountryID).Any())
+                    {
+                        return new RepositoryState() { ERROR = true, MSG = "There are festivals and artists depending on this country. Please modify these first." };
+                    }
+                    else
+                    {
+                        UCountry c = Db.Countries.Find(country.CountryID);
+                        Db.Countries.Remove(c);
+                        Db.SaveChanges();
+                        return new RepositoryState { AffectedID = country.CountryID, SUCCESS = true, MSG = $"Country {c.Name} successfully modified." };
+                    }
                 }
             }
             catch (DbEntityValidationException ex)

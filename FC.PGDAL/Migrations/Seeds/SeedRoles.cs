@@ -16,14 +16,42 @@ namespace FC.PGDAL.Migrations.Seeds
             if (SeedCanRun)
             {
                 SeedStart();
-                Permission EndUser = Db.Permissions.Where(w => w.PermissionKey == "END_USER").FirstOrDefault();
-                Role role = new Role()
+                Db.Roles.Add(new Role()
                 {
                     RoleID = Guid.NewGuid(),
-                    Name = "END_USER",
-                };
-                role.Permissions.Add(EndUser);
-                Db.Roles.Add(role);
+                    Name = "Advertiser",
+                });
+
+                Db.Roles.Add(new Role()
+                {
+                    RoleID = Guid.NewGuid(),
+                    Name = "Festival",
+                });
+
+                Db.Roles.Add(new Role()
+                {
+                    RoleID = Guid.NewGuid(),
+                    Name = "Venue",
+                });
+
+                Db.Roles.Add(new Role()
+                {
+                    RoleID = Guid.NewGuid(),
+                    Name = "Artist",
+                });
+
+                Db.Roles.Add(new Role()
+                {
+                    RoleID = Guid.NewGuid(),
+                    Name = "Retailer",
+                });
+
+                Db.Roles.Add(new Role()
+                {
+                    RoleID = Guid.NewGuid(),
+                    Name = "TravelAgent",
+                });
+
                 Db.SaveChanges();
                 SeedFinished(true);
             }

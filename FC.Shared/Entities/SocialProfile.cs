@@ -18,7 +18,7 @@ namespace FC.Shared.Entities
         public Guid? ProfileTypeID { get; set; }
 
         [ForeignKey("ProfileTypeID")]
-        public virtual SocialProfileType ProfileType { get; set; }
+        public  SocialProfileType ProfileType { get; set; }
 
         [Index]
         public Guid? GenericID { get; set; }

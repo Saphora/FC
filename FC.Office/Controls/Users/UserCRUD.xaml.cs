@@ -49,46 +49,52 @@ namespace FC.Office.Controls.Users
         {
             RepositoryState state;
 
-            if (this.pssRepeat.Password == this.pss.Password)
+            if (vm.Model != null)
             {
-                if (vm.Model != null)
+                if (!string.IsNullOrEmpty(this.pss.Password))
                 {
-                    if (vm.Model.Country != null)
+                    if (this.pssRepeat.Password == this.pss.Password)
                     {
-                        vm.Model.CountryID = vm.Model.Country.CountryID;
+                        vm.Model.UserPassword = this.pssRepeat.Password;
                     }
+                    else
+                    {
+                        MessageBox.Show("The passwords you have entered doesn't match.");
+                    }
+                }
+                if (vm.Model.Country != null)
+                {
+                    vm.Model.CountryID = vm.Model.Country.CountryID;
+                }
 
-                    vm.Model.UserPassword = this.pss.Password;
-                    if (vm.Model.UserID == null)
+                if (vm.Model.UserID == null)
+                {
+                    vm.Model.Roles = this.RolePicker.Roles;
+                    state = repositories.Auth.Create(vm.Model);
+                }
+                else
+                {
+                    vm.Model.Roles = this.RolePicker.Roles;
+                    state = repositories.Auth.Update(vm.Model);
+                }
+                MessageBox.Show(state.MSG);
+                if (state.SUCCESS == true)
+                {
+                    this.Refresh();
+                    if (this.SaveSuccess != null)
                     {
-                        state = repositories.Auth.Create(vm.Model);
+                        this.SaveSuccess(this, vm.Model);
                     }
-                    else
+                }
+                else
+                {
+                    if (this.SaveFailure != null)
                     {
-                        state = repositories.Auth.Update(vm.Model);
-                    }
-                    MessageBox.Show(state.MSG);
-                    if (state.SUCCESS == true)
-                    {
-                        this.Refresh();
-                        if (this.SaveSuccess != null)
-                        {
-                            this.SaveSuccess(this, vm.Model);
-                        }
-                    }
-                    else
-                    {
-                        if (this.SaveFailure != null)
-                        {
-                            this.SaveFailure(this, vm.Model);
-                        }
+                        this.SaveFailure(this, vm.Model);
                     }
                 }
             }
-            else
-            {
-                MessageBox.Show("The passwords you have entered doesn't match.");
-            }
+            
         }
 
         public void SetModel(ApplicationUser e)

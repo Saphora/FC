@@ -19,47 +19,56 @@ namespace FC.BL.Repositories
     public abstract class BaseRepository: IDisposable {
 
         public int PageCount { get; set; }
-
+        
         public decimal GetPageCount<T>(string dbSetName, int size) where T: class,IBaseModel
         {
-            IQueryable<T> dbset = (IQueryable<T>)this.Db.GetType().GetProperty(dbSetName).GetValue(this.Db);
-            Decimal d = new Decimal((float)dbset.Where(w=>w.IsDeleted == false).Count() / (float)size);
-            return Math.Ceiling(d) - 1;
+            using (Db = new ContentModel())
+            {
+                IQueryable<T> dbset = (IQueryable<T>)this.Db.GetType().GetProperty(dbSetName).GetValue(this.Db);
+                Decimal d = new Decimal((float)dbset.Where(w => w.IsDeleted == false).Count() / (float)size);
+                return Math.Ceiling(d) - 1;
+            }
         }
 
         public virtual List<T> GetPaged<T>(int size, int page, string dbSetName) where T : class, IBaseModel
         {
-            IQueryable<T> dbset = (IQueryable<T>)this.Db.GetType().GetProperty(dbSetName).GetValue(this.Db);
-            List<T> result = new List<T>();
-            int from = 0;
-            if (page == 1)
+            using (Db = new ContentModel())
             {
-                from = 0;
+                IQueryable<T> dbset = (IQueryable<T>)this.Db.GetType().GetProperty(dbSetName).GetValue(this.Db);
+                List<T> result = new List<T>();
+                int from = 0;
+                if (page == 1)
+                {
+                    from = 0;
+                }
+                else if (page > 1 && page <= GetPageCount<T>(dbSetName, size))
+                {
+                    from = size * page - 1;
+                }
+                result = dbset.Where(w => w.IsDeleted == false).OrderBy(o => o.Name).Skip(from).Take(size).ToList();
+                return result;
             }
-            else if (page > 1 && page <= GetPageCount<T>(dbSetName,size))
-            {
-                from = size * page - 1;
-            }
-            result = dbset.Where(w=>w.IsDeleted == false).OrderBy(o => o.Name).Skip(from).Take(size).ToList();
-            return result;
         }
 
         public virtual IQueryable<T> GetPagedQueryable<T>(int size, int page, string dbSetName) where T : class, IBaseModel
         {
-            this.Db = new ContentModel();
-            IQueryable<T> dbset = (IQueryable<T>)this.Db.GetType().GetProperty(dbSetName).GetValue(this.Db);
-            IQueryable<T> result;
-            int from = 0;
-            if (page == 1)
+            using (this.Db = new ContentModel())
             {
-                from = 0;
+                this.Db = new ContentModel();
+                IQueryable<T> dbset = (IQueryable<T>)this.Db.GetType().GetProperty(dbSetName).GetValue(this.Db);
+                IQueryable<T> result;
+                int from = 0;
+                if (page == 1)
+                {
+                    from = 0;
+                }
+                else if (page > 1 && page <= GetPageCount<T>(dbSetName, size))
+                {
+                    from = size * page - 1;
+                }
+                result = dbset.Where(w => w.IsDeleted == false).OrderBy(o => o.CreatedDate).Skip(from).Take(size);
+                return result;
             }
-            else if (page > 1 && page <= GetPageCount<T>(dbSetName, size))
-            {
-                from = size * page - 1;
-            }
-            result = dbset.Where(w => w.IsDeleted == false).OrderBy(o=>o.CreatedDate).Skip(from).Take(size);
-            return result;
         }
 
         public virtual List<T> GetSorted<T>(string dbSetName, string search = "0-9", int page = 1) where T : class, IBaseModel
@@ -212,7 +221,6 @@ namespace FC.BL.Repositories
 
         public BaseRepository()
         {
-            Db = new ContentModel();
         }
 
 
@@ -323,7 +331,7 @@ namespace FC.BL.Repositories
             result.ValidationErrors = errors;
             foreach (IValidationError error in errors)
             {
-                result.MSG += string.Format("{0}<br />",error.Message);
+                result.MSG += string.Format("{0}",error.Message);
             }
             return result;
         }
@@ -333,50 +341,66 @@ namespace FC.BL.Repositories
 
         public T HandleException<T>(Exception ex, T result)
         {
-            Db = new ContentModel();
-            Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.GenericError));
-            Db.SaveChanges();
+            using (Db = new ContentModel())
+            {
+                Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.GenericError));
+                Db.SaveChanges();
+            }
             return result;
         }
 
         public T HandleException<T>(DbEntityValidationException ex,T result)
         {
-            Db = new ContentModel();
-            Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.DBError));
-            Db.SaveChanges();
-            return result;
+
+            using (Db = new ContentModel())
+            {
+                Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.DBError));
+                Db.SaveChanges();
+                return result;
+            }
         }
 
         public T HandleException<T>(ArgumentNullException ex, T result)
         {
-            Db = new ContentModel();
-            Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.GenericError));
-            Db.SaveChanges();
-            return result;
+            using (Db = new ContentModel())
+            {
+                Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.GenericError));
+                Db.SaveChanges();
+                return result;
+            }
         }
 
 
         public T HandleException<T>(DbEntityValidationException ex, string msg, T result)
         {
-            Db = new ContentModel();
-            Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.DBError));
-            Db.SaveChanges();
-            return result;
+            using (Db = new ContentModel())
+            {
+                Db = new ContentModel();
+                Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.DBError));
+                Db.SaveChanges();
+                return result;
+            }
         }
 
         public T HandleException<T>(ArgumentNullException ex, string msg, T result)
         {
-            Db = new ContentModel();
-            Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.GenericError));
-            Db.SaveChanges();
-            return result;
+            using (Db = new ContentModel())
+            {
+                Db = new ContentModel();
+                Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.GenericError));
+                Db.SaveChanges();
+                return result;
+            }
         }
         public T HandleException<T>(NpgsqlException ex, string msg, T result)
         {
-            Db = new ContentModel();
-            Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.DBError));
-            Db.SaveChanges();
-            return result;
+            using (Db = new ContentModel())
+            {
+                Db = new ContentModel();
+                Db.GenericMessages.Add(new Shared.Entities.GenericMessage(ex, GenericMessageStatus.DBError));
+                Db.SaveChanges();
+                return result;
+            }
         }
 
         public void Dispose()

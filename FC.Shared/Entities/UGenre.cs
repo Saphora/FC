@@ -42,12 +42,12 @@ namespace FC.Shared.Entities
         }
 
         
-        public virtual int VisibleOnHome { get; set; }
+        public  int VisibleOnHome { get; set; }
 
         
         [Index("GenreName", IsUnique = true, IsClustered = true)]
         [Validation(ValidationRule.Any, true)]
-        public virtual string Name { get; set; }
+        public  string Name { get; set; }
         
         public Guid? AlbumID { get; set; }
         public Guid? ThumbnailID { get; set; }
@@ -59,9 +59,6 @@ namespace FC.Shared.Entities
         public Media Thumbnail { get; set; }
 
         public List<UGenre> Related { get; set; }
-        public bool IsDeleted { get; set; }
-        public bool IsPublished { get; set; }
-        public DateTime ArchiveDate { get; set; }
         
     }
 }

@@ -28,6 +28,25 @@ var FC;
                         throw new Error("Use CacheManager.GetInstance() for instantiating this class, or get the instance key by CacheManager.GetInstKey() first..");
                     }
                 }
+                CacheManager.prototype.GetCookieValue = function (key) {
+                    var vm = this;
+                    var cookies = document.cookie.split(";");
+                    var c = cookies.filter(function (v, i) {
+                        var kvp = v.split('=');
+                        var k = kvp[0];
+                        var v = kvp[1];
+                        return k == key;
+                    });
+                    var val = "";
+                    if (c != null) {
+                        if (c.length > 0) {
+                            if (c[0].split('=').length > 0) {
+                                val = c[0].split('=')[1];
+                            }
+                        }
+                    }
+                    return val;
+                };
                 CacheManager.GetInstKey = function () {
                     return "132B862D62FE41F0B1865F43BF574BAC";
                 };
@@ -235,15 +254,14 @@ var FC;
                     }
                 };
                 CacheManager.prototype.DeleteStorage = function (key) {
-                    localStorage.removeItem(key);
-                    var e = new CustomEvent(key + "_Deleted", { 'detail': key });
-                    window.dispatchEvent(e);
+                    //localStorage.removeItem(key);
+                    //var e = new CustomEvent(key + "_Deleted", { 'detail': key });
+                    //window.dispatchEvent(e);
                 };
                 CacheManager.prototype.ClearStorage = function () {
                     localStorage.clear();
                 };
                 CacheManager.prototype.Contains = function (key) {
-                    //if (cacheMode == CacheMode.LocalStorage) {
                     if (localStorage[key]) {
                         var value = localStorage[key];
                         var data = null;
@@ -261,7 +279,6 @@ var FC;
                     else {
                         return false;
                     }
-                    //}
                 };
                 return CacheManager;
             }());

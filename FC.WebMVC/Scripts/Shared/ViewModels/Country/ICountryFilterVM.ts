@@ -8,5 +8,6 @@
         Reset: Function;
         Close: Function;
         IsActive: Function;
+        Selected: string;
     }
 }

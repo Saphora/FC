@@ -13,6 +13,7 @@
 @import "../controls/_datepicker.scss";
 @import "../controls/_introbox.scss";
 @import "../controls/_artistbrowser.scss";
+@import "../controls/_listview.scss";
 @import "../controls/_mediabrowser.scss";
 @import "../controls/_genrepicker.scss";
 @import "../controls/_genericpicker.scss";
@@ -24,11 +25,32 @@
 @import "../controls/_news.scss";
 @import "../controls/_overview.scss";
 @import "../controls/_list-table.scss";
+@import "../controls/_benefits.scss";
 
 /*cards*/
 @import "../cards/_festival.scss";
 @import "../cards/_headlines.scss";
 @import "../controls/_loader.scss";
+
+i.fa-festival-calendar {
+    display:block;
+    min-width:30px;
+    min-height:30px;
+    background-size: 25px 25px;
+    background-image:url(/Resources/images/fa-festival.png);
+    background-repeat:no-repeat;
+    background-position: 50% 50%;
+}
+
+.largemenu {
+    display:block;
+    width: 100%;
+    padding: 0;
+    li {
+        float:left;
+    }
+    list-style: none;
+}
 
 html {
     font-size: 16px !important;
@@ -503,6 +525,25 @@ span.no-image-defined {
     .btn {
         float:left;
     }
+    .navigation-items {
+        max-height:100%;
+        min-height:100%;
+        padding-top: 10px;
+        padding-left: 15px;
+        float:left;
+         a {
+            float:left;
+            display:block;
+            margin-right: 15px;
+            color:#FFF !important;
+            font-size: 12px; 
+            .count {
+                background-color: #FF0000;
+                padding: 3px;
+                border-radius: 2px;
+            }
+        }
+    }
     .crumb {
         max-height:100%;
         min-height:100%;
@@ -521,6 +562,11 @@ span.no-image-defined {
         }
         a {
             font-size: 12px; 
+            .count {
+                background-color: #FF0000;
+                padding: 3px;
+                border-radius: 2px;
+            }
         }
     }
 }

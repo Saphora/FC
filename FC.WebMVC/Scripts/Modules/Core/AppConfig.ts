@@ -8,65 +8,34 @@ module FC.Core {
     }
     export class Environment {
 
-        public static UpdateBuild(): string {
-            var version = this.GetVersion().split(".");
-            var cacheversion = parseInt(version[2]);
-            var releaseversion = parseInt(version[0]);
-            var build = parseInt(version[1])+1;
-            this.VERSION = releaseversion + "." + build + "." + cacheversion;
-            CacheManager.WriteStorage("version", this.VERSION);
-            return this.VERSION;
-        }
-
-        public static UpdateCache(): string {
-            var version = this.GetVersion().split(".");
-            var cacheversion = parseInt(version[2])+1;
-            var releaseversion = parseInt(version[0]);
-            var build = parseInt(version[1]);
-            this.VERSION = releaseversion + "." + build + "." + cacheversion;
-            CacheManager.WriteStorage("version", this.VERSION);
-            return this.VERSION;
-        }
-
-        public static UpdateRelease(): string {
-            var version = this.GetVersion().split(".");
-            var cacheversion = 0;
-            var build = parseInt(version[1]);
-            var releaseversion = parseInt(version[0])+1;
-            this.VERSION = releaseversion + "." + build + "." + cacheversion;
-            CacheManager.WriteStorage("version", this.VERSION);
-            return this.VERSION;
-        }
-
-
-
-        public static GetVersion() {
-            if (CacheManager.Contains("version")) {
-                this.VERSION = CacheManager.Get<string>("version").data;
-                return this.VERSION;
-            } else {
-                this.VERSION = "1.0.0";
-                return this.VERSION;
-            }
-        }
         private static VERSION = "";
         public static GeoIPURL = "https://freegeoip.net/json/";
         public static LocalBaseURL = "http://localhost:8888";
         public static RemoteBaseURL = "https://festival-calendar.nl:8888";
         public static GeoServicesURL = "http://wmdevelopment.nl:8080";
         public static MediaURLRoot = "https://festival-calendar.nl:8888/";
+        public static MediaURLRootLocal = "http://localhost:8888/";
+        public static UploadStateKey = "4C3A3ADE-CCD0-4CAC-A46A-1E8410DDA79C";
         public static MEDIA_ROOT_ID= "710FE0A0-8894-40DB-8D7D-2FCBD7BA14CF";
         public static FESTIVAL_DIR_ROOT_ID= "1c9f99e9-1ff2-4eef-9f94-25b400340fba";
         public static ARTIST_DIR_ROOT_ID= "3aa4eee3-5821-40ce-a82c-5018b890b824";
         public static NEWS_DIR_ROOT_ID = "e55379cd-13e3-4180-8b68-07b82e0d6172";
         public static APPUSER_DIR_ROOT_ID= "CDEA7718-1081-4204-A839-6463E357151D";
-        public static REPORT_DIR_ROOT_ID= "359859A6-307D-4907-ACF6-1AD799F25317";
+        public static REPORT_DIR_ROOT_ID = "359859A6-307D-4907-ACF6-1AD799F25317";
         public static GetBaseURL(et: EnvironmentType) {
             if (et.toString() == EnvironmentType.Local.toString()) {
                 return Environment.LocalBaseURL;
             }
             if (et.toString() == EnvironmentType.Remote.toString()) {
                 return Environment.RemoteBaseURL;
+            }
+        }
+        public static GetMediaURL(et: EnvironmentType) {
+            if (et.toString() == EnvironmentType.Local.toString()) {
+                return Environment.MediaURLRootLocal;
+            }
+            if (et.toString() == EnvironmentType.Remote.toString()) {
+                return Environment.MediaURLRoot;
             }
         }
     }
@@ -122,16 +91,13 @@ module FC.Core {
     }
     export class AppConfig {
         constructor() {
-            this.URLRoot = Environment.GetBaseURL(EnvironmentType.Remote);
+            this.URLRoot = Environment.GetBaseURL(EnvironmentType.Local);
             this.ServiceHeaders = new FC.Shared.Models.SystemHeaders();
-
             this.ServiceHeaders.Culture = this.Client.UserCulture;
             this.ServiceHeaders.UserDateTime = this.Client.CurrentTicks;
             this.ServiceHeaders.ContentType = 'application/json';
             this.ServiceHeaders.Accept = 'application/json';
-            if (FC.Shared.Util.CacheManager.GetInstance().Contains("Token")) {
-                this.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().Get<string>("Token").data;
-            }
+            this.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().GetCookieValue("Token");
         }
         public CurrentCountry = "";
         public DefaultGenreID = 4492;

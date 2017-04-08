@@ -1,0 +1,114 @@
+﻿@model List<FC.Shared.ViewModels.Festival.FestivalVM>
+<div class="row search-control" id="initialResult">
+    @foreach (var festival in Model)
+    {
+        <div class="col-xl-6 col-lg-8 col-md-10 col-sm-12 col-xs-24 search-result">
+            <div class="card festival-card">
+                <div class="card-header link">
+                    <a class="h5" href="/#/details/festival/@festival.FestivalID">@festival.Name.ToUpper()</a>
+                </div>
+                <div class="card-block">
+                    <div class="top">
+                        <div class="card-img pull-left">
+                            <img src="@Html.Raw(FC.Shared.Config.FCConfig.API+"/"+festival.IMG+".img?&thumb=true")" class="ct-logo" />
+                        </div>
+                        <div class="card-date pull-right">
+                            <span class="hr top"></span>
+                            <div class="inner">
+                                <span class="day">@festival.StartDateExplosion.Day</span>
+                                <span class="month">@festival.StartDateExplosion.Month</span>
+                                <span class="year">
+                                    <span>@festival.StartDateExplosion.Y1</span>
+                                    <span>@festival.StartDateExplosion.Y2</span>
+                                    <span>@festival.StartDateExplosion.Y3</span>
+                                    <span>@festival.StartDateExplosion.Y4</span>
+                                </span>
+                            </div>
+                            <span class="hr bottom"></span>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <div>
+                            <i class="fa fa-group"></i>
+                            @if (festival.Visitors != null)
+                            {
+                                if (festival.Visitors.ToLower().Contains("select") || festival.Visitors.ToLower().Contains("please"))
+                                {
+                                    <span class="txt">Unknown</span>
+                                }
+                                else
+                                {
+                                    <span class="txt">@festival.Visitors.ToUpper()</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="txt">Unknown</span>
+                            }
+                            <i class="fa fa-hourglass-end"></i>
+                            <span class="txt">@festival.Daycount.ToUpper()</span>
+                        </div>
+                        <div>
+                            <i class="fa fa-map-marker"></i> @festival.City.ToUpper()<br />
+                            <i class="fa fa-map-marker" style="color:transparent;">
+                            </i> @festival.CountryName.ToUpper()
+                        </div>
+                        <div class="genres">
+                            <i class="fa fa-heart"></i>
+                            @if (festival.Genres != null)
+                            {
+                                int index = 0;
+                                foreach (var genre in festival.Genres)
+                                {
+                                    if (index < 2)
+                                    {
+                                        <span class="g">@genre.Name.ToUpper()</span>
+                                    }
+                                    index++;
+                                }
+                                if (festival.Genres.Count > 2)
+                                {
+                                    <span class="g">+ @(festival.Genres.Count - 2)</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="rating" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr">
+                        <span class="count" theme="count" ng-if="Festival.Rating.DisplayCount == '0'">
+                            0
+                        </span>
+                        <span class="count" theme="count" ng-if="Festival.Rating.DisplayCount != '0'">
+                            {{Festival.Rating.DisplayCount}}
+                        </span>
+                        <a href="#" id="star_{{Festival.FestivalID}}_1" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',1)">
+                            <i class="star active fa fa-star" ng-if="Festival.Rating.Star1Active"></i>
+                            <i class="star fa fa-star" ng-if="!Festival.Rating.Star1Active"></i>
+                        </a>
+                        <a href="#" id="star_{{Festival.FestivalID}}_2" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',2)">
+                            <i class="star active fa fa-star" ng-if="Festival.Rating.Star2Active"></i>
+                            <i class="star fa fa-star" ng-if="!Festival.Rating.Star2Active"></i>
+                        </a>
+                        <a href="#" id="star_{{Festival.FestivalID}}_3" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',3)">
+                            <i class="star active fa fa-star" ng-if="Festival.Rating.Star3Active"></i>
+                            <i class="star fa fa-star" ng-if="!Festival.Rating.Star3Active"></i>
+                        </a>
+                        <a href="#" id="star_{{Festival.FestivalID}}_4" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',4)">
+                            <i class="star active fa fa-star" ng-if="Festival.Rating.Star4Active"></i>
+                            <i class="star fa fa-star" ng-if="!Festival.Rating.Star4Active"></i>
+                        </a>
+                        <a href="#" id="star_{{Festival.FestivalID}}_5" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',5)">
+                            <i class="star active fa fa-star" ng-if="Festival.Rating.Star5Active"></i>
+                            <i class="star fa fa-star" ng-if="!Festival.Rating.Star5Active"></i>
+                        </a>
+                        <!--Example of star
+                        Example of star-half
+                        Example of star-half-empty (alias)
+                        Example of star-half-full (alias)
+                        Example of star-half-o
+                        Example of star-o-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

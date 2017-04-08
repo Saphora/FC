@@ -16,7 +16,7 @@ var FC;
             (function (Controllers) {
                 var SearchController = (function (_super) {
                     __extends(SearchController, _super);
-                    function SearchController($mdDialog, $http, $q, $scope, $route, $routeParams, $location, SearchService) {
+                    function SearchController($mdDialog, $http, $q, $scope, $routeParams, $location, SearchService) {
                         _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
                         this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
                         this.SearchService = new FC.Modules.Search.Services.SearchService($http, $q);
@@ -77,7 +77,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
                         '$routeParams',
                         '$location'
                     ];

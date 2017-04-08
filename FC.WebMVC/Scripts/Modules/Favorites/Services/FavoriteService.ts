@@ -22,12 +22,16 @@ module FC.Modules.Favorites.Services {
             return this.Get('/API/Favorite/Mark/?&contentID=' + contentID + '&type=' + contentType);
         }
 
-        public GetUserFavorites(): ng.IPromise<INT.IServiceResponse<IList<FC.Shared.Models.Favorite>>> {
-            return this.Get('/API/Favorite/GetUserFavorites');
+        public GetUserFavorites(userID: string, icType: FC.Shared.Enum.InternalContentType): ng.IPromise<INT.IServiceResponse<IList<FC.Shared.Models.Favorite>>> {
+            return this.Get('/API/Favorite/GetUserFavorites?&userID=' + userID + '&icType=' + icType);
         }
 
-        public IsFavorite(contentID: string): ng.IPromise<INT.IServiceResponse<VM.RepositoryState>> {
-            return this.Get('/API/Favorite/IsFavorite/?&contentID=' + contentID);
+        public GetUserFavoritesCount(userID: string, icType: FC.Shared.Enum.InternalContentType): ng.IPromise<INT.IServiceResponse<number>> {
+            return this.Get('/API/Favorite/GetUserFavoritesCount?&userID=' + userID + '&icType=' + icType);
+        }
+
+        public IsFavorite(userID:string, contentID: string): ng.IPromise<INT.IServiceResponse<boolean>> {
+            return this.Get('/API/Favorite/IsFavorite/?&userID='+userID+'&contentID=' + contentID);
         }
 
         public UnmarkFavorite(contentID: string): ng.IPromise<INT.IServiceResponse<VM.RepositoryState>> {

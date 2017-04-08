@@ -16,8 +16,8 @@ namespace FC.Shared.Entities
         public Guid? MenuSectionID { get; set; }
 
         [ForeignKey("RoleID")]
-        public virtual Role Role { get; set; }
+        public  Role Role { get; set; }
         [ForeignKey("MenuSectionID")]
-        public virtual MenuSection Section { get; set; }
+        public  MenuSection Section { get; set; }
     }
 }

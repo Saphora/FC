@@ -12,7 +12,7 @@ namespace FC.Shared.Entities
         public Guid? TranslationID { get; set; }
         public Guid? LanguageID { get; set; }
 
-        public virtual Translation Translation {get;set;}
-        public virtual Language Language {get;set;}
+        public  Translation Translation {get;set;}
+        public  Language Language {get;set;}
     }
 }

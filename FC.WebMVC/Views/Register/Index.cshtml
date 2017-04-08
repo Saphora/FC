@@ -18,49 +18,16 @@
             <div class="card-block">
                 <div class="row">
                     <div class="col-md-12">
-                        <h5>WHAT ARE OUR BENEFITS?</h5>
-                        <ul>
-                            <li>
-                                <i class="fa fa-heart"></i> <span class="h5">PERSONALIZE SETTINGS PERMANENTLY</span>
-                                <span class="description">Mark genres and artists as favorite, so that you only see content of your taste.</span>
-                            </li>
-                            <li>
-                                <i class="fa fa-heart"></i> <span class="h5">SIGN UP YOUR FESTIVAL</span>
-                                <span class="description">Let us know if you organize a festival / concert / event! Manage lineups and many more!</span>
-                            </li>
-                            <li>
-                                <i class="fa fa-heart"></i> <span class="h5">SIGN UP YOUR VENUE</span>
-                                <span class="description">Connect with festivals / artists / retailers etc. And create your own personal calendar.</span>
-                            </li>
-                            <li>
-                                <i class="fa fa-heart"></i> <span class="h5">SIGN UP AS ARTIST</span>
-                                <span class="description">Connect with festivals and other artists. Create your own profile to promote yourself. View the festivals were you play at.</span>
-                            </li>
-                            <li>
-                                <i class="fa fa-heart"></i> <span class="h5">REQUEST ADVERTISEMENT</span>
-                                <span class="description">Connect with festivals and other artists. Create your own profile to promote yourself. View the festivals were you play at.</span>
-                            </li>
-                            <li>
-                                <i class="fa fa-heart"></i> <span class="h5">JOIN OUR RETAILER PROGRAM</span>
-                                <span class="description">If you want to sell tickets or other cool festival related stuff.</span>
-                            </li>
-                            <li>
-                                <i class="fa fa-heart"></i> <span class="h5">SIGN UP AS TRAVEL AGENCY</span>
-                                <span class="description">Provide all in one festival travels!</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-12">
                         @using (Html.BeginForm())
                         {
                             @Html.AntiForgeryToken()
 
-                            @*if (ViewBag.Message != null)
+                            if (ViewBag.Message != null)
                             {
                                 <div class="alert alert-danger">
                                     @ViewBag.Message
                                 </div>
-                            }*@
+                            }
                             <div class="form-horizontal">
                                 <h4>CREATE AN ACCOUNT</h4>
                                 <hr />
@@ -80,7 +47,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.Label("Password repeat", htmlAttributes: new { @class = "control-label col-md-24" })
+                                    @Html.Label("Repeat password", htmlAttributes: new { @class = "control-label col-md-24" })
                                     <div class="col-md-24">
                                         <input type="password" class="form-control" name="UserPassword_Repeat" />
                                     </div>
@@ -102,17 +69,55 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    @Html.Label("How do you like to join?", htmlAttributes: new { @class = "control-label col-md-24" })
+                                    <div class="col-md-24">
+                                        <select name="AccountTypes" class="form-control">
+                                            <option value="@FC.Shared.Enum.Roles.EndUser" selected="selected">I just love festivals!</option>
+                                            <option value="@FC.Shared.Enum.Roles.Retailer,@FC.Shared.Enum.Roles.Advertiser,@FC.Shared.Enum.Roles.Partner">I want to advertise</option>
+                                            <option value="@FC.Shared.Enum.Roles.Artist,@FC.Shared.Enum.Roles.Advertiser">I want join as artist</option>
+                                            <option value="@FC.Shared.Enum.Roles.Festival">I want to join as festival</option>
+                                            <option value="@FC.Shared.Enum.Roles.Venue,@FC.Shared.Enum.Roles.Festival,@FC.Shared.Enum.Roles.Advertiser">I want to join as venue</option>
+                                            @*<option value="@FC.Shared.Enum.Roles.Retailer,@FC.Shared.Enum.Roles.Advertiser,@FC.Shared.Enum.Roles.Partner">I want to join as retailer</option>*@
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="col-md-24" style="padding-top:15px; padding-bottom:15px;">
                                         @Html.Partial("~/Views/Forms/Recaptcha.cshtml")
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-offset-20 col-md-4">
-                                        <input type="submit" value="REGISTER" class="btn btn-default" />
+                                    <div class="col-md-24">
+                                        <input type="submit" value="SIGN UP NOW" class="btn btn-success pull-right" />
                                     </div>
                                 </div>
                             </div>
                         }
+                    </div>
+                    <div class="col-md-12 benefits">
+                        <h5>OUR BENEFITS!</h5>
+                        <ul>
+                            <li>
+                                <i class="fa fa-heart"></i> <span class="h5">PERSONALIZE SETTINGS PERMANENTLY</span>
+                                <span class="description">Mark genres and artists as favorite, so that you only see content of your taste.</span>
+                            </li>
+                            <li>
+                                <i class="fa-festival-calendar"></i> <span class="h5">SIGN UP YOUR FESTIVAL</span>
+                                <span class="description">Let us know if you organize a festival / concert / event! Manage lineups and many more!</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-map-marker"></i> <span class="h5">SIGN UP YOUR VENUE</span>
+                                <span class="description">Connect with festivals / artists / retailers etc. And create your own personal calendar.</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-music"></i> <span class="h5">SIGN UP AS ARTIST</span>
+                                <span class="description">Connect with festivals and other artists. Create your own profile to promote yourself. View the festivals were you play at.</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-bullhorn"></i> <span class="h5">ADVERTISEMENT</span>
+                                <span class="description">Connect with festivals and other artists. Create your own profile to promote yourself. View the festivals were you play at.</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

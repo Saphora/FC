@@ -21,6 +21,31 @@ namespace FC.BL.Repositories
             DBERROR = false;
             ValidationErrors = new List<IValidationError>();
         }
+        public RepositoryState(bool success, string msg)
+        {
+            NOT_AUTHORIZED = false;
+            SUCCESS = success;
+            EXISTS = false;
+            INVALID = false;
+            ERROR = false;
+            MSG = msg;
+            DBERROR = false;
+            ValidationErrors = new List<IValidationError>();
+        }
+        public RepositoryState(bool success, string msg, Guid? afid)
+        {
+            NOT_AUTHORIZED = false;
+            SUCCESS = success;
+            EXISTS = false;
+            INVALID = false;
+            ERROR = false;
+            MSG = msg;
+            DBERROR = false;
+            AffectedID = afid;
+            ValidationErrors = new List<IValidationError>();
+        }
+
+
         public object Data { get; set; }
         public bool ERROR { get; set; }
         public bool NOT_AUTHORIZED { get; set; }

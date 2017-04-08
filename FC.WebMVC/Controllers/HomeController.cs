@@ -7,7 +7,7 @@ using FC.Shared.Entities;
 using FC.BL.Repositories;
 namespace FC.WebMVC.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         FestivalRepository repo = new FestivalRepository();
 

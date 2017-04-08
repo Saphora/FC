@@ -28,7 +28,7 @@ namespace FC.Shared.Entities
         
         public bool IsPopular { get; set; }
         
-        [Validation(ValidationRule.Guid, true)]
+        [Validation(ValidationRule.Guid, false)]
         public Guid? CountryID { get; set; }
 
         [Index]
@@ -36,7 +36,8 @@ namespace FC.Shared.Entities
         public bool IsDeleted { get; set; }
         
         public  List<Ticket> Tickets { get; set; }
-        
+
+        public string ZIPCode { get; set; }
 
         public  long DayCount
         {
@@ -65,8 +66,6 @@ namespace FC.Shared.Entities
         public  UCountry Country { get; set; }
 
         [Index]
-        [Required]
-        [Validation(true)]
         public  string City { get; set; }
         
         [Index]
@@ -78,10 +77,12 @@ namespace FC.Shared.Entities
         public  DateTime StartDate {
             set
             {
+                this.StartDateExplosion = new DateVM(value);
                 this._stdt = value.ToUniversalTime();
             } 
             get
             {
+                this.StartDateExplosion = new DateVM(this._stdt.ToLocalTime());
                 return this._stdt.ToLocalTime();
             }
         }
@@ -92,10 +93,12 @@ namespace FC.Shared.Entities
         public  DateTime EndDate {
             set
             {
+                this.EndDateExplosion = new DateVM(value);
                 this._edt = value.ToUniversalTime();
             }
             get
             {
+                this.EndDateExplosion = new DateVM(this._edt.ToLocalTime());
                 return this._edt.ToLocalTime();
             }
         }
@@ -124,9 +127,14 @@ namespace FC.Shared.Entities
         public  Media ProfileImage { get; set; }
 
         [NotMapped]
-        public DateVM StartDateExplosion { get; set; }
+        public DateVM StartDateExplosion {
+            get;set;
+        }
         [NotMapped]
-        public DateVM EndDateExplosion { get; set; }
+        public DateVM EndDateExplosion
+        {
+            get;set;
+        }
 
         [Index]
         public bool TopFestival { get; set; }

@@ -22,20 +22,20 @@ namespace FC.WebAPI.Controllers.API
         [HttpGet]
         public ServiceResponse<UNews> GetByID(Guid? id)
         {
-            return new ServiceResponse<UNews>(repo.GetByID(id), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<UNews>(repo.GetByID(id), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet]
         public ServiceResponse<List<UNews>> GetPaged(int page, int month, int year)
         {
             repo.PageCount = 20;
-            return new ServiceResponse<List<UNews>>(repo.GetPaged(page, month, year).ToList(), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<UNews>>(repo.GetPaged(page, month, year).ToList(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet]
         public ServiceResponse<int> GetPagedCount(int page, string month, string year)
         {
-            return new ServiceResponse<int>(repo.GetPagedCount(page, month, year), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<int>(repo.GetPagedCount(page, month, year), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpPost]
@@ -43,7 +43,7 @@ namespace FC.WebAPI.Controllers.API
         {
             ServiceMessage<NewsFilter> msg = new ServiceMessage<NewsFilter>(payload);
             List<UNews> news = repo.GetFiltered(msg.Data);
-            return new ServiceResponse<List<UNews>>(news, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<UNews>>(news, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpPost]

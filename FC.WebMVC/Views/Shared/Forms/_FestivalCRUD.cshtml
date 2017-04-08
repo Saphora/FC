@@ -1,0 +1,434 @@
+﻿@model FC.Shared.Entities.UFestival
+@section META {}
+@{
+    var state = ViewBag.State as FC.BL.Repositories.RepositoryState;
+    var section = ViewBag.Section as string;
+}
+<div class="row">
+    <div class="col-md-24">
+        <div class="navigation-bar">
+            <a href="/Profile/Index" class="btn btn-danger">
+                <i class="fa fa-angle-left"></i> BACK
+            </a>
+            <div class="crumb">
+
+                <a href="/Profile/Index" title="MY FESTIVAL CALENDAR ACCOUNT">
+                    MY ACCOUNT
+                </a>
+
+                <i class="fa fa-angle-right"></i>
+                @if (Model.Name != null)
+                {
+                    <a href="/festival/edit/@Model.FestivalID" title="@Model.Name">
+                        @Model.Name.ToUpper()
+                    </a>
+                }
+                else
+                {
+                    <a href="/festival/create" title="Create new festival">CREATE NEW FESTIVAL</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@if (!Model.IsPublished)
+{
+    <div class="row">
+        <div class="col-md-24">
+            <div class="alert alert-info">
+                Your festival is not published at the moment, we need to make sure that this festival is existing.
+                We inform you via e-mail if the festival is published or we might to ask you additional information.
+                The more information your provide, the faster we can publish your festival.
+            </div>
+        </div>
+    </div>
+}
+<div class="row" ng-controller="FC.Modules.Festival.Controllers.FestivalCRUDController as vm" ng-init="vm.RegisterID('@Model.FestivalID')">
+    @if (Model.FestivalID == null)
+    {
+        using (Html.BeginForm("Create", "Festival"))
+        {
+            <div class="col-xs-24 col-sm-24 col-md-24">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h5">GENERIC INFO</span>
+                    </div>
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-xs-24 col-sm-24 col-md-12 benefits">
+                                <h5>SIGN UP YOUR FESTIVAL! STEP 1</h5>
+                                <ul>
+                                    <li>
+                                        <i class="fa-festival-calendar"></i> <span class="h5">YOUR FESTIVAL NAME</span>
+                                        <span class="description">
+                                            Please enter the name of the festival. Good examlples are (Lowlands / Grasspop metal meeting). Please do not mention any date / time in the name field.
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-calendar"></i> <span class="h5">WHEN?</span>
+                                        <span class="description">
+                                            The (start/end) date and time are very important. Because you do not want that your guests arriving to late/early...
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-24 col-sm-24 col-md-12">
+                                @if (state != null && section == "generic")
+                                {
+                                    if (state.SUCCESS == false)
+                                    {
+                                <div class="alert alert-danger">
+                                    @state.MSG
+                                </div>
+                                    }
+                                    else
+                                    {
+                                <div class="alert alert-success">
+                                    @state.MSG
+                                </div>
+                                    }
+                                }
+                                @Html.HiddenFor(model => model.FestivalID)
+                                @Html.Hidden("section", "generic")
+                                @Html.HiddenFor(model => model.AuthorID)
+                                @Html.AntiForgeryToken()
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        @Html.Label("Name")
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="form-group" style="float:left; width:100%; position:relative;">
+                                        <div class="col-xs-24 no-padding no-margin">
+                                            <label>Start date (yyyy/mm/dd hh:mm)</label>
+                                        </div>
+                                        @Html.EditorFor(model => model.StartDate)
+                                    </div>
+                                    <div class="form-group" style="float:left; width:100%; position:relative;">
+                                        <div class="col-xs-24 no-padding no-margin">
+                                            <label>End date (yyyy/mm/dd hh:mm)</label>
+                                        </div>
+                                        @Html.EditorFor(model => model.EndDate)
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="SAVE" class="btn btn-success pull-right" style="margin-top: 10px;" />
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        using (Html.BeginForm("Edit", "Festival", FormMethod.Post))
+        {
+            <input type="hidden" value="@Model.AuthorID" name="AuthorID" />
+            <div class="col-xs-24 col-sm-24 col-md-12 col-lg-8 col-xl-8">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h5">GENERIC INFO</span>
+                    </div>
+                    <div class="card-block">
+                        @Html.HiddenFor(model => model.FestivalID)
+                        @Html.Hidden("section", "generic")
+                        @Html.HiddenFor(model => model.AuthorID)
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                @Html.Label("Name")
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group" style="float:left; width:100%; position:relative;">
+                                <div class="col-xs-24 no-padding no-margin">
+                                    <label>Start date (yyyy/mm/dd hh:mm)</label>
+                                </div>
+                                @Html.EditorFor(model => model.StartDate)
+                            </div>
+                            <div class="form-group" style="float:left; width:100%; position:relative;">
+                                <div class="col-xs-24 no-padding no-margin">
+                                    <label>End date (yyyy/mm/dd hh:mm)</label>
+                                </div>
+                                @Html.EditorFor(model => model.EndDate)
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="SAVE" class="btn btn-success pull-right" style="margin-top: 10px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h5">LOCATION INFO</span>
+                    </div>
+                    <div class="card-block">
+                        @if (state != null && section == "location")
+                        {
+                            if (state.SUCCESS == false)
+                            {
+                        <div class="alert alert-danger">
+                            @state.MSG
+                        </div>
+                            }
+                            else
+                            {
+                        <div class="alert alert-success">
+                            @state.MSG
+                        </div>
+                            }
+                        }
+                        @Html.Hidden("section", "location")
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                @Html.Label("Country")
+                                <select name="CountryID" class="form-control">
+                                    <option value="">SELECT COUNTRY</option>
+                                    @foreach (SelectListItem c in ViewBag.CountrySelect as IEnumerable<SelectListItem>)
+                                    {
+                                        if (Model.CountryID == Guid.Parse(c.Value))
+                                        {
+                                    <option value="@c.Value" selected="selected">@c.Text</option>
+                                        }
+                                        else
+                                        {
+                                    <option value="@c.Value">@c.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("ZIP code")
+                                @Html.EditorFor(model => model.ZIPCode, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.ZIPCode, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("City")
+                                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Venue (when available)")
+                                @Html.EditorFor(model => model.FestivalLocationID, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.FestivalLocationID, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="SAVE" class="btn btn-success pull-right" style="margin-top: 10px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-24 col-sm-24 col-md-12 col-lg-8 col-xl-8">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h5">IMAGES</span>
+                    </div>
+                    <div class="card-block">
+                        @if (state != null && section == "images")
+                        {
+                            if (state.SUCCESS == false)
+                            {
+                                <div class="alert alert-danger">
+                                    @state.MSG
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-success">
+                                    @state.MSG
+                                </div>
+                            }
+                        }
+                        <input type="hidden" name="MediaDirectoryID" value="@Model.MediaDirectoryID" ng-model="model.MediaDirectoryID" />
+                        <input type="hidden" name="LogoID" value="@Model.LogoID" ng-model="model.LogoID" />
+                        <input type="hidden" name="ProfileImageID" value="@Model.ProfileImageID" ng-model="model.ProfileImageID" />
+                        @Html.Hidden("section", "images")
+                        <div class="form-horizontal">
+                            <div class="form-group media-picker">
+                                <div class="row">
+                                    <div class="col-xs-24">
+                                        <label>Thumbnail</label>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span class="preview">
+                                            <img src="@Html.Thumbnail(Model.LogoID)" ng-src="{{MediaURLRoot}}/{{model.LogoID}}.img?&thumb=true" }" />
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <a href="#" class="btn btn-default" ng-click="$event.preventDefault();vm.OpenLogoModal('@Model.MediaDirectoryID',150,150,true)">
+                                            <i class="fa fa-hand-rock-o" aria-hidden="true"></i> IMAGE
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group media-picker">
+                                <div class="row">
+                                    <div class="col-xs-24">
+                                        <label>Profile header image</label>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span class="preview">
+                                            <img src="@Html.Thumbnail(Model.ProfileImageID)" ng-src="{{MediaURLRoot}}/{{model.ProfileImageID}}.img?&thumb=true" }" />
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <a href="#" class="btn btn-default" ng-click="$event.preventDefault();vm.OpenHeaderImageModal('@Model.MediaDirectoryID',800,272,false)">
+                                            <i class="fa fa-hand-rock-o" aria-hidden="true"></i> IMAGE
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h5">DETAILS</span>
+                    </div>
+                    <div class="card-block">
+                        @if (state != null && section == "details")
+                        {
+                            if (state.SUCCESS == false)
+                            {
+                                <div class="alert alert-danger">
+                                    @state.MSG
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-success">
+                                    @state.MSG
+                                </div>
+                            }
+                        }
+                        <input type="hidden" name="FestivalID" value="@Model.FestivalID" ng-model="model.FestivalID" />
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label>Short description</label>
+                                <textarea class="form-control" rows="5" name="Description">@Model.Description</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Visitors</label>
+                                <select name="Visitors" class="form-control">
+                                    <option value="">SELECT VISITORS</option>
+                                    @if (Model.Visitors == "100 - 500")
+                                    {
+                                        <option value="100 - 500" selected="selected">100 - 500</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="100 - 500">100 - 500</option>
+                                    }
+                                    @if (Model.Visitors == "1K - 5K")
+                                    {
+                                        <option value="1K - 5K" selected="selected">1K - 5K</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="1K - 5K">1K - 5K</option>
+                                    }
+
+                                    @if (Model.Visitors == "5K - 10K")
+                                    {
+                                        <option value="5K - 10K" selected="selected">5K - 10K</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="5K - 10K">5K - 10K</option>
+                                    }
+                                    @if (Model.Visitors == "10K - 50K")
+                                    {
+                                        <option value="10K - 50K" selected="selected">10K - 50K</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="10K - 50K">10K - 50K</option>
+                                    }
+                                    @if (Model.Visitors == "50K - 100K")
+                                    {
+                                        <option value="50K - 100K" selected="selected">50K - 100K</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="50K - 100K">50K - 100K</option>
+                                    }
+                                    @if (Model.Visitors == "100K+")
+                                    {
+                                        <option value="100K+" selected="selected">100K+</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="100K+">100K+</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="SAVE" class="btn btn-success pull-right" style="margin-top: 10px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-24 col-sm-24 col-md-12 col-lg-8 col-xl-8">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h5">GENRES</span>
+                    </div>
+                    <div class="card-block" ng-controller="FC.Modules.Genres.Controllers.GenreFormController as vm" ng-init="vm.RegisterID('@Model.FestivalID')">
+                        @if (state != null && section == "details")
+                        {
+                            if (state.SUCCESS == false)
+                            {
+                                <div class="alert alert-danger">
+                                    @state.MSG
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-success">
+                                    @state.MSG
+                                </div>
+                            }
+                        }
+                        @Html.Hidden("section", "details")
+                        <div class="form-horizontal">
+                            <div class="form-group ">
+                                <input type="hidden" name="GenreIDs" ng-model="model.GenreIDs" />
+                                <input type="text" class="form-control" ng-change="vm.search()" ng-model="SearchKey" />
+                                <input id="GenreIDs" ng-model="genreids" type="hidden" />
+                                <div class="row autocomplete-picker">
+                                    <div class="col-xs-24">
+                                        <ul class="search-result">
+                                            <li>
+                                                <a href="#" ng-repeat="Genre in SearchResult" ng-click="$event.preventDefault();vm.DoSelectGenre(vm.DoSelectGenre('@Model.FestivalID', Genre.GenreID))">
+                                                    <i class="fa fa-square-o" ng-if="!vm.GenreActive(Genre)"></i>
+                                                    <i class="fa fa-check-square-o" ng-if="vm.GenreActive(Genre)"></i>
+                                                    {{Genre.Name}}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-xs-24">
+                                        <ul class="selected">
+                                            <li ng-repeat="Genre in SelectedGenres" ng-click="$event.preventDefault();vm.DoSelectGenre('@Model.FestivalID', Genre.GenreID)">
+                                                <a href="#" class="btn-sm btn-danger">
+                                                    <i class="fa fa-remove"></i> {{Genre.Name}}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

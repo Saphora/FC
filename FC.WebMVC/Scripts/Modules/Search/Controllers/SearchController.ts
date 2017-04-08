@@ -15,7 +15,6 @@ module FC.Modules.Search.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
             '$routeParams',
             '$location'
         ];
@@ -24,7 +23,6 @@ module FC.Modules.Search.Controllers {
             $http,
             $q,
             $scope,
-            $route,
             $routeParams,
             $location,
             SearchService: FC.Modules.Search.Services.SearchService
@@ -57,7 +55,9 @@ module FC.Modules.Search.Controllers {
             //    }
             //});
         }
+        public DoChangeSearch(): void {
 
+        }
         public DoSearch() {
             var vm = this;
             var SearchFilter = new FC.Shared.ServiceMessages.SearchFilter();
@@ -73,6 +73,8 @@ module FC.Modules.Search.Controllers {
                         var e = new CustomEvent("SearchCompleteNoResult", { detail: response.Data });
                         window.dispatchEvent(e);
                     }
+                    vm.$scope.IsLoading = false;
+                    vm.$scope.Completed = true;
                 }).catch(function () {
                     window.dispatchEvent(new CustomEvent("SearchCompletedWithNoResults"));
                 });

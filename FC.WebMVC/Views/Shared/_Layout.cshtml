@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿@using FC.WebMVC.Helpers
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en">
 <head>
     <!-- Meta tags -->
@@ -37,7 +39,7 @@
     <div id="fb-root"></div>
     <img alt="festival calendar background" src="Resources/images/bg.jpg" id="bg" />
     <div id="MainOverlay" class="overlay ctx-hidden"></div>
-    <div class="menu-mobile visible-xs-down visible-sm-down visible-md-down hidden-xl-up" ng-controller="FC.Modules.Menu.Controllers.MenuController as mctr">
+    <div class="menu-mobile visible-xs-down visible-sm-down visible-md-down hidden-xl-up">
         <div class="container">
             <div class="left visible-sm-up">
                 <ul>
@@ -54,13 +56,13 @@
                 </div>
             </div>
             <div class="right">
-                <a href="#" ng-click="$event.preventDefault();ToggleMobile()">
+                <a href="#">
                     <i class="fa fa-bars"></i>
                 </a>
             </div>
         </div>
     </div>
-    <div class="menu hidden-sm-down hidden-lg-down" ng-controller="FC.Modules.Menu.Controllers.MenuController as mctr">
+    <div class="menu hidden-sm-down hidden-lg-down">
         <div class="container">
             <div class="left">
                 <ul>
@@ -89,41 +91,19 @@
                         <a href="/news" title="NEWS">NEWS</a>
                     </li>
                     <li><span class="separator">/</span></li>
-                    <li>
-                        <a href="/register" title="SIGN UP AT FESTIVAL CALENDAR">SIGN UP</a>
-                    </li>
+                    @if (!Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
+                    {
+                        <li>
+                            <a href="/login" title="SIGN IN AT FESTIVAL CALENDAR">LOGIN</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="/profile/index" title="SIGN IN AT FESTIVAL CALENDAR">MY ACCOUNT</a>
+                        </li>
+                    }
                 </ul>
-                @*<ul>
-                        <li><span class="separator">/</span></li>
-                        <li>
-                            <a href="/#/countries" ng-click="$event.preventDefault();ToggleCountryFilter(this);">
-                                Countries
-                                <span class="count" ng-if="CountryCount && CountryCount != 0">
-                                    {{CountryCount}}
-                                </span>
-                            </a>
-                        </li>
-                        <li><span class="separator">/</span></li>
-                        <li>
-                            <a href="/#/genres">Genres</a>
-                            <span class="count" ng-if="CountryCount && CountryCount != 0">
-                                {{CountryCount}}
-                            </span>
-                        </li>
-                        <li><span class="separator">/</span></li>
-                        <li>
-                            <a href="/#/settings">Settings</a>
-                        </li>
-                        <li>
-                            <span class="separator">/</span>
-                        </li>
-                        <li not-for-roles="ALL">
-                            <a href="/#/login" ng-click="$event.preventDefault();OpenLoginModal(this)">Login</a>
-                        </li>
-                        <li for-roles="ALL">
-                            <a href="/#/login" ng-click="$event.preventDefault();OpenMyProfileModal(this)">My profile</a>
-                        </li>
-                    </ul>*@
             </div>
         </div>
     </div>
@@ -131,7 +111,7 @@
         @RenderBody()
     </div>
 
-    <footer class="footer" ng-controller="FC.Modules.Menu.Controllers.MenuController as mctr">
+    <footer class="footer">
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 left">

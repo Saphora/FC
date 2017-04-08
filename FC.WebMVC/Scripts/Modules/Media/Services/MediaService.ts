@@ -30,6 +30,10 @@
         public GetDirByID(id: string) {
             return this.Get<INT.IMediaDirectory>('/API/Media/GetDirByID?id=' + id);
         }
+        public HandleUploaded(id: string) {
+            var g = this.Get<INT.IMediaDirectory>('/API/Media/HandleUploaded?id=' + id);
+            return g;
+        }
 
         public GetDirectoryMedia(id: string) {
             return this.Get<INT.IMedia[]>('/API/Media/GetDirectoryMedia?id=' + id);

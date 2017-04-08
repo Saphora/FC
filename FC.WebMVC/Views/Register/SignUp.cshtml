@@ -1,0 +1,47 @@
+﻿@model FC.Shared.Entities.ApplicationUser
+@{
+    string typename = ViewBag.TypeName;
+}
+<div class="row news-detail">
+    <div class="col-xs-24">
+        <div class="navigation-bar">
+            <a href="/register/start" class="btn btn-danger">
+                <i class="fa fa-angle-left"></i> BACK
+            </a>
+            <div class="crumb">
+                <a href="/register/start">
+                    START
+                </a>
+
+                <i class="fa fa-angle-right"></i>
+
+                <a href="/register/signup/@ViewBag.TypeName.ToLower()/@Model.UserID">
+                    @ViewBag.TypeName
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    @switch (typename)
+    {
+        case "user":
+            @Html.Partial("_ProfileCRUD");
+            break;
+        case "festival":
+            @Html.Partial("_FestivalCRUD");
+            break;
+        case "artist":
+            @Html.Partial("_ArtistCRUD");
+            break;
+        case "venue":
+            @Html.Partial("_VenueCRUD");
+            break;
+        case "advertiser":
+            @Html.Partial("_AdvertiserCRUD");
+            break;
+        case "travelagency":
+            @Html.Partial("_TravelAgencyCRUD");
+            break;
+    }
+</div>

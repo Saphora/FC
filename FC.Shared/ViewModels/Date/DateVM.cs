@@ -69,54 +69,57 @@ namespace FC.Shared.ViewModels.Date
 
         public DateVM(DateTime t)
         {
-            this.AgoString = this.GetAgoString(t);
-            this.Day = t.ToString("dd", CultureInfo.InvariantCulture);
-            this.Y1 = t.Year.ToString().ToArray()[0].ToString();
-            this.Y2 = t.Year.ToString().ToArray()[1].ToString();
-            this.Y3 = t.Year.ToString().ToArray()[2].ToString();
-            this.Y4 = t.Year.ToString().ToArray()[3].ToString();
-            this.Year = t.Year.ToString();
-            int hour = int.Parse(t.ToString("HH", CultureInfo.InvariantCulture)) + 1;
-            this.Hour = hour.ToString();
-            this.Minute = t.ToString("mm", CultureInfo.InvariantCulture);
-            switch (t.Month)
+            if (t.Year > DateTime.Now.Year-2)
             {
-                case 1:
-                    this.Month = "JAN";
-                    break;
-                case 2:
-                    this.Month = "FEB";
-                    break;
-                case 3:
-                    this.Month = "MAR";
-                    break;
-                case 4:
-                    this.Month = "APR";
-                    break;
-                case 5:
-                    this.Month = "MAY";
-                    break;
-                case 6:
-                    this.Month = "JUN";
-                    break;
-                case 7:
-                    this.Month = "JUL";
-                    break;
-                case 8:
-                    this.Month = "AUG";
-                    break;
-                case 9:
-                    this.Month = "SEP";
-                    break;
-                case 10:
-                    this.Month = "OCT";
-                    break;
-                case 11:
-                    this.Month = "NOV";
-                    break;
-                case 12:
-                    this.Month = "DEC";
-                    break;
+                this.AgoString = this.GetAgoString(t);
+                this.Day = t.ToString("dd", CultureInfo.InvariantCulture);
+                this.Y1 = t.Year.ToString().ToArray()[0].ToString();
+                this.Y2 = t.Year.ToString().ToArray()[1].ToString();
+                this.Y3 = t.Year.ToString().ToArray()[2].ToString();
+                this.Y4 = t.Year.ToString().ToArray()[3].ToString();
+                this.Year = t.Year.ToString();
+                int hour = int.Parse(t.ToString("HH", CultureInfo.InvariantCulture)) + 1;
+                this.Hour = hour.ToString();
+                this.Minute = t.ToString("mm", CultureInfo.InvariantCulture);
+                switch (t.Month)
+                {
+                    case 1:
+                        this.Month = "JAN";
+                        break;
+                    case 2:
+                        this.Month = "FEB";
+                        break;
+                    case 3:
+                        this.Month = "MAR";
+                        break;
+                    case 4:
+                        this.Month = "APR";
+                        break;
+                    case 5:
+                        this.Month = "MAY";
+                        break;
+                    case 6:
+                        this.Month = "JUN";
+                        break;
+                    case 7:
+                        this.Month = "JUL";
+                        break;
+                    case 8:
+                        this.Month = "AUG";
+                        break;
+                    case 9:
+                        this.Month = "SEP";
+                        break;
+                    case 10:
+                        this.Month = "OCT";
+                        break;
+                    case 11:
+                        this.Month = "NOV";
+                        break;
+                    case 12:
+                        this.Month = "DEC";
+                        break;
+                }
             }
         }
     }

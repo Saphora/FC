@@ -9,6 +9,9 @@
         News,
         Report,
         Genre,
-        Artist
+        Artist,
+        Advertisement,
+        Country,
+        All
     }
 }

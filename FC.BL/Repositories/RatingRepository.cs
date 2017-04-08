@@ -49,6 +49,7 @@ namespace FC.BL.Repositories
                 List<Rating> rating = Db.Ratings.Where(w => w.ContentItemID == ContentItemID && w.Type == type).ToList();
 
                 result = new RatingVm();
+                result.ContentItemID = ContentItemID;
                 result.Counter = rating.Count;
                 int maxValue = rating.Count * 5;
                 int sumAmmount = rating.Sum(s => s.CreditAmmount);
@@ -59,11 +60,21 @@ namespace FC.BL.Repositories
                 }
                 else
                 {
-                    return new RatingVm { Counter = 0, StarCount = 0 };
+                    return new RatingVm {ContentItemID = ContentItemID, Counter = 0, StarCount = 0 };
                 }
             }
             return result;
 
+        }
+
+
+        public List<Rating> GetList(Guid? ContentItemID, string type)
+        {
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
+                List<Rating> rating = Db.Ratings.Where(w => w.ContentItemID == ContentItemID && w.Type == type).ToList();
+                return rating;
+            }
         }
     }
 }

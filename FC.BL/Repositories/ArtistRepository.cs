@@ -49,6 +49,15 @@ namespace FC.BL.Repositories
             return result;
         }
 
+        public List<UArtist> Search(string name)
+        {
+            if(name == null)
+            {
+                name = "";
+            }
+            name = name.ToLower();
+            return Db.Artists.Where(w => w.Name.ToLower().Contains(name)).OrderBy(o=>o.Name).Take(10).ToList();
+        }
 
         public List<MaterializedArtistListVM> GetSorted(string search = "0-9", int page = 1)
         {

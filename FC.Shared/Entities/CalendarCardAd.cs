@@ -19,7 +19,7 @@ namespace FC.Shared.Entities
         public Guid? AdvertisementID { get; set; }
 
         [ForeignKey("AdvertisementID")]
-        public virtual Advertisement Advertisment { get; set; }
+        public  Advertisement Advertisment { get; set; }
 
         public string Title { get; set; }
         public string Image { get; set; }

@@ -24,7 +24,10 @@ namespace FC.Shared.Entities
         public Guid? UserID { get; set; }
 
         [ForeignKey("UserID")]
-        public virtual ApplicationUser User { get; set; }
+        public ApplicationUser User { get; set; }
+
+        [NotMapped]
+        public object Content { get; set; }
 
     }
 }

@@ -1,0 +1,35 @@
+﻿@model FC.Shared.ViewModels.Rating.RatingVm
+<div class="rating" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr" >
+    <span class="count" theme="count" ng-if="Festival.Rating.DisplayCount == '0'">
+        0
+    </span>
+    <span class="count" theme="count" ng-if="Festival.Rating.DisplayCount != '0'">
+        {{Festival.Rating.DisplayCount}}
+    </span>
+    <a href="#" id="star_{{Festival.FestivalID}}_1" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',1)">
+        <i class="star active fa fa-star" ng-if="Festival.Rating.Star1Active"></i>
+        <i class="star fa fa-star" ng-if="!Festival.Rating.Star1Active"></i>
+    </a>
+    <a href="#" id="star_{{Festival.FestivalID}}_2" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',2)">
+        <i class="star active fa fa-star" ng-if="Festival.Rating.Star2Active"></i>
+        <i class="star fa fa-star" ng-if="!Festival.Rating.Star2Active"></i>
+    </a>
+    <a href="#" id="star_{{Festival.FestivalID}}_3" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',3)">
+        <i class="star active fa fa-star" ng-if="Festival.Rating.Star3Active"></i>
+        <i class="star fa fa-star" ng-if="!Festival.Rating.Star3Active"></i>
+    </a>
+    <a href="#" id="star_{{Festival.FestivalID}}_4" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',4)">
+        <i class="star active fa fa-star" ng-if="Festival.Rating.Star4Active"></i>
+        <i class="star fa fa-star" ng-if="!Festival.Rating.Star4Active"></i>
+    </a>
+    <a href="#" id="star_{{Festival.FestivalID}}_5" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',5)">
+        <i class="star active fa fa-star" ng-if="Festival.Rating.Star5Active"></i>
+        <i class="star fa fa-star" ng-if="!Festival.Rating.Star5Active"></i>
+    </a>
+    <!--Example of star
+    Example of star-half
+    Example of star-half-empty (alias)
+    Example of star-half-full (alias)
+    Example of star-half-o
+    Example of star-o-->
+</div>

@@ -52,8 +52,7 @@ module FC.Modules.Media.Controllers {
             super($http, $q, $scope, $location, $routeParams, $mdDialog);
             var vm = this;
             vm.$sce = $sce;
-            
-            vm.$sce.whiteListR
+            vm.$sce.whiteListR;
             vm.EventManager = FC.Shared.Util.EventManager.GetInstance();
             vm.MemReg = FC.Shared.Util.MemReg.GetInstance();
             this.MediaSvc = MediaSvc;
@@ -73,6 +72,26 @@ module FC.Modules.Media.Controllers {
                 vm.$scope.DirectoryID = $local[2];
             } else {
                 throw new Error("No directory id is defined.");
+            }
+            if ($local[3]) {
+                vm.$scope.DirectoryID = $local[2];
+            } else {
+                throw new Error("Not authorized, because there is no token defined.");
+            }
+            if ($local[4]) {
+                vm.$scope.ValidationWidth = $local[4];
+            } else {
+                vm.$scope.ValidationWidth = 0;
+            }
+            if ($local[5]) {
+                vm.$scope.ValidationHeight = $local[5];
+            } else {
+                vm.$scope.ValidationHeight = 0;
+            }
+            if ($local[6] && $local[6] == true) {
+                vm.$scope.IsThumbnail = true;
+            } else {
+                vm.$scope.IsThumbnail = false;
             }
             vm.$scope.DoEditMediaDir = this.DoEditMediaDir;
             vm.$scope.DoSaveEditMediaDir = this.DoSaveEditMediaDir;
@@ -99,7 +118,6 @@ module FC.Modules.Media.Controllers {
             vm.$scope.URLRoot = ENV.MediaURLRoot;
             vm.$scope.ShortenFileName = vm.ShortenFileName;
             vm.$scope.ActivateMediaItem = vm.ActivateMediaItem;
-            vm.SetDirectories($scope);
             vm.initAdvancedUpload($scope.inst.$scope);
             if (!vm.$scope.inst.AuthService.HasAuth(FC.Shared.Enum.Roles.GetAdmins())) {
                 vm.$scope.IsMediaDirCreating = false;
@@ -115,6 +133,8 @@ module FC.Modules.Media.Controllers {
             }
             if (CacheManager.Contains("Token")) {
                 vm.$scope.Token = CacheManager.Get<string>("Token").data;
+            } else {
+                vm.$scope.Token = CacheManager.GetCookieValue("Token");
             }
             //window.addEventListener("");
             window.addEventListener("FCDataLoadingComplete", function (e) {
@@ -122,57 +142,22 @@ module FC.Modules.Media.Controllers {
             });
             window.addEventListener("MediaServiceFileUploaded", function (e) {
                 var state: INT.IServiceResponse<FC.Shared.ViewModels.RepositoryState> = e["detail"] as INT.IServiceResponse<FC.Shared.ViewModels.RepositoryState>;
-                //vm.$scope = vm.$scope.inst.$scope;
-                //vm.$scope.ServerMsg = state.Data.MSG;
-                //vm.$scope.IsMediaItemCreated = true;
-                //vm.$scope.IsLoading = true;
-
-                //vm.MediaSvc.GetDirByID(vm.$scope.ActiveDir.DirectoryID).then(function (r) {
-                //    vm.$scope.ActiveDir = r.Data;
-                //    vm.$scope.IsLoading = false;
-                //    if (state.Data.SUCCESS==true) {
-                //        vm.$scope.DoCancelCRUD($scope);
-                //        vm.$scope.IsMediaDirCreating = false;
-                //        vm.$scope.IsCreating = false;
-                //        vm.$scope.IsDeleting = false;
-                //        vm.$scope.IsEditing = false;
-                //        vm.$scope.IsMediaDirEditing = false;
-                //        vm.$scope.IsMediaDirDeleting = false;
-                //    } else {
-                //        vm.$scope.IsMediaItemCreated = false;
-                //        vm.$scope.IsMediaDirCreating = false;
-                //        vm.$scope.IsCreating = false;
-                //        vm.$scope.IsDeleting = false;
-                //        vm.$scope.IsEditing = false;
-                //        vm.$scope.IsMediaDirEditing = false;
-                //        vm.$scope.IsMediaDirDeleting = false;
-                //    }
-                //});
             });
-
-            window.addEventListener("iframeSrcChanged", function () {
-                vm.SetDirectories($scope);
+            this.SetDirectories(vm.$scope);
+            window.addEventListener("iframeSrcChanged", function (r) {
                 var currentNum = vm.MemReg.Get<number>("PrevMediaCount") || 0;
                 if ($scope.ActiveDir) {
-                    vm.MediaSvc.GetDirByID($scope.ActiveDir.DirectoryID).then(function (r: INT.IServiceResponse<INT.IMediaDirectory>) {
+                    vm.MediaSvc.HandleUploaded($scope.ActiveDir.DirectoryID).then(function (r: INT.IServiceResponse<INT.IMediaDirectory>) {
                         vm.$scope.ActiveDir = r.Data;
                         vm.$scope.IsLoading = false;
+                        if (r.State) {
+                            vm.$scope.State = r.State;
+                        }
                     });
                 }
             });
-            vm.MediaSvc.GetDirByID(vm.$scope.DirectoryID).then(function (r) {
-                vm.$scope.ActiveDir = r.Data;
-                vm.$scope.IsLoading = false;
-
-                if (vm.$scope.ActiveDir.DirectoryID == vm.$scope.RootID) {
-                    vm.$scope.ShowFolderUp = false;
-                } else {
-                    vm.$scope.ShowFolderUp = true;
-                }
-            });
-
             $scope.getUploadURL = function () {
-                var url = vm.$sce.trustAsResourceUrl(FC.Core.Environment.MediaURLRoot + "/API/Media/Upload?dirID=" + vm.$scope.DirectoryID + "&width=0&height=0&thumb=false&Token=" + vm.$scope.Token);
+                var url = vm.$sce.trustAsResourceUrl($AppConfig.URLRoot + "/API/Media/Upload?dirID=" + vm.$scope.DirectoryID + "&width="+vm.$scope.ValidationWidth+"&height="+vm.$scope.ValidationHeight+"&thumb="+vm.$scope.IsThumbnail+"&Token=" + vm.$scope.Token+"&callback=uploadcb");
                 return url;
             };
             vm.$scope.Save = vm.Save;
@@ -185,7 +170,6 @@ module FC.Modules.Media.Controllers {
         }
 
         public DoCreate($scope: VM.IMediaModalScope) {
-            $scope.inst.CheckAuth($scope);
             $scope = $scope.inst.$scope;
             $scope.IsCreating = true;
             $scope.IsMediaDirCreating = false;
@@ -195,45 +179,46 @@ module FC.Modules.Media.Controllers {
         }
 
         public handleDroppedFiles($scope: VM.IMediaModalScope, files: Array<File>, $form: any): void {
-            var vm = this;
-            //TODO: This is not the way that we want but it works for now. Problem: when files is uploaded and there is a success/failure response from server. My scope seems not to be available.
-            $scope = $scope.inst.$scope;
-            if (!$scope.Token) {
-                //$scope.DoCancelCRUD($scope);
-                var state = new FC.Shared.ViewModels.RepositoryState();
-                state.MSG = "You are not authorized to upload images.";
-                var r: INT.IServiceResponse<VM.RepositoryState> = { Data: state, Message: "You are not authorized to upload images.", StatusCode: 500, Params: null };
-                window.dispatchEvent(new CustomEvent("MediaServiceFileUploaded", { 'detail': r }));
-            } else {
-                this.MediaSvc.UploadFiles(files, vm.$scope.ActiveDir.DirectoryID, vm.$scope.Token).then(function (state) {
-                    vm.$scope = vm.$scope.inst.$scope;
-                    vm.$scope.ServerMsg = state.Data.MSG;
-                    vm.$scope.IsMediaItemCreated = true;
-                    vm.$scope.IsLoading = true;
+            throw new Error("Method not supported");
+            //var vm = this;
+            ////TODO: This is not the way that we want but it works for now. Problem: when files is uploaded and there is a success/failure response from server. My scope seems not to be available.
+            //$scope = $scope.inst.$scope;
+            //if (!$scope.Token) {
+            //    //$scope.DoCancelCRUD($scope);
+            //    var state = new FC.Shared.ViewModels.RepositoryState();
+            //    state.MSG = "You are not authorized to upload images.";
+            //    var r: INT.IServiceResponse<VM.RepositoryState> = { Data: state, Message: "You are not authorized to upload images.", StatusCode: 500, Params: null,State:null };
+            //    window.dispatchEvent(new CustomEvent("MediaServiceFileUploaded", { 'detail': r }));
+            //} else {
+            //    this.MediaSvc.UploadFiles(files, vm.$scope.ActiveDir.DirectoryID, vm.$scope.Token).then(function (state) {
+            //        vm.$scope = vm.$scope.inst.$scope;
+            //        vm.$scope.ServerMsg = state.Data.MSG;
+            //        vm.$scope.IsMediaItemCreated = true;
+            //        vm.$scope.IsLoading = true;
 
-                    vm.MediaSvc.GetDirByID(vm.$scope.ActiveDir.DirectoryID).then(function (r) {
-                        vm.$scope.ActiveDir = r.Data;
-                        vm.$scope.IsLoading = false;
-                        if (state.Data.SUCCESS == true) {
-                            vm.$scope.DoCancelCRUD($scope);
-                            vm.$scope.IsMediaDirCreating = false;
-                            vm.$scope.IsCreating = false;
-                            vm.$scope.IsDeleting = false;
-                            vm.$scope.IsEditing = false;
-                            vm.$scope.IsMediaDirEditing = false;
-                            vm.$scope.IsMediaDirDeleting = false;
-                        } else {
-                            vm.$scope.IsMediaItemCreated = false;
-                            vm.$scope.IsMediaDirCreating = false;
-                            vm.$scope.IsCreating = false;
-                            vm.$scope.IsDeleting = false;
-                            vm.$scope.IsEditing = false;
-                            vm.$scope.IsMediaDirEditing = false;
-                            vm.$scope.IsMediaDirDeleting = false;
-                        }
-                    });
-                });
-            }
+            //        vm.MediaSvc.GetDirByID(vm.$scope.ActiveDir.DirectoryID).then(function (r) {
+            //            vm.$scope.ActiveDir = r.Data;
+            //            vm.$scope.IsLoading = false;
+            //            if (state.Data.SUCCESS == true) {
+            //                vm.$scope.DoCancelCRUD($scope);
+            //                vm.$scope.IsMediaDirCreating = false;
+            //                vm.$scope.IsCreating = false;
+            //                vm.$scope.IsDeleting = false;
+            //                vm.$scope.IsEditing = false;
+            //                vm.$scope.IsMediaDirEditing = false;
+            //                vm.$scope.IsMediaDirDeleting = false;
+            //            } else {
+            //                vm.$scope.IsMediaItemCreated = false;
+            //                vm.$scope.IsMediaDirCreating = false;
+            //                vm.$scope.IsCreating = false;
+            //                vm.$scope.IsDeleting = false;
+            //                vm.$scope.IsEditing = false;
+            //                vm.$scope.IsMediaDirEditing = false;
+            //                vm.$scope.IsMediaDirDeleting = false;
+            //            }
+            //        });
+            //    });
+            //}
         }
         public initAdvancedUpload($scope: VM.IMediaModalScope) {
             var vm = this;
@@ -289,7 +274,7 @@ module FC.Modules.Media.Controllers {
         }
         private Repair(arr: INT.IMediaDirectory[]): INT.IMediaDirectory[] {
             var result = new Array<INT.IMediaDirectory>();
-            arr.forEach(function (v, k) {
+            arr.forEach(function (v, k) { 
                 if (v.DirectoryID) {
                     result.push(v);
                 }
@@ -328,16 +313,6 @@ module FC.Modules.Media.Controllers {
                 $scope.ShowFolderUp = false;
             }
             vm.SetDirectories($scope);
-            //vm.MediaSvc.GetDirByID(dir.DirectoryID).then(function (r) {
-            //    vm.$scope.ActiveDir = dir;
-            //    vm.initAdvancedUpload($scope);
-            //    $scope.IsLoading = false;
-            //    if (vm.$scope.ActiveDir.DirectoryID == vm.$scope.RootID) {
-            //        vm.$scope.ShowFolderUp = false;
-            //    } else {
-            //        vm.$scope.ShowFolderUp = true;
-            //    }
-            //});
 
         }
 
@@ -367,16 +342,17 @@ module FC.Modules.Media.Controllers {
         public SetDirectories($scope: VM.IMediaModalScope): void {
 
             var rootDir = $scope.RootID;
-            if ($scope.ActiveDir) {
-                rootDir = $scope.ActiveDir.DirectoryID;
+            if ($scope.DirectoryID) {
+                rootDir = $scope.DirectoryID
             }
+
             var vm = this;
             if (rootDir) {
                 this.MediaSvc.GetDirByID(rootDir).then(function (r) {
-                    $scope.IsLoading = false;
-                    $scope.ActiveDir = r.Data;
-                    if ($scope.Crumb.length == 0) {
-                        $scope.Crumb[0] = $scope.ActiveDir;
+                    vm.$scope.IsLoading = false;
+                    vm.$scope.ActiveDir = r.Data;
+                    if (vm.$scope.Crumb.length == 0) {
+                       vm.$scope.Crumb[0] = $scope.ActiveDir;
                     }
                     vm.$scope.RootDir = $scope.ActiveDir;
                     // vm.$scope.Crumb.push($scope.ActiveDir);
@@ -385,7 +361,7 @@ module FC.Modules.Media.Controllers {
                     } else {
                         vm.$scope.ShowFolderUp = true;
                     }
-                    vm.initAdvancedUpload($scope);
+                    vm.initAdvancedUpload(vm.$scope);
                 });
             }
         }

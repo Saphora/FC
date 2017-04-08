@@ -25,9 +25,27 @@
             return this.Get<FC.Shared.Models.UFestival>('/API/Festival/GetByID?&id=' + festivalId);
         }
 
+
+        public GetByFilter(filter: FC.Shared.ServiceMessages.FestivalFilter) {
+            if (CacheManager.GetCookieValue("UserID")) {
+                return this.Post<Array<FC.Shared.ViewModels.IFestivalVM>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
+            } else {
+                return this.Post<Array<FC.Shared.ViewModels.IFestivalVM>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
+            }
+        }
+
         Create(festival: FC.Shared.Models.UFestival): ng.IPromise<INT.IServiceResponse<FC.Shared.ViewModels.RepositoryState>> {
             return this.Post<VM.RepositoryState, FC.Shared.Models.UFestival>('/API/Festival/Create', new FC.Shared.Models.ServiceMessage<FC.Shared.Models.UFestival>(festival));
         }
+
+        ToggleGenre(festivalID: string, genreID: string): ng.IPromise<INT.IServiceResponse<FC.Shared.ViewModels.RepositoryState>> {
+            if (festivalID && genreID) {
+                return this.Get<VM.RepositoryState>('/API/Festival/ToggleGenre?&festivalID=' + festivalID + "&genreID=" + genreID);
+            } else {
+                return null;
+            }
+        }
+
         Update(festival: FC.Shared.Models.UFestival): ng.IPromise<INT.IServiceResponse<FC.Shared.ViewModels.RepositoryState>> {
             return this.Post<VM.RepositoryState, FC.Shared.Models.UFestival>('/API/Festival/Update', new FC.Shared.Models.ServiceMessage<FC.Shared.Models.UFestival>(festival));
         }

@@ -1,44 +1,91 @@
 ﻿@import "../core/var.scss";
 
-.filter-control {
-    .filter-control-item-wrapper {
-        &.col-xs-24 {
-            .filter-control-item {
-            max-width: 272px;
-            min-width: 272px;
-            margin: auto;
+.autocomplete-picker {
+    margin:0;
+    padding: 0;
+    ul.search-result {
+        float:left;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        display: block;
+        list-style:none;
+        li {
+            float:left;
+            width: 100%;
+            padding: 5px;
+            border-bottom: 1px solid $BGInputBorder;
+            a {
+                color: #333 !important;
+                float:left;
+                width: 100%;
             }
+        }
+    }
+    ul.selected {
+        float:left;
+        width: 100%;
+        display:block;
+        list-style:none;
+        margin: 0;
+        padding: 0;
+        li {
+            display:block;
+            margin-top: 10px;
+            margin-right: 5px;
+            float:left;
+        }
+    }
+}
+
+.filter-control {
+        margin-left: auto;
+        margin-right: auto;
+    .filter-control-item-wrapper {
+        float:left;
+        margin-left: auto;
+        margin-right: auto;
+        margin: auto;
+    }
+    .col-xs-24 {
+        .filter-control-item {
+            max-width: 272px;
+            margin-left: auto !important;
+            margin-right: auto !important;
         }
     }
     .filter-control-item {
         margin-top:5px;
         margin-left: 0;
         margin-bottom:5px;
-        &.search {
-            max-width: 50px;
-            .btn {
-                color: $BGDark !important;
-                max-width: 50px !important;
-                min-width: 50px !important;
-            }
-            .textbox {
-                max-width: 220px !important;
-                min-width: 220px !important;
-            }
-        }
         .btn {
             float:left;
-            max-width:110px;
-            min-width:110px;
+            max-width:38px;
+            min-width:38px;
+            padding: 0;
+            i {
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 10px;
+                margin-bottom: auto;
+            }
+            max-height:38px;
+            min-height: 38px;
+
         }
         .textbox {
+            &.searching {
+                width:calc(100% - 72px);
+                max-width:calc(100% - 72px);
+                max-width:calc(100% - 72px);
+            }
             float: left;
             height: 38px;
             font-size: 16px;
             border: 0;
-
-            max-width: 160px;
-            min-width: 160px;
+                width:calc(100% - 38px);
+                max-width:calc(100% - 38px);
+                max-width:calc(100% - 38px);
             font-family: 'Oswald';
             padding-left: 20px;
 
@@ -52,6 +99,7 @@
 }
 
 .complex-filter {
+    max-width: 768px !important;
     min-width:15%;
     .content {
         .h5 {

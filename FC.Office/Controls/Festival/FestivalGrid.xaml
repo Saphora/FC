@@ -17,11 +17,14 @@
         <Button x:Name="DeleteSelectedBtn" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" Width="120" Margin="3" Content="Delete selected" Click="DeleteSelectedBtn_Click"></Button>
         <DataGrid x:Name="festivalsGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="0"  MaxHeight="768" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Festivals}" SelectionChanged="festivalsGrid_SelectionChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding FestivalID}"></DataGridTextColumn>
+                <DataGridCheckBoxColumn Header="Published" Binding="{Binding IsPublished}">
+
+                </DataGridCheckBoxColumn>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Start date" Binding="{Binding StartDate}"></DataGridTextColumn>
                 <DataGridTextColumn Header="End date" Binding="{Binding EndDate}">
                 </DataGridTextColumn>
+                <DataGridTextColumn Header="ID" Binding="{Binding FestivalID}"></DataGridTextColumn>
                 <DataGridTextColumn Header="IMG" Binding="{Binding LogoID}"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>

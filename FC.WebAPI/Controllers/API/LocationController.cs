@@ -27,7 +27,7 @@ namespace FC.WebAPI.Controllers.API
                 throw new HttpException(404, "Page size invalid");
             }
             result = repo.GetPaged(size, page);
-            return new ServiceResponse<List<Location>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<Location>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet]
@@ -39,12 +39,12 @@ namespace FC.WebAPI.Controllers.API
                 Guid? countryIDGuid = Guid.Parse(countryID);
                 List<Location> result = new List<Location>();
                 result = repo.GetSorted(countryIDGuid, sortIndex, page);
-                return new ServiceResponse<List<Location>>(result, HttpStatusCode.OK, "OK");
+                return new ServiceResponse<List<Location>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             } else
             {
                 List<Location> result = new List<Location>();
                 result = repo.GetSorted(null, sortIndex, page);
-                return new ServiceResponse<List<Location>>(result, HttpStatusCode.OK, "OK");
+                return new ServiceResponse<List<Location>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             }
         }
         
@@ -54,11 +54,11 @@ namespace FC.WebAPI.Controllers.API
             if(!string.IsNullOrEmpty(countryID))
             {
                 Guid? countryIDGuid = Guid.Parse(countryID);
-                return new ServiceResponse<int>(repo.GetPagedCount(countryIDGuid, page, sortIndex), HttpStatusCode.OK, "OK");
+                return new ServiceResponse<int>(repo.GetPagedCount(countryIDGuid, page, sortIndex), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             } else
             {
 
-                return new ServiceResponse<int>(repo.GetPagedCount(null, page, sortIndex), HttpStatusCode.OK, "OK");
+                return new ServiceResponse<int>(repo.GetPagedCount(null, page, sortIndex), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             }
         }
 
@@ -67,13 +67,13 @@ namespace FC.WebAPI.Controllers.API
         {
             LocationRepository repo = new LocationRepository();
             List<Location> locations = repo.GetByCountryID(countryID);
-            return new ServiceResponse<List<Location>>(locations, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<Location>>(locations, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet]
         public ServiceResponse<Location> GetByID(Guid? id)
         {
-            return new ServiceResponse<Location>(repo.GetByID(id), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<Location>(repo.GetByID(id), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
 

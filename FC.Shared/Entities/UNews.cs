@@ -22,10 +22,7 @@ namespace FC.Shared.Entities
         public UNews() {
             this.ArchiveDate = DateTime.Now.AddYears(1);
         }
-
-        [Index]
-        [Validation(ValidationRule.Guid, true)]
-        public override Guid? AuthorID { get; set; }
+        
         
         public string Title { get; set; }
 
@@ -36,7 +33,7 @@ namespace FC.Shared.Entities
         public Guid? MediaDirectoryID { get; set; }
 
         [ForeignKey("MediaDirectoryID")]
-        public virtual MediaDirectory Album { get; set; }
+        public  MediaDirectory Album { get; set; }
         
 
         [Validation(ValidationRule.BigText, false)]

@@ -17,9 +17,9 @@ namespace FC.WebAPI.Controllers.API
 {
     public class RatingController : BaseAPIController
     {
-        private RatingRepository RatingRepo { get; set; }
+        private RatingRepository RatingRepo;
         public RatingController() : base() {
-            RatingRepo = new RatingRepository();
+            RatingRepo = this.Repositories.Rating;
         }
 
         [HttpOptions, HttpPost]
@@ -33,7 +33,7 @@ namespace FC.WebAPI.Controllers.API
         [HttpGet]
         public ServiceResponse<RatingVm> GetRating(Guid? contentItemID, string type)
         {
-            return new ServiceResponse<RatingVm>(RatingRepo.GetRating(contentItemID, type), HttpStatusCode.OK, "Success-GetRating");
+            return new ServiceResponse<RatingVm>(RatingRepo.GetRating(contentItemID, type), HttpStatusCode.OK, "Success-GetRating", this.Repositories.Auth.ActiveToken);
         }
     }
 }

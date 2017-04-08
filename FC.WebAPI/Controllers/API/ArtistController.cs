@@ -32,7 +32,7 @@ namespace FC.WebAPI.Controllers.API
                 throw new HttpException(404, "Page size invalid");
             }
             result = repo.GetPaged(size, page);
-            return new ServiceResponse<List<ArtistListVm>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<ArtistListVm>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet]
@@ -40,7 +40,7 @@ namespace FC.WebAPI.Controllers.API
         {
             List<MaterializedArtistListVM> result = new List<MaterializedArtistListVM>();
             result = repo.GetSorted(sortIndex, page);
-            return new ServiceResponse<List<MaterializedArtistListVM>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<MaterializedArtistListVM>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
 
@@ -48,25 +48,25 @@ namespace FC.WebAPI.Controllers.API
         [HttpGet]
         public ServiceResponse<int> GetPagedCount(string sortIndex, int page = 1)
         {
-            return new ServiceResponse<int>(repo.GetPagedCount(page, sortIndex), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<int>(repo.GetPagedCount(page, sortIndex), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<List<UArtist>> GetAll()
         {
-            return new ServiceResponse<List<UArtist>>(repo.GetAll().Take(50).ToList(), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<UArtist>>(repo.GetAll().Take(50).ToList(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
-        //[HttpOptions, HttpGet, HttpPost]
-        //public ServiceResponse<List<ArtistListVm>> GetByPartialName(string name)
-        //{
-        //    return new ServiceResponse<List<ArtistListVm>>(repo.GetByPartialName(name), HttpStatusCode.OK, "OK");
-        //}
+        [HttpOptions, HttpGet, HttpPost]
+        public ServiceResponse<List<UArtist>> GetByPartialName(string name)
+        {
+            return new ServiceResponse<List<UArtist>>(repo.Search(name), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
+        }
 
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<UArtist> GetByID(Guid? id)
         {
-            return new ServiceResponse<UArtist>(repo.GetByID(id), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<UArtist>(repo.GetByID(id), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpGet, HttpPost]
@@ -77,7 +77,7 @@ namespace FC.WebAPI.Controllers.API
                 ServiceMessage<UArtist> artist = new ServiceMessage<UArtist>(payload);
                 RepositoryState result = new RepositoryState();
                 result = repo.Create(artist.Data);
-                return this.HandleRepositoryState(result);
+                return this.HandleRepositoryState(result, this.Repositories.Auth.ActiveToken);
             }
             else
             {
@@ -93,7 +93,7 @@ namespace FC.WebAPI.Controllers.API
                 ServiceMessage<UArtist> artist = new ServiceMessage<UArtist>(payload);
                 RepositoryState result = new RepositoryState();
                 result = repo.Update(artist.Data);
-                return this.HandleRepositoryState(result);
+                return this.HandleRepositoryState(result, this.Repositories.Auth.ActiveToken);
             } else
             {
                 return NotAuthorized();
@@ -108,7 +108,7 @@ namespace FC.WebAPI.Controllers.API
                 ServiceMessage<UArtist> artist = new ServiceMessage<UArtist>(payload);
                 RepositoryState result = new RepositoryState();
                 result = repo.Delete(artist.Data);
-                return this.HandleRepositoryState(result);
+                return this.HandleRepositoryState(result, this.Repositories.Auth.ActiveToken);
             } else
             {
                 return NotAuthorized();
@@ -123,7 +123,7 @@ namespace FC.WebAPI.Controllers.API
                 ServiceMessage<UArtist> artist = new ServiceMessage<UArtist>(payload);
                 RepositoryState result = new RepositoryState();
                 result = repo.ForceDelete(artist.Data);
-                return this.HandleRepositoryState(result);
+                return this.HandleRepositoryState(result, this.Repositories.Auth.ActiveToken);
 
             } else
             {

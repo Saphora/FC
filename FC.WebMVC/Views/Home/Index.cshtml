@@ -9,6 +9,16 @@
     <meta name="keywords" content="Festival,Calendar,Events,Artists,Social,Platform,Manage,Profile,Agenda" />
     <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
 }
+@{
+
+    var state = ViewBag.Flash as FC.BL.Repositories.RepositoryState;
+    if (state == null) {
+        if (ViewBag.State != null)
+        {
+            state = ViewBag.State;
+        }
+    }
+}
 <div class="row">
     <div class="col-xs-24 introbox">
         <center>
@@ -22,35 +32,45 @@
         <div class="inner">
             @*<a href="/Account/create" class="btn btn-danger">REGISTER NOW</a>*@
             @*<ul>
-                <li>
-                    <a title="Festival Calendar Facebook page" href="https://www.facebook.com/Festival-Calendar-523659261065735/?fref=ts" target="_blank"><span class="icon fb"></span></a>
-                    <a title="Festival Calendar Youtube channel" href="https://www.youtube.com/" target="_blank"><span class="icon youtube"></span></a>
-                    <a title="Festival Calendar Vimeo page" href="https://www.vimeo.com/" target="_blank"><span class="icon vimeo"></span></a>
-                </li>
-            </ul>*@
+                    <li>
+                        <a title="Festival Calendar Facebook page" href="https://www.facebook.com/Festival-Calendar-523659261065735/?fref=ts" target="_blank"><span class="icon fb"></span></a>
+                        <a title="Festival Calendar Youtube channel" href="https://www.youtube.com/" target="_blank"><span class="icon youtube"></span></a>
+                        <a title="Festival Calendar Vimeo page" href="https://www.vimeo.com/" target="_blank"><span class="icon vimeo"></span></a>
+                    </li>
+                </ul>*@
         </div>
     </div>
 </div>
-<div class="row filter-control">
+@if (state != null)
+{
+    <div class="row">
+        <div class="col-xs-24">
+            @if (state.SUCCESS)
+            {
+                <div class="alert alert-success">
+                    @state.MSG
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    @state.MSG
+                </div>
+            }
+        </div>
+    </div>
+}
+<div class="row filter-control" ng-if="IsLoading == false">
 
-    <div class="col-xs-24 col-sm-24 col-md-8 col-lg-8 col-xl-6 filter-control-item-wrapper">
+    <div class="col-xs-24 col-sm-24 col-md-8 col-lg-8 col-xl-8 filter-control-item-wrapper">
         <form class="filter-control-item search" ng-controller="FC.Modules.Search.Controllers.SearchController as vm" ng-submit="vm.DoSearch()">
             <a href="#" class="btn btn-default">
                 <i class="fa fa-search" style="color:#FFF"></i>
             </a>
-            <input type="text" class="textbox" placeholder="FESTIVAL, CITY, GENRE, ARTIST" ng-model="Keyword"/>
+            <input type="text" class="textbox" placeholder="FESTIVAL, CITY, GENRE, ARTIST" ng-model="Keyword" ng-change="vm.DoChangeSearch()" />
         </form>
     </div>
-    <div class="col-xs-24 col-sm-24 col-md-8 col-lg-8 col-xl-6 filter-control-item-wrapper">
-        <div class="filter-control-item" ng-controller="FC.Modules.Genres.Controllers.GenreFilterController as vm">
-            <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
-                <i class="fa fa-heart" style="color: #FF0000"></i> GENRES
-            </a>
-            <input type="text" class="textbox" ng-model="Selected" disabled="disabled" />
-            <input type="hidden" name="Genres" ng-model="SelectedGenreIds" />
-        </div>
-    </div>
-    <div class="col-xs-24 col-sm-24 col-md-8 col-lg-8 col-xl-6 filter-control-item-wrapper">
+    <div class="col-xs-24 col-sm-24 col-md-8 col-lg-8 col-xl-8 filter-control-item-wrapper">
         <div class="filter-control-item" ng-controller="FC.Modules.Filtering.Controllers.DateFilterController as vm">
             <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
                 <i class="fa fa-calendar" style="position:relative;top:-2px;"></i> DATE
@@ -61,6 +81,15 @@
         </div>
     </div>
     <div class="col-xs-24 col-sm-24 col-md-8 col-lg-8 col-xl-6 filter-control-item-wrapper">
+        <div class="filter-control-item" ng-controller="FC.Modules.Genres.Controllers.GenreFilterController as vm">
+            <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
+                <i class="fa fa-heart" style="color: #FF0000"></i> GENRES
+            </a>
+            <input type="text" class="textbox" ng-model="Selected" disabled="disabled" />
+            <input type="hidden" name="Genres" ng-model="SelectedGenreIds" />
+        </div>
+    </div>
+    <div class="col-xs-24 col-sm-24 col-md-8 col-lg-8 col-xl-8 filter-control-item-wrapper">
         <div class="filter-control-item" ng-controller="FC.Modules.Filtering.Controllers.CountryFilterController as vm">
             <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
                 <i class="fa fa-map-marker"></i> COUNTRY
@@ -77,7 +106,7 @@
     <div ng-if="IsLoading == false && Festivals.length == 0" class="col-xs-24 no-result">
         <center>
             <h2 style="margin-top: 50px; color:#FFF !important;">
-                No festivals were found at the moment. 
+                No festivals were found at the moment.
             </h2>
             <h5 style="color:#FFF; margin-top: 20px;">
                 Please come back later, or try to modify your specifications.

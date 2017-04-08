@@ -15,6 +15,16 @@ namespace FC.BL.Repositories
         public AdvertisementRepository() : base()
         { }
 
+        public List<Advertisement> GetByUser(Guid? userID)
+        {
+            List<Advertisement> advertisement = new List<Advertisement>();
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
+                advertisement.AddRange(Db.Advertisement.Where(w => w.AuthorID == userID).OrderBy(o => o.Created).ToList());
+            }
+            return advertisement;
+        }
+
         public IQueryable<Advertisement> GetAll()
         {
             return Db.Advertisement;

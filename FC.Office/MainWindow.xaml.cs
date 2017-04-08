@@ -153,6 +153,7 @@ namespace FC.Office
                 this.NewsViewControl.Visibility = Visibility.Hidden;
                 this.GenreViewControl.Visibility = Visibility.Hidden;
                 this.UsersViewControl.Visibility = Visibility.Hidden;
+                this.CountryViewControl.Visibility = Visibility.Hidden;
             }
             if (s.Content.ToString().ToLower() == "locations")
             {
@@ -160,6 +161,7 @@ namespace FC.Office
                 this.NewsViewControl.Visibility = Visibility.Hidden;
                 this.GenreViewControl.Visibility = Visibility.Hidden;
                 this.UsersViewControl.Visibility = Visibility.Hidden;
+                this.CountryViewControl.Visibility = Visibility.Hidden;
 
             }
             if (s.Content.ToString().ToLower() == "artists")
@@ -168,6 +170,7 @@ namespace FC.Office
                 this.NewsViewControl.Visibility = Visibility.Hidden;
                 this.GenreViewControl.Visibility = Visibility.Hidden;
                 this.UsersViewControl.Visibility = Visibility.Hidden;
+                this.CountryViewControl.Visibility = Visibility.Hidden;
 
             }
             if (s.Content.ToString().ToLower() == "genres")
@@ -176,6 +179,7 @@ namespace FC.Office
                 this.NewsViewControl.Visibility = Visibility.Hidden;
                 this.GenreViewControl.Visibility = Visibility.Visible;
                 this.UsersViewControl.Visibility = Visibility.Hidden;
+                this.CountryViewControl.Visibility = Visibility.Hidden;
             }
             if (s.Content.ToString().ToLower() == "advertisement")
             {
@@ -184,6 +188,7 @@ namespace FC.Office
                 this.NewsViewControl.Visibility = Visibility.Hidden;
                 this.GenreViewControl.Visibility = Visibility.Hidden;
                 this.UsersViewControl.Visibility = Visibility.Hidden;
+                this.CountryViewControl.Visibility = Visibility.Hidden;
             }
             if (s.Content.ToString().ToLower() == "news")
             {
@@ -191,6 +196,7 @@ namespace FC.Office
                 this.NewsViewControl.Visibility = Visibility.Visible;
                 this.GenreViewControl.Visibility = Visibility.Hidden;
                 this.UsersViewControl.Visibility = Visibility.Hidden;
+                this.CountryViewControl.Visibility = Visibility.Hidden;
             }
             if (s.Content.ToString().ToLower() == "users")
             {
@@ -198,6 +204,15 @@ namespace FC.Office
                 this.FestivalViewControl.Visibility = Visibility.Hidden;
                 this.GenreViewControl.Visibility = Visibility.Hidden;
                 this.UsersViewControl.Visibility = Visibility.Visible;
+                this.CountryViewControl.Visibility = Visibility.Hidden;
+            }
+            if (s.Content.ToString().ToLower() == "countries")
+            {
+                this.NewsViewControl.Visibility = Visibility.Hidden;
+                this.FestivalViewControl.Visibility = Visibility.Hidden;
+                this.GenreViewControl.Visibility = Visibility.Hidden;
+                this.UsersViewControl.Visibility = Visibility.Hidden;
+                this.CountryViewControl.Visibility = Visibility.Visible;
             }
             //client.SendData(new List<string>());
         }

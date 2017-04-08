@@ -64,7 +64,7 @@ namespace FC.Shared.Entities
         public Guid? MediaDirectoryID { get; set; }
 
         [ForeignKey("MediaDirectoryID")]
-        public virtual MediaDirectory Album { get; set; }
+        public MediaDirectory Album { get; set; }
 
         public List<SocialProfile> SocialProfiles { get; set; }
         
@@ -78,7 +78,7 @@ namespace FC.Shared.Entities
 
         
         [ForeignKey("CountryID")]
-        public virtual UCountry Country { get; set; }
+        public  UCountry Country { get; set; }
 
         
         [Validation(ValidationRule.Website)]

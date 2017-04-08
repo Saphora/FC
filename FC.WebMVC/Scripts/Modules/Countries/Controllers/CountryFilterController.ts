@@ -14,7 +14,7 @@ module FC.Modules.Countries.Controllers {
 
         public inst: FC.Modules.Countries.Controllers.CountryFilterController;
         public ShowTravelInfo = false;
-        public GenreService: FC.Modules.Genres.Services.GenreService;
+        public Countrieservice: FC.Modules.Countries.Services.CountriesService;
         public ArtistService: FC.Modules.Artists.Services.ArtistService;
         public CalendarService: FC.Modules.Calendar.Services.CalendarService;
         public URLManSvc: FC.Core.Services.URLManagerService;
@@ -33,7 +33,6 @@ module FC.Modules.Countries.Controllers {
             '$q',
             '$mdDialog',
             '$scope',
-            '$route',
             '$routeParams',
             '$location',
             "$sce"
@@ -60,33 +59,32 @@ module FC.Modules.Countries.Controllers {
             vm.$scope.FormID = 'CCFDB150-42F0-4F0E-8CA3-C48069E09CBE';
             vm.$scope.MemReg = FC.Shared.Util.MemReg.GetInstance();
             vm.$scope.Save = this.Save;
-            vm.$scope.Close = this.Close;
             vm.$scope.Reset = this.Reset;
             vm.$scope.MtModal = $mdDialog;
             vm.$scope.IsLoading = true;
             vm.SetCountryList();
-            if (CacheManager.Contains("sys-countries")) {
-                vm.$scope.SysCountries = CacheManager.Get<MODELS.UCountry[]>("sys-countries").data;
-            }
-            vm.$scope.ToggleCountry = this.ToggleCountry
-            if (vm.$scope.MemReg.Get("UserCountries")) {
-                vm.$scope.inst.$scope.SelectedCountries = vm.$scope.MemReg.Get<Array<MODELS.UCountry>>("UserCountries");
-            } else {
-                vm.$scope.SelectedCountries = new Array<MODELS.UCountry>();
-                if (CacheManager.Contains("UserCountries")) {
-                    vm.$scope.inst.$scope.SelectedCountries = CacheManager.Get<Array<MODELS.UCountry>>("UserCountries").data;
-                    vm.$scope.IsLoading = false;
-                }
-            }
             vm.$scope.IsActive = this.IsActive;
+            if (vm.$scope.SelectedCountries == null) {
+                vm.$scope.SelectedCountries = new Array<MODELS.UCountry>();
+                vm.$scope.Selected = "SELECT COUNTRIES";
+            }
 
+            if (vm.$scope.SelectedCountries.length == 1) {
+                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
+            } else {
+                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRIES SELECTED";
+            }
+
+            if (vm.$scope.SelectedCountries.length == 0) {
+                vm.$scope.Selected = "SELECT COUNTRIES";
+            }
             //this.RecoverModel(this.$scope.model, this.$scope);
         }
 
         public IsActive(country: FC.Shared.Models.UCountry) {
             var vm = this;
-            if (CacheManager.Contains("UserCountries")) {
-                var activated = CacheManager.Get<FC.Shared.Models.UCountry[]>("UserCountries").data;
+            if (CacheManager.Contains("ActiveCountries")) {
+                var activated = CacheManager.Get<FC.Shared.Models.UCountry[]>("ActiveCountries").data;
                 var isactive = activated.some(function (g, i) {
                     return g.CountryID == country.CountryID;
                 });
@@ -97,32 +95,30 @@ module FC.Modules.Countries.Controllers {
         }
 
         public ToggleCountry($scope: VM.ICountryFilterVm, country: MODELS.UCountry): void {
-            $scope = $scope.inst.$scope;
-            var any = false;
-            var modified = false;
-            debugger;
-            any = $scope.SelectedCountries.some(function (v, i) {
-                if (v.CountryID == country.CountryID) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-            if (any == false) {
-                $scope.SelectedCountries.push(country);
-                modified = true;
+            var vm = this;
+            if (!this.IsActive(country)) {
+                vm.$scope.SelectedCountries.push(country);
+
+                CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 999999999999999);
             } else {
-                var index = $scope.SelectedCountries.indexOf(country);
-                if (index > -1) {
-                    delete $scope.SelectedCountries[index];
-                    $scope.SelectedCountries = $scope.RepairArray($scope.SelectedCountries);
-                    modified = true;
-                }
+                var tmp = new Array<MODELS.UCountry>();
+                
+                vm.$scope.SelectedCountries.forEach(function (v, i) {
+                    if (v.CountryID != country.CountryID) {
+                        tmp.push(v);
+                    }
+                });
+                vm.$scope.SelectedCountries = tmp;
+
+                CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 999999999999999);
             }
-            if (modified) {
-                CacheManager.WriteStorage("UserCountries", $scope.SelectedCountries, 999999999999999);
-                modified = false;
+            if (vm.$scope.SelectedCountries.length == 1) {
+                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
+            } else {
+                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRIES SELECTED";
             }
+            vm.$scope.model.Countries = vm.$scope.SelectedCountries;
+            vm.Save(vm.$scope);
         }
 
         public SetCountryList(): void {
@@ -135,17 +131,14 @@ module FC.Modules.Countries.Controllers {
 
         public Save($scope: VM.ICountryFilterVm): void {
             var vm = this;
-            vm.Close($scope);
+            vm.$scope.MtModal.cancel();
+            var e = new FC.Modules.Filtering.FilterChangedEvent(this.$scope.model);
             //vm.$scope.IsLoading = true;
         }
-
-        public Close($scope: VM.ICountryFilterVm): void {
-            $("#CountryFilterControl").removeClass('ctx-visible').addClass('ctx-hidden');
-            $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
-        }
+        
 
         public Reset($scope: VM.ICountryFilterVm): void {
-            CacheManager.DeleteStorage("UserCountries");
+            CacheManager.DeleteStorage("ActiveCountries");
             $scope.Close();
         }
 

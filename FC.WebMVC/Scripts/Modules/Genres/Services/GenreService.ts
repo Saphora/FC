@@ -32,12 +32,15 @@ module FC.Modules.Genres.Services {
             return this.Get('/API/Genre/GetPagedCount?&page=' + page + '&sortIndex=' + sortIndex);
         }
 
-        public Search(key: string): ng.IPromise<INT.IServiceResponse<INT.IUGenre[]>> {
+        public Search(key: string): ng.IPromise<INT.IServiceResponse<MODELS.UGenre[]>> {
             return this.Get<INT.IUGenre[]>('/API/Genre/Search?name='+key);
         }
 
         public GetByID(id: string): ng.IPromise<INT.IServiceResponse<MODELS.UGenre>> {
             return this.Get<MODELS.UGenre>('/API/Genre/GetByID?id=' + id);
+        }
+        public GetByFestivalID(id: string): ng.IPromise<INT.IServiceResponse<MODELS.UGenre[]>> {
+            return this.Get<MODELS.UGenre[]>('/API/Genre/GetByFestivalID?festivalID=' + id);
         }
 
         public GetAllRoot(): ng.IPromise<INT.IServiceResponse<INT.IUGenre[]>> {

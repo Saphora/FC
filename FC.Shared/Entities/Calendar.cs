@@ -8,8 +8,8 @@ namespace FC.Shared.Entities
 {
     public class Calendar : BaseModel
     {
-        public virtual int Month { get; set; }
-        public virtual int Year { get; set; }
-        public virtual List<UFestival> Festivals {get;set;}
+        public  int Month { get; set; }
+        public  int Year { get; set; }
+        public  List<UFestival> Festivals {get;set;}
     }
 }

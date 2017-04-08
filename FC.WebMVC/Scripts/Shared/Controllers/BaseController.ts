@@ -204,11 +204,10 @@ module FC.Shared.Controllers {
         constructor($http, $q:ng.IQService, $scope:FC.Shared.ViewModels.IFormVMBase<any>, $location: ng.ILocationService, $routeParams: any, $mdDialog:angular.material.MDDialogService) {
             var vm = this;
             this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
-            this.IsUpdated();
             this.$scope = $scope;
             this.$scope.inst = this;
             this.$scope.Now = new Date();
-            this.$http = $http
+            this.$http = $http;
             this.$q = $q;
             this.$scope.$q = $q;
             this.$scope['CONFIRMATION'] = FC.Core.Controllers.CONFIRMATION;
@@ -284,17 +283,14 @@ module FC.Shared.Controllers {
                 vm.$scope.IsLoading = false;
             });
         }
-
+        
         public IsFavorite(contentID: string): boolean {
             var vm = this;
             return vm.$scope.UserFavorites.Contains("ContentID", contentID);
         }
 
         public SetUserFavorites(): void {
-            var vm = this;
-            vm.FavoriteService.GetUserFavorites().then(function (r) {
-                vm.$scope.UserFavorites = new List<FC.Shared.Models.Favorite>(r.Data);
-            });
+            throw new Error("BaseController.SetUserFavorites is obsolete");
         }
 
         public DoMarkFavorite(contentID: string, type: string) {
@@ -594,36 +590,7 @@ module FC.Shared.Controllers {
                 return d.toLocaleDateString();
             }
         }
-
-        public IsUpdated() {
-            var vm = this;
-            if (vm.CacheManager.Contains("version")) {
-                vm.CacheManager.GetStorage("version", function (r) {
-                    if (r.data != ENV.GetVersion()) {
-                        vm.CacheManager.DeleteStorage("sys-genres");
-                        vm.CacheManager.DeleteStorage("user-genres");
-                        vm.CacheManager.DeleteStorage("active-theme");
-                        vm.CacheManager.DeleteStorage("sys-countries");
-                        vm.CacheManager.DeleteStorage("user-location");
-                        vm.CacheManager.DeleteStorage("user-countries");
-                        vm.CacheManager.DeleteStorage("sys-months");
-                        vm.CacheManager.DeleteStorage("sys-years");
-                        vm.CacheManager.WriteStorage("version", ENV.GetVersion());
-                        window.location.reload();
-                    }
-                }); 
-            } else {
-                vm.CacheManager.DeleteStorage("sys-genres");
-                vm.CacheManager.DeleteStorage("user-genres");
-                vm.CacheManager.DeleteStorage("active-theme");
-                vm.CacheManager.DeleteStorage("sys-countries");
-                vm.CacheManager.DeleteStorage("user-location");
-                vm.CacheManager.DeleteStorage("user-countries");
-                vm.CacheManager.DeleteStorage("sys-months");
-                vm.CacheManager.DeleteStorage("sys-years");
-                vm.CacheManager.WriteStorage("version", ENV.GetVersion());
-            }
-        }
+        
 
         private _detectCount = 0;
         private _timeout = null;
@@ -657,7 +624,7 @@ module FC.Shared.Controllers {
                                 tmp.push(v);
                             }
                         });
-                        CacheManager.Write("UserCountries", tmp, 99999999999999999999);
+                        CacheManager.WriteStorage("UserCountries", tmp, 99999999999999999999);
 
                     });
                     vm.$scope.MemReg.Register("sys-countries-set", true);
@@ -939,7 +906,7 @@ module FC.Shared.Controllers {
 
         }
 
-        public ConfirmDelete($scope: FC.Shared.ViewModels.IFormVMBase<any>): void{
+        public ConfirmDelete($scope: FC.Shared.ViewModels.IFormVMBase<any>): void {
             var vm = this;
             var opts: ng.material.MDDialogOptions = {};
             //$scope.MemReg.Register("ServerMsg", $scope.ServerMsg);
@@ -951,6 +918,23 @@ module FC.Shared.Controllers {
             opts.controllerAs = 'vm';
             opts.locals = { local: { ServerMsg: $scope.ServerMsg, model: $scope.model } };
             opts.templateUrl = '/Scripts/modules/details/views/dialogs/alerts/delete-confirm.html';
+            opts.parent = document.body;
+            opts.clickOutsideToClose = true;
+            $scope.MtModal.show(opts);
+        }
+
+        public Warn($scope: FC.Shared.ViewModels.IFormVMBase<any>, msg): void {
+            var vm = this;
+            var opts: ng.material.MDDialogOptions = {};
+            //$scope.MemReg.Register("ServerMsg", $scope.ServerMsg);
+
+            if ($scope.MtModal) {
+                $scope.MtModal.hide();
+            }
+            opts.controller = FC.Core.Controllers.AlertController;
+            opts.controllerAs = 'vm';
+            opts.locals = { local: { ServerMsg: $scope.ServerMsg, model: msg } };
+            opts.templateUrl = '/Scripts/modules/details/views/dialogs/alerts/warning.html';
             opts.parent = document.body;
             opts.clickOutsideToClose = true;
             $scope.MtModal.show(opts);

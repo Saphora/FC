@@ -35,20 +35,6 @@ var FC;
                         vm.$scope.MtModal = $mdDialog;
                         vm.$scope.IsLoading = true;
                         vm.SetCountryList();
-                        if (CacheManager.Contains("sys-countries")) {
-                            vm.$scope.SysCountries = CacheManager.Get("sys-countries").data;
-                        }
-                        vm.$scope.ToggleCountry = this.ToggleCountry;
-                        if (vm.$scope.MemReg.Get("UserCountries")) {
-                            vm.$scope.inst.$scope.SelectedCountries = vm.$scope.MemReg.Get("UserCountries");
-                        }
-                        else {
-                            vm.$scope.SelectedCountries = new Array();
-                            if (CacheManager.Contains("UserCountries")) {
-                                vm.$scope.inst.$scope.SelectedCountries = CacheManager.Get("UserCountries").data;
-                                vm.$scope.IsLoading = false;
-                            }
-                        }
                         vm.$scope.IsActive = this.IsActive;
                         //this.RecoverModel(this.$scope.model, this.$scope);
                     }
@@ -121,7 +107,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$route',
                         '$routeParams',
                         '$location',
                         "$sce"

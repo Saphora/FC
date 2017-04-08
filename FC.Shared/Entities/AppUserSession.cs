@@ -9,8 +9,52 @@ using System.Threading.Tasks;
 
 namespace FC.Shared.Entities
 {
+    public enum SessionType
+    {
+        Auth,
+        PasswordReset
+    }
     public class AppUserSession
     {
+        public static AppUserSession Factory(SessionType type, Guid? userID, string userIP=null)
+        {
+            AppUserSession s = new AppUserSession();
+            switch(type)
+            {
+                case SessionType.PasswordReset:
+                    s = new AppUserSession()
+                    {
+                        SessionID = Guid.NewGuid(),
+                        Token = Guid.NewGuid(),
+                        UserID = userID,
+                        Expires = DateTime.Now.AddHours(12),
+                        Authenticated = false,
+                        Authorized = false,
+                        Action = "PasswordReset",
+                        Controller = "Register",
+                        Active = true,
+                        IPAddress = userIP
+                    };
+                    break;
+                case SessionType.Auth:
+                    s = new AppUserSession()
+                    {
+                        SessionID = Guid.NewGuid(),
+                        Token = Guid.NewGuid(),
+                        UserID = userID,
+                        Expires = DateTime.Now.AddHours(12),
+                        Authenticated = true,
+                        Authorized = false,
+                        Action = "Login",
+                        Controller = "Register",
+                        Active = true,
+                        IPAddress = userIP
+                    };
+                    break;
+            }
+            return s;
+        }
+
         public AppUserSession()
         {
             this.Token = Guid.NewGuid();
@@ -66,7 +110,7 @@ namespace FC.Shared.Entities
         public bool Active { get; set; }
         
         [ForeignKey("UserID")]
-        public virtual ApplicationUser User { get; set; }
+        public  ApplicationUser User { get; set; }
 
         public string IPAddress { get; set; }
         public string IPv6Address { get; set; }

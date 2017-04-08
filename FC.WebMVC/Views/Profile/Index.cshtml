@@ -1,0 +1,306 @@
+﻿@{ 
+    List<FC.Shared.Entities.UFestival> festivals = new List<FC.Shared.Entities.UFestival>();
+    List<FC.Shared.Entities.Location> locations = new List<FC.Shared.Entities.Location>();
+    List<FC.Shared.Entities.Advertisement> advertisement = new List<FC.Shared.Entities.Advertisement>();
+    int fcount = 0;
+    int vcount = 0;
+    int acount = 0;
+    RepositoryContext ctx = RepositoryContext.GetInstance();
+    var user = ctx.Auth.CurrentUser;
+    if (ViewBag.Festivals != null)
+    {
+        festivals = ViewBag.Festivals as List<FC.Shared.Entities.UFestival>;
+        fcount = festivals.Count - 10;
+    }
+    if (ViewBag.Locations != null)
+    {
+        locations = ViewBag.Locations as List<FC.Shared.Entities.Location>;
+    }
+    if(ViewBag.Advertisement != null)
+    {
+        advertisement = ViewBag.Advertisement as List<FC.Shared.Entities.Advertisement>;
+    }
+    var state = ViewBag.Flash;
+    if(state == null)
+    {
+        if(ViewBag.State != null)
+        {
+            state = ViewBag.State;
+        }
+    }
+}
+
+@section META {
+}
+
+<div class="row">
+    <div class="col-xs-24">
+        <div class="navigation-bar">
+            <a href="/news" class="btn btn-danger">
+                <i class="fa fa-angle-left"></i> BACK
+            </a>
+            <div class="crumb">
+                <a href="/Profile/Index">
+                    MY FESTIVAL CALENDAR
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (state != null)
+{
+    <div class="row">
+        <div class="col-xs-24">
+            @if (state.SUCCESS)
+            {
+                <div class="alert alert-success">
+                    @state.MSG
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    @state.MSG
+                </div>
+            }
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-24">
+        <div class="alert alert-info">
+            This section is still under construction and might not work as expected. Please come back later when you discover any issue.
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5">FAVORITE COUNTRIES</span>
+            </div>
+            <div class="card-block" ng-controller="FC.Modules.Favorites.Controllers.FavoriteController as vm" ng-init="vm.RegisterType(11)">
+                @Html.Hidden("section", "details")
+                <div class="form-horizontal">
+                    <div class="form-group ">
+                        <input type="text" class="form-control" ng-change="vm.search(11)" ng-model="SearchKey" />
+                        <div class="row autocomplete-picker">
+                            <div class="col-xs-24">
+                                <ul class="search-result">
+                                    <li>
+                                        <a href="#" ng-repeat="Country in SearchResult" ng-click="$event.preventDefault();vm.ToggleFavorite(11, Country.CountryID)">
+                                            <i class="fa fa-square-o" ng-if="!vm.FavoriteActive(Country.CountryID)"></i>
+                                            <i class="fa fa-check-square-o" ng-if="vm.FavoriteActive(Country.CountryID)"></i>
+                                            {{Country.Name.toUpperCase()}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-24">
+                                <ul class="selected">
+                                    <li ng-repeat="Country in SelectedCountries" ng-click="$event.preventDefault();vm.ToggleFavorite(11, Country.CountryID)">
+                                        <a href="#" class="btn-sm btn-danger">
+                                            <i class="fa fa-remove"></i> {{Country.Name.toUpperCase()}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Html.HasViewAuth(new string[] { FC.Shared.Enum.Roles.Festival, FC.Shared.Enum.Roles.Venue }))
+        {
+            <div class="card list-view-card festival-list-view">
+                <div class="card-header">
+                    <span class="h5">MY FESTIVALS</span>
+                </div>
+                <div class="card-block">
+                    <ul>
+                        <li>
+                            <a href="/festival/create" class="btn btn-danger">SIGN UP NEW FESTIVAL</a>
+                        </li>
+                        @if (festivals != null)
+                        {
+                            if (festivals.Count == 0)
+                            {
+                    <li>You don't have any festivals registered.</li>
+                            }
+                            foreach (FC.Shared.Entities.UFestival f in festivals.Take(10))
+                            {
+                    <li>
+                        <a href="/festival/edit/@f.FestivalID" title="Edit festival @f.Name">
+                            <img src="@Html.Thumbnail(f.LogoID)" width="40" height="40" />
+                            <div class="text">
+                                <span class="lbl">@f.Name.ToUpper()</span>
+                                <br />
+                                <span class="lbl-sm">START: @f.StartDate.ToShortDateString()</span>
+                            </div>
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </li>
+                            }
+                            if (fcount > 0)
+                            {
+                    <li>
+                        <a href="/festival/create" class="btn btn-default">SHOW @fcount MORE</a>
+                    </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5">FAVORITE GENRES</span>
+            </div>
+            <div class="card-block" ng-controller="FC.Modules.Favorites.Controllers.FavoriteController as vm" ng-init="vm.RegisterType(8)">
+                @Html.Hidden("section", "details")
+                <div class="form-horizontal">
+                    <div class="form-group ">
+                        <input type="text" class="form-control" ng-change="vm.search(8)" ng-model="SearchKey" />
+                        <div class="row autocomplete-picker">
+                            <div class="col-xs-24">
+                                <ul class="search-result">
+                                    <li>
+                                        <a href="#" ng-repeat="Genre in SearchResult" ng-click="$event.preventDefault();vm.ToggleFavorite(8, Genre.GenreID)">
+                                            <i class="fa fa-square-o" ng-if="!vm.FavoriteActive(Genre.GenreID)"></i>
+                                            <i class="fa fa-check-square-o" ng-if="vm.FavoriteActive(Genre.GenreID)"></i>
+                                            {{Genre.Name.toUpperCase()}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-24">
+                                <ul class="selected">
+                                    <li ng-repeat="Genre in SelectedGenres" ng-click="$event.preventDefault();vm.ToggleFavorite(8, Genre.GenreID)">
+                                        <a href="#" class="btn-sm btn-danger">
+                                            <i class="fa fa-remove"></i> {{Genre.Name.toUpperCase()}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card list-view-card  venues-list-view">
+            <div class="card-header">
+                <span class="h5">MY VENUES</span>
+            </div>
+            <div class="card-block">
+                <ul>
+                    <li>
+                        <a href="/venue/create" class="btn btn-danger">CREATE NEW VENUE</a>
+                    </li>
+                    @if (locations != null)
+                    {
+                        if (locations.Count == 0)
+                        {
+                            <li>
+                                You don't have any venues registered.
+                            </li>
+                        }
+                        foreach (FC.Shared.Entities.Location l in locations)
+                        {
+                            <li>
+                                <a href="/venue/edit/@l.LocationID" title="Edit venue @l.LocationName.">
+                                    <img src="@Html.Thumbnail(l.ThumbnailID)" width="40" height="40" />
+                                    <span class="label">@l.LocationName.ToUpper()</span> <i class="fa fa-edit"></i>
+                                </a>
+                            </li>
+                        }
+                        if (vcount > 0)
+                        {
+                            <li>
+                                <a href="/festival/create" class="btn btn-default">SHOW @vcount MORE</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8">
+
+        <div class="card">
+            <div class="card-header">
+                <span class="h5">FAVORITE ARTISTS</span>
+            </div>
+            <div class="card-block" ng-controller="FC.Modules.Favorites.Controllers.FavoriteController as vm" ng-init="vm.RegisterType(9)">
+                @Html.Hidden("section", "details")
+                <div class="form-horizontal">
+                    <div class="form-group ">
+                        <input type="text" class="form-control" ng-change="vm.search(9)" ng-model="SearchKey" />
+                        <div class="row autocomplete-picker">
+                            <div class="col-xs-24">
+                                <ul class="search-result">
+                                    <li>
+                                        <a href="#" ng-repeat="Artist in SearchResult" ng-click="$event.preventDefault();vm.ToggleFavorite(9, Artist.ArtistID)">
+                                            <i class="fa fa-square-o" ng-if="!vm.FavoriteActive(Artist.ArtistID)"></i>
+                                            <i class="fa fa-check-square-o" ng-if="vm.FavoriteActive(Artist.ArtistID)"></i>
+                                            {{Artist.Name.toUpperCase()}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-24">
+                                <ul class="selected">
+                                    <li ng-repeat="Artist in SelectedArtists" ng-click="$event.preventDefault();vm.ToggleFavorite(9, Artist.ArtistID)">
+                                        <a href="#" class="btn-sm btn-danger">
+                                            <i class="fa fa-remove"></i> {{Artist.Name.toUpperCase()}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card list-view-card  advertisement-list-view">
+            <div class="card-header">
+                <span class="h5">
+                    MY ADVERTISEMENT
+                </span>
+            </div>
+            <div class="card-block">
+                <ul>
+                    <li>
+                        <a href="/venue/create" class="btn btn-danger">CREATE NEW ADVERTISEMENT</a>
+                    </li>
+                    @if (advertisement != null)
+                    {
+                        if (advertisement.Count == 0)
+                        {   
+                            <li>You don't have any advertisement registered.</li>
+                        }
+                        foreach (FC.Shared.Entities.Advertisement l in advertisement.Take(10))
+                        {
+                            <li>
+                                <a href="/festival/edit/@l.AdvertisementID" title="Edit venue @l.Name">
+                                    <img src="@Html.Thumbnail(null)" width="40" height="40" />
+                                    <span class="label">@l.Name.ToUpper()</span> <i class="fa fa-edit"></i>
+                                </a>
+                            </li>
+                        }
+                        if (acount > 0)
+                        {
+                            <li>
+                                <a href="/festival/create" class="btn btn-default">SHOW @acount MORE</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

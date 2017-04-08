@@ -1,0 +1,39 @@
+﻿@model FC.WebMVC.Models.Lists.GenreList
+
+<div class="card">
+    <div class="card-header">
+        <span class="h5">GENRES</span>
+    </div>
+    <div class="card-block" ng-controller="FC.Modules.Genres.Controllers.GenreFormController as vm" ng-init="vm.RegisterID('@Model.FestivalID')">
+        @Html.Hidden("section", "details")
+        <div class="form-horizontal">
+            <div class="form-group ">
+                <input type="hidden" name="GenreIDs" ng-model="model.GenreIDs" />
+                <input type="text" class="form-control" ng-change="vm.search()" ng-model="SearchKey" />
+                <input id="GenreIDs" ng-model="genreids" type="hidden" />
+                <div class="row autocomplete-picker">
+                    <div class="col-xs-24">
+                        <ul class="search-result">
+                            <li>
+                                <a href="#" ng-repeat="Genre in SearchResult" ng-click="$event.preventDefault();vm.DoSelectGenre(vm.DoSelectGenre('@Model.FestivalID', Genre.GenreID))">
+                                    <i class="fa fa-square-o" ng-if="!vm.GenreActive(Genre)"></i>
+                                    <i class="fa fa-check-square-o" ng-if="vm.GenreActive(Genre)"></i>
+                                    {{Genre.Name}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-24">
+                        <ul class="selected">
+                            <li ng-repeat="Genre in SelectedGenres" ng-click="$event.preventDefault();vm.DoSelectGenre('@Model.FestivalID', Genre.GenreID)">
+                                <a href="#" class="btn-sm btn-danger">
+                                    <i class="fa fa-remove"></i> {{Genre.Name}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

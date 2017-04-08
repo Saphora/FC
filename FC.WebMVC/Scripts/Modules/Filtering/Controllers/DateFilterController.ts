@@ -59,15 +59,14 @@ module FC.Modules.Filtering.Controllers {
             vm.$scope.Year = new Date().getFullYear().toString();
             vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
             try {
-                vm.CacheManager.Get<number>("Filter_Month", function (storage) {
-                    vm.$scope.Month = storage.data;
-                    
+                if (CacheManager.GetCookieValue("Filter_Month")) {
+                    vm.$scope.Month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
                     vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
-                });
-                vm.CacheManager.Get<number>("Filter_Year", function (storage) {
-                    vm.$scope.Year = storage.data.toString();
+                }
+                if (CacheManager.GetCookieValue("Filter_Year")) {
+                    vm.$scope.Year = CacheManager.GetCookieValue("Filter_Year");
                     vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
-                });
+                }
             } catch (e) {
                 vm.$scope.Year = new Date().getFullYear().toString();
                 vm.$scope.Month = new Date().getMonth() + 1;
@@ -90,14 +89,14 @@ module FC.Modules.Filtering.Controllers {
                 if (e) {
                     if (e.detail) {
                         var d = e.detail as FC.Modules.Filtering.Models.FilterBarVM;
-                        vm.CacheManager.Get<number>("Filter_Month", function (storage) {
-                            vm.$scope.Month = storage.data;
+                        if (CacheManager.GetCookieValue("Filter_Month")) {
+                            vm.$scope.Month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
                             vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
-                        });
-                        vm.CacheManager.Get<number>("Filter_Year", function (storage) {
-                            vm.$scope.Year = storage.data.toString();
+                        }
+                        if (CacheManager.GetCookieValue("Filter_Year")) {
+                            vm.$scope.Year = CacheManager.GetCookieValue("Filter_Year");
                             vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
-                        });
+                        }
                         vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
                     }
                 }
@@ -140,15 +139,16 @@ module FC.Modules.Filtering.Controllers {
         }
 
         public DoChangeYear(): void {
-            CacheManager.WriteStorage("Filter_Year", this.$scope.Year, 1000 * 60 * 60 * 24);
+            CacheManager.SetCookieValue("Filter_Year", this.$scope.Year);
             var e = new FilterChangedEvent(this.$scope);
             this.$scope.MtModal.hide();
         }
 
         public ToggleMonth(month: number): void {
+            
             if (this.$scope.Month != month) {
                 this.$scope.Month = month;
-                CacheManager.WriteStorage("Filter_Month", this.$scope.Month, 1000 * 60 * 60 * 24);
+                CacheManager.SetCookieValue("Filter_Month", this.$scope.Month.toString());
                 var e = new FilterChangedEvent(this.$scope);
             }
             if (month == -1) {

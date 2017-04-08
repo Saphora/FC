@@ -19,209 +19,87 @@ module FC.Modules.Festival.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
             '$routeParams',
             '$location',
             "$sce",
-            "$mdDialog"
+            "$mdDialog" 
         ];
 
         constructor(
             $http: ng.IHttpService,
             $q,
             $scope: FC.Shared.ViewModels.IFestivalCRUDVM,
-            $route: ng.route.IRouteProvider,
             $routeParams,
             $location: any,
             $sce,
-            $mdDialog
+            $mdDialog: ng.material.MDDialogService
         ) {
             super($http, $q, $scope, $location, $routeParams, $mdDialog);
             var vm = this;
             this.$scope = $scope;
-            vm.CheckAuth($scope);
             this.$scope.inst = this;
-            this.$scope.MediaURLRoot =  FC.Core.Environment.MediaURLRoot;
-            this.$scope.FormID = "C018E5F4-1C4F-42BB-8537-85FFA794B0F4";
-            this.$scope.SaveFieldState = this.SaveFieldState;
-            this.$scope.GetFieldState = this.GetFieldState;
-            this.$scope.GetMediaPickerFieldState = this.GetMediaPickerFieldState;
             this.$scope.SaveFormState = this.SaveFormState;
-            this.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
             this.$location = $location;
             this.$scope.model = new FC.Shared.Models.UFestival();
-            this._InitGenres();
-            this.AddListeners(this.$scope);
-            this.$scope.$location = $location;
-            this.$scope.$routeParams = $routeParams;
-            if ($routeParams["step"]) {
-                this.$scope.WizardStep = $routeParams["step"];
-            } else {
-                this.$scope.WizardStep = 1;
-            }
-            if ($routeParams["festivalID"]) {
-                vm.$scope.IsEditing = true;
-                vm.$scope.FestivalID = $routeParams["festivalID"];
-                vm.$scope.SaveFieldState($scope, "FestivalID", vm.$scope.FestivalID);
-                vm.$scope.IsCreating = false;
-                vm.$scope.model = null;
-            } else {
-                vm.$scope.IsCreating = true;
-                vm.$scope.IsEditing = false;
-            }
-            //if (!this.AuthService.HasAuth()) {
-            //    $location.path('/login');
-            //}
-            var d = new Date();
-            this.$scope.MinDateStart = d;
-            this.$scope.MaxDateStart = new Date(d.getFullYear() + 2, 11, 31);
-            this.$scope.MaxDateEnd = new Date(d.getFullYear() + 2, 11, 31);
-            this.$scope.MinDateEnd = new Date(d.getFullYear() + 2, 11, 31);
-            this.$scope.DoChangeStartDate = this.DoChangeStartDate;
-           
+            this.$scope.MtModal = $mdDialog;
+            this.$scope.Token = CacheManager.GetCookieValue("Token");
 
-            this.$scope.DoSaveCreate = this.DoSaveCreate;
-            this.$scope.DoSaveDelete = this.DoSaveDelete;
-            this.$scope.DoSaveEdit = this.DoSaveEdit;
-            this.RecoverModel();
+            window.addEventListener("LogoImageSaved", function (e: CustomEventInit) {
+                vm.$scope.model.LogoID = e.detail;
+                vm.$scope.MtModal.hide();
+                vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + "/" + vm.$scope.model.LogoID;
+                vm.DoSaveCRUD(Shared.Controllers.ActionType.Update, Shared.Controllers.ServiceType.FestivalService, $scope);
+            });
 
-        }
-
-        public DoChangeStartDate($scope: FC.Shared.ViewModels.IFestivalCRUDVM) {
-            this.$scope.MinDateEnd = $scope.model.StartDate;
-        }
-
-        public DoSaveCreate($scope: FC.Shared.ViewModels.IFestivalCRUDVM): void {
-            $scope = $scope.inst.$scope;
-            $scope.inst.FestivalService.Create($scope.model).then(function (r) {
-                $scope.ServerMsg = r.Message;
-                if (r.Data.SUCCESS == true) {
-                    $scope.IsCreated = true;
-                    $scope.IsCreating = false;
-                    $scope.FinishForm($scope);
-                    //$scope.$location = '/#/festival/add/confirm';
-                } else {
-                    $scope.IsCreated = false;
-                    $scope.IsCreating = true;
-                }
+            window.addEventListener("HeaderImageSaved", function (e: CustomEventInit) {
+                vm.$scope.model.ProfileImageID = e.detail;
+                vm.$scope.MtModal.hide();
+                vm.DoSaveCRUD(Shared.Controllers.ActionType.Update, Shared.Controllers.ServiceType.FestivalService, $scope);
+                ///vm.$scope["ProfileHeaderPath"]= FC.Core.Environment.MediaURLRoot + "/" + vm.$scope.model.LogoID;
             });
         }
-
-        public DoSaveEdit($scope: FC.Shared.ViewModels.IFestivalCRUDVM): void {
-            $scope = $scope.inst.$scope;
-            $scope.inst.FestivalService.Update($scope.model).then(function (r) {
-                $scope.ServerMsg = r.Message;
-                if (r.Data.SUCCESS == true) {
-                    $scope.IsEdited = true;
-                    $scope.IsEditing = false;
-                    $scope.FinishForm($scope);
-                } else {
-                    $scope.IsEdited = false;
-                    $scope.IsEditing = true;
-                }
-            });
+        public RegisterID(id: string) {
+            this.$scope.model.FestivalID = id;
         }
-
-        public DoSaveDelete($scope: FC.Shared.ViewModels.IFestivalCRUDVM): void {
-            $scope = $scope.inst.$scope;
-            $scope.inst.FestivalService.Delete($scope.model).then(function (r) {
-                $scope.ServerMsg = r.Message;
-                if (r.Data.SUCCESS == true) {
-                    $scope.IsDeleted = true;
-                    $scope.IsDeleting = false;
-                } else {
-                    $scope.IsDeleted == false;
-                    $scope.IsDeleting = true;
-                }
+        public GetSelectedLogo(): string {
+            var vm = this;
+            window.addEventListener("ModalMediaSaveEvent", function (e:CustomEventInit) {
+                vm.$scope.model.LogoID = e.detail
             });
+            return vm.$scope.model.LogoID;
         }
         
-        public RecoverModel(): void {
+        public OpenLogoModal(dirID: string, validationWidth: number, validationHeight: number, isThumbnail: boolean = false): void {
             var vm = this;
-            var r = super.RecoverModel<MODELS.UFestival>(vm.$scope.model, vm.$scope);
-            vm.$scope.model = r;
+            var opts: ng.material.MDDialogOptions = {};
+            //$scope.MemReg.Register("ServerMsg", $scope.ServerMsg);
 
-            if (vm.$scope.IsEditing && !vm.$scope.model.Name) {
-                vm.FestivalService.GetFestival(vm.$scope.$routeParams["festivalID"]).then(function (r) {
-                    if (vm.$scope.inst.MediaIsObsolete(vm.$scope.model.LogoID)) {
-                        vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=true&MediaID=' + vm.$scope.model.LogoID;
-                    } else {
-                        vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=false&MediaID=' + vm.$scope.model.LogoID;
-                    }
-                    vm.$scope.model = r.Data;
-                    vm.$scope.model.StartDate = new Date(r.Data.StartDate.toString());
-                    vm.$scope.model.EndDate = new Date(r.Data.EndDate.toString());
-                    vm.RestoreModel(vm.$scope);
-                });
+            if (vm.$scope.MtModal) {
+                vm.$scope.MtModal.hide();
             }
-
-            if (vm.$scope.model && vm.$scope.model.StartDate && vm.$scope.model.EndDate) {
-                vm.$scope.model.StartDate = new Date(vm.$scope.model.toString());
-                vm.$scope.model.EndDate = new Date(vm.$scope.model.EndDate.toString());
-                if (vm.$scope.inst.MediaIsObsolete(vm.$scope.model.LogoID)) {
-                    vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=true&MediaID=' + vm.$scope.model.LogoID;
-                } else {
-                    vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=false&MediaID=' + vm.$scope.model.LogoID;
-                }
-            }
+            opts.controller = FC.Modules.Media.Controllers.MediaModalController;
+            opts.controllerAs = 'vm';
+            opts.templateUrl = '/Scripts/modules/media/views/media-modal.html';
+            opts.locals = { local: [vm.$scope.MtModal, "LogoImageSaved", dirID, this.$scope.Token, validationWidth, validationHeight, isThumbnail] },
+            opts.clickOutsideToClose = true;
+            vm.$scope.MtModal.show(opts);
         }
 
-
-        //public SaveFieldState($scope: FC.Shared.ViewModels.IFestivalCRUDVM, name: string, value: any): void {
-        //    FC.Shared.CoreModel.Recovery.Add($scope.FormID, name, value);
-        //}
-        //public GetFieldState($scope: FC.Shared.ViewModels.IFestivalCRUDVM, name: string): void {
-        //    if ($scope.model) {
-        //        $scope.model[name] = FC.Shared.CoreModel.Recovery.Get<string>($scope.FormID, name);
-        //    }
-        //}
-
-        public GetMediaPickerFieldState($scope: FC.Shared.ViewModels.IFestivalCRUDVM, name: string): void {
-            var v = FC.Shared.CoreModel.Recovery.Get<string>($scope.FormID, name);
-            $scope.model[name] = v;
-            $scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&MediaID=' + v;
-        }
-        public GetArtistPickerFieldState($scope: FC.Shared.ViewModels.IFestivalCRUDVM, name: string): void {
-            var v = FC.Shared.CoreModel.Recovery.Get<string>($scope.FormID, name);
-           // $scope.model[name] = v;
-        }
-
-        public SaveFormState($scope: FC.Shared.ViewModels.IFestivalCRUDVM): void {
-            FC.Shared.CoreModel.Recovery.SaveState($scope.FormID, $scope.$location.path());
-        }
-
-        public AddListeners($scope: FC.Shared.ViewModels.IFestivalCRUDVM):void {
-            $scope = $scope.inst.$scope;
-            window.addEventListener("FestivalLogoSaved", function (e) {
-                $scope.model.LogoID = e["detail"].MediaID;
-                if ($scope.inst.MediaIsObsolete($scope.model.LogoID)) {
-                    $scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=true&MediaID=' + e["detail"].MediaID;
-                } else {
-                    $scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=false&MediaID=' + e["detail"].MediaID;
-                }
-                $scope.SaveFieldState($scope, 'Logo', $scope.model.LogoID);
-            });
-            window.addEventListener("ArtistPickerSaved", function (e) {
-                $scope.model.Artists = e["detail"].SelectedArtists;
-                $scope.SaveFieldState($scope, 'Artists', $scope.model.Artists);
-
-            });
-            window.addEventListener("GenrePickerSaved", function (e) {
-                $scope.model.Genres = e["detail"].SelectedGenres;
-                $scope.SaveFieldState($scope, 'Genres', $scope.model.Genres);
-            });
-        }
-
-        private _InitGenres():void {
+        public OpenHeaderImageModal(dirID: string, validationWidth: number, validationHeight: number, isThumbnail: boolean = false): void {
             var vm = this;
-            if (this.CacheManager.Contains("sys-genres")) {
-                vm.$scope.SysGenres = this.CacheManager.GetStorage("sys-genres").data;
-            }
-            if (this.CacheManager.Contains("sys-countries")) {
-                vm.$scope.SysCountries = this.CacheManager.GetStorage("sys-countries").data;
-            }
-        }
+            var opts: ng.material.MDDialogOptions = {};
+            //$scope.MemReg.Register("ServerMsg", $scope.ServerMsg);
 
+            if (vm.$scope.MtModal) {
+                vm.$scope.MtModal.hide();
+            }
+            opts.controller = FC.Modules.Media.Controllers.MediaModalController;
+            opts.controllerAs = 'vm';
+            opts.templateUrl = '/Scripts/modules/media/views/media-modal.html';
+            opts.locals = { local: [vm.$scope.MtModal, "HeaderImageSaved", dirID, this.$scope.Token, validationWidth, validationHeight, isThumbnail] },
+             opts.clickOutsideToClose = true;
+            vm.$scope.MtModal.show(opts);
+        }
     }
     FestivalModule.GetApplication().RegisterController("FC.Modules.Festival.Controllers.FestivalCRUDController", FC.Modules.Festival.Controllers.FestivalCRUDController);
 }

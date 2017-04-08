@@ -51,27 +51,48 @@ module FC.Modules.Genres.Controllers {
             vm.$scope.Reset = this.Reset;
             vm.$scope.MtModal = $mdDialog;
             vm.$scope.SelectedGenreIds = "";
-            vm.SetGenreList();
-            if (vm.$scope.MemReg.Get("ActiveGenres")) {
-                vm.$scope.inst.$scope.SelectedGenres = vm.$scope.MemReg.Get<Array<MODELS.UGenre>>("ActiveGenres");
-            } else {
-                vm.$scope.SelectedGenres = new Array<MODELS.UGenre>();
-                if (CacheManager.Contains("ActiveGenres")) {
-                    vm.$scope.inst.$scope.SelectedGenres = CacheManager.Get<Array<MODELS.UGenre>>("ActiveGenres").data;
+            vm.$scope.IsActive = this.IsActive;
+
+            var userID = CacheManager.GetCookieValue("UserID");
+
+            if (CacheManager.Contains("ActiveGenres")) {
+                vm.$scope.SelectedGenres = CacheManager.Get<List<MODELS.UGenre>>("ActiveGenres").data;
+                if (vm.$scope.SelectedGenres.length == 1) {
+                    vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRE SELECTED";
+                } else {
+                    vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRES SELECTED";
                 }
             }
-            vm.$scope.IsActive = this.IsActive;
-            vm.$scope.Selected = "0 SELECTED";
-            if (vm.$scope.SelectedGenres != null) {
-                vm.$scope.Selected = this.$scope.SelectedGenres.length + " SELECTED";
+            if (userID) {
+                vm.FavoriteService.GetUserFavorites(userID, Shared.Enum.InternalContentType.Genre).then(function (r) {
+                    r.Data.forEach(function (v, k) {
+                        if (v.Content) {
+                            var any = vm.$scope.SelectedGenres.some(function (genre, k) {
+                                return genre.GenreID == v.ContentID
+                            });
+                            if (any == false) {
+                                vm.$scope.SelectedGenres.push(v.Content as MODELS.UGenre);
+                            }
+                            vm.$scope.Selected = vm.$scope.SelectedGenres.length + " SELECTED";
+                        }
+                    });
+                    CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 9999999999);
+                });
             }
+            if (vm.$scope.SelectedGenres.length == 0) {
+                vm.$scope.Selected = "SELECT GENRES";
+            }
+            
+            vm.SetGenreList();
+            
+
             //this.RecoverModel(this.$scope.model, this.$scope);
             vm.$scope.IsLoading = false;
 
             vm.$scope.model = new FC.Modules.Filtering.Models.FilterBarVM();
             vm.addFilterChangeListener();
             window.addEventListener('ClearFilter', function () {
-                vm.$scope.Selected = "0 SELECTED";
+                vm.$scope.Selected = "SELECT GENRES";
                 vm.$scope.SelectedGenres = new Array<FC.Shared.Models.UGenre>();
                 CacheManager.DeleteStorage('ActiveGenres');
             });
@@ -79,16 +100,25 @@ module FC.Modules.Genres.Controllers {
 
         private addFilterChangeListener(): void {
             var vm = this;
-            window.addEventListener("FilterChanged", function (e:CustomEventInit) {
+            window.addEventListener("FilterChanged", function (e: CustomEventInit) {
                 if (e) {
                     if (e.detail) {
                         var d = e.detail as FC.Modules.Filtering.Models.FilterBarVM;
                         if (d.Genres) {
-                            vm.$scope.Selected = d.Genres.length + " SELECTED";
+                            vm.$scope.Selected = d.Genres.length + " GENRE(S) SELECTED";
                             d.Genres.forEach(function (g, i) {
                                 vm.$scope.SelectedGenreIds += g.GenreID + ',';
                             });
                             vm.$scope.SelectedGenres = d.Genres;
+                            if (vm.$scope.SelectedGenres.length == 1) {
+                                vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRE SELECTED";
+                            } else {
+                                vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRES SELECTED";
+                            }
+
+                            if (vm.$scope.SelectedGenres.length == 0) {
+                                vm.$scope.Selected = "SELECT GENRES";
+                            }
                             vm.$scope.SelectedGenreIds = vm.$scope.SelectedGenreIds.substr(0, vm.$scope.SelectedGenreIds.length - 1);
                         }
                     }
@@ -130,32 +160,47 @@ module FC.Modules.Genres.Controllers {
         public ToggleGenre(genre: MODELS.UGenre): void {
             var vm = this;
             if (!this.IsActive(genre)) {
+                
                 vm.$scope.SelectedGenres.push(genre);
                 CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 999999999999999);
+                
+
             } else {
                 var tmp = new Array<MODELS.UGenre>();
+
                 vm.$scope.SelectedGenres.forEach(function (v, i) {
                     if (v.GenreID != genre.GenreID) {
                         tmp.push(v);
                     }
                 });
                 vm.$scope.SelectedGenres = tmp;
-                vm.$scope.Selected = tmp.length + " SELECTED";
                 
                 CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 999999999999999);
             }
             vm.$scope.SelectedGenres.forEach(function (v, i) {
                 vm.$scope.SelectedGenreIds += v.GenreID + ",";
             });
-            vm.$scope.Selected = vm.$scope.SelectedGenres.length + " SELECTED";
+            if (vm.$scope.SelectedGenres) {
+                if (vm.$scope.SelectedGenres.length == 0) {
+                    vm.$scope.Selected = "SELECT GENRES";
+                } else {
+                    vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRE(S) SELECTED";
+                }
+            }
             vm.$scope.SelectedGenreIds = vm.$scope.SelectedGenreIds.substr(0, vm.$scope.SelectedGenreIds.length - 1);
             vm.$scope.model.Genres = vm.$scope.SelectedGenres;
+            this.Save();
         }
 
         public SetGenreList(): void {
             var vm = this;
             vm.GenreService.GetAllGenres().then(function (r: INT.IServiceResponse<MODELS.UGenre[]>) {
                 vm.$scope.SysGenres = r.Data;
+                if (CacheManager.Contains("ActiveGenres")) {
+                    vm.$scope.SelectedGenres = CacheManager.GetStorage("ActiveGenres").data;
+                } else {
+                    vm.$scope.SelectedGenres = new Array<MODELS.UGenre>();
+                }
             });
         }
 

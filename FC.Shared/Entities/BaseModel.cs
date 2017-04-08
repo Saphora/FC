@@ -29,16 +29,16 @@ namespace FC.Shared.Entities
             this.IsPublished = bm.IsPublished;
         }
 
-        public virtual DateTime? ModifiedDate { get; set; }
-        public virtual bool IsPublished { get; set; }
-        public virtual int SortOrder { get; set; }
-        public virtual string URL { get; set; }
+        public  DateTime? ModifiedDate { get; set; }
+        public  bool IsPublished { get; set; }
+        public  int SortOrder { get; set; }
+        public  string URL { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Modified { get; set; }
         public DateTime? ArchiveDate { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? DeleteDate { get; set; }
-        public virtual Guid? AuthorID { get; set; }
+        public  Guid? AuthorID { get; set; }
 
         public bool Deleted
         {

@@ -8,6 +8,13 @@ namespace FC.Shared.Enum
 {
     public class Roles
     {
+        public static string Festival = "Festival";
+        public static string Artist = "Artist";
+        public static string Venue = "Venue";
+        public static string Retailer = "Retailer";
+        public static string TravelAgent = "TravelAgent";
+        public static string Advertiser = "Advertiser";
+
         public static string UserAdmin= "UserAdmin";
         public static string Reporter= "Reporter";
         public static string GenreAdmin= "GenreAdmin";
@@ -27,6 +34,33 @@ namespace FC.Shared.Enum
         public static string SponsorAdmin= "SponsorAdmin";
         public static string FestivalAdmin= "FestivalAdmin";
         public static string Owner = "Owner";
+
+        public static string[] GetAllPublic()
+        {
+            return new string[]
+            {
+                Roles.Advertiser,
+                Roles.Festival,
+                Roles.Venue,
+                Roles.Artist,
+                Roles.EndUser,
+                Roles.Retailer,
+                Roles.TravelAgent,
+                Roles.Developer,
+                Roles.UserAdmin,
+                Roles.FestivalAdmin,
+                Roles.RoleAdmin,
+                Roles.GenreAdmin,
+                Roles.ArtistAdmin,
+                Roles.BannerAdmin,
+                Roles.NewsAdmin,
+                Roles.SponsorAdmin,
+                Roles.Owner,
+                Roles.AnnouncementAdmin,
+                Roles.UserAdmin,
+                Roles.Admin
+            };
+        }
 
         public static string[] GetAllRoot() {
             return new string[] {
@@ -70,7 +104,14 @@ namespace FC.Shared.Enum
                 Roles.ArtistAdmin,
                 Roles.Admin,
                 Roles.SponsorAdmin,
-                Roles.FestivalAdmin
+                Roles.FestivalAdmin,
+                Roles.Advertiser,
+                Roles.Festival,
+                Roles.Venue,
+                Roles.Artist,
+                Roles.EndUser,
+                Roles.Retailer,
+                Roles.TravelAgent
             };
         }
 

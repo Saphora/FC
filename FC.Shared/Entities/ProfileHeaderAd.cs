@@ -16,18 +16,18 @@ namespace FC.Shared.Entities
         public Guid? AdvertisementID { get; set; }
 
         [ForeignKey("AdvertisementID")]
-        public virtual Advertisement Advertisment { get; set; }
+        public  Advertisement Advertisment { get; set; }
 
         public Guid? AlbumID { get; set; }
 
         [ForeignKey("AlbumID")]
-        public virtual MediaDirectory Album { get; set; }
+        public  MediaDirectory Album { get; set; }
 
         public Guid? MediaID { get; set; }
         public string Title { get; set; }
 
         [ForeignKey("MediaID")]
-        public virtual Media Thumbnail { get; set; }
+        public  Media Thumbnail { get; set; }
         public string TextLine { get; set; }
         public DateTime Date { get; set; }
         public string DeepLink { get; set; }

@@ -6,13 +6,26 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-
+using System.Web.SessionState;
+using FC.Shared.Helpers;
 namespace FC.WebAPI
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
+        public override void Init()
+        {
+            this.PostAuthenticateRequest += MvcApplication_PostAuthenticateRequest;
+            base.Init();
+        }
+
+        void MvcApplication_PostAuthenticateRequest(object sender, EventArgs e)
+        {
+            System.Web.HttpContext.Current.SetSessionStateBehavior(
+                SessionStateBehavior.Required);
+        }
         protected void Application_Start()
         {
+            var first = MemReg.GetInstance();
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

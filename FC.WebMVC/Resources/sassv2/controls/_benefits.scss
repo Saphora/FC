@@ -1,0 +1,68 @@
+﻿@import "../core/var.scss";
+.benefits,wizard-list,icon-list {
+    ul {
+        float:left;
+        width:100%;
+        padding: 0;
+        list-style:none;
+        li {
+            float:left;
+            display:block;
+            width:100%;
+            margin-top: 15px;
+            i{
+                position:relative;
+                float:left;
+                text-align:center;
+                max-width:35px;
+                width:35px;
+                font-size: 25px;
+            }
+            .h5 {
+                float:left;
+                line-height:10px;
+                font-size: 18px;
+            }
+            .description {
+                float:left;
+                width:100%;
+                font-size:12px;
+                padding-left: 40px; 
+            }
+            a {
+                float:left;
+                display:block;
+                width:100%;
+                color: #333 !important;
+                &:hover {
+                    .h5 {
+                        color: $LinkColorDefault;
+                    }
+                    .description {
+                        color: $LinkColorDefault;
+                    }
+                }
+                i{
+                    color: #333 !important;
+                    position:relative;
+                    float:left;
+                    text-align:center;
+                    max-width:35px;
+                    width:35px;
+                    font-size: 25px;
+                }
+                .h5 {
+                    float:left;
+                    line-height:10px;
+                    font-size: 18px;
+                }
+                .description {
+                    float:left;
+                    width:100%;
+                    font-size:12px;
+                    padding-left: 40px;
+                }
+            }
+        }
+    }
+}

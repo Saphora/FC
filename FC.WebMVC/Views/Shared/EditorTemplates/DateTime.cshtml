@@ -1,0 +1,16 @@
+﻿@model DateTime
+<div class="col-xs-5" style="padding-right:2px; padding-left:0;">
+    @Html.TextBoxFor(model=>model.Year, new { @class="form-control", placeholder="YYYY"})
+</div>
+<div class="col-xs-5 " style="padding-right:2px;">
+    @Html.TextBoxFor(model => model.Month, new { @class = "form-control", placeholder="MM" })
+</div>
+<div class="col-xs-5  " style="padding-right:2px;">
+    @Html.TextBoxFor(model => model.Day, new { @class = "form-control", placeholder="DD" })
+</div>
+<div class="col-xs-4  " style="padding-right:2px;">
+    @Html.TextBoxFor(model => model.Hour, new { @class = "form-control", placeholder = "HH" })
+</div>
+<div class="col-xs-4  " style="padding-right:2px;">
+    @Html.TextBoxFor(model => model.Minute, new { @class = "form-control", placeholder = "MM" })
+</div>

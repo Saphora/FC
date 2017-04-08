@@ -855,6 +855,21 @@ var FC;
                     opts.clickOutsideToClose = true;
                     $scope.MtModal.show(opts);
                 };
+                BaseController.prototype.Warn = function ($scope, msg) {
+                    var vm = this;
+                    var opts = {};
+                    //$scope.MemReg.Register("ServerMsg", $scope.ServerMsg);
+                    if ($scope.MtModal) {
+                        $scope.MtModal.hide();
+                    }
+                    opts.controller = FC.Core.Controllers.AlertController;
+                    opts.controllerAs = 'vm';
+                    opts.locals = { local: { ServerMsg: $scope.ServerMsg, model: msg } };
+                    opts.templateUrl = '/Scripts/modules/details/views/dialogs/alerts/warning.html';
+                    opts.parent = document.body;
+                    opts.clickOutsideToClose = true;
+                    $scope.MtModal.show(opts);
+                };
                 BaseController.prototype.SetLogoutURL = function (url) {
                     var vm = this;
                     vm.$scope.LogoutURL = '/#/logout/' + btoa(url);

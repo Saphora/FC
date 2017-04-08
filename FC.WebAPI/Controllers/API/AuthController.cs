@@ -19,7 +19,7 @@ namespace FC.WebAPI.Controllers.API
 
         public ServiceResponse<List<Role>> GetRoleList()
         {
-            return new ServiceResponse<List<Role>>(AuthRepo.GetRoleList(), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<Role>>(AuthRepo.GetRoleList(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet,HttpPost, HttpOptions]
@@ -28,14 +28,14 @@ namespace FC.WebAPI.Controllers.API
             try
             {
                 ServiceMessage<LoginMsg> filter = new ServiceMessage<LoginMsg>(payload);
-                AppUserSession sess = this.AuthRepo.Login(filter.Data.Username, filter.Data.PassOrCode, System.Web.HttpContext.Current, this.ControllerContext);
+                AppUserSession sess = this.AuthRepo.Login(filter.Data.Username, filter.Data.PassOrCode);
                 if (sess != null && sess.Authenticated)
                 {
-                    return new ServiceResponse<AppUserSession>(sess, HttpStatusCode.OK, "OK");
+                    return new ServiceResponse<AppUserSession>(sess, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
                 }
                 else
                 {
-                    return new ServiceResponse<AppUserSession>(sess, HttpStatusCode.Unauthorized, "OK");
+                    return new ServiceResponse<AppUserSession>(sess, HttpStatusCode.Unauthorized, "OK", this.Repositories.Auth.ActiveToken);
                 }
             } catch(Exception ex)
             {
@@ -49,7 +49,7 @@ namespace FC.WebAPI.Controllers.API
             try
             {
                 ServiceMessage<IsAuthMsg> filter = new ServiceMessage<IsAuthMsg>(payload);
-                return new ServiceResponse<AppUserSession>(this.AuthRepo.Authenticated(filter.Data), HttpStatusCode.OK, "OK");
+                return new ServiceResponse<AppUserSession>(this.AuthRepo.Authenticated(filter.Data), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             } catch(Exception ex)
             {
                 return HandleException<AppUserSession>(ex);
@@ -63,7 +63,7 @@ namespace FC.WebAPI.Controllers.API
             {
                 ServiceMessage<LogoutMsg> filter = new ServiceMessage<LogoutMsg>(payload);
                 bool status = this.AuthRepo.Logout(filter.Data.SessionID);
-                return new ServiceResponse<bool>(status, HttpStatusCode.OK, "OK");
+                return new ServiceResponse<bool>(status, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
-﻿@section META {
+﻿@model FC.Shared.Entities.ApplicationUser
+@section META {
     <title>FESTIVAL CALENDAR | Please activate your account</title>
 }
 <div class="row">
@@ -7,39 +8,54 @@
             <div class="card-header">
                 <span class="h5">ACCOUNT ACTIVATION</span>
             </div>
-            <div class="card-block">
-                <h5>ACCOUNT ACTIVATED!</h5>
-                <p>
-                    Your account is verified now.
-                    Please select one of the actions below to proceed.
-                </p>
-                <ul>
-                    <li>
-                        <a href="/profile/settings" alt="Create a festival calendar profile">
-                            <i class="fa fa-user"></i> GO TO MY PROFILE
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/register/festival" alt="Sign up your festival!">
-                            <i class="fa-festival-icon"></i> SIGN UP MY FESTIVAL
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/register/artist" alt="Create an artist profile">
-                            <i class="fa fa-note"></i> SIGN UP AS ARTIST
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/register/venue" alt="Sign up your venue">
-                            <i class="fa fa-map-marker"></i> SIGN UP AS VENUE
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/register/advertisement" alt="Advertise on Festival Calendar!">
-                            <i class="fa fa-bullhorn"></i> ADVERTISEMENT
-                        </a>
-                    </li>
-                </ul>
+            <div class="card-block ">
+                <div class="benefits">
+                    <h5>WHATS NEXT?</h5>
+                    <ul>
+                        <li>
+                            <a href="/register/signup/festival/@Model.UserID" title="My profile">
+                                <i class="fa fa-user"></i> <span class="h5">MY PROFILE</span>
+                                <span class="description">Subscribe your profile and keep updated about the newest festivals of your taste.</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/register/signup/festival/@Model.UserID" title="Sign up festival">
+                                <i class="fa-festival-calendar"></i> <span class="h5">SIGN UP YOUR FESTIVAL</span>
+                                <span class="description">Let us know if you organize a festival / concert / event! Manage lineups and many more!</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/register/signup/venue/@Model.UserID" title="Sign up venue">
+                                <i class="fa fa-map-marker"></i> <span class="h5">SIGN UP YOUR VENUE</span>
+                                <span class="description">Connect with festivals / artists / retailers etc. And create your own personal calendar.</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/register/signup/artist/@Model.UserID" title="Sign up as artist">
+                                <i class="fa fa-music"></i> <span class="h5">SIGN UP AS ARTIST</span>
+                                <span class="description">Connect with festivals and other artists. Create your own profile to promote yourself. View the festivals were you play at.</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/register/signup/advertisement/@Model.UserID" title="Request advertisement">
+                                <i class="fa fa-bullhorn"></i> <span class="h5">ADVERTISEMENT</span>
+                                <span class="description">Connect with festivals and other artists. Create your own profile to promote yourself. View the festivals were you play at.</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/register/signup/retailer/@Model.UserID">
+                                <i class="fa fa-shopping-cart"></i> <span class="h5">JOIN OUR RETAILER PROGRAM</span>
+                                <span class="description">If you want to sell tickets or other cool festival related stuff.</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/register/signup/travel/@Model.UserID">
+                                <i class="fa fa-plane"></i> <span class="h5">SIGN UP AS TRAVEL AGENCY</span>
+                                <span class="description">Provide all in one festival travels!</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

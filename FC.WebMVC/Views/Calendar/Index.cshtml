@@ -1,0 +1,146 @@
+﻿@model List<FC.Shared.ViewModels.Festival.FestivalVM>
+@section META {
+    <title>FESTIVAL CALENDAR | Discover the most amazing festivals world wide!</title>
+    <meta property="og:url" content="http://festival-calendar.nl/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FESTIVAL CALENDAR | Discover the most amazing festivals world wide!" />
+    <meta property="og:description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+    <meta property="og:image" content="~/Resources/images/fc-icon.png" />
+    <meta name="keywords" content="Festival,Calendar,Events,Artists,Social,Platform,Manage,Profile,Agenda" />
+    <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
+}
+@{
+
+    var state = ViewBag.Flash as FC.BL.Repositories.RepositoryState;
+    if (state == null)
+    {
+        if (ViewBag.State != null)
+        {
+            state = ViewBag.State;
+        }
+    }
+}
+<div class="row">
+    <div class="col-xs-24 col-sm-24 col-md-24 col-lg-24 col-xl-24">
+        <div class="navigation-bar" ng-controller="FC.Core.Controllers.NavBarController as vm">
+            <a href="/profile/index" class="btn btn-danger">
+                MY FAVORITES
+            </a>
+            <div class="navigation-items">
+                <a href="/profile/index">
+                    MY GENRES
+                    <span class="count" ng-if="GenreCount && GenreCount > 0">
+                        {{GenreCount}}
+                    </span>
+                </a>
+
+                @*<a href="/profile/index" class="hidden-xs">
+                    MY ARTISTS
+                    <span class="count" ng-if="ArtistCount">
+                        {{ArtistCount}}
+                    </span>
+                </a>*@
+
+                <a href="/profile/index" class="hidden-xs">
+                    MY COUNTRIES
+                    <span class="count" ng-if="CountryCount">
+                        {{CountryCount}}
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+@if (state != null)
+{
+    <div class="row">
+        <div class="col-xs-24">
+            @if (state.SUCCESS)
+            {
+                <div class="alert alert-success">
+                    @state.MSG
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    @state.MSG
+                </div>
+            }
+        </div>
+    </div>
+}
+<div class="row filter-control">
+
+    <div class="col-xs-24 col-sm-24 col-md-12 col-lg-6 col-xl-6 filter-control-item-wrapper">
+        <form class="filter-control-item search" ng-controller="FC.Modules.Search.Controllers.SearchController as vm" ng-submit="vm.DoSearch()">
+            <a href="#" class="btn btn-default" ng-click="$event.preventDefault();vm.DoSearch()">
+                <i class="fa fa-search"></i>
+            </a>
+            <input type="text" ng-class="Keyword ? 'searching':''" class="textbox" placeholder="FESTIVAL, CITY, GENRE, ARTIST" ng-model="Keyword" ng-change="vm.DoChangeSearch()" />
+            <a href="#" class="btn btn-default cancel" ng-class="Keyword ? 'searching':''" ng-click="$event.preventDefault();Keyword=null;vm.DoSearch();" ng-if="Keyword">
+                <i class="fa fa-times"></i>
+            </a>
+        </form>
+    </div>
+    <div class="col-xs-24 col-sm-24 col-md-12 col-lg-6 col-xl-6  filter-control-item-wrapper">
+        <div class="filter-control-item" ng-controller="FC.Modules.Filtering.Controllers.DateFilterController as vm">
+            <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
+                <i class="fa fa-calendar" style="position:relative;top:-2px;"></i>
+            </a>
+            <input type="text" class="textbox" disabled="disabled" ng-model="DateString" />
+            <input type="hidden" name="Year" ng-model="Year" />
+            <input type="hidden" name="Month" ng-model="Month" />
+        </div>
+    </div>
+    <div class="col-xs-24 col-sm-24 col-md-12 col-lg-6 col-xl-6 filter-control-item-wrapper">
+        <div class="filter-control-item" ng-controller="FC.Modules.Genres.Controllers.GenreFilterController as vm">
+            <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
+                <i class="fa fa-heart" style="color: #FF0000"></i>
+            </a>
+            <input type="text" class="textbox" ng-model="Selected" disabled="disabled" placeholder=""/>
+            <input type="hidden" name="Genres" ng-model="SelectedGenreIds" />
+        </div>
+    </div>
+    <div class="col-xs-24 col-sm-24 col-md-12 col-lg-6 col-xl-6 filter-control-item-wrapper">
+        <div class="filter-control-item" ng-controller="FC.Modules.Filtering.Controllers.CountryFilterController as vm">
+            <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
+                <i class="fa fa-map-marker"></i>
+            </a>
+            <input type="text" class="textbox" ng-model="Selected" disabled="disabled" />
+            <input type="hidden" name="Genres" ng-model="SelectedGenreIds" />
+        </div>
+    </div>
+</div>
+
+<div class="row search-control" ng-controller="FC.Modules.Calendar.Controllers.SimpleCalendarController as vm">
+    <div ng-if="IsLoading == false" class="col-xs-24 col-sm-12 col-md-12 col-lg-8 col-xl-6" search-result" ng-repeat="(FestivalKey,Festival) in Festivals">
+        <ng-include src="'/Scripts/Modules/Festival/Views/festival-card.html'"></ng-include>
+    </div>
+    <div ng-if="IsLoading == false && Festivals.length == 0" class="col-xs-24 no-result">
+        <center>
+            <h2 style="margin-top: 50px; color:#FFF !important;">
+                No festivals were found at the moment.
+            </h2>
+            <h5 style="color:#FFF; margin-top: 20px;">
+                Please come back later, or try to modify your specifications.
+            </h5>
+            <p>
+                Please be aware that we need to collect data from festivals all over the world, so please come back later.
+            </p>
+        </center>
+        <div class="no-result-controls">
+            <center>
+                <a href="#" title="Back to calendar" class="btn btn-success" ng-if="ShowCancelSearch" ng-click="$event.preventDefault(); vm.init();">
+                    <i class="fa fa-times"></i> BACK TO CALENDAR
+                </a>
+                <a href="#" title="Restore to defaults" class="btn btn-danger" ng-click="$event.preventDefault(); vm.ClearFilters();">
+                    <i class="fa fa-refresh"></i> CLEAR ALL FILTERS
+                </a>
+            </center>
+        </div>
+    </div>
+    <div ng-if="IsLoading == true" class="col-xs-24">
+        <ng-include src="'/Scripts/Shared/Views/loader.html'" ng-if="IsLoading==true"></ng-include>
+    </div>
+</div>

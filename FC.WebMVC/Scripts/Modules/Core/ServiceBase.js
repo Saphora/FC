@@ -9,13 +9,13 @@ var FC;
                 this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
                 this.GetCompleted = new Object();
                 this.Config = new FC.Core.AppConfig();
-                this.Loading = FC.Shared.Util.LoadQueue.GetInstance();
+                // this.Loading = FC.Shared.Util.LoadQueue.GetInstance();
             }
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.Upload = function (url, files) {
                 var _this = this;
                 var vm = this;
                 url = $AppConfig.URLRoot + url;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var config = this.Config;
                 var vm = this;
                 var result;
@@ -35,15 +35,18 @@ var FC;
                     method: 'POST',
                     cache: false,
                 }).then(function (response) { return _this.handlerResponded(url, response, {}); });
+                result.then(function (r) {
+                    debugger;
+                });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.Get = function (url, params) {
                 var _this = this;
                 var vm = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var result;
                 if (vm.GetCompleted[url] == null || vm.GetCompleted[url] == true) {
                     vm.GetCompleted[url] == false;
@@ -54,7 +57,7 @@ var FC;
                             params: params
                         }).then(function (response) { return _this.handlerResponded(url, response, params); });
                         result.catch(function () {
-                            vm.Loading.TriggerFailure(url);
+                            // vm.Loading.TriggerFailure(url);
                         });
                     }
                     else {
@@ -62,7 +65,7 @@ var FC;
                             headers: $AppConfig.ServiceHeaders
                         }).then(function (response) { return _this.handlerResponded(url, response, params); });
                         result.catch(function () {
-                            vm.Loading.TriggerFailure(url);
+                            //vm.Loading.TriggerFailure(url);
                         });
                     }
                     return result;
@@ -75,7 +78,7 @@ var FC;
                 var _this = this;
                 var hdrs = {};
                 var prms = {};
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 if (params) {
                     prms = params;
                 }
@@ -89,13 +92,13 @@ var FC;
                     params: prms
                 }).then(function (response) { return _this.handlerRespondedRaw(response, params); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.GetRawTyped = function (url, params, headers) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var hdrs = {};
                 var prms = {};
                 var vm = this;
@@ -111,13 +114,13 @@ var FC;
                     params: prms
                 }).then(function (response) { return _this.handlerRespondedRaw(response, params); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.JSONP = function (url, params) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var result;
                 var vm = this;
                 url = $AppConfig.URLRoot + url;
@@ -133,13 +136,13 @@ var FC;
                     }).then(function (response) { return _this.handlerResponded(url, response, params); });
                 }
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.RawJSONP = function (url, params, headers) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var hdrs = {};
                 var prms = {};
                 var vm = this;
@@ -155,13 +158,13 @@ var FC;
                     params: prms
                 }).then(function (response) { return _this.handlerRespondedRaw(response, params); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.PostRaw = function (url, params, headers) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var vm = this;
                 var result;
                 var hdrs = {};
@@ -177,13 +180,13 @@ var FC;
                     params: prms
                 }).then(function (response) { return _this.handlerRespondedRaw(response, params); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.Post = function (url, svcMsg) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 url = $AppConfig.URLRoot + url;
                 var config = this.Config;
                 var vm = this;
@@ -195,14 +198,14 @@ var FC;
                     method: 'POST'
                 }).then(function (response) { return _this.handlerResponded(url, response, {}); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.handlerResponded = function (url, response, params) {
                 var vm = this;
                 vm.GetCompleted[url] = true;
-                vm.Loading.TriggerComplete(url["ReplaceAll"]($AppConfig.URLRoot, "")["ReplaceAll"]('/', ''));
+                //vm.Loading.TriggerComplete(url["ReplaceAll"]($AppConfig.URLRoot, "")["ReplaceAll"]('/', ''));
                 if (params && params.length > 0) {
                     response.Params = params;
                 }

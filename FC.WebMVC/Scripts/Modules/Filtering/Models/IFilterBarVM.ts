@@ -17,6 +17,8 @@
         DateString: number; //readonly
         Genres: FC.Shared.Models.UGenre[];
         Countries: FC.Shared.Models.UCountry[];
+        Artists: FC.Shared.Models.UArtist[];
+        Locations: FC.Shared.Models.Location[];
         CurrentYear: number;
         NextYear: number;
         PrevYear: number;

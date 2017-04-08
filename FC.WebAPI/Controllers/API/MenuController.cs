@@ -22,14 +22,14 @@ namespace FC.WebAPI.Controllers.API
         [HttpGet]
         public ServiceResponse<List<MenuSection>> GetMenu(string pageKey = "")
         {
-            return new ServiceResponse<List<MenuSection>>(repo.GetMenu(pageKey), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<MenuSection>>(repo.GetMenu(pageKey), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
 
         [HttpGet]
         public ServiceResponse<List<MenuItem>> GetBySectionID(Guid? sectionID)
         {
-            return new ServiceResponse<List<MenuItem>>(repo.GetBySectionID(sectionID), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<MenuItem>>(repo.GetBySectionID(sectionID), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet]
@@ -41,7 +41,7 @@ namespace FC.WebAPI.Controllers.API
                 throw new HttpException(404, "Page size invalid");
             }
             result = repo.GetPaged<MenuSection>(size, page, "MenuSections");
-            return new ServiceResponse<List<MenuSection>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<MenuSection>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet]
@@ -49,7 +49,7 @@ namespace FC.WebAPI.Controllers.API
         {
             List<MenuSection> result = new List<MenuSection>();
             result = repo.GetPaged<MenuSection>(50, page, "MenuSections");
-            return new ServiceResponse<List<MenuSection>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<MenuSection>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
 
@@ -57,18 +57,18 @@ namespace FC.WebAPI.Controllers.API
         [HttpGet]
         public ServiceResponse<int> GetPagedCount(string sortIndex, int page = 1)
         {
-            return new ServiceResponse<int>(repo.GetPagedCount<MenuSection>("MenuSections",page, sortIndex), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<int>(repo.GetPagedCount<MenuSection>("MenuSections",page, sortIndex), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<List<MenuSection>> GetAllSections()
         {
-            return new ServiceResponse<List<MenuSection>>(repo.GetAllSections(), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<MenuSection>>(repo.GetAllSections(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<List<MenuItem>> GetAllItems()
         {
-            return new ServiceResponse<List<MenuItem>>(repo.GetAllItems(), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<MenuItem>>(repo.GetAllItems(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         //[HttpOptions, HttpGet, HttpPost]
@@ -80,12 +80,12 @@ namespace FC.WebAPI.Controllers.API
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<MenuSection> GetByID(Guid? id)
         {
-            return new ServiceResponse<MenuSection>(repo.GetByID(id), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<MenuSection>(repo.GetByID(id), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<MenuItem> GetMenuItemByID(Guid? id)
         {
-            return new ServiceResponse<MenuItem>(repo.GetMenuItemByID(id), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<MenuItem>(repo.GetMenuItemByID(id), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpGet, HttpPost]

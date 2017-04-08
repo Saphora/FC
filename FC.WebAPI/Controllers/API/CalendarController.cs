@@ -41,7 +41,7 @@ namespace FC.WebAPI.Controllers.API
                 result.Add(index.ToString());
                 index++;
             }
-            return new ServiceResponse<List<string>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<string>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
     }
 }

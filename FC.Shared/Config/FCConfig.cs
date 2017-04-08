@@ -9,14 +9,76 @@ namespace FC.Shared.Config
 {
     public class FCConfig
     {
-       
+        public static List<string> Domains
+        {
+            get
+            {
+                int index = 1;
+                List<string> result = new List<string>();
+                while(index <= 100)
+                {
+                    if(ConfigurationManager.AppSettings.AllKeys.Contains("DOMAIN_"+index))
+                    {
+                        string val = ConfigurationManager.AppSettings["DOMAIN_" + index];
+                        result.Add(val);
+                        index++;
+                    } else
+                    {
+                        break;
+                    }
+                }
+                return result;
+            }
+        }
+
+        public static Guid UploadStateKey = Guid.Parse("4C3A3ADE-CCD0-4CAC-A46A-1E8410DDA79C");
         public static Guid FestivalMediaDir = Guid.Parse("5b778e5b-a1e4-40b4-a260-51d79890fafa");
         public static Guid UsersDirectoryID = Guid.Parse("52BAE06C-1EE7-4DED-B413-FB6FD1009AB0");
         public static Guid NewsDirectoryID = Guid.Parse("e55379cd-13e3-4180-8b68-07b82e0d6172");
         public static Guid ArtistsDirectoryID = Guid.Parse("bd808f49-dee0-4ec4-9024-dec2a716948a");
         public static Guid LocationsDirectoryID = Guid.Parse("186A264A-75A0-484A-A7F1-BF44B3A631F3");
+        
+        public static Guid? ANON_USER_ID {
+            get {
+                if (ConfigurationManager.AppSettings["ANON_USER_ID"] != null)
+                {
+                    return Guid.Parse(ConfigurationManager.AppSettings["ANON_USER_ID"]);
+                }
+                else
+                {
+                    throw new Exception("Application setting ANON_USER_ID was not found. Check your Web/App.config files.");
+                }
+            }
+        }
 
-
+        public static string MEDIA_ROOT
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["MEDIA_ROOT"] != null)
+                {
+                    return ConfigurationManager.AppSettings["MEDIA_ROOT"];
+                }
+                else
+                {
+                    throw new Exception("Application setting MEDIA_ROOT was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+        public static string DEFAULT_THUMB
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["DEFAULT_THUMB"] != null)
+                {
+                    return ConfigurationManager.AppSettings["DEFAULT_THUMB"];
+                }
+                else
+                {
+                    throw new Exception("Application setting DEFAULT_THUMB was not found. Check your Web/App.config files.");
+                }
+            }
+        }
         public static string MEDIA_ROOT_ID
         {
             get
@@ -28,6 +90,35 @@ namespace FC.Shared.Config
                 else
                 {
                     throw new Exception("Application setting MEDIA_ROOT_ID was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string RECAPTCHA_PUBLIC
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["RECAPTCHA_PUBLIC"] != null)
+                {
+                    return ConfigurationManager.AppSettings["RECAPTCHA_PUBLIC"];
+                }
+                else
+                {
+                    throw new Exception("Application setting RECAPTCHA_PUBLIC was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+        public static string RECAPTCHA_PRIVATE
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["RECAPTCHA_PRIVATE"] != null)
+                {
+                    return ConfigurationManager.AppSettings["RECAPTCHA_PRIVATE"];
+                }
+                else
+                {
+                    throw new Exception("Application setting RECAPTCHA_PRIVATE was not found. Check your Web/App.config files.");
                 }
             }
         }

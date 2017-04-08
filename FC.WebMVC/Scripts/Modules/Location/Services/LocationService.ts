@@ -17,6 +17,9 @@ module FC.Modules.Location.Services {
         public GetList(): ng.IPromise<INT.IServiceResponse<IList<MODELS.Location>>> {
             return this.Get<IList<MODELS.Location>>('/API/Location/GetList');
         }
+        public GetByID(id:string): ng.IPromise<INT.IServiceResponse<MODELS.Location>> {
+            return this.Get<MODELS.Location>('/API/Location/GetByID?id='+id);
+        }
 
         public Search(keyword: string): ng.IPromise<INT.IServiceResponse<IList<MODELS.Location>>> {
             return this.Get<IList<MODELS.Location>>('/API/Location/GetByPartialName?name=' + keyword);

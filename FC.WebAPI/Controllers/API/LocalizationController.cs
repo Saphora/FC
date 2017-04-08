@@ -35,7 +35,7 @@ namespace FC.WebAPI.Controllers.API
         public ServiceResponse<UserLocalization> GetLocaleInfo()
         {
             UserLocalization locale = new UserLocalization(CultureInfo.CurrentCulture, RegionInfo.CurrentRegion);
-            return new ServiceResponse<UserLocalization>(locale, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<UserLocalization>(locale, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
     }
 }

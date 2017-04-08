@@ -50,19 +50,37 @@ module FC.Modules.Filtering.Controllers {
             vm.$scope.Close = this.Close;
             vm.$scope.Reset = this.Reset;
             vm.$scope.MtModal = $mdDialog;
-            vm.SetGenreList();
-            if (vm.$scope.MemReg.Get("ActiveCountries")) {
-                vm.$scope.inst.$scope.SelectedCountries = vm.$scope.MemReg.Get<Array<MODELS.UCountry>>("ActiveCountries");
-            } else {
-                vm.$scope.SelectedCountries = new Array<MODELS.UCountry>();
-                if (CacheManager.Contains("ActiveCountries")) {
-                    vm.$scope.inst.$scope.SelectedCountries = CacheManager.Get<Array<MODELS.UCountry>>("ActiveCountries").data;
-                }
+            vm.$scope.SelectedCountries = new Array<MODELS.UCountry>();
+            var userID = CacheManager.GetCookieValue("UserID");
+            if (CacheManager.Contains("ActiveCountries")) {
+                vm.$scope.inst.$scope.SelectedCountries = CacheManager.Get<Array<MODELS.UCountry>>("ActiveCountries").data;
             }
+
+            if (userID) {
+                vm.FavoriteService.GetUserFavorites(userID, Shared.Enum.InternalContentType.Country).then(function (r) {
+                    r.Data.forEach(function (v, k) {
+                        if (v.Content) {
+                            var any = vm.$scope.SelectedCountries.some(function (country, k) {
+                                return country.CountryID == v.ContentID
+                            });
+                            if (any == false) {
+                                vm.$scope.SelectedCountries.push(v.Content as MODELS.UCountry);
+                            }
+                        }
+                    });
+                    CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedCountries, 9999999999);
+                });
+            }
+            vm.SetCountryList();
             vm.$scope.IsActive = this.IsActive;
-            vm.$scope.Selected = "0 SELECTED";
-            if (vm.$scope.SelectedCountries != null) {
-                vm.$scope.Selected = this.$scope.SelectedCountries.length + " SELECTED";
+            if (vm.$scope.SelectedCountries.length == 1) {
+                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
+            } else {
+                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRIES SELECTED";
+            }
+
+            if (vm.$scope.SelectedCountries.length == 0) {
+                vm.$scope.Selected = "SELECT COUNTRIES";
             }
             //this.RecoverModel(this.$scope.model, this.$scope);
             vm.$scope.IsLoading = false;
@@ -117,7 +135,7 @@ module FC.Modules.Filtering.Controllers {
                 });
                 return isactive;
             } else {
-                return false;
+
             }
         }
 
@@ -138,11 +156,20 @@ module FC.Modules.Filtering.Controllers {
 
                 CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 999999999999999);
             }
-            vm.$scope.Selected = vm.$scope.SelectedCountries.length + " SELECTED";
+            if (vm.$scope.SelectedCountries.length == 1) {
+                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
+            } else {
+                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRIES SELECTED";
+            }
+
+            if (vm.$scope.SelectedCountries.length == 0) {
+                vm.$scope.Selected = "SELECT COUNTRIES";
+            }
             vm.$scope.model.Countries = vm.$scope.SelectedCountries;
+            vm.Save();
         }
 
-        public SetGenreList(): void {
+        public SetCountryList(): void {
             var vm = this;
             vm.CountriesSvc.GetAll().then(function (r: INT.IServiceResponse<MODELS.UCountry[]>) {
                 vm.$scope.SysCountries = r.Data;

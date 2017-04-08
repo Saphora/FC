@@ -1,5 +1,6 @@
 ﻿using FC.Shared.Entities;
 using FC.Shared.ViewModels.Date;
+using FC.Shared.ViewModels.Rating;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,8 +13,12 @@ namespace FC.Shared.ViewModels.Festival
     public class FestivalVM
     { 
         public FestivalVM() { }
-        public FestivalVM(UFestival f)
+        public FestivalVM(UFestival f, RatingVm rating = null)
         {
+            if (rating != null)
+            {
+                this.Rating = rating;
+            }
             this.FestivalID = f.FestivalID;
             if (f.DayCount > 1)
             {
@@ -50,6 +55,7 @@ namespace FC.Shared.ViewModels.Festival
             this.Name = f.Name;
             this.URL = f.URL;
             if (f.Country != null) {
+                this.Country = f.Country;
                 if (f.Country.Name.Length >= 12)
                 {
                     this.CountryName = f.Country.Name.Substring(0, 9) + "...";
@@ -98,14 +104,19 @@ namespace FC.Shared.ViewModels.Festival
                 this.StartDateExplosion = new DateVM(f.StartDate);
                 this.EndDateExplosion = new DateVM(f.EndDate);
             }
+            this.IsPublished = f.IsPublished;
+            this.CountryID = f.CountryID;
+            
         }
         public string City { get; set; }
+        public Guid? CountryID { get; set; }
         public UCountry Country { get; set; }
         public string CountryName { get; set; }
         public DateVM StartDateExplosion { get; }
         public DateVM EndDateExplosion { get; }
         public string Location { get; set; }
         public Guid? FestivalID { get; set; }
+        public RatingVm Rating { get; set; }
         public string DateString { get; set; }
         public string Daycount { get; set; }
         public List<UGenre> Genres { get; set; }
@@ -123,6 +134,7 @@ namespace FC.Shared.ViewModels.Festival
         public string FlickrURL { get; set; }
         public string InstagramURL { get; set; }
         public int OrderDate { get; set; }
+        public bool IsPublished { get; set; }
 
     }
 }

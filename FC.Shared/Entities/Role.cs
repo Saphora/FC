@@ -13,7 +13,6 @@ namespace FC.Shared.Entities
         public Role()
         {
             Permissions = new List<Permission>();
-            this.Name = "Hello word";
         }
         
         [Key]

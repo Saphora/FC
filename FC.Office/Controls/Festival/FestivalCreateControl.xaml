@@ -27,6 +27,7 @@
                 <RowDefinition MaxHeight="30"></RowDefinition>
                 <RowDefinition MaxHeight="30"></RowDefinition>
                 <RowDefinition MaxHeight="30"></RowDefinition>
+                <RowDefinition MaxHeight="30"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MaxWidth="100"></ColumnDefinition>
@@ -73,7 +74,10 @@
                 <ComboBoxItem>100K+</ComboBoxItem>
             </ComboBox>
 
-            <Button x:Name="button" Content="Save" Grid.Column="1" HorizontalAlignment="Left"  Grid.Row="10" VerticalAlignment="Top" Width="75" Margin="3" Click="DoSaveFestival"/>
+            <Label Tag="Visitors" Grid.Row="10" Grid.Column="0" HorizontalAlignment="Right">Published?</Label>
+            <CheckBox x:Name="IsPublishedCheck" Grid.Row="10" Grid.Column="1" IsChecked="{Binding IsPublished, Mode=TwoWay}"></CheckBox>
+
+            <Button x:Name="button" Content="Save" Grid.Column="1" HorizontalAlignment="Left"  Grid.Row="11" VerticalAlignment="Top" Width="75" Margin="3" Click="DoSaveFestival"/>
         </Grid>
         <Media:MediaPicker x:Name="MediaPickerCtrl" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" />
     </Grid>

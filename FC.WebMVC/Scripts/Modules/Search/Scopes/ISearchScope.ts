@@ -3,6 +3,7 @@
         DoSearch: Function;
         DoSubmit: Function;
         OpenModal: Function;
+        Completed: boolean;
         Keyword: string;
         URLRoot: string;
         ActiveCountries: Array<number>;

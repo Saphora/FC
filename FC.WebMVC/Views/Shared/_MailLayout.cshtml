@@ -27,9 +27,14 @@
     <link rel="icon" type="image/png" href="https://festival-calendar.nl//favicon-16x16.png" sizes="16x16" />
     <link rel="manifest" href="https://festival-calendar.nl//manifest.json" />
     <link rel="mask-icon" href="https://festival-calendar.nl//safari-pinned-tab.svg" color="#5bbad5" />
-    @RenderSection("STYLE")
-</head>
-<body>
-    @RenderBody()
-</body>
+    <meta charset="utf-8" /> <!-- utf-8 works for most cases -->
+    <meta name="viewport" content="width=device-width" /> <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Use the latest (edge) version of IE rendering engine -->
+    <meta name="x-apple-disable-message-reformatting" />  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+        @RenderSection("Style")
+
+    </head>
+    <body width="100%" bgcolor="#222222" style="margin: 0; mso-line-height-rule: exactly;">
+        @RenderBody()
+    </body>
 </html>

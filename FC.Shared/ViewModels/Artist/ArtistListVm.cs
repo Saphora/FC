@@ -10,6 +10,7 @@ namespace FC.Shared.ViewModels.Artist
 {
     public class ArtistListVm : BaseModel
     {
+
         public Guid ArtistID { get; set; }
         public Media Thumbnail { get; set; }
         public string CountryName { get; set; }

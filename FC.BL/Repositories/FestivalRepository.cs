@@ -6,6 +6,7 @@ using FC.Shared.Entities;
 using FC.Shared.ServerMessages;
 using FC.Shared.ViewModels.Date;
 using FC.Shared.ViewModels.Festival;
+using FC.Shared.ViewModels.Rating;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,11 +28,28 @@ namespace FC.BL.Repositories
         {
             List<UFestival> festivals;
 
-            using (Db = new PGDAL.PGModel.ContentModel()) {
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
                 festivals = Db.Festivals.OrderBy(o => o.Name).ToList();
             }
 
             return festivals;
+        }
+
+        public List<UFestival> GetByUser(Guid? author)
+        {
+            List<UFestival> result = new List<UFestival>();
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
+                result =  Db.Festivals.Where(w => w.AuthorID == author.Value).OrderBy(o => o.Name).ToList();
+            }
+            return result;
+        }
+
+        public IQueryable<UFestival> ToQueryable()
+        {
+            Db = new PGDAL.PGModel.ContentModel();
+            return Db.Festivals.AsQueryable<UFestival>();
         }
 
         public List<UFestival> GetAllWithGenres()
@@ -78,16 +96,22 @@ namespace FC.BL.Repositories
                 }
                 foreach (var f in result)
                 {
-                    f.StartDateExplosion = new DateVM(f.StartDate);
-                    f.EndDateExplosion = new DateVM(f.EndDate);
-
                     if (f.Country == null)
                     {
                         f.Country = Db.Countries.Find(f.CountryID);
                     }
                 }
             }
-            return result.OrderBy(o => o.StartDate).ToList();
+            
+            var festivals =  result.OrderBy(o => o.StartDate).ToList();
+            using (Db = new PGDAL.PGModel.ContentModel())
+            {
+                foreach (UFestival f in festivals)
+                {
+                    f.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).OrderBy(o => o.Name).ToList();
+                }
+            }
+            return festivals;
         }
 
         public UFestival GetByID(Guid? id)
@@ -131,79 +155,100 @@ namespace FC.BL.Repositories
             return f;
         }
 
+        private List<UFestival> mergeResult(List<UFestival> result, List<UFestival> query)
+        {
+            foreach(UFestival f in query)
+            {
+                if(!result.Select(s=>s.FestivalID).Contains(f.FestivalID))
+                {
+                    result.Add(f);
+                }
+            }
+            return result;
+        }
         public List<FestivalVM> GetFilteredFestival(FC.Shared.ServerMessages.FestivalFilter filter)
         {
             List<UFestival> result = new List<UFestival>();
             List<UFestival> tmpList = new List<UFestival>();
             List<FestivalVM> vmResult = new List<FestivalVM>();
+            if (filter.YearNum == -1)
+            {
+                filter.YearNum = DateTime.Now.Year;
+            }
+            if (filter.MonthNum == -1)
+            {
+                filter.MonthNum = DateTime.Now.Month;
+            }
+
             using (Db = new PGDAL.PGModel.ContentModel())
             {
-                if (filter.CountryIDs == null)
+                bool none = true;
+                if (filter.GenreIDs != null)
                 {
-                    filter.CountryIDs = new List<Guid?>();
+                    if (filter.GenreIDs.Count > 0) {
+                        none = false;
+                        List<UFestival> g2f = Db.G2F.Where(w => filter.GenreIDs.Contains(w.GenreID)).Select(s => s.Festival).Distinct().ToList();
+                        tmpList = this.mergeResult(tmpList, g2f);
+                    }
                 }
-                if (filter.GenreIDs == null)
+                if(filter.LocationIDs != null)
                 {
-                    filter.GenreIDs = new List<Guid?>();
-                }
-                if (filter.GenreIDs.Count() > 0 && filter.CountryIDs.Count() == 0)
-                {
-                    result = Db.Festivals.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum).ToList();
-                    foreach (UFestival f in result)
+                    if (filter.LocationIDs.Count > 0)
                     {
-                        UFestival tmp = f;
-                        tmp.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).ToList();
-                        if (tmp.Genres.Select(s => s).Where(w => filter.GenreIDs.Contains(w.GenreID)).Any())
+                        none = false;
+                        List<UFestival> fl = Db.Festivals.Where(w => filter.LocationIDs.Contains(w.FestivalLocationID)).Distinct().ToList();
+                        tmpList = this.mergeResult(tmpList, fl);
+                    }
+                }
+                if(filter.ArtistIDs != null)
+                {
+                    if (filter.ArtistIDs.Count > 0)
+                    {
+                        none = false;
+                        List<UFestival> a2f = Db.A2F.Where(w => filter.ArtistIDs.Contains(w.ArtistID)).Select(s => s.Festival).Distinct().ToList();
+                        tmpList = this.mergeResult(tmpList, a2f);
+                    }
+                }
+                if (filter.CountryIDs != null)
+                {
+                    if (filter.CountryIDs.Count > 0)
+                    {
+                        none = false;
+                        List<UFestival> c2f;
+
+                        if (tmpList.Count == 0)
                         {
-                            tmpList.Add(tmp);
+                            c2f = Db.Festivals.Where(w => filter.CountryIDs.Contains(w.CountryID)).Distinct().ToList();
+                            tmpList = this.mergeResult(tmpList, c2f);
+                        }
+                        else
+                        {
+                            tmpList = tmpList.Where(w =>filter.CountryIDs.Contains(w.CountryID)).Distinct().ToList();
                         }
                     }
                 }
-                else if (filter.GenreIDs.Count() > 0 && filter.CountryIDs.Count() > 0)
+
+                if(none)
                 {
-                    result = Db.Festivals.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum && filter.CountryIDs.Contains(w.CountryID)).ToList();
-                    foreach (UFestival f in result)
-                    {
-                        UFestival tmp = f;
-                        tmp.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).ToList();
-                        if (tmp.Genres.Select(s => s).Where(w => filter.GenreIDs.Contains(w.GenreID)).Any())
-                        {
-                            tmpList.Add(tmp);
-                        }
-                    }
+                    tmpList = Db.Festivals.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum).ToList();
                 }
-                else if (filter.GenreIDs.Count() == 0 && filter.CountryIDs.Count() > 0)
+
+                if (filter.MonthNum >= 1 && filter.MonthNum <=12)
                 {
-                    result = Db.Festivals.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum && filter.CountryIDs.Contains(w.CountryID)).ToList();
-                    foreach (UFestival f in result)
-                    {
-                        UFestival tmp = f;
-                        tmp.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).ToList();
-                        tmpList.Add(tmp);
-                    }
-                }
-                else if (filter.GenreIDs.Count() == 0 && filter.CountryIDs.Count() == 0)
+                    tmpList = tmpList.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum).Take(50).ToList();
+                } else
                 {
-                    if (filter.MonthNum == 0 || filter.YearNum == 0)
-                    {
-                        throw new Exception("Invalid year or month specified");
-                    }
-                    else
-                    {
-                        result = Db.Festivals.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum).ToList();
-                        foreach (UFestival f in result)
-                        {
-                            UFestival tmp = f;
-                            tmp.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).ToList();
-                            tmpList.Add(tmp);
-                        }
-                    }
+                    tmpList = tmpList.Where(w => w.StartDate >= DateTime.Now && w.StartDate <= DateTime.Now.AddDays(30)).Take(50).ToList();
                 }
-                else
+                vmResult = new List<FestivalVM>();
+                foreach(UFestival f in tmpList)
                 {
-                    throw new Exception("Cannot filter festivals because none of the filter parameters was specified.");
+                    f.Country = RepositoryContext.GetInstance().Countries.GetByID(f.CountryID);
+                    f.Genres = RepositoryContext.GetInstance().Genres.GetByFestivalID(f.FestivalID);
+                    RatingVm r = RepositoryContext.GetInstance().Rating.GetRating(f.FestivalID, "festival");
+                    FestivalVM vm = new FestivalVM(f,r);
+                    vmResult.Add(vm);
                 }
-                vmResult = (from f in tmpList.OrderBy(o => o.StartDate) select new FestivalVM(f)).ToList();
             }
             return vmResult.OrderBy(o => o.StartDateExplosion.Day).ThenBy(o=>o.StartDateExplosion.Month).ThenBy(o=>o.StartDateExplosion.Y4).ToList();
         }
@@ -216,14 +261,24 @@ namespace FC.BL.Repositories
             using (Db = new PGDAL.PGModel.ContentModel())
             {
                 result.AddRange(Db.A2F.Where(w => w.Artist.Name.ToLower().Contains(keyword)).Select(s => s.Festival));
-                result.AddRange(Db.G2F.Include("Genres").Where(w => w.Festival.Name.ToLower().Contains(keyword) || w.Festival.Country.Name.ToLower().Contains(keyword) || w.Festival.City.Contains(keyword) || w.Genre.Name.ToLower().Contains(keyword)).Select(s => s.Festival));
+                result.AddRange(Db.G2F.Include("Genres").Where(w => w.Genre.Name.ToLower().Contains(keyword)).Select(s => s.Festival).Distinct());
+                result.AddRange(Db.Festivals.Where(w => w.City.ToLower().Contains(keyword) || 
+                                                        w.Name.ToLower().Contains(keyword) || 
+                                                        w.Country.Name.ToLower().Contains(keyword) || 
+                                                        w.ZIPCode.Contains(keyword)).Distinct());
+
                 foreach (UFestival f in result)
                 {
-                    f.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).OrderBy(o => o.Name).ToList();
+                    f.Country = Db.Countries.Find(f.CountryID);
+                    f.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).Distinct().OrderBy(o => o.Name).ToList();
                     ret.Add(f);
                 }
             }
-            return ret.Distinct().Select(s => new FestivalVM(s)).OrderBy(o => o.OrderDate).ToList();
+            return ret.Distinct().Select(s => new FestivalVM(s))
+                .OrderBy(o => o.StartDateExplosion.Day)
+                .ThenBy(o => o.StartDateExplosion.Month)
+                .ThenBy(o => o.StartDateExplosion.Y4)
+                .ToList();
         }
         
 
@@ -233,88 +288,112 @@ namespace FC.BL.Repositories
             {
                 using (Db = new PGDAL.PGModel.ContentModel())
                 {
-                    List<UFestival> tmpList = Db.Festivals.Where(w => w.CountryID == fest.CountryID).Take(1000).ToList();
-
-
-                    if (!tmpList.Where(w => w.Name.ToLower() == fest.Name.ToLower() && w.StartDate.Year == fest.StartDate.Year && w.StartDate.Month == fest.StartDate.Month && w.StartDate.Day == fest.StartDate.Day).Any())
+                    fest.FestivalID = Guid.NewGuid();
+                    if (fest.Tickets != null)
                     {
-                        fest.FestivalID = Guid.NewGuid();
-                        if (fest.Tickets != null)
+                        if (fest.Tickets.Count > 0)
                         {
-                            if (fest.Tickets.Count > 0)
+                            foreach (Ticket t in fest.Tickets)
                             {
-                                foreach (Ticket t in fest.Tickets)
-                                {
-                                    Db.T2F.Add(new Ticket2Festival() { FestivalID = fest.FestivalID, TicketID = t.TicketID, T2FID = Guid.NewGuid() });
-                                }
-                            }
-
-                        }
-                        if (fest.SocialProfiles != null)
-                        {
-                            if (fest.SocialProfiles.Count > 0)
-                            {
-                                foreach (SocialProfile t in fest.SocialProfiles)
-                                {
-                                    t.GenericID = fest.FestivalID;
-                                    t.ContentType = Shared.Enum.SocialMediaBindableType.Festival;
-                                    Db.SocialProfiles.Add(t);
-                                }
+                                Db.T2F.Add(new Ticket2Festival() { FestivalID = fest.FestivalID, TicketID = t.TicketID, T2FID = Guid.NewGuid() });
                             }
                         }
 
-                        if (fest.Genres != null)
+                    }
+                    if (fest.SocialProfiles != null)
+                    {
+                        if (fest.SocialProfiles.Count > 0)
                         {
-                            if (fest.Genres.Count > 0)
+                            foreach (SocialProfile t in fest.SocialProfiles)
                             {
-                                List<UGenre2UFestival> g2f = (from g in fest.Genres select new UGenre2UFestival { G2FID = Guid.NewGuid(), FestivalID = fest.FestivalID, GenreID = g.GenreID }).ToList();
-                                Db.G2F.AddRange(g2f);
+                                t.GenericID = fest.FestivalID;
+                                t.ContentType = Shared.Enum.SocialMediaBindableType.Festival;
+                                Db.SocialProfiles.Add(t);
                             }
                         }
-                        fest.IsPublished = false;
-                        fest.Created = DateTime.Now;
-                        if (fest.AuthorID == null)
+                    }
+
+                    if (fest.Genres != null)
+                    {
+                        if (fest.Genres.Count > 0)
                         {
-                            fest.AuthorID = AuthorizationRepository.Current.CurrentUser.UserID;
+                            List<UGenre2UFestival> g2f = (from g in fest.Genres select new UGenre2UFestival { G2FID = Guid.NewGuid(), FestivalID = fest.FestivalID, GenreID = g.GenreID }).ToList();
+                            Db.G2F.AddRange(g2f);
                         }
-                        fest.URL = string.Format("/Festival/{0}", fest.Name);
-                        List<IValidationError> errors = this.Validate<UFestival>(fest);
-                        if (fest.EndDate == DateTime.MinValue)
+                    }
+                    fest.IsPublished = false;
+                    fest.Created = DateTime.Now;
+                    if (fest.AuthorID == null)
+                    {
+                        fest.AuthorID = AuthorizationRepository.Current.CurrentUser.UserID;
+                    }
+                    fest.URL = string.Format("/Festival/{0}", fest.Name);
+                    List<IValidationError> errors = this.Validate<UFestival>(fest);
+                    if (fest.EndDate == DateTime.MinValue)
+                    {
+                        errors.Add(new ValidationError { Fieldname = "EndDate", Message = "The field End date is required but empty." });
+                    }
+                    if (fest.StartDate == DateTime.MinValue)
+                    {
+                        errors.Add(new ValidationError { Fieldname = "StartDate", Message = "The field Start date is required but empty." });
+                    }
+                    if (fest.EndDate < fest.StartDate)
+                    {
+                        errors.Add(new ValidationError { Fieldname = "EndDate", Message = "The field End date is before start date." });
+                    }
+                    if (errors.Count() == 0)
+                    {
+                        fest.Country = null;
+                        fest.FestivalLocation = null;
+                        fest.Genres = null;
+                        fest.Tickets = null;
+                        fest.SocialProfiles = null;
+                        MediaDirectory album = new MediaDirectory { Created = DateTime.Now, AuthorID = fest.AuthorID, DirectoryID = Guid.NewGuid(), Name = fest.Name, ParentID = Guid.Parse("1c9f99e9-1ff2-4eef-9f94-25b400340fba") };
+                        Db.MediaDirectories.Add(album);
+                        if (!System.IO.Directory.Exists(FCConfig.MEDIA_ROOT + album.DirectoryID.Value.ToString()))
                         {
-                            errors.Add(new ValidationError { Fieldname = "EndDate", Message = "The field End date is required but empty." });
+                            System.IO.Directory.CreateDirectory(FCConfig.MEDIA_ROOT + album.DirectoryID.Value.ToString());
                         }
-                        if (fest.StartDate == DateTime.MinValue)
-                        {
-                            errors.Add(new ValidationError { Fieldname = "StartDate", Message = "The field Start date is required but empty." });
-                        }
-                        if (fest.EndDate < fest.StartDate)
-                        {
-                            errors.Add(new ValidationError { Fieldname = "EndDate", Message = "The field End date is before start date." });
-                        }
-                        if (errors.Count() == 0)
-                        {
-                            fest.Country = null;
-                            fest.FestivalLocation = null;
-                            fest.Genres = null;
-                            fest.Tickets = null;
-                            fest.SocialProfiles = null;
-                            MediaDirectory album = new MediaDirectory { Created = DateTime.Now, AuthorID = fest.AuthorID, DirectoryID = Guid.NewGuid(), Name = fest.Name, ParentID = Guid.Parse("1c9f99e9-1ff2-4eef-9f94-25b400340fba") };
-                            Db.MediaDirectories.Add(album);
-                            fest.MediaDirectoryID = album.DirectoryID;
-                            Db.Festivals.Add(fest);
-                            Db.SaveChanges();
-                            return new RepositoryState { AffectedID = fest.FestivalID, SUCCESS = true, MSG = $"Festival {fest.Name} successfully created." };
-                        }
-                        else
-                        {
-                            return this.HandleValidationErrors(errors);
-                        }
+                        fest.MediaDirectoryID = album.DirectoryID;
+                        Db.Festivals.Add(fest);
+                        Db.SaveChanges();
+                        return new RepositoryState { AffectedID = fest.FestivalID, SUCCESS = true, MSG = $"Festival {fest.Name} successfully created." };
                     }
                     else
                     {
-                        return new RepositoryState { EXISTS = true, MSG = $"Festival {fest.Name} already exists." };
+                        return this.HandleValidationErrors(errors);
                     }
                 }
+            }
+            catch (DbEntityValidationException ex)
+            {
+                return new RepositoryState() { ValidationEx = ex, DBERROR = true, MSG = "Internal server error. Please try again later." };
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryState() { Exception = ex, DBERROR = true, MSG = "Internal server error. Please try again later." };
+            }
+        }
+
+        public RepositoryState ToggleGenre(Guid? festivalID, Guid? genreID)
+        {
+            try
+            {
+                List<UGenre> festGenres = new List<UGenre>();
+                using (Db = new PGDAL.PGModel.ContentModel())
+                {
+                    if (Db.G2F.Where(w => w.GenreID == genreID && w.FestivalID == festivalID).Any())
+                    {
+                        Db.G2F.Remove(Db.G2F.Where(w => w.GenreID == genreID && w.FestivalID == festivalID).FirstOrDefault());
+                    }
+                    else
+                    {
+                        Db.G2F.Add(new UGenre2UFestival { G2FID = Guid.NewGuid(), FestivalID = festivalID, GenreID = genreID });
+                    }
+                    Db.SaveChanges();
+                    festGenres = Db.G2F.Where(w => w.FestivalID == festivalID).Select(s => s.Genre).OrderBy(o => o.Name).ToList();
+                }
+                return new RepositoryState { AffectedID = festivalID, SUCCESS = true, MSG = $"OK", Data = festGenres };
             }
             catch (DbEntityValidationException ex)
             {
@@ -341,28 +420,76 @@ namespace FC.BL.Repositories
                     {
                         f.AuthorID = fest.AuthorID;
                     }
-                    f.City = fest.City;
-                    f.CountryID = fest.CountryID;
+                    if (fest.City != null)
+                    {
+                        f.City = fest.City;
+                    }
+                    if (fest.CountryID != null)
+                    {
+                        f.CountryID = fest.CountryID;
+                    }
+                    if(fest.ZIPCode != null)
+                    {
+                        f.ZIPCode = fest.ZIPCode;
+                    }
                     f.IsDeleted = false;
-                    f.Description = fest.Description;
-                    f.EndDate = fest.EndDate;
-                    f.IndoorOutdoor = fest.IndoorOutdoor;
-                    f.IsPublished = false;
-                    f.IsSoldOut = fest.IsSoldOut;
-                    f.LogoID = fest.LogoID;
-                    f.MetaDescription = fest.MetaDescription;
-                    f.MetaKeys = fest.MetaKeys;
+                    if (fest.Description != null)
+                    {
+                        f.Description = fest.Description;
+                    }
+                    if (fest.EndDate != null && fest.EndDate.Year > 2000)
+                    {
+                        f.EndDate = fest.EndDate;
+                    }
+                    if (fest.IndoorOutdoor != null)
+                    {
+                        f.IndoorOutdoor = fest.IndoorOutdoor;
+                    }
+                    f.IsPublished = fest.IsPublished;
+                    if (fest.IsSoldOut != null)
+                    {
+                        f.IsSoldOut = fest.IsSoldOut;
+                    }
+                    if (fest.LogoID != null)
+                    {
+                        f.LogoID = fest.LogoID;
+                    }
+                    if (fest.MetaDescription != null)
+                    {
+                        f.MetaDescription = fest.MetaDescription;
+                    }
+                    if (fest.MetaKeys != null)
+                    {
+                        f.MetaKeys = fest.MetaKeys;
+                    }
+                    
                     f.ModifiedDate = DateTime.Now;
-                    f.Name = fest.Name;
-                    f.StartDate = fest.StartDate;
-                    f.OrderDate = fest.StartDate.Ticks;
-                    f.FestivalLocationID = fest.FestivalLocationID;
-                    f.ProfileImageID = fest.ProfileImageID;
-                    f.URL = string.Format("/Festival/{0}", fest.Name);
-                    f.Visitors = fest.Visitors;
-                    f.Title = fest.Name;
-
-
+                    if (fest.Name != null)
+                    {
+                        f.Name = fest.Name;
+                    }
+                    if (fest.StartDate != null && fest.StartDate.Year > 2000)
+                    {
+                        f.StartDate = fest.StartDate;
+                        f.OrderDate = fest.StartDate.Ticks;
+                    }
+                    if (fest.FestivalLocationID != null)
+                    {
+                        f.FestivalLocationID = fest.FestivalLocationID;
+                    }
+                    if (fest.ProfileImageID != null)
+                    {
+                        f.ProfileImageID = fest.ProfileImageID;
+                    }
+                    if (fest.Name != null)
+                    {
+                        f.URL = string.Format("/Festival/{0}", fest.Name);
+                        f.Title = fest.Name;
+                    }
+                    if (fest.Visitors != null)
+                    {
+                        f.Visitors = fest.Visitors;
+                    }
                     if (fest.Tickets != null)
                     {
                         if (fest.Tickets.Count > 0)
@@ -516,3 +643,58 @@ namespace FC.BL.Repositories
         }
     }
 }
+
+
+//if (filter.GenreIDs.Count() > 0 && filter.CountryIDs.Count() == 0)
+//{
+//    result = Db.Festivals.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum).ToList();
+//    foreach (UFestival f in result)
+//    {
+//        UFestival tmp = f;
+//        tmp.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).ToList();
+//        if (tmp.Genres.Select(s => s).Where(w => filter.GenreIDs.Contains(w.GenreID)).Any())
+//        {
+//            tmpList.Add(tmp);
+//        }
+//    }
+//}
+//else if (filter.GenreIDs.Count() > 0 && filter.CountryIDs.Count() > 0)
+//{
+//    result = Db.Festivals.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum && filter.CountryIDs.Contains(w.CountryID)).ToList();
+//    foreach (UFestival f in result)
+//    {
+//        UFestival tmp = f;
+//        tmp.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).ToList();
+//        if (tmp.Genres.Select(s => s).Where(w => filter.GenreIDs.Contains(w.GenreID)).Any())
+//        {
+//            tmpList.Add(tmp);
+//        }
+//    }
+//}
+//else if (filter.GenreIDs.Count() == 0 && filter.CountryIDs.Count() > 0)
+//{
+//    result = Db.Festivals.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum && filter.CountryIDs.Contains(w.CountryID)).ToList();
+//    foreach (UFestival f in result)
+//    {
+//        UFestival tmp = f;
+//        tmp.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).ToList();
+//        tmpList.Add(tmp);
+//    }
+//}
+//else if (filter.GenreIDs.Count() == 0 && filter.CountryIDs.Count() == 0)
+//{
+//    if (filter.MonthNum == 0 || filter.YearNum == 0)
+//    {
+//        throw new Exception("Invalid year or month specified");
+//    }
+//    else
+//    {
+//        result = Db.Festivals.Where(w => w.StartDate.Month == filter.MonthNum && w.StartDate.Year == filter.YearNum).ToList();
+//        foreach (UFestival f in result)
+//        {
+//            UFestival tmp = f;
+//            tmp.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).ToList();
+//            tmpList.Add(tmp);
+//        }
+//    }
+//}

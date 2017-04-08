@@ -35,7 +35,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>38</ApplicationRevision>
+    <ApplicationRevision>44</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -192,6 +192,16 @@
     <Compile Include="Controls\Files\FileUploadControl.xaml.cs">
       <DependentUpon>FileUploadControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Countries\CountryCreate.xaml.cs">
+      <DependentUpon>CountryCreate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Countries\CountryGrid.xaml.cs">
+      <DependentUpon>CountryGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Countries\CountryViewControl.xaml.cs">
+      <DependentUpon>CountryViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Countries\Models\CountryContext.cs" />
     <Compile Include="Controls\Genres\GenreCreate.xaml.cs">
       <DependentUpon>GenreCreate.xaml</DependentUpon>
     </Compile>
@@ -281,6 +291,18 @@
     <Page Include="Controls\Files\FileUploadControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Countries\CountryCreate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Countries\CountryGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Countries\CountryViewControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Genres\GenreCreate.xaml">
       <SubType>Designer</SubType>

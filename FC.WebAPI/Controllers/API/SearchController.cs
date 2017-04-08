@@ -39,7 +39,7 @@ namespace FC.WebAPI.Controllers.API
             
             List<FestivalVM> tmp = new List<FestivalVM>();
             tmp = FR.Search(filter.Data.Keyword);
-            return new ServiceResponse<List<FestivalVM>>(tmp, HttpStatusCode.OK, "Search-SUCCESS");
+            return new ServiceResponse<List<FestivalVM>>(tmp, HttpStatusCode.OK, "Search-SUCCESS", this.Repositories.Auth.ActiveToken);
         }
     }
 }

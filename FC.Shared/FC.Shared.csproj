@@ -203,6 +203,7 @@
     <Compile Include="Enum\Roles.cs" />
     <Compile Include="Enum\Exceptions\NotAuthorizedException.cs" />
     <Compile Include="Enum\SocialMediaBindableType.cs" />
+    <Compile Include="Helpers\MemReg.cs" />
     <Compile Include="ServerMessages\BannerFilter.cs" />
     <Compile Include="ServerMessages\FestivalFilter.cs" />
     <Compile Include="ServerMessages\GenreFilter.cs" />

@@ -216,6 +216,38 @@
     <Compile Include="Migrations\201703091937018_MediaProperties.Designer.cs">
       <DependentUpon>201703091937018_MediaProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703112007093_FestivalZipCode.cs" />
+    <Compile Include="Migrations\201703112007093_FestivalZipCode.Designer.cs">
+      <DependentUpon>201703112007093_FestivalZipCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703112114225_removedMandatories.cs" />
+    <Compile Include="Migrations\201703112114225_removedMandatories.Designer.cs">
+      <DependentUpon>201703112114225_removedMandatories.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703121204404_ApplicationUserIndexFix.cs" />
+    <Compile Include="Migrations\201703121204404_ApplicationUserIndexFix.Designer.cs">
+      <DependentUpon>201703121204404_ApplicationUserIndexFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703121944495_AdvertisementRevisited.cs" />
+    <Compile Include="Migrations\201703121944495_AdvertisementRevisited.Designer.cs">
+      <DependentUpon>201703121944495_AdvertisementRevisited.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703132109446_ApplicationUserRemoveRequired.cs" />
+    <Compile Include="Migrations\201703132109446_ApplicationUserRemoveRequired.Designer.cs">
+      <DependentUpon>201703132109446_ApplicationUserRemoveRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703290925287_update20170329.cs" />
+    <Compile Include="Migrations\201703290925287_update20170329.Designer.cs">
+      <DependentUpon>201703290925287_update20170329.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704010644102_update20170401.cs" />
+    <Compile Include="Migrations\201704010644102_update20170401.Designer.cs">
+      <DependentUpon>201704010644102_update20170401.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704071714310_firstnameLastnameValidation.cs" />
+    <Compile Include="Migrations\201704071714310_firstnameLastnameValidation.Designer.cs">
+      <DependentUpon>201704071714310_firstnameLastnameValidation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Seeds\SeedAlbumIDs.cs" />
     <Compile Include="Migrations\Seeds\SeedApplicationUsersV2.cs" />
     <Compile Include="Migrations\Seeds\SeedApplicationUsers.cs" />
@@ -354,6 +386,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703091937018_MediaProperties.resx">
       <DependentUpon>201703091937018_MediaProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703112007093_FestivalZipCode.resx">
+      <DependentUpon>201703112007093_FestivalZipCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703112114225_removedMandatories.resx">
+      <DependentUpon>201703112114225_removedMandatories.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703121204404_ApplicationUserIndexFix.resx">
+      <DependentUpon>201703121204404_ApplicationUserIndexFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703121944495_AdvertisementRevisited.resx">
+      <DependentUpon>201703121944495_AdvertisementRevisited.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703132109446_ApplicationUserRemoveRequired.resx">
+      <DependentUpon>201703132109446_ApplicationUserRemoveRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703290925287_update20170329.resx">
+      <DependentUpon>201703290925287_update20170329.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704010644102_update20170401.resx">
+      <DependentUpon>201704010644102_update20170401.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704071714310_firstnameLastnameValidation.resx">
+      <DependentUpon>201704071714310_firstnameLastnameValidation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

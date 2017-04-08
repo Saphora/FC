@@ -50,13 +50,19 @@ module FC.Modules.Calendar.Controllers {
             vm.$scope.MemReg = FC.Shared.Util.MemReg.GetInstance();
             vm.$scope.MtModal = $mdDialog;
             vm.$scope.IsLoading = false;
-            this.init();
+            CacheManager.ClearStorage();
             this.addFilterChangeListener();
             this.handleSearch();
             this.$scope.ShowCancelSearch = false;
+            vm.init();
         }
         public ClearFilters() {
-            CacheManager.ClearStorage();
+            CacheManager.DeleteStorage("Filter_Year");
+            CacheManager.DeleteStorage("Filter_Month");
+            CacheManager.DeleteStorage("ActiveGenres");
+            CacheManager.DeleteStorage("ActiveCountries");
+            CacheManager.DeleteStorage("ActiveLocations");
+            CacheManager.DeleteStorage("ActiveArtists");
             var e = new CustomEvent("ClearFilter");
             window.dispatchEvent(e);
             this.init();
@@ -84,69 +90,151 @@ module FC.Modules.Calendar.Controllers {
             var month = new Date().getMonth() + 1;
             var year = new Date().getFullYear();
             var countries = new Array<MODELS.UCountry>();
+            var locations = new Array<MODELS.Location>();
+            var artists = new Array<MODELS.UArtist>();
+            vm.$scope.IsLoading = false;
             try {
-                CacheManager.Get<number>("Filter_Month", function (storage) {
-                    month = storage.data;
-                    if (!month) {
-                        month = new Date().getMonth() + 1;
+
+
+                if (CacheManager.GetCookieValue("UserID")) {
+                    vm.FavoriteService.GetUserFavorites(CacheManager.GetCookieValue("UserID"), Shared.Enum.InternalContentType.All).then(function (r) {
+                        var filter = new FC.Shared.ServiceMessages.FestivalFilter(
+                            r.Data.filter(function (v, k) {
+                               return v.ContentType == Shared.Enum.InternalContentType.Genre
+                            }),
+                            r.Data.filter(function (v, k) {
+                                return v.ContentType == Shared.Enum.InternalContentType.Artist
+                            }),
+                            r.Data.filter(function (v, k) {
+                                return v.ContentType == Shared.Enum.InternalContentType.Location
+                            }),
+                            r.Data.filter(function (v, k) {
+                                return v.ContentType == Shared.Enum.InternalContentType.Country
+                            })
+                        );
+                        if (CacheManager.GetCookieValue("Filter_Month")) {
+                            filter.MonthNum = parseInt(CacheManager.GetCookieValue("Filter_Month"));
+                            //vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
+                        }
+                        if (CacheManager.GetCookieValue("Filter_Year")) {
+                            filter.YearNum = parseInt(CacheManager.GetCookieValue("Filter_Year"));
+                            //vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
+                        }
+                        if (vm.CacheManager.Contains("ActiveGenres")) {
+                            genres = vm.CacheManager.Get<Array<FC.Shared.Models.UGenre>>("ActiveGenres").data;
+                            genres.forEach(function (v, k) {
+                                filter.GenreIDs.push(v.GenreID);
+                            });
+                        }
+                        if (vm.CacheManager.Contains("ActiveCountries")) {
+                            countries = vm.CacheManager.Get<Array<FC.Shared.Models.UCountry>>("ActiveCountries").data;
+                            countries.forEach(function (v, k) {
+                                filter.CountryIDs.push(v.CountryID);
+                            });
+                        }
+                        if (vm.CacheManager.Contains("ActiveArtists")) {
+                            artists = vm.CacheManager.Get<Array<FC.Shared.Models.UArtist>>("ActiveArtists").data;
+                            artists.forEach(function (v, k) {
+                                filter.ArtistIDs.push(v.CountryID);
+                            });
+                        }
+                        if (vm.CacheManager.Contains("ActiveLocations")) {
+                            locations = vm.CacheManager.Get<Array<FC.Shared.Models.Location>>("ActiveLocations").data;
+                            locations.forEach(function (v, k) {
+                                filter.LocationIDs.push(v.LocationID);
+                            });
+                        }
+                        vm.CalendarService.GetByFilter(filter).then(function (r) {
+                            vm.$scope.Festivals = r.Data;
+                            vm.$scope.IsLoading = false;
+                        });
+                    });
+                } else {
+                    var filter: FC.Shared.ServiceMessages.FestivalFilter = new FC.Shared.ServiceMessages.FestivalFilter();
+                    filter.YearNum = -1;
+                    filter.MonthNum = -1;
+                    
+                    var genres = new Array<MODELS.UGenre>();
+                    var countries = new Array<MODELS.UCountry>();
+                    var locations = new Array<MODELS.Location>();
+                    var artists = new Array<MODELS.UArtist>();
+                    var month = new Date().getMonth() + 1;
+                    var year = new Date().getFullYear();
+                    
+                    if (CacheManager.GetCookieValue("Filter_Month")) {
+                        month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
                     }
-                });
-                vm.CacheManager.Get<number>("Filter_Year", function (storage) {
-                    year = storage.data;
-                    if (!year) {
-                        year = new Date().getFullYear();
+                    if (CacheManager.GetCookieValue("Filter_Year")) {
+                        year = parseInt(CacheManager.GetCookieValue("Filter_Year"));
                     }
-                });
-                vm.CacheManager.Get<Array<MODELS.UGenre>>("ActiveGenres", function (storage) {
-                    genres = storage.data;
-                });
-                vm.CacheManager.Get<Array<MODELS.UCountry>>("ActiveCountries", function (storage) {
-                    countries = storage.data;
-                });
+                    if (vm.CacheManager.Contains("ActiveGenres")) {
+                        genres = vm.CacheManager.Get<Array<FC.Shared.Models.UGenre>>("ActiveGenres").data;
+                    }
+                    if (vm.CacheManager.Contains("ActiveCountries")) {
+                        countries = vm.CacheManager.Get<Array<FC.Shared.Models.UCountry>>("ActiveCountries").data;
+                    }
+                    if (vm.CacheManager.Contains("ActiveArtists")) {
+                        artists = vm.CacheManager.Get<Array<FC.Shared.Models.UArtist>>("ActiveArtists").data;
+                    }
+                    if (vm.CacheManager.Contains("ActiveLocations")) {
+                        locations = vm.CacheManager.Get<Array<FC.Shared.Models.Location>>("ActiveLocations").data;
+                    }
+                    filter.YearNum = year;
+                    filter.MonthNum = month;
+                    
+                    vm.CalendarService.GetFilteredFestivals(filter.MonthNum, filter.YearNum, genres, countries).then(function (r) {
+                        vm.$scope.Festivals = r.Data;
+                        vm.$scope.IsLoading = false;
+                    });
+                }
             } catch (e) {
                 year = new Date().getFullYear();
                 month = new Date().getMonth() + 1;
                 genres = new Array<MODELS.UGenre>();
                 countries = new Array<MODELS.UCountry>();
             }
-            vm.$scope.IsLoading = true;
-            vm.CalendarService.GetFilteredFestivals(month, year, genres, countries).then(function (r) {
-                vm.$scope.Festivals = r.Data;
-                vm.$scope.IsLoading = false;
-            });
-
         }
 
         private addFilterChangeListener(): void {
             var vm = this;
+            //document.getElementById("initialResult").remove();
             window.addEventListener("FilterChanged", function (e: CustomEventInit) {
                 if (e) {
                     if (e.detail) {
                         vm.$scope.IsLoading = true;
                         var d = e.detail as FC.Modules.Filtering.Models.FilterBarVM;
                         var genres = new Array<MODELS.UGenre>();
+                        var countries = new Array<MODELS.UCountry>();
+                        var locations = new Array<MODELS.Location>();
+                        var artists = new Array<MODELS.UArtist>();
                         var month = new Date().getMonth() + 1;
                         var year = new Date().getFullYear();
-                        CacheManager.Get<number>("Filter_Month", function (storage) {
-                            month = storage.data;
-                        });
-                        vm.CacheManager.Get<number>("Filter_Year", function (storage) {
-                            year = storage.data;
-                        });
-                        vm.CacheManager.Get<Array<MODELS.UGenre>>("ActiveGenres", function (storage) {
-                            genres = storage.data;
-                        });
-                        vm.CalendarService.GetFilteredFestivals(month,year,genres, null).then(function (r) {
+                        
+                        if (CacheManager.GetCookieValue("Filter_Month")) {
+                            month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
+                        }
+                        if (CacheManager.GetCookieValue("Filter_Year")) {
+                            year = parseInt(CacheManager.GetCookieValue("Filter_Year"));
+                        }
+                        if (vm.CacheManager.Contains("ActiveGenres")) {
+                            genres = vm.CacheManager.Get<Array<FC.Shared.Models.UGenre>>("ActiveGenres").data;
+                        }
+                        if (vm.CacheManager.Contains("ActiveCountries")) {
+                            countries = vm.CacheManager.Get<Array<FC.Shared.Models.UCountry>>("ActiveCountries").data;
+                        }
+                        if (vm.CacheManager.Contains("ActiveArtists")) {
+                            artists = vm.CacheManager.Get<Array<FC.Shared.Models.UArtist>>("ActiveArtists").data;
+                        }
+                        if (vm.CacheManager.Contains("ActiveLocations")) {
+                            locations = vm.CacheManager.Get<Array<FC.Shared.Models.Location>>("ActiveLocations").data;
+                        }
+                        vm.CalendarService.GetFilteredFestivals(month,year,genres,countries).then(function (r) {
                             vm.$scope.Festivals = r.Data;
                             vm.$scope.IsLoading = false;
                         });
                     }
                 }
             });
-        }
-
-        private initCalendar(): void {
-
         }
     }
     CalendarModule.GetApplication().RegisterController("FC.Modules.Calendar.Controllers.SimpleCalendarController", FC.Modules.Calendar.Controllers.SimpleCalendarController);

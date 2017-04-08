@@ -1,0 +1,68 @@
+﻿@model FC.Shared.Entities.UFestival
+@{ 
+    ViewBag.ContentItemID = Model.FestivalID;
+    ViewBag.ContentItemType = "festival";
+    Dictionary<Guid, List<FC.Shared.Entities.Rating>> Rates = ViewBag.Rates;
+    List<FC.Shared.Entities.Rating> rating = Rates[Model.FestivalID.Value].ToList();
+    var thumbnail = FC.Shared.Config.FCConfig.API + "/" + Model.LogoID.ToString() + ".img?&thumb=true";
+}
+<div class="card festival-card">
+    <div class="card-header link">
+        <a class="h5" title="@Model.Name" href="/details/festival/@Model.FestivalID">@Model.Name.ToUpper()</a>
+    </div>
+    <div class="card-block">
+        <div class="top">
+            <div class="card-img pull-left">
+                <img src="@thumbnail" class="ct-logo" />
+            </div>
+            <div class="card-date pull-right">
+                <span class="hr top"></span>
+                <div class="inner">
+                    <span class="day">@Model.StartDateExplosion.Day</span>
+                    <span class="month">@Model.StartDateExplosion.Month</span>
+                    <span class="year">
+                        <span>@Model.StartDateExplosion.Y1</span>
+                        <span>@Model.StartDateExplosion.Y2</span>
+                        <span>@Model.StartDateExplosion.Y3</span>
+                        <span>@Model.StartDateExplosion.Y4</span>
+                    </span>
+                </div>
+                <span class="hr bottom"></span>
+            </div>
+        </div>
+        <div class="bottom">
+            <div>
+                <i class="fa fa-map-marker"></i> @Model.City.ToUpper()<br />
+                <i class="fa fa-map-marker" style="color:transparent;">
+                </i> @Model.Country.Name.ToUpper()
+            </div>
+            <div>
+                <i class="fa fa-group"></i>
+                <span class="txt">@Model.Visitors.ToUpper()</span>
+                <span class="txt">Unknown</span>
+                <i class="fa fa-hourglass-end"></i>
+                <span class="txt">@Model.DayCount Days</span>
+            </div>
+            <div class="genres">
+                <i class="fa fa-heart"></i>
+                @{
+                    int index = 0;
+                    foreach (var g in Model.Genres)
+                    {
+                        if (index < 2)
+                        {
+                            <span class="g">@g.Name.ToUpper()</span>
+                        }
+                        index++;
+                    }
+                }
+                
+                @if (Model.Genres.Count > 2)
+                {
+                    <span class="g">@(Model.Genres.Count-2)+</span>
+                }
+            </div>
+        </div>
+        @Html.Partial("~/Views/Shared/_Rating.cshtml",rating)
+    </div>
+</div>

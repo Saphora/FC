@@ -71,6 +71,8 @@
         IsFailure: boolean;
         IsSuccess: boolean;
         IsAuthorized: boolean;
+        Token: string;
+        State: FC.Shared.ViewModels.RepositoryState;
         
     }
     export interface IVMBase extends ng.IScope {

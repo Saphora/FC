@@ -30,7 +30,7 @@ namespace FC.Shared.Entities
         public Guid? CountryID { get; set; }
 
         [ForeignKey("CountryID")]
-        public virtual UCountry Country { get; set; }
+        public  UCountry Country { get; set; }
 
         [Validation(ValidationRule.Any, true)]
         [Obsolete("LocationName is obsolete please use Name instead.")]
@@ -60,7 +60,7 @@ namespace FC.Shared.Entities
         public Guid? MediaDirectoryID { get; set; }
 
         [ForeignKey("MediaDirectoryID")]
-        public virtual MediaDirectory Album { get; set; }
+        public  MediaDirectory Album { get; set; }
 
         [ForeignKey("ThumbnailID")]
         public Media Thumbnail { get; set; }

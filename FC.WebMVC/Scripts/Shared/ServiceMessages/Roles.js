@@ -8,6 +8,17 @@ var FC;
             var Roles = (function () {
                 function Roles() {
                 }
+                Roles.GetAllPublic = function () {
+                    return [
+                        Roles.Advertiser,
+                        Roles.Festival,
+                        Roles.Venue,
+                        Roles.Artist,
+                        Roles.EndUser,
+                        Roles.Retailer,
+                        Roles.TravelAgent
+                    ];
+                };
                 Roles.GetAnonymous = function () {
                     return [
                         this.Anonymous,
@@ -64,7 +75,14 @@ var FC;
                         this.Admin,
                         this.SponsorAdmin,
                         this.FestivalAdmin,
-                        this.Owner
+                        this.Owner,
+                        Roles.Advertiser,
+                        Roles.Festival,
+                        Roles.Venue,
+                        Roles.Artist,
+                        Roles.EndUser,
+                        Roles.Retailer,
+                        Roles.TravelAgent
                     ];
                 };
                 Roles.GetAdmins = function () {
@@ -82,6 +100,12 @@ var FC;
                         this.Owner
                     ];
                 };
+                Roles.Festival = "Festival";
+                Roles.Artist = "Artist";
+                Roles.Venue = "Venue";
+                Roles.Retailer = "Retailer";
+                Roles.TravelAgent = "TravelAgent";
+                Roles.Advertiser = "Advertiser";
                 Roles.Anonymous = "Anonymous";
                 Roles.UserAdmin = "UserAdmin";
                 Roles.Reporter = "Reporter";

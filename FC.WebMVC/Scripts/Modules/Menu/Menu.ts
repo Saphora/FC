@@ -7,17 +7,6 @@ module FC.Modules.Menu {
         }
         constructor(private NgModule: ng.IModule, private app: FC.Core.FCModule) {
             this.$Application = app;
-            this.$Application.AddRoute("/menus", "/Scripts/Modules/Menu/Views/overview.html", "FC.Modules.Menu.Controllers.MenuOverviewController", "vm");
-            this.$Application.AddRoute("/menus/:pagenum", "/Scripts/Modules/Menu/Views/overview.html", "FC.Modules.Menu.Controllers.MenuOverviewController", "vm");
-            this.$Application.AddRoute("/menus/sort/:character", "/Scripts/Modules/Menu/Views/overview.html", "FC.Modules.Menu.Controllers.MenuOverviewController", "vm");
-            this.$Application.AddRoute("/menus/menuitems/create", "/Scripts/Modules/Menu/Views/create-item.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-            this.$Application.AddRoute("/menus/menuitems/create/:step", "/Scripts/Modules/Menu/Views/create-item.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-            this.$Application.AddRoute("/menus/menusections/create", "/Scripts/Modules/Menu/Views/create-section.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-            this.$Application.AddRoute("/menus/menusections/create/:step", "/Scripts/Modules/Menu/Views/create-section.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-            this.$Application.AddRoute("/menus/menuitems/edit/:menuitemid", "/Scripts/Modules/Menu/Views/create-item.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-            this.$Application.AddRoute("/menus/menusections/edit/:menusectionid", "/Scripts/Modules/Menu/Views/create-section.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-
-            this.$Application.AddRoute("/menus/menuitems/:sectionid", "/Scripts/Modules/Menu/Views/menuitems-overview.html", "FC.Modules.Menu.Controllers.MenuOverviewController", "vm");
         }
     }
 }

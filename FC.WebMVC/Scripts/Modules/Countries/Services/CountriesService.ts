@@ -20,6 +20,9 @@ module FC.Modules.Countries.Services {
         public GetPaged(size: number, page: number): ng.IPromise<INT.IServiceResponse<FC.Shared.Models.UCountry[]>> {
             return this.Get<MODELS.UCountry[]>('/API/Country/GetPaged?size=' + size + '&page=' + page);
         }
+        public Search(name:string): ng.IPromise<INT.IServiceResponse<FC.Shared.Models.UCountry[]>> {
+            return this.Get<MODELS.UCountry[]>('/API/Country/Search?name='+name);
+        }
 
         public GetSorted(sortIndex: string, page: number = 1): ng.IPromise<INT.IServiceResponse<FC.Shared.Models.UCountry[]>> {
             return this.Get<MODELS.UCountry[]>('/API/Country/GetSorted?sortIndex=' + sortIndex + '&page=' + page);

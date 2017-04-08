@@ -57,12 +57,22 @@ var FC;
                     return Environment.RemoteBaseURL;
                 }
             };
+            Environment.GetMediaURL = function (et) {
+                if (et.toString() == EnvironmentType.Local.toString()) {
+                    return Environment.MediaURLRootLocal;
+                }
+                if (et.toString() == EnvironmentType.Remote.toString()) {
+                    return Environment.MediaURLRoot;
+                }
+            };
             Environment.VERSION = "";
             Environment.GeoIPURL = "https://freegeoip.net/json/";
-            Environment.LocalBaseURL = "http://localhost:8888";
+            Environment.LocalBaseURL = "https://localhost:8888";
             Environment.RemoteBaseURL = "https://festival-calendar.nl:8888";
             Environment.GeoServicesURL = "http://wmdevelopment.nl:8080";
             Environment.MediaURLRoot = "https://festival-calendar.nl:8888/";
+            Environment.MediaURLRootLocal = "http://localhost:8888/";
+            Environment.UploadStateKey = "4C3A3ADE-CCD0-4CAC-A46A-1E8410DDA79C";
             Environment.MEDIA_ROOT_ID = "710FE0A0-8894-40DB-8D7D-2FCBD7BA14CF";
             Environment.FESTIVAL_DIR_ROOT_ID = "1c9f99e9-1ff2-4eef-9f94-25b400340fba";
             Environment.ARTIST_DIR_ROOT_ID = "3aa4eee3-5821-40ce-a82c-5018b890b824";

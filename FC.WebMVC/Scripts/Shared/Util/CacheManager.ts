@@ -29,6 +29,41 @@
             }
         }
 
+        public GetCookieValue(key: string):string {
+            var vm = this;
+            var cookies = document.cookie.split(";");
+            var c = cookies.filter(function (v, i) {
+                var kvp = v.split('=');
+                var k = kvp[0];
+                var v = kvp[1];
+                return k.trim() == key.trim();
+            });
+            var val = "";
+            if (c != null) {
+                if (c.length > 0) {
+                    if (c[0].split('=').length > 0) {
+                        val = c[0].split('=')[1];
+                    }
+                }
+            }
+            if (val == "") {
+                return null;
+            } else {
+                return val;
+            }
+        }
+
+
+        public SetCookieValue(key: string, value:string, expires:Date=null): void {
+            var vm = this;
+            var cookies = document.cookie.split(";");
+            if (!expires) {
+                expires = new Date();
+                expires.setDate(expires.getDate() + 1);
+            }
+            document.cookie = key + "=" + value + ";expires=" + expires.toUTCString()+";path=/";
+        }
+
         public static GetInstKey(): string {
             return "132B862D62FE41F0B1865F43BF574BAC";
         }
@@ -50,53 +85,25 @@
             return result;
         }
 
-        public WriteStorage(key: string, obj: any, ms?: number) {
-            var currentDate = new Date();
-            if (ms) {
-                this.Expires = ms;
-            }
-            var expires = new Date().getTime() + this.Expires;
-            var data = new Storage<any>();
-            data.data = obj;
-            data.expires = expires;
+        public WriteStorage(key: string, obj: any, ms?:number) {
+            var vm = this;
+            var str = "";
             try {
-                var str = JSON.stringify(data);
-                if (data.data != null && data.data != undefined) {
-                    localStorage.setItem(key, str);
-                    var event = new CustomEvent(key + "_Writed");
-                    window.dispatchEvent(event);
+                if (typeof (obj) == "string") {
+                    str = obj
                 } else {
-                    throw new Error("Cannot set empty data objects to localstorage, data must contain data!");
+                    str = JSON.stringify(obj);
                 }
+                vm.SetCookieValue(key, str);
+                var event = new CustomEvent(key + "_Writed");
+                window.dispatchEvent(event);
+                var event2 = new CustomEvent("StorageWrited", { detail: key });
+                window.dispatchEvent(event2);
             } catch (ex) {
                 var event = new CustomEvent("StorageError");
                 window.dispatchEvent(event);
             }
         }
-        public Write<T>(key: string, obj: T, ms?: number) {
-            var currentDate = new Date();
-            if (ms) {
-                this.Expires = ms;
-            }
-            var expires = new Date().getTime() + this.Expires;
-            var data = new Storage<T>();
-            data.data = obj;
-            data.expires = expires;
-            try {
-                var str = JSON.stringify(data);
-                if (data.data != null && data.data != undefined) {
-                    localStorage.setItem(key, str);
-                    var event = new CustomEvent(key + "_Writed");
-                    window.dispatchEvent(event);
-                } else {
-                    throw new Error("Cannot set empty data objects to localstorage, data must contain data!");
-                }
-            } catch (ex) {
-                var event = new CustomEvent("StorageError");
-                window.dispatchEvent(event);
-            }
-        }
-
 
         /**
          * @param storageKey the localstorage identifier key.
@@ -132,6 +139,7 @@
                 });
             }, expiredCallback).data;
         }
+
         public GetByValueContains(storageKey: string, key: string, value: string, successCallback: Function, dataEmptyCallback?: Function, expiredCallback?: Function) {
             var storage = new Array<any>();
             storage = this.GetStorage(storageKey, function (response: any) {
@@ -162,100 +170,94 @@
 
 
         public GetStorage(key: string, successCallback?: Function, expiredCallback?: Function): Storage<any> {
-            try {
-                var vm = this;
-                var value = localStorage.getItem(key);
-                var data: Storage<any> = null;
-                if (value) {
-                    data = JSON.parse(value);
-                } else {
-                    return null;
-                }
-                if (data && data.expires) {
-                    if (data.expires > new Date().getTime()) {
-                        if (successCallback) {
-                            successCallback(data);
-                        }
-                        return data;
-                    } else {
-                        console.info('Data expired ' + key + ' from localstorage')
-                        if (successCallback) {
-                            successCallback(data);
-                        }
-                        if (expiredCallback) {
-                            expiredCallback(data);
-                        }
-                        return data;
-                    }
-                } else {
-                    return null;
-                }
-            } catch (ex) {
-                throw ex;
+            var vm = this;
+            var data: Storage<any> =  this.Get<any>(key);
+            if (successCallback && data) {
+                successCallback(data);
             }
+            if (expiredCallback) {
+                if (data) {
+                    expiredCallback(data);
+                } else {
+                    expiredCallback();
+                }
+            }
+            return data;        
         }
 
         public Get<T>(key: string, successCallback?: SuccessCallback<T>, expiredCallback?: Function): Storage<T> {
-            try {
-                var vm = this;
-                var value = localStorage.getItem(key);
-                var data: Storage<T> = null;
-                if (value) {
-                    data = JSON.parse(value);
-                } else {
-                    return null;
+            var data: T|string;
+            var result: Storage<T> = new Storage<T>();
+            if (this.GetCookieValue(key)) {
+                try {
+                    data = JSON.parse(this.GetCookieValue(key)) as T;
+                } catch(e) {
+                    data = this.GetCookieValue(key);
                 }
-                if (data && data.expires) {
-                    if (data.expires > new Date().getTime()) {
-                        if (successCallback) {
-                            successCallback(data);
-                        }
-                        return data;
-                    } else {
-                        console.info('Data expired ' + key + ' from localstorage')
-                        if (successCallback) {
-                            successCallback(data);
-                        }
-                        if (expiredCallback) {
-                            expiredCallback(data);
-                        }
-                        return data;
-                    }
-                } else {
-                    return null;
-                }
-            } catch (ex) {
-                throw ex;
             }
+            if (data) {
+                result.data = data as T;
+                result.expires = 99999999999;
+                return result;
+            } else {
+                return null;
+            }
+            //try {
+            //    var vm = this;
+            //    var value = localStorage.getItem(key);
+            //    var data: Storage<T> = null;
+            //    if (value) {
+            //        data = JSON.parse(value);
+            //    } else {
+            //        return null;
+            //    }
+            //    if (data && data.expires) {
+            //        if (data.expires > new Date().getTime()) {
+            //            if (successCallback) {
+            //                successCallback(data);
+            //            }
+            //            return data;
+            //        } else {
+            //            console.info('Data expired ' + key + ' from localstorage')
+            //            if (successCallback) {
+            //                successCallback(data);
+            //            }
+            //            if (expiredCallback) {
+            //                expiredCallback(data);
+            //            }
+            //            return data;
+            //        }
+            //    } else {
+            //        return null;
+            //    }
+            //} catch (ex) {
+            //    throw ex;
+            //}
         }
         
         public DeleteStorage(key) {
-            //localStorage.removeItem(key);
-            //var e = new CustomEvent(key + "_Deleted", { 'detail': key });
-            //window.dispatchEvent(e);
+            var cookies = document.cookie.split(";");
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                if (name.trim() == key.trim()) {
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                }
+            }
+            var e = new CustomEvent(key + "_Deleted", { 'detail': key });
+            window.dispatchEvent(e);
         }
         public ClearStorage() {
-            localStorage.clear();
+            console.info("Clear storage is not longer supported since migrated to cookies.");
         }
 
-        public Contains(key) {
-            //if (cacheMode == CacheMode.LocalStorage) {
-            if (localStorage[key]) {
-                var value = localStorage[key];
-                var data = null;
-                if (value) {
-                    var data = JSON.parse(value);
-                }
-                if (data && data.expires && data.expires > new Date().getTime()) {
-                    return true;
-                } else {
-                    this.DeleteStorage(key);
-                    return false;
-                }
+        public Contains(key):boolean {
+            if (this.GetCookieValue(key)) {
+                return true;
             } else {
                 return false;
             }
-            //}
         }
     }
 }

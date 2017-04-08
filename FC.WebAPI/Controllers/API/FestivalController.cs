@@ -20,6 +20,7 @@ using System.Data.Entity.Validation;
 using FC.Shared.Enum;
 using System.Xml;
 using System.Xml.Serialization;
+using FC.WebAPI.Attribs;
 
 namespace FC.WebAPI.Controllers.API
 {
@@ -42,7 +43,7 @@ namespace FC.WebAPI.Controllers.API
     public class FestivalController : BaseAPIController
     {
         public FestivalRepository FestivalRepository { get; set; }
-        public GenreRespository GenreRespository { get; set; }
+        public GenreRepository GenreRespository { get; set; }
         public string CacheFilePath { get; set; }
         
 
@@ -52,34 +53,90 @@ namespace FC.WebAPI.Controllers.API
             base()
         {
             FestivalRepository = new FestivalRepository();
-            GenreRespository = new GenreRespository();
+            GenreRespository = new GenreRepository();
         }
 
         [HttpGet]
         public ServiceResponse<List<UFestival>> GetAll()
         {
-            return new ServiceResponse<List<UFestival>>(FestivalRepository.GetAll().ToList(), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<UFestival>>(FestivalRepository.GetAll().ToList(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet,HttpPost,HttpOptions]
         public ServiceResponse<UFestival> GetByID(Guid? id)
         {
-            return new ServiceResponse<UFestival>(FestivalRepository.GetByID(id), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<UFestival>(FestivalRepository.GetByID(id), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpPost]
         public ServiceResponse<List<FestivalVM>> GetFiltered([FromBody]JObject payload)
         {
+            var token = this.AuthRepo.GetHTTPToken();
+
             ServiceMessage<FestivalFilter> filter = new ServiceMessage<FestivalFilter>(payload);
+            if (this.AuthRepo.UserID != null)
+            {
+                List<Favorite> genres = this.Repositories.Favorites.GetUserFavorites(this.AuthRepo.UserID, InternalContentType.Genre);
+                List<Favorite> countries = this.Repositories.Favorites.GetUserFavorites(this.AuthRepo.UserID, InternalContentType.Country);
+                List<Favorite> artists = this.Repositories.Favorites.GetUserFavorites(this.AuthRepo.UserID, InternalContentType.Artist);
+                List<Favorite> locations = this.Repositories.Favorites.GetUserFavorites(this.AuthRepo.UserID, InternalContentType.Location);
+                if (filter.Data.CountryIDs.Count == 0)
+                {
+                    foreach (Favorite c in countries)
+                    {
+                        filter.Data.CountryIDs.Add(c.ContentID);
+                    }
+                }
+                if (filter.Data.ArtistIDs.Count == 0)
+                {
+                    foreach (Favorite a in artists)
+                    {
+                        filter.Data.ArtistIDs.Add(a.ContentID);
+                    }
+                }
+                if (filter.Data.LocationIDs.Count == 0)
+                {
+                    foreach (Favorite l in locations)
+                    {
+                        filter.Data.LocationIDs.Add(l.ContentID);
+                    }
+                }
+                if (filter.Data.GenreIDs.Count == 0)
+                {
+                    foreach (Favorite g in genres)
+                    {
+                        filter.Data.GenreIDs.Add(g.ContentID);
+                    }
+                }
+            }
+
             List<FestivalVM> result = FestivalRepository.GetFilteredFestival(filter.Data);
-            return new ServiceResponse<List<FestivalVM>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<FestivalVM>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
+        }
+
+        [HttpOptions, HttpPost]
+        public ServiceResponse<List<FestivalVM>> GetByFilter([FromBody]JObject payload)
+        {
+            var token = this.Repositories.Auth.GetHTTPToken();
+            ServiceMessage<FestivalFilter> filter = new ServiceMessage<FestivalFilter>(payload);
+
+            if (this.Repositories.Auth.CurrentUser != null)
+            {
+                var favorites = this.Repositories.Favorites.GetUserFavorites(this.Repositories.Auth.CurrentUser.UserID);
+                filter.Data.GenreIDs.AddRange(favorites.Where(w => w.ContentType == InternalContentType.Genre).Select(s => s.ContentID).ToList());
+                filter.Data.CountryIDs.AddRange(favorites.Where(w => w.ContentType == InternalContentType.Country).Select(s => s.ContentID).ToList());
+                //filter.Data.ArtistIDs.AddRange(favorites.Where(w => w.ContentType == InternalContentType.Genre).Select(s => s.ContentID).ToList());
+            }
+
+            List<FestivalVM> result = FestivalRepository.GetFilteredFestival(filter.Data);
+            return new ServiceResponse<List<FestivalVM>>(result, HttpStatusCode.OK, "OK", token);
         }
 
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<RepositoryState> Create([FromBody]JObject payload)
         {
 
-            if (this.IsAuthorized(Roles.GetAdmins()))
+            if (this.IsAuthorized(Roles.GetAllPublic()))
             {
                 ServiceMessage<UFestival> festival = new ServiceMessage<UFestival>(payload);
                 RepositoryState result = new RepositoryState();
@@ -95,11 +152,26 @@ namespace FC.WebAPI.Controllers.API
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<RepositoryState> Update([FromBody]JObject payload)
         {
-            if (this.IsAuthorized(Roles.GetAdmins()))
+            if (this.IsAuthorized(Roles.GetAllPublic()))
             {
                 ServiceMessage<UFestival> festival = new ServiceMessage<UFestival>(payload);
                 RepositoryState result = new RepositoryState();
                 result = FestivalRepository.Update(festival.Data);
+                return this.HandleRepositoryState(result);
+            }
+            else
+            {
+                return NotAuthorized();
+            }
+        }
+
+        [HttpGet]
+        public ServiceResponse<RepositoryState> ToggleGenre(Guid? festivalID, Guid? genreID)
+        {
+            if (this.IsAuthorized(Roles.GetAllPublic()))
+            {
+                RepositoryState result = new RepositoryState();
+                result = FestivalRepository.ToggleGenre(festivalID, genreID);
                 return this.HandleRepositoryState(result);
             }
             else

@@ -32,6 +32,10 @@ var FC;
                     MediaService.prototype.GetDirByID = function (id) {
                         return this.Get('/API/Media/GetDirByID?id=' + id);
                     };
+                    MediaService.prototype.HandleUploaded = function (id) {
+                        var g = this.Get('/API/Media/HandleUploaded?id=' + id);
+                        return g;
+                    };
                     MediaService.prototype.GetDirectoryMedia = function (id) {
                         return this.Get('/API/Media/GetDirectoryMedia?id=' + id);
                     };

@@ -57,5 +57,8 @@
         Token: string;
         $dismiss: any;
         Modal: any;
+        ValidationWidth: number;
+        ValidationHeight: number;
+        IsThumbnail: boolean;
     }
 }

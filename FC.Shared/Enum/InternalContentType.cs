@@ -17,6 +17,9 @@ namespace FC.Shared.Enum
         News,
         Report,
         Genre,
-        Artist
+        Artist,
+        Advertisement,
+        Country,
+        All
     }
 }

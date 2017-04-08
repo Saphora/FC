@@ -44,40 +44,11 @@ namespace FC.Office.Controls.Login
         {
             this.vm = DataContext as LoginModel;
             var s = repositories.Auth.Login(this.uname.Text, this.pss.Password.ToString());
-            
-            if(s.Authenticated && s.Authorized)
+            if (s != null)
             {
-                if (repositories.Auth.ActionAuthorized(new string[] { Roles.Admin, Roles.Developer }))
-                {
-                    if (this.LoginSuccess != null)
-                    {
-                        this.LoginSuccess(this, true);
-                    }
-                } else
-                {
-                    MessageBox.Show("You are not allowed to access this backlog. Therefore we close this application now.");
-                    MainWindow.Destroy();
-                }
-            } else
-            {
-                if(this.LoginFailure != null)
-                {
-                    this.LoginFailure(this, false);
-                }
-                MessageBox.Show("Invalid username or password.");
-            }
-            
-        }
-
-        private void pss_KeyDown(object sender, KeyEventArgs e)
-        {
-            if(e.Key == Key.Enter)
-            {
-                this.vm = DataContext as LoginModel;
-                var s = repositories.Auth.Login(this.uname.Text, this.pss.Password.ToString());
                 if (s.Authenticated && s.Authorized)
                 {
-                    if (repositories.Auth.ActionAuthorized(new string[] { Roles.Admin, Roles.Developer }))
+                    if (repositories.Auth.IsOfficeUser(new string[] { Roles.Admin, Roles.Developer }))
                     {
                         if (this.LoginSuccess != null)
                         {
@@ -86,12 +57,64 @@ namespace FC.Office.Controls.Login
                     }
                     else
                     {
-                        MessageBox.Show("You are not allowed to access the Festival Calendar backoffice. Therefore we close this application now.");
+                        MessageBox.Show("You are not allowed to access this backlog. Therefore we close this application now.");
                         MainWindow.Destroy();
                     }
                 }
                 else
                 {
+                    if (this.LoginFailure != null)
+                    {
+                        this.LoginFailure(this, false);
+                    }
+                    MessageBox.Show("Invalid username or password.");
+                }
+            }
+            else
+            {
+                if (this.LoginFailure != null)
+                {
+                    this.LoginFailure(this, false);
+                }
+                MessageBox.Show("Invalid username or password.");
+            }
+            }
+
+        private void pss_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                this.vm = DataContext as LoginModel;
+                var s = repositories.Auth.Login(this.uname.Text, this.pss.Password.ToString());
+                if (s != null)
+                {
+                    if (s.Authenticated && s.Authorized)
+                    {
+                        if (repositories.Auth.IsOfficeUser(new string[] { Roles.Admin, Roles.Developer }))
+                        {
+                            if (this.LoginSuccess != null)
+                            {
+                                this.LoginSuccess(this, true);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("You are not allowed to access the Festival Calendar backoffice. Therefore we close this application now.");
+                            MainWindow.Destroy();
+                        }
+                    }
+                    else
+                    {
+                        if (this.LoginFailure != null)
+                        {
+                            this.LoginFailure(this, false);
+                        }
+                        MessageBox.Show("Invalid username or password.");
+                    }
+                }
+                else
+                {
+
                     if (this.LoginFailure != null)
                     {
                         this.LoginFailure(this, false);

@@ -15,78 +15,78 @@ namespace FC.Shared.ViewModels.Festival
     {
 
         
-        public virtual String Name { get; set; }
+        public  String Name { get; set; }
 
         
-        public virtual string Logo { get; set; }
+        public  string Logo { get; set; }
 
         
-        public virtual string IndoorOutdoor { get; set; }
+        public  string IndoorOutdoor { get; set; }
 
         
-        public virtual UCountry Country { get; set; }
+        public  UCountry Country { get; set; }
 
         
-        public virtual string City { get; set; }
+        public  string City { get; set; }
 
         
-        public virtual string Location { get; set; }
+        public  string Location { get; set; }
 
         
-        public virtual double TicketPrice { get; set; }
+        public  double TicketPrice { get; set; }
 
         
-        public virtual double DailyTicketPrice { get; set; }
+        public  double DailyTicketPrice { get; set; }
 
         
-        public virtual double Visitors { get; set; }
+        public  double Visitors { get; set; }
 
         
-        public virtual DateTime StartDate { get; set; }
+        public  DateTime StartDate { get; set; }
 
         
-        public virtual DateTime EndDate { get; set; }
+        public  DateTime EndDate { get; set; }
 
         
         public string Genres { get; set; }
 
         
-        public virtual string IsTopFestival { get; set; }
+        public  string IsTopFestival { get; set; }
 
         
-        public virtual int Stages { get; set; }
+        public  int Stages { get; set; }
 
         
-        public virtual string FacebookURL { get; set; }
+        public  string FacebookURL { get; set; }
 
         
-        public virtual string TwitterURL { get; set; }
+        public  string TwitterURL { get; set; }
 
         
-        public virtual string YoutubeURL { get; set; }
+        public  string YoutubeURL { get; set; }
 
         
-        public virtual string FlickrURL { get; set; }
+        public  string FlickrURL { get; set; }
 
         
-        public virtual string InstagramURL { get; set; }
+        public  string InstagramURL { get; set; }
         
-        public virtual string SpotifyURL { get; set; }
+        public  string SpotifyURL { get; set; }
         
-        public virtual string DeezerURL { get; set; }
-        public virtual long DayCount
+        public  string DeezerURL { get; set; }
+        public  long DayCount
         {
             get
             {
                 return new TimeSpan(this.EndDate.Ticks - this.StartDate.Ticks).Days + 1;
             }
         }
-        public virtual string CultureStartDate
+        public  string CultureStartDate
         {
             set { value = StartDate.ToString("d", CultureInfo.CurrentCulture); }
             get { return StartDate.ToString("d", CultureInfo.CurrentCulture); }
         }
-        public virtual string CultureEndDate { set { value = EndDate.ToString("d", CultureInfo.CurrentCulture); } get { return EndDate.ToString("d", CultureInfo.CurrentCulture); } }
+        public  string CultureEndDate { set { value = EndDate.ToString("d", CultureInfo.CurrentCulture); } get { return EndDate.ToString("d", CultureInfo.CurrentCulture); } }
 
 
         public FestivalMonthItem()

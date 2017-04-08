@@ -1,0 +1,63 @@
+﻿@model List<FC.Shared.Entities.Rating>
+
+@{
+    int ratingCount = Model.Count();
+    double total = Model.Sum(s => s.CreditAmmount);
+    int starCount = 5;
+    double maxCredit = ratingCount * starCount;
+    double percentage = (total / maxCredit) * 100;
+
+    int StarsActive = 0;
+
+    if(percentage > 95)
+    {
+        StarsActive = 5;
+    } else if(percentage >= 70)
+    {
+        StarsActive = 4;
+    }
+    else if (percentage >= 40 && percentage < 70)
+    {
+        StarsActive = 3;
+    }
+    else if (percentage >= 30)
+    {
+        StarsActive = 2;
+    }
+    else if (percentage >= 1)
+    {
+        StarsActive = 1;
+    }
+    Guid? cid = ViewBag.ContentItemID as Guid?;
+    string Refer = "";
+    if (cid != null)
+    {
+        byte[] b = System.Text.Encoding.UTF8.GetBytes(ViewBag.Refer + "#" + cid.Value.ToString());
+        Refer = Convert.ToBase64String(b);
+    } else
+    {
+        Refer = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(ViewBag.Refer));
+    }
+}
+
+<div class="rating">
+    <span class="count" theme="count">
+        @Model.Count()
+    </span>
+    @for (int i = 1; i <= starCount; i++)
+    {
+        if (StarsActive >= i)
+        {
+            <a href="/rating/rate/@ViewBag.ContentItemID/@ViewBag.ContentItemType/@i/@Refer">
+                <i class="star active fa fa-star"></i>
+            </a>
+        }
+        else
+        {
+
+            <a href="/rating/rate/@ViewBag.ContentItemID/@ViewBag.ContentItemType/@i/@Refer">
+                <i class="star fa fa-star"></i>
+            </a>
+        }
+    }
+</div>

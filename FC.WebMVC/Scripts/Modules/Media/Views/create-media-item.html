@@ -15,11 +15,9 @@
 
 <iframe src="/Scripts/Modules/Media/Views/files.html" id="UploadCtrl" name="files_frame" onload="window.dispatchEvent(new CustomEvent('iframeSrcChanged'));" onchange="window.dispatchEvent(new CustomEvent('iframeChanged'))" style="width:0;height:0;visibility:hidden;"></iframe>
 <form enctype="multipart/form-data" id="MediaModalForm" action="{{getUploadURL(DirectoryID)}}" target="files_frame" method="post">
-
-        <input type="hidden" name="Author" ng-model="CurrentUserID" />
-        <input type="hidden" name="DirectoryID" ng-model="model.DirectoryID" />
-        <input id="fileUploader" type="file" name="Media[]" ng-change="DoSubmit()" ng-model="FileName" class="fake-hidden" placeholder="Select file" />
-
+    <input type="hidden" name="Author" ng-model="CurrentUserID" />
+    <input type="hidden" name="DirectoryID" ng-model="model.DirectoryID" />
+    <input id="fileUploader" type="file" name="Media[]" ng-change="DoSubmit()" ng-model="FileName" class="fake-hidden" placeholder="Select file" />
 </form>
 
 <!--<form class="festival-form" role="form" ng-if="!IsDeleting && !IsCreating && (IsMediaDirCreating || IsMediaDirEditing)">

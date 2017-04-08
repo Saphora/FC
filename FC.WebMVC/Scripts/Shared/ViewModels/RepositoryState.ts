@@ -9,5 +9,6 @@
         public NOT_AUTHORIZED: boolean;
         public ValidationErrors: Array<FC.Shared.ViewModels.ValidationError>;
         public AffectedID: string;
+        public Data: Object;
     }
 }

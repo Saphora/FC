@@ -10,6 +10,7 @@ var FC;
                     this.Message = r.Message;
                     this.StatusCode = r.StatusCode;
                     this.Params = r.Params;
+                    this.State = r.State;
                 }
                 return ServiceResponse;
             }());

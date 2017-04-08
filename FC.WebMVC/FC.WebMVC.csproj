@@ -58,6 +58,19 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile>festival-calendar.js</TypeScriptOutFile>
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
   </PropertyGroup>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
@@ -210,14 +223,19 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CalendarController.cs" />
+    <Compile Include="Controllers\FestivalController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IssuesController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Models\Issues\IssueVm.cs" />
+    <Compile Include="Models\Lists\GenreList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +295,7 @@
     <Content Include="Resources\fonts\pictos-web.svg" />
     <Content Include="Resources\images\bg.jpg" />
     <Content Include="Resources\images\bg.png" />
+    <Content Include="Resources\images\fa-festival.png" />
     <Content Include="Resources\images\fc-icon.png" />
     <Content Include="Resources\images\fc-news-img.jpg" />
     <Content Include="Resources\images\Icons\fb.png" />
@@ -2134,6 +2153,7 @@
     <Content Include="Scripts\Modules\Details\Views\artist-detail.html" />
     <Content Include="Scripts\Modules\Details\Views\Dialogs\Alerts\delete-confirm.html" />
     <Content Include="Scripts\Modules\Details\Views\Dialogs\Alerts\save-failure.html" />
+    <Content Include="Scripts\Modules\Details\Views\Dialogs\Alerts\warning.html" />
     <Content Include="Scripts\Modules\Details\Views\Dialogs\Alerts\save-success.html" />
     <Content Include="Scripts\Modules\Details\Views\Dialogs\Festival\festival-date.html" />
     <Content Include="Scripts\Modules\Details\Views\Dialogs\Festival\festival-name.html" />
@@ -2245,6 +2265,7 @@
     <Folder Include="Scripts\Modules\Search\Models\" />
     <Folder Include="Scripts\Shared\Directives\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Festival\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -2350,6 +2371,25 @@
     <Content Include="Views\Register\Success.cshtml" />
     <Content Include="Views\Register\ActivationMail.cshtml" />
     <Content Include="Views\Shared\_MailLayout.cshtml" />
+    <Content Include="Resources\sassv2\controls\_benefits.scss" />
+    <Content Include="Views\Register\SignUp.cshtml" />
+    <Content Include="Views\Shared\Forms\_FestivalCRUD.cshtml" />
+    <Content Include="Views\Shared\Forms\_ArtistCRUD.cshtml" />
+    <Content Include="Views\Shared\Forms\_VenueCRUD.cshtml" />
+    <Content Include="Views\Shared\Forms\_AdvertiserCRUD.cshtml" />
+    <Content Include="Views\Shared\Forms\_TravelAgencyCRUD.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\Register\Login.cshtml" />
+    <Content Include="Views\Register\ForgotPasswordMail.cshtml" />
+    <Content Include="Views\Register\ResetPassword.cshtml" />
+    <Content Include="Views\Register\ForgotPassword.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Resources\sassv2\controls\_listview.scss" />
+    <Content Include="Views\Shared\DisplayTemplates\GenreList.cshtml" />
+    <Content Include="Views\Calendar\Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\RatingVm.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\FestivalList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\Modules\Artists\Artists.ts" />
@@ -2376,6 +2416,7 @@
     <TypeScriptCompile Include="Scripts\Modules\Core\Auth.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\Controllers\AlertController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\Controllers\HeadController.ts" />
+    <TypeScriptCompile Include="Scripts\Modules\Core\Controllers\NavBarController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\Controllers\RolePickerController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\Controllers\RolePickerDialogController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\Controllers\StdDatePickerController.ts" />
@@ -2384,6 +2425,7 @@
     <TypeScriptCompile Include="Scripts\Modules\Core\Directives\ViewTitleDirective.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\FC.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\Models\IRolePickerDialog.ts" />
+    <TypeScriptCompile Include="Scripts\Modules\Core\Models\NavBarVM.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\ServiceBase.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\Services\AuthService.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Core\Services\GeoIPService.ts" />
@@ -2407,7 +2449,9 @@
     <TypeScriptCompile Include="Scripts\Modules\Details\Models\IFestivalDateDialog.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Details\Models\IFestivalDetailDialog.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Details\Models\IFestivalNameDialog.ts" />
+    <TypeScriptCompile Include="Scripts\Modules\Favorites\Controllers\FavoriteController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Favorites\Favorites.ts" />
+    <TypeScriptCompile Include="Scripts\Modules\Favorites\Models\IFavoritePickerVM.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Favorites\Services\FavoriteService.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Festival\Controllers\FestivalCRUDController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Festival\Festival.ts" />
@@ -2424,6 +2468,7 @@
     <TypeScriptCompile Include="Scripts\Modules\Filtering\FilterChangedEvent.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Filtering\Models\ICountryFilterVM.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Filtering\Models\IFilterBarVM.ts" />
+    <TypeScriptCompile Include="Scripts\Modules\Genres\Controllers\GenreFormController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Genres\Controllers\_GenreFilterController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Genres\Controllers\GenreFilterController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Genres\Controllers\GenreOverviewController.ts" />

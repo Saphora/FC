@@ -31,7 +31,7 @@ namespace FC.Shared.ViewModels.Search
         
         public string City { get; set; }
 
-        public virtual string CultureStartDate
+        public  string CultureStartDate
         {
             set { value = Date.ToString("d", CultureInfo.CurrentCulture); }
             get { return Date.ToString("d", CultureInfo.CurrentCulture); }

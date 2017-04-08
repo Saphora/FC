@@ -12,10 +12,10 @@ namespace FC.WebAPI.Controllers.API
 {
     public class GenreController : BaseAPIController
     {
-        private GenreRespository repo;
+        private GenreRepository repo;
         public GenreController() : base()
         {
-            repo = new GenreRespository();
+            repo = new GenreRepository();
         }
 
 
@@ -28,7 +28,7 @@ namespace FC.WebAPI.Controllers.API
                 throw new HttpException(404, "Page size invalid");
             }
             result = repo.GetPaged<UGenre>(size, page,"Genres");
-            return new ServiceResponse<List<UGenre>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<UGenre>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpGet]
@@ -36,7 +36,7 @@ namespace FC.WebAPI.Controllers.API
         {
             List<UGenre> result = new List<UGenre>();
             result = repo.GetSorted<UGenre>("Genres",sortIndex, page);
-            return new ServiceResponse<List<UGenre>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<UGenre>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
 
@@ -44,7 +44,7 @@ namespace FC.WebAPI.Controllers.API
         [HttpGet]
         public ServiceResponse<int> GetPagedCount(string sortIndex, int page = 1)
         {
-            return new ServiceResponse<int>(repo.GetPagedCount<UGenre>("Genres",page, sortIndex), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<int>(repo.GetPagedCount<UGenre>("Genres",page, sortIndex), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
 
@@ -53,18 +53,24 @@ namespace FC.WebAPI.Controllers.API
         {
             try
             {
-                return new ServiceResponse<List<UGenre>>(repo.GetByPartialName(name), HttpStatusCode.OK, "OK");
+                return new ServiceResponse<List<UGenre>>(repo.GetByPartialName(name), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             }
             catch (Exception ex)
             {
                 return HandleException<List<UGenre>>(ex);
             }
         }
-        
+
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<UGenre> GetByID(Guid? id)
         {
-            return new ServiceResponse<UGenre>(repo.GetByID(id), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<UGenre>(repo.GetByID(id), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
+        }
+
+        [HttpOptions, HttpGet, HttpPost]
+        public ServiceResponse<List<UGenre>> GetByFestivalID(Guid? festivalID)
+        {
+            return new ServiceResponse<List<UGenre>>(repo.GetByFestivalID(festivalID), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpGet, HttpPost]
@@ -72,7 +78,7 @@ namespace FC.WebAPI.Controllers.API
         {
             try
             {
-                return new ServiceResponse<List<Guid?>>(repo.GetAllDefaultIds(), HttpStatusCode.OK, "OK");
+                return new ServiceResponse<List<Guid?>>(repo.GetAllDefaultIds(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             } catch(Exception ex)
             {
                 return HandleException<List<Guid?>>(ex);
@@ -84,7 +90,7 @@ namespace FC.WebAPI.Controllers.API
         {
             try
             {
-                ServiceResponse<List<UGenre>> result = new ServiceResponse<List<UGenre>>(repo.GetAllDefault(), HttpStatusCode.OK, "OK");
+                ServiceResponse<List<UGenre>> result = new ServiceResponse<List<UGenre>>(repo.GetAllDefault(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
                 return result;
             } catch(Exception ex)
             {
@@ -97,7 +103,7 @@ namespace FC.WebAPI.Controllers.API
         {
             try
             {
-                return new ServiceResponse<List<UGenre>>(repo.GetAll(), HttpStatusCode.OK, "OK");
+                return new ServiceResponse<List<UGenre>>(repo.GetAll(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             } catch(Exception ex)
             {
                 return HandleException<List<UGenre>>(ex);
@@ -109,7 +115,7 @@ namespace FC.WebAPI.Controllers.API
         {
             try
             {
-                return new ServiceResponse<List<UGenre>>(repo.GetAllRoot(), HttpStatusCode.OK, "OK");
+                return new ServiceResponse<List<UGenre>>(repo.GetAllRoot(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             } catch(Exception ex)
             {
                 return HandleException<List<UGenre>>(ex);
@@ -121,7 +127,7 @@ namespace FC.WebAPI.Controllers.API
         {
             try
             {
-                return new ServiceResponse<List<UGenre>>(repo.GetAllChildren(), HttpStatusCode.OK, "OK");
+                return new ServiceResponse<List<UGenre>>(repo.GetAllChildren(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             } catch(Exception ex)
             {
                 return HandleException<List<UGenre>>(ex);
@@ -135,11 +141,11 @@ namespace FC.WebAPI.Controllers.API
             List<UGenre> result = new List<UGenre>();
             if (filter.GenreID.HasValue && filter.ParentID.HasValue)
             {
-                return new ServiceResponse<List<UGenre>>(null, HttpStatusCode.BadRequest, "FAIL-Genres/GetAll-cannot user filter.GenreID & filter.ParentID at same time.");
+                return new ServiceResponse<List<UGenre>>(null, HttpStatusCode.BadRequest, "FAIL-Genres/GetAll-cannot user filter.GenreID & filter.ParentID at same time.", this.Repositories.Auth.ActiveToken);
             } else if (filter.GenreID.HasValue)
             {
                 result.Add(repo.GetByID(filter.GenreID));
-                return new ServiceResponse<List<UGenre>>(result, HttpStatusCode.OK, "OK");
+                return new ServiceResponse<List<UGenre>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
             } else if (filter.ParentID.HasValue)
             {
                 result.AddRange(repo.GetByParentID(filter.ParentID));
@@ -152,7 +158,7 @@ namespace FC.WebAPI.Controllers.API
                     return HandleException<List<UGenre>>(ex);
                 }
             }
-            return new ServiceResponse<List<UGenre>>(result, HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<UGenre>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         
@@ -171,7 +177,7 @@ namespace FC.WebAPI.Controllers.API
             {
                 this.LogUnauthorized();
                 System.Web.HttpContext.Current.Response.StatusCode = 401;
-                return new ServiceResponse<RepositoryState>(new RepositoryState(), HttpStatusCode.Unauthorized, "You are not authorized to perform this action.");
+                return new ServiceResponse<RepositoryState>(new RepositoryState(), HttpStatusCode.Unauthorized, "You are not authorized to perform this action.", this.Repositories.Auth.ActiveToken);
             }
         }
 
@@ -189,7 +195,7 @@ namespace FC.WebAPI.Controllers.API
             {
                 this.LogUnauthorized();
                 System.Web.HttpContext.Current.Response.StatusCode = 401;
-                return new ServiceResponse<RepositoryState>(new RepositoryState(), HttpStatusCode.Unauthorized, "You are not authorized to perform this action.");
+                return new ServiceResponse<RepositoryState>(new RepositoryState(), HttpStatusCode.Unauthorized, "You are not authorized to perform this action.", this.Repositories.Auth.ActiveToken);
             }
         }
 
@@ -206,7 +212,7 @@ namespace FC.WebAPI.Controllers.API
             else
             {
                 this.LogUnauthorized();
-                return new ServiceResponse<RepositoryState>(new RepositoryState(), HttpStatusCode.Unauthorized, "You are not authorized to perform this action.");
+                return new ServiceResponse<RepositoryState>(new RepositoryState(), HttpStatusCode.Unauthorized, "You are not authorized to perform this action.", this.Repositories.Auth.ActiveToken);
             }
         }
         [HttpOptions, HttpGet, HttpPost]
@@ -223,7 +229,7 @@ namespace FC.WebAPI.Controllers.API
             else
             {
                 this.LogUnauthorized();
-                return new ServiceResponse<RepositoryState>(new RepositoryState(), HttpStatusCode.Unauthorized, "You are not authorized to perform this action.");
+                return new ServiceResponse<RepositoryState>(new RepositoryState(), HttpStatusCode.Unauthorized, "You are not authorized to perform this action.", this.Repositories.Auth.ActiveToken);
             }
         }
 

@@ -27,18 +27,138 @@ namespace FC.BL.Repositories
         private static AuthorizationRepository _inst;
         private MD5 MD5Hasher { get; set; }
 
-        
-        public AppUserSession Session { get; set; }
-        public ApplicationUser CurrentUser { get; set; }
-        public List<Role> CurrentUserRoles { get; set; }
-        public Guid? ActiveToken { get; set; }
+
+        public AppUserSession Session
+        {
+            get
+            {
+                if (HttpContext.Current.Items.Contains("AppUserSession"))
+                {
+                    return (AppUserSession)HttpContext.Current.Items["AppUserSession"];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (!HttpContext.Current.Items.Contains("AppUserSession"))
+                {
+                    HttpContext.Current.Items.Add("AppUserSession", value);
+                }
+                else
+                {
+                    HttpContext.Current.Items["AppUserSession"] = value;
+
+                }
+            }
+        }
+        public ApplicationUser CurrentUser
+        {
+            get
+            {
+                if (HttpContext.Current.Items.Contains("CurrentUser"))
+                {
+                    return (ApplicationUser)HttpContext.Current.Items["CurrentUser"];
+                } else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (!HttpContext.Current.Items.Contains("CurrentUser"))
+                {
+                    HttpContext.Current.Items.Add("CurrentUser", value);
+                }
+                else
+                {
+                    HttpContext.Current.Items["CurrentUser"] = value;
+                }
+            }
+            //TODO: GET THIS FROM HTTP CONTEXT CURRENT.
+        }
+        public List<Role> CurrentUserRoles
+        {
+            get
+            {
+                if (HttpContext.Current.Items.Contains("CurrentUserRoles"))
+                {
+                    return (List<Role>)HttpContext.Current.Items["CurrentUserRoles"];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if(!HttpContext.Current.Items.Contains("CurrentUserRoles"))
+                {
+                    HttpContext.Current.Items.Add("CurrentUserRoles", value);
+                } else
+                {
+                    HttpContext.Current.Items["CurrentUserRoles"] = value;
+                }
+            }
+        }
+        public Guid? ActiveToken
+        {
+            get
+            {
+                if (HttpContext.Current.Items.Contains("ActiveToken"))
+                {
+                    return (Guid?)HttpContext.Current.Items["ActiveToken"];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (!HttpContext.Current.Items.Contains("ActiveToken"))
+                {
+                    HttpContext.Current.Items.Add("ActiveToken", value);
+                } else
+                {
+                    HttpContext.Current.Items["ActiveToken"] = value;
+                }
+            }
+        }
+        public Guid? UserID
+        {
+            get
+            {
+                if (HttpContext.Current.Items.Contains("UserID"))
+                {
+                    return Guid.Parse(HttpContext.Current.Items["UserID"].ToString());
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                if (!HttpContext.Current.Items.Contains("UserID"))
+                {
+                    HttpContext.Current.Items.Add("UserID", value);
+                }
+                else
+                {
+                    HttpContext.Current.Items["UserID"] = value;
+                }
+            }
+        }
         public bool HasAuth { get; set; }
         public bool IsAuthorized { get; set; }
         public bool IsAlmostExpired { get; set; }
-        
+
         private AuthorizationRepository() : base()
         {
-            this.MD5Hasher = MD5.Create();   
+            this.MD5Hasher = MD5.Create();
         }
 
         /// <summary>
@@ -87,6 +207,11 @@ namespace FC.BL.Repositories
             }
         }
 
+        public bool IsOfficeUser(string[] roles)
+        {
+            return this.UserHasRoles(roles);
+        }
+
         public RepositoryState ForceDelete(ApplicationUser model)
         {
             try
@@ -102,9 +227,12 @@ namespace FC.BL.Repositories
                     this.Db.SaveChanges();
                 }
                 return new RepositoryState { SUCCESS = true, MSG = "User successfully removed with force" };
-            } catch(DbEntityValidationException ex) { 
+            }
+            catch (DbEntityValidationException ex)
+            {
                 return this.HandleException(ex, "Cannot remove user, because a database error occured.");
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return this.HandleException(ex, "Cannot remove user, please try again later");
             }
@@ -159,11 +287,10 @@ namespace FC.BL.Repositories
                                 {
                                     try
                                     {
-                                        ActiveToken = Guid.NewGuid();
-                                        s.Token = ActiveToken;
+
                                         s.Authenticated = true;
                                         s.Authorized = true;
-                                        s.Expires = DateTime.Now.AddHours(1);
+                                        s = this.RefreshToken(s);
                                         this.Db.Entry<AppUserSession>(s).State = System.Data.Entity.EntityState.Modified;
                                         this.Db.SaveChanges();
                                         return s;
@@ -268,6 +395,16 @@ namespace FC.BL.Repositories
             return usr;
         }
 
+        public ApplicationUser GetUserByEmail(string userEmailAddress)
+        {
+            ApplicationUser user;
+            using (Db = new ContentModel())
+            {
+                user = Db.ApplicationUsers.Where(w => w.UserEmailAddress.ToLower() == userEmailAddress.ToLower()).FirstOrDefault();
+            }
+            return user;
+        }
+
         /// <summary>
         /// Get Roles based on user id.
         /// </summary>
@@ -291,26 +428,98 @@ namespace FC.BL.Repositories
         /// <returns></returns>
         public bool IsExpired(AppUserSession sess)
         {
-            if(sess.Expires < DateTime.Now)
+            if (sess.Expires < DateTime.Now)
             {
                 return true;
-            } else
+            }
+            else
             {
                 return false;
             }
         }
 
+        public RepositoryState StartSession(AppUserSession sess)
+        {
+            RepositoryState state;
+            using (Db = new ContentModel())
+            {
+                try
+                {
+                    if (sess.SessionID == null)
+                    {
+                        sess.SessionID = Guid.NewGuid();
+                    }
+                    if (sess.Token == null)
+                    {
+                        sess.Token = Guid.NewGuid();
+                        this.ActiveToken = sess.Token;
+                    }
+                    sess.Created = DateTime.Now;
+                    WriteTokenCookie(sess);
+                    Db.AppUserSessions.Add(sess);
+                    Db.SaveChanges();
+
+                    state = new RepositoryState(true, "SESSION STARTED", sess.SessionID);
+                    return state;
+                }
+                catch (Exception ex)
+                {
+                    return this.HandleException(ex, "Cannot start a new session at the moment, this problem is logged. Please try again later.");
+                }
+            }
+        }
+
+        public RepositoryState DestroySessions(AppUserSession sess)
+        {
+            RepositoryState state;
+            using (Db = new ContentModel())
+            {
+                try
+                {
+                    Db.AppUserSessions.Remove(Db.AppUserSessions.Find(sess.SessionID));
+                    Db.AppUserSessions.RemoveRange(Db.AppUserSessions.Where(w => w.UserID == sess.UserID));
+                    Db.SaveChanges();
+                    state = new RepositoryState(true, "All the sessions are closed.", sess.SessionID);
+                    return state;
+                }
+                catch (Exception ex)
+                {
+                    return this.HandleException(ex, "Cannot close sessions at the moment. Please try again later.");
+                }
+            }
+        }
+
         /// <summary>
-        /// Get the current user session based on token.
+        /// Get the current user session based on token, and validate the expiration based on expire date. also check if Authenticated or Authorized states are changed.
         /// </summary>
         /// <param name="token"></param>
+        /// <param name="validateExpired"></param>
+        /// <param name="authOnly"></param>
         /// <returns></returns>
-        public AppUserSession GetByToken(Guid? token)
+        public AppUserSession GetByToken(Guid? token, bool validateExpired = true, bool authOnly = true)
         {
             AppUserSession result;
             using (Db = new ContentModel())
             {
-                result = this.Db.AppUserSessions.Where(w => w.Token == token).FirstOrDefault();
+                if (validateExpired)
+                {
+                    result = this.Db.AppUserSessions.Where(w => w.Token == token && w.Active == true && w.Expires >= DateTime.UtcNow).FirstOrDefault();
+                }
+                else
+                {
+                    result = this.Db.AppUserSessions.Where(w => w.Token == token && w.Active == true).FirstOrDefault();
+                }
+                if (result != null)
+                {
+                    if (authOnly)
+                    {
+                        if (!result.Authenticated || !result.Authorized)
+                        {
+                            return null;
+                        }
+                    }
+
+                }
             }
             return result;
         }
@@ -345,26 +554,215 @@ namespace FC.BL.Repositories
         }
 
         /// <summary>
-        /// Keep the session alive, raises the expiredate with one hour.
+        /// Refreshes the token and writes the cookie. Updates also session in DB if @update is true
         /// </summary>
-        /// <param name="sessionID"></param>
+        /// <param name="sess"></param>
+        /// <param name="update"></param>
         /// <returns></returns>
-        public bool KeepAlive(Guid? sessionID)
+        public AppUserSession RefreshToken(AppUserSession sess, bool update = false)
         {
-            var db = new PGDAL.PGModel.ContentModel();
-            AppUserSession sess = db.AppUserSessions.Find(sessionID);
-            if (sess != null)
+            sess.Token = Guid.NewGuid();
+            this.ActiveToken = sess.Token;
+            sess.Modified = DateTime.UtcNow;
+            sess.Expires = DateTime.UtcNow.AddHours(6);
+
+            HttpCookie c = new HttpCookie("Token", sess.Token.Value.ToString());
+            c.Expires = DateTime.UtcNow.AddHours(6);
+            c.HttpOnly = false;
+            c.Shareable = false;
+            if (HttpContext.Current != null)
             {
-                if (sess.Active == true)
+                if (HttpContext.Current.Response.Cookies.AllKeys.Contains("Token"))
                 {
-                    sess.Expires = DateTime.Now.AddHours(1);
-                    db.Entry<AppUserSession>(sess).State = System.Data.Entity.EntityState.Modified;
-                    db.SaveChanges();
-                    return true;
+                    HttpContext.Current.Response.SetCookie(c);
                 }
                 else
                 {
-                    return false;
+                    HttpContext.Current.Response.Cookies.Add(c);
+                }
+            }
+            HttpCookie c2 = new HttpCookie("UserID", sess.UserID.Value.ToString());
+            c2.Expires = DateTime.UtcNow.AddDays(6);
+            c2.HttpOnly = false;
+            c2.Shareable = false;
+            if (HttpContext.Current != null)
+            {
+                if (HttpContext.Current.Response.Cookies.AllKeys.Contains("UserID"))
+                {
+                    HttpContext.Current.Response.SetCookie(c2);
+                }
+                else
+                {
+                    HttpContext.Current.Response.Cookies.Add(c2);
+                }
+            }
+            if (update)
+            {
+                using (Db = new ContentModel())
+                {
+                    var s = Db.AppUserSessions.Find(sess.SessionID);
+                    s.Token = sess.Token;
+                    s.Modified = sess.Modified;
+                    s.Expires = sess.Expires;
+                    Db.Entry(s).State = System.Data.Entity.EntityState.Modified;
+                    Db.SaveChanges();
+                    return s;
+                }
+            }
+            return sess;
+        }
+
+        public void WriteTokenCookie(AppUserSession sess)
+        {
+            //foreach (string domain in FCConfig.Domains)
+            //{
+            HttpCookie c = new HttpCookie("Token", sess.Token.Value.ToString());
+            c.Expires = DateTime.UtcNow.AddHours(6);
+            c.HttpOnly = false;
+            c.Shareable = false;
+            if (HttpContext.Current != null)
+            {
+                if (HttpContext.Current.Response.Cookies.AllKeys.Contains("Token"))
+                {
+                    HttpContext.Current.Response.SetCookie(c);
+                }
+                else
+                {
+                    HttpContext.Current.Response.Cookies.Add(c);
+                }
+            }
+            HttpCookie c2 = new HttpCookie("UserID", sess.UserID.Value.ToString());
+            c2.Expires = DateTime.UtcNow.AddDays(6);
+            c2.HttpOnly = false;
+            c2.Shareable = false;
+            if (HttpContext.Current != null)
+            {
+                if (HttpContext.Current.Response.Cookies.AllKeys.Contains("UserID"))
+                {
+                    HttpContext.Current.Response.SetCookie(c2);
+                }
+                else
+                {
+                    HttpContext.Current.Response.Cookies.Add(c2);
+                }
+            }
+        }
+
+
+
+        public void DestroyToken(AppUserSession sess)
+        {
+            using (Db = new ContentModel())
+            {
+                if (HttpContext.Current != null)
+                {
+                    HttpContext.Current.Response.Cookies.Remove("Token");
+                }
+                Db.AppUserSessions.RemoveRange(Db.AppUserSessions.Where(w => w.Token == sess.Token));
+                Db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Keep the session alive, raises the expiredate with one day.
+        /// </summary>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public Guid? KeepAlive(AppUserSession session)
+        {
+
+            using (Db = new ContentModel())
+            {
+                AppUserSession sess = Db.AppUserSessions.Find(session.SessionID);
+                if (sess != null)
+                {
+                    if (session.SessionID != null)
+                    {
+                        sess.SessionID = session.SessionID;
+                    }
+                    if (session.Action != null)
+                    {
+                        sess.Action = session.Action;
+                    }
+                    sess.Authorized = session.Authorized;
+                    sess.Authenticated = session.Authenticated;
+                    sess.Active = session.Active;
+
+                    if (session.Controller != null)
+                    {
+                        sess.Controller = session.Controller;
+                    }
+                    sess.Modified = DateTime.Now;
+                    if (session.BrowserName != null)
+                    {
+                        sess.BrowserName = session.BrowserName;
+                    }
+                    if (session.Token != null)
+                    {
+                        sess.Token = session.Token;
+                    }
+                    if (session.Culture != null)
+                    {
+                        sess.Culture = session.Culture;
+                    }
+                    sess.Expires = DateTime.UtcNow.AddDays(1);
+                    if (session.HostAddress != null)
+                    {
+                        sess.HostAddress = session.HostAddress;
+                    }
+                    if (session.HostName != null)
+                    {
+                        sess.HostName = session.HostName;
+                    }
+
+                    sess.MobileDeviceName = session.MobileDeviceName;
+                    sess.MobileDeviceVersion = session.MobileDeviceVersion;
+                    if (session.ScreenHeight != null)
+                    {
+                        sess.ScreenHeight = session.ScreenHeight;
+                    }
+                    if (session.ScreenWidth != null)
+                    {
+                        sess.ScreenWidth = session.ScreenWidth;
+                    }
+                    if (session.URI != null)
+                    {
+                        sess.URI = session.URI;
+                    }
+                    sess.User = null;
+                    if (session.UserID != null)
+                    {
+                        sess.UserID = session.UserID;
+                    }
+                    if (session.UserAgent != null)
+                    {
+                        sess.UserAgent = session.UserAgent;
+                    }
+                    sess.Mode = AuthMode.LOCAL;
+                    if (session.Payload != null)
+                    {
+                        sess.Payload = session.Payload;
+                    }
+                    if (session.MobileDeviceName != null)
+                    {
+                        sess.IsMobileDevice = session.IsMobileDevice;
+                    }
+                    if (session.IPAddress != null)
+                    {
+                        sess.IPAddress = session.IPAddress;
+                    }
+                    if (session.IPv6Address != null)
+                    {
+                        sess.IPv6Address = session.IPv6Address;
+                    }
+                    if (session.Platform != null)
+                    {
+                        sess.Platform = session.Platform;
+                    }
+                    sess = this.RefreshToken(sess);
+                    Db.Entry<AppUserSession>(sess).State = System.Data.Entity.EntityState.Modified;
+                    Db.SaveChanges();
+                    return sess.Token;
                 }
             }
             throw new Exception("You where never logged in on this session.");
@@ -391,7 +789,8 @@ namespace FC.BL.Repositories
                     sess.Action = ctx.RouteData.Values["action"].ToString();
                     sess.Controller = ctx.RouteData.Values["controller"].ToString();
                     sess.URI = r.Url.Query;
-                    this.KeepAlive(sess.SessionID);
+
+                    this.KeepAlive(sess);
                     this.Session = sess;
                 }
             }
@@ -408,30 +807,20 @@ namespace FC.BL.Repositories
         /// <returns></returns>
         public bool Logout(Guid? sessionID)
         {
-            using (Db = new ContentModel())
+            try
             {
-                AppUserSession sess = this.Db.AppUserSessions.Find(sessionID);
-                if (sess != null)
+                using (Db = new ContentModel())
                 {
-                    if (sess.Authorized == true && sess.Active == true && sess.Expires > DateTime.Now)
-                    {
-                        sess.Active = false;
-                        sess.Expires = new DateTime(1989, 12, 28); //My date of birth :D 
-                        sess.Authorized = false;
-                        sess.Authenticated = false;
-                        this.Db.Entry<AppUserSession>(sess).State = System.Data.Entity.EntityState.Modified;
-                        this.Db.SaveChanges();
-                        this.Session = null;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    var s = Db.AppUserSessions.Find(sessionID);
+                    this.DestroySessions(s);
+                    this.DestroyToken(s);
+                    return true;
                 }
-                this.Session = null;
-                return true;
+            } catch
+            {
+                return false;
             }
+            
         }
 
         /// <summary>
@@ -441,15 +830,36 @@ namespace FC.BL.Repositories
         /// <returns></returns>
         public bool ActionAuthorized(string[] roleNames)
         {
-            bool any = false;
-            foreach(string role in roleNames)
+            this.ActiveToken = this.GetHTTPToken();
+
+            if (this.ActiveToken != null)
             {
-                if(CurrentUser.Roles.Select(s => s.Name).Where(w => w == role).Any())
-                {
-                    any = true;
-                }
+                this.RefreshToken(this.Session, true);
+                return this.UserHasRoles(roleNames);
             }
-            return any;
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the authenticated user roles matches one of the roles in roleNames
+        /// </summary>
+        /// <param name="roleNames"></param>
+        /// <returns></returns>
+        public bool ActionAuthorized(string[] roleNames, Guid? authorID)
+        {
+            this.ActiveToken = this.GetHTTPToken();
+            if (this.ActiveToken != null)
+            {
+                this.RefreshToken(this.Session, true);
+                return this.UserHasRoles(roleNames, authorID);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -458,37 +868,27 @@ namespace FC.BL.Repositories
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public AppUserSession Login(string username, string password)
+        public AppUserSession Login(string username, string password, bool encrypt = true)
         {
             using (Db = new ContentModel())
             {
-                if (this.Session == null || this.Session.Authenticated == false)
+                string pass = GetMd5Hash(this.MD5Hasher, password);
+                if (encrypt == false)
                 {
-                    string pass = GetMd5Hash(this.MD5Hasher, password);
-                    ApplicationUser authUser = this.Db.ApplicationUsers.Where(w => w.UserEmailAddress == username && w.UserPassword == pass).FirstOrDefault();
-                    if (authUser == null)
-                    {
-                        AppUserSession session = new AppUserSession("Login", "ControllerContext")
-                        {
-                            UserID = null,
-                            Authorized = false,
-                            Authenticated = false,
-                            Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName,
-                            Expires = DateTime.Now.AddMinutes(10),
-                            SessionID = Guid.NewGuid(),
-                            Mode = Shared.Enum.AuthMode.LOCAL,
-                            //UserID = authUser.UserID,
-                            Active = true,
-                            URI = "SECURE"
-                        };
-                        this.Session = session;
-                        return session;
-                    }
+                    pass = password;
+                }
+                ApplicationUser authUser = this.Db.ApplicationUsers.Where(w => w.UserEmailAddress == username && w.UserPassword == pass).FirstOrDefault();
+                if (authUser == null)
+                {
+                    return null;
+                }
+                else
+                {
                     authUser.Roles = this.Db.U2R.Where(w => w.UserID == authUser.UserID).Select(s => s.Role).ToList();
                     if (authUser != null)
                     {
                         authUser.Roles = this.Db.U2R.Where(w => w.UserID == authUser.UserID).Select(s => s.Role).ToList();
-                        AppUserSession session = new AppUserSession("Login","ControllerContext")
+                        AppUserSession session = new AppUserSession("Login", "ControllerContext")
                         {
                             UserID = authUser.UserID,
                             Authorized = true,
@@ -512,6 +912,7 @@ namespace FC.BL.Repositories
                         this.Session = session;
                         this.Db.AppUserSessions.Add(this.Session);
                         this.Db.SaveChanges();
+                        this.WriteTokenCookie(session);
                         return session;
                     }
                     else
@@ -522,87 +923,97 @@ namespace FC.BL.Repositories
                         return null;
                     }
                 }
-                else
+            }
+        }
+
+        public bool HasViewAuth(string[] roles)
+        {
+            if (this.CurrentUserRoles != null)
+            {
+                bool any = false;
+                foreach (string role in roles)
                 {
-                    return Session;
+                    if (this.CurrentUserRoles.Where(w => w.Name == role).Any())
+                    {
+                        any = true;
+                    }
                 }
+                return any;
+            }
+            else
+            {
+                return false;
             }
         }
 
 
         /// <summary>
-        /// Sign a user in.
+        /// Checks if the user has one of the passed roles in roleNames array.
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <param name="requestContext"></param>
-        /// <param name="ctx"></param>
+        /// <param name="roleNames"></param>
         /// <returns></returns>
-        public AppUserSession Login(string username, string password, System.Web.HttpContext requestContext, System.Web.Http.Controllers.HttpControllerContext ctx)
+        public bool UserHasRoles(string[] roleNames, Guid? authorID = null)
         {
-            if (this.Session == null || this.Session.Authenticated == false)
+            bool hasNone = true;
+            if (authorID != null)
             {
-                System.Web.HttpRequest r = requestContext.Request;
-                string pass = GetMd5Hash(this.MD5Hasher, password);
-                ApplicationUser authUser = this.Db.ApplicationUsers.Where(w => w.UserEmailAddress == username && w.UserPassword == pass).FirstOrDefault();
-                authUser.Roles = this.Db.U2R.Where(w => w.UserID == authUser.UserID).Select(s=>s.Role).ToList();
-                if (authUser != null)
+                if (authorID == this.CurrentUser.UserID)
                 {
-                    authUser.Roles = this.Db.U2R.Where(w => w.UserID == authUser.UserID).Select(s => s.Role).ToList();
-                    AppUserSession session = new AppUserSession()
-                    {
-                        User = authUser,
-                        Authorized = false,
-                        Authenticated = true,
-                        Created = DateTime.Now,
-                        Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName,
-                        HostAddress = requestContext.Request.UserHostName,
-                        IPAddress = requestContext.Request.UserHostAddress,
-                        HostName = requestContext.Request.UserHostName,
-                        Expires = DateTime.Now.AddMinutes(10),
-                        Platform = requestContext.Request.Browser.Platform,
-                        ScreenWidth = requestContext.Request.Browser.ScreenPixelsWidth.ToString(),
-                        ScreenHeight = requestContext.Request.Browser.ScreenPixelsHeight.ToString(),
-                        Token = Guid.NewGuid(),
-                        SessionID = Guid.NewGuid(),
-                        BrowserName = requestContext.Request.Browser.Browser,
-                        Mode = Shared.Enum.AuthMode.LOCAL,
-                        UserAgent = requestContext.Request.Browser.Browser,
-                        UserID = authUser.UserID,
-                        Active = true,
-                        Action = ctx.RouteData.Values["action"].ToString(),
-                        Controller = ctx.RouteData.Values["controller"].ToString(),
-                        URI = "SECURE"
-                    };
-                    if (requestContext.Request.Browser.IsMobileDevice)
-                    {
-                        session.IsMobileDevice = requestContext.Request.Browser.IsMobileDevice;
-                        session.MobileDeviceName = requestContext.Request.Browser.MobileDeviceModel;
-                    }
-                    this.CurrentUser = authUser;
-                    this.HasAuth = true;
-                    if (authUser.Roles.Count() == 0)
-                    {
-                        authUser.Roles.Add(Db.Roles.Where(w => w.Name == Roles.EndUser).FirstOrDefault());
-                    }
-                    this.CurrentUserRoles = authUser.Roles;
-                    this.Session = session;
-                    this.Db.AppUserSessions.Add(this.Session);
-                    this.Db.SaveChanges();
-                    return session;
+                    return true;
                 }
                 else
                 {
-                    this.HasAuth = false;
-                    this.CurrentUser = null;
-                    this.CurrentUserRoles = null;
-                    return null;
+                    using (Db = new ContentModel())
+                    {
+                        this.CurrentUserRoles = Db.U2R.Where(w => w.UserID == this.CurrentUser.UserID).Select(s => s.Role).ToList();
+                        foreach (string roleName in Roles.GetAllRoot())
+                        {
+                            if (this.CurrentUserRoles != null)
+                            {
+                                if (this.CurrentUserRoles.Where(w => w.Name == roleName).Any())
+                                {
+                                    hasNone = false;
+                                }
+                            }
+                        }
+                        if (!hasNone)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
                 }
-            } else
+            }
+            else
             {
-                return Session;
+                using (Db = new ContentModel())
+                {
+                    this.CurrentUserRoles = Db.U2R.Where(w => w.UserID == this.CurrentUser.UserID).Select(s => s.Role).ToList();
+                    foreach (string roleName in roleNames)
+                    {
+                        if (this.CurrentUserRoles != null)
+                        {
+                            if (this.CurrentUserRoles.Where(w => w.Name == roleName).Any())
+                            {
+                                hasNone = false;
+                            }
+                        }
+                    }
+                    if (!hasNone)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
             }
         }
+
 
         /// <summary>
         /// Create new application user.
@@ -616,6 +1027,10 @@ namespace FC.BL.Repositories
             {
                 try
                 {
+                    if (Db.ApplicationUsers.Where(w => w.UserEmailAddress == user.UserEmailAddress).Any())
+                    {
+                        return new RepositoryState { SUCCESS = false, MSG = string.Format("There is already an user registred with the following mail adres {0}", user.UserEmailAddress) };
+                    }
 
                     Db.MediaDirectories.Add(
                         new MediaDirectory()
@@ -636,9 +1051,10 @@ namespace FC.BL.Repositories
                         user.UserEmailAddress = user.UserEmailAddress.ToLower();
                         user.Country = null;
                         user.Album = null;
-                        if(user.Roles != null)
+
+                        if (user.Roles != null)
                         {
-                            foreach(var r in user.Roles)
+                            foreach (var r in user.Roles)
                             {
                                 this.Db.U2R.Add(new User2Role { U2RID = Guid.NewGuid(), RoleID = r.RoleID, UserID = user.UserID });
                             }
@@ -674,6 +1090,25 @@ namespace FC.BL.Repositories
             }
         }
 
+        public RepositoryState Activate(ApplicationUser user)
+        {
+
+            user.IsActive = true;
+            user.UserActivated = true;
+            this.CurrentUser = user;
+            this.CurrentUserRoles = user.Roles;
+            this.Session = this.Login(user.UserEmailAddress, user.UserPassword, false);
+            if (this.ActionAuthorized(Roles.GetAll()))
+            {
+                var state = this.Update(user);
+                state.Data = this.Session;
+                return state;
+            }
+            else
+            {
+                return new RepositoryState { SUCCESS = false, MSG = "Invalid activation session." };
+            }
+        }
         /// <summary>
         /// Update application user.
         /// </summary>
@@ -686,30 +1121,68 @@ namespace FC.BL.Repositories
                 try
                 {
                     ApplicationUser u = Db.ApplicationUsers.Find(user.UserID);
-
-                    if(user.UserPassword != null) {
-                        u.UserPassword = GetMd5Hash(MD5Hasher, user.UserPassword);
-                    }
-                    u.UserName = user.UserName;
-                    u.UserPhoneNumber = user.UserPhoneNumber;
-                    u.UserProfileIMG = user.UserProfileIMG;
-                    u.UserFirstname = user.UserFirstname;
-                    u.UserLastname = user.UserLastname;
-                    u.UserMiddlename = user.UserMiddlename;
-                    u.CountryID = user.CountryID;
-                    u.City = user.City;
-                    u.UserAddress = user.UserAddress;
-                    u.UserAddressNR = user.UserAddressNR;
                     u.IsActive = user.IsActive;
                     u.UserActivated = user.UserActivated;
-                    u.ZIPCode = user.ZIPCode;
+                    if (user.UserPassword != null)
+                    {
+                        u.UserPassword = GetMd5Hash(MD5Hasher, user.UserPassword);
+                    }
+                    if (user.UserName != null)
+                    {
+                        u.UserName = user.UserName;
+                    }
+                    if (user.UserPhoneNumber != null)
+                    {
+                        u.UserPhoneNumber = user.UserPhoneNumber;
+                    }
+                    if (user.UserProfileIMG != null)
+                    {
+                        u.UserProfileIMG = user.UserProfileIMG;
+                    }
+                    if (user.UserFirstname != null)
+                    {
+                        u.UserFirstname = user.UserFirstname;
+                    }
+                    if (user.UserLastname != null)
+                    {
+                        u.UserLastname = user.UserLastname;
+                    }
+                    if (user.UserMiddlename != null)
+                    {
+                        u.UserMiddlename = user.UserMiddlename;
+                    }
+                    if (user.CountryID != null)
+                    {
+                        u.CountryID = user.CountryID;
+                    }
+                    if (user.City != null)
+                    {
+                        u.City = user.City;
+                    }
+                    if (user.UserAddress != null)
+                    {
+                        u.UserAddress = user.UserAddress;
+                    }
+                    if (user.UserAddressNR != null)
+                    {
+                        u.UserAddressNR = user.UserAddressNR;
+                    }
+                    if (user.ZIPCode != null)
+                    {
+                        u.ZIPCode = user.ZIPCode;
+                    }
+
                     u.Country = null;
+
                     if (user.Roles != null)
                     {
-                        Db.U2R.RemoveRange(Db.U2R.Where(w => w.UserID == user.UserID));
-                        foreach (Role r in user.Roles)
+                        if (user.Roles.Count > 0)
                         {
-                            Db.U2R.Add(new User2Role { U2RID = Guid.NewGuid(), RoleID = r.RoleID, UserID = user.UserID });
+                            Db.U2R.RemoveRange(Db.U2R.Where(w => w.UserID == user.UserID));
+                            foreach (Role r in user.Roles)
+                            {
+                                Db.U2R.Add(new User2Role { U2RID = Guid.NewGuid(), RoleID = r.RoleID, UserID = user.UserID });
+                            }
                         }
                     }
                     if (u.MediaDirectoryID == null)
@@ -747,7 +1220,7 @@ namespace FC.BL.Repositories
                 }
             }
         }
-        
+
 
         /// <summary>
         /// Deletes the user from the application
@@ -767,7 +1240,8 @@ namespace FC.BL.Repositories
                     Db.Entry<ApplicationUser>(u).State = System.Data.Entity.EntityState.Modified;
                     Db.SaveChanges();
                     return new RepositoryState() { AffectedID = user.UserID, SUCCESS = true, MSG = $"User {user.UserName} successfully removed." };
-                } catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     return this.HandleException(ex, $"Cannot remove user {user.UserName}. Please try again later.");
                 }
@@ -782,15 +1256,133 @@ namespace FC.BL.Repositories
         public List<ApplicationUser> GetAllUsers()
         {
             List<ApplicationUser> users;
-            using(Db = new ContentModel())
+            using (Db = new ContentModel())
             {
                 users = Db.ApplicationUsers.OrderBy(o => o.UserName).ToList();
-                foreach(ApplicationUser user in users)
+                foreach (ApplicationUser user in users)
                 {
-                    user.Roles = Db.U2R.Where(w => w.UserID == user.UserID).Select(s => s.Role).OrderBy(o=>o.Name).ToList();
+                    user.Roles = Db.U2R.Where(w => w.UserID == user.UserID).Select(s => s.Role).OrderBy(o => o.Name).ToList();
                 }
             }
             return users;
         }
+
+
+        /// <summary>
+        /// Fetches the token from the HTTPContext and get the user based on that token. User is accessible via AuthorizationRepository.Current.CurrentUser
+        /// </summary>
+        /// <returns></returns>
+        public Guid? GetHTTPToken()
+        {
+            Guid? token = null;
+            Guid? userID = null;
+            if (HttpContext.Current != null)
+            {
+                if (HttpContext.Current.Request.Headers["Token"] != null)
+                {
+                    if (HttpContext.Current.Request.Headers["Token"] != "null")
+                    {
+                        token = Guid.Parse(HttpContext.Current.Request.Headers["Token"]);
+                        this.ActiveToken = token;
+                    }
+                }
+                if (HttpContext.Current.Request.Cookies["Token"] != null)
+                {
+                    token = Guid.Parse(HttpContext.Current.Request.Cookies["Token"].Value);
+                    this.ActiveToken = token;
+                }
+                if (token != null)
+                {
+                    this.Session = this.GetByToken(token);
+                    if (this.Session != null)
+                    {
+                        this.UserID = Session.UserID;
+                        this.CurrentUser = this.GetUserByID(this.Session.UserID);
+                        this.CurrentUserRoles = this.CurrentUser.Roles;
+                        return token;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Guid? GetRequestToken()
+        {
+            Guid? token = null;
+            Guid? userID = null;
+            if (HttpContext.Current != null)
+            {
+                if (HttpContext.Current.Request.Headers["Token"] != null)
+                {
+                    if (HttpContext.Current.Request.Headers["Token"] != "null") //LIKE WHUUUT??? HOW IS THIS POSSIBLE?
+                    {
+                        token = Guid.Parse(HttpContext.Current.Request.Headers["Token"]);
+                        this.ActiveToken = token;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                if (HttpContext.Current.Request.Cookies["Token"] != null)
+                {
+                    token = Guid.Parse(HttpContext.Current.Request.Cookies["Token"].Value);
+                    this.ActiveToken = token;
+                }
+                return token;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Fetches the token from the HTTPContext and get the user based on that token. User is accessible via AuthorizationRepository.Current.CurrentUser
+        /// </summary>
+        public bool SetHTTPToken(Guid? token)
+        {
+
+            if (token != null)
+            {
+                this.Session = this.GetByToken(token);
+                if (this.Session != null)
+                {
+                    this.UserID = Session.UserID;
+                    this.CurrentUser = this.GetUserByID(this.Session.UserID);
+                    this.CurrentUserRoles = this.CurrentUser.Roles;
+
+                    if (this.CurrentUser != null && this.CurrentUserRoles != null)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }
+

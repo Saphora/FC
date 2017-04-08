@@ -65,6 +65,40 @@ var FC;
                         throw new Error("Use CacheManager.GetInstance() for instantiating this class, or get the instance key by CacheManager.GetInstKey() first..");
                     }
                 }
+                CacheManager.prototype.GetCookieValue = function (key) {
+                    var vm = this;
+                    var cookies = document.cookie.split(";");
+                    var c = cookies.filter(function (v, i) {
+                        var kvp = v.split('=');
+                        var k = kvp[0];
+                        var v = kvp[1];
+                        return k.trim() == key.trim();
+                    });
+                    var val = "";
+                    if (c != null) {
+                        if (c.length > 0) {
+                            if (c[0].split('=').length > 0) {
+                                val = c[0].split('=')[1];
+                            }
+                        }
+                    }
+                    if (val == "") {
+                        return null;
+                    }
+                    else {
+                        return val;
+                    }
+                };
+                CacheManager.prototype.SetCookieValue = function (key, value, expires) {
+                    if (expires === void 0) { expires = null; }
+                    var vm = this;
+                    var cookies = document.cookie.split(";");
+                    if (!expires) {
+                        expires = new Date();
+                        expires.setDate(expires.getDate() + 1);
+                    }
+                    document.cookie = key + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
+                };
                 CacheManager.GetInstKey = function () {
                     return "132B862D62FE41F0B1865F43BF574BAC";
                 };
@@ -84,49 +118,20 @@ var FC;
                     return result;
                 };
                 CacheManager.prototype.WriteStorage = function (key, obj, ms) {
-                    var currentDate = new Date();
-                    if (ms) {
-                        this.Expires = ms;
-                    }
-                    var expires = new Date().getTime() + this.Expires;
-                    var data = new Storage();
-                    data.data = obj;
-                    data.expires = expires;
+                    var vm = this;
+                    var str = "";
                     try {
-                        var str = JSON.stringify(data);
-                        if (data.data != null && data.data != undefined) {
-                            localStorage.setItem(key, str);
-                            var event = new CustomEvent(key + "_Writed");
-                            window.dispatchEvent(event);
+                        if (typeof (obj) == "string") {
+                            str = obj;
                         }
                         else {
-                            throw new Error("Cannot set empty data objects to localstorage, data must contain data!");
+                            str = JSON.stringify(obj);
                         }
-                    }
-                    catch (ex) {
-                        var event = new CustomEvent("StorageError");
+                        vm.SetCookieValue(key, str);
+                        var event = new CustomEvent(key + "_Writed");
                         window.dispatchEvent(event);
-                    }
-                };
-                CacheManager.prototype.Write = function (key, obj, ms) {
-                    var currentDate = new Date();
-                    if (ms) {
-                        this.Expires = ms;
-                    }
-                    var expires = new Date().getTime() + this.Expires;
-                    var data = new Storage();
-                    data.data = obj;
-                    data.expires = expires;
-                    try {
-                        var str = JSON.stringify(data);
-                        if (data.data != null && data.data != undefined) {
-                            localStorage.setItem(key, str);
-                            var event = new CustomEvent(key + "_Writed");
-                            window.dispatchEvent(event);
-                        }
-                        else {
-                            throw new Error("Cannot set empty data objects to localstorage, data must contain data!");
-                        }
+                        var event2 = new CustomEvent("StorageWrited", { detail: key });
+                        window.dispatchEvent(event2);
                     }
                     catch (ex) {
                         var event = new CustomEvent("StorageError");
@@ -198,107 +203,95 @@ var FC;
                     }, expiredCallback).data;
                 };
                 CacheManager.prototype.GetStorage = function (key, successCallback, expiredCallback) {
-                    try {
-                        var vm = this;
-                        var value = localStorage.getItem(key);
-                        var data = null;
-                        if (value) {
-                            data = JSON.parse(value);
+                    var vm = this;
+                    var data = this.Get(key);
+                    if (successCallback && data) {
+                        successCallback(data);
+                    }
+                    if (expiredCallback) {
+                        if (data) {
+                            expiredCallback(data);
                         }
                         else {
-                            return null;
-                        }
-                        if (data && data.expires) {
-                            if (data.expires > new Date().getTime()) {
-                                if (successCallback) {
-                                    successCallback(data);
-                                }
-                                return data;
-                            }
-                            else {
-                                console.info('Data expired ' + key + ' from localstorage');
-                                if (successCallback) {
-                                    successCallback(data);
-                                }
-                                if (expiredCallback) {
-                                    expiredCallback(data);
-                                }
-                                return data;
-                            }
-                        }
-                        else {
-                            return null;
+                            expiredCallback();
                         }
                     }
-                    catch (ex) {
-                        throw ex;
-                    }
+                    return data;
                 };
                 CacheManager.prototype.Get = function (key, successCallback, expiredCallback) {
-                    try {
-                        var vm = this;
-                        var value = localStorage.getItem(key);
-                        var data = null;
-                        if (value) {
-                            data = JSON.parse(value);
+                    var data;
+                    var result = new Storage();
+                    if (this.GetCookieValue(key)) {
+                        try {
+                            data = JSON.parse(this.GetCookieValue(key));
                         }
-                        else {
-                            return null;
-                        }
-                        if (data && data.expires) {
-                            if (data.expires > new Date().getTime()) {
-                                if (successCallback) {
-                                    successCallback(data);
-                                }
-                                return data;
-                            }
-                            else {
-                                console.info('Data expired ' + key + ' from localstorage');
-                                if (successCallback) {
-                                    successCallback(data);
-                                }
-                                if (expiredCallback) {
-                                    expiredCallback(data);
-                                }
-                                return data;
-                            }
-                        }
-                        else {
-                            return null;
+                        catch (e) {
+                            data = this.GetCookieValue(key);
                         }
                     }
-                    catch (ex) {
-                        throw ex;
+                    if (data) {
+                        result.data = data;
+                        result.expires = 99999999999;
+                        return result;
                     }
+                    else {
+                        return null;
+                    }
+                    //try {
+                    //    var vm = this;
+                    //    var value = localStorage.getItem(key);
+                    //    var data: Storage<T> = null;
+                    //    if (value) {
+                    //        data = JSON.parse(value);
+                    //    } else {
+                    //        return null;
+                    //    }
+                    //    if (data && data.expires) {
+                    //        if (data.expires > new Date().getTime()) {
+                    //            if (successCallback) {
+                    //                successCallback(data);
+                    //            }
+                    //            return data;
+                    //        } else {
+                    //            console.info('Data expired ' + key + ' from localstorage')
+                    //            if (successCallback) {
+                    //                successCallback(data);
+                    //            }
+                    //            if (expiredCallback) {
+                    //                expiredCallback(data);
+                    //            }
+                    //            return data;
+                    //        }
+                    //    } else {
+                    //        return null;
+                    //    }
+                    //} catch (ex) {
+                    //    throw ex;
+                    //}
                 };
                 CacheManager.prototype.DeleteStorage = function (key) {
-                    //localStorage.removeItem(key);
-                    //var e = new CustomEvent(key + "_Deleted", { 'detail': key });
-                    //window.dispatchEvent(e);
+                    var cookies = document.cookie.split(";");
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i];
+                        var eqPos = cookie.indexOf("=");
+                        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                        if (name.trim() == key.trim()) {
+                            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                        }
+                    }
+                    var e = new CustomEvent(key + "_Deleted", { 'detail': key });
+                    window.dispatchEvent(e);
                 };
                 CacheManager.prototype.ClearStorage = function () {
-                    localStorage.clear();
+                    console.info("Clear storage is not longer supported since migrated to cookies.");
                 };
                 CacheManager.prototype.Contains = function (key) {
-                    //if (cacheMode == CacheMode.LocalStorage) {
-                    if (localStorage[key]) {
-                        var value = localStorage[key];
-                        var data = null;
-                        if (value) {
-                            var data = JSON.parse(value);
-                        }
-                        if (data && data.expires && data.expires > new Date().getTime()) {
-                            return true;
-                        }
-                        else {
-                            this.DeleteStorage(key);
-                            return false;
-                        }
+                    if (this.GetCookieValue(key)) {
+                        return true;
                     }
                     else {
                         return false;
                     }
-                    //}
                 };
                 return CacheManager;
             }());
@@ -320,43 +313,6 @@ var FC;
         var Environment = (function () {
             function Environment() {
             }
-            Environment.UpdateBuild = function () {
-                var version = this.GetVersion().split(".");
-                var cacheversion = parseInt(version[2]);
-                var releaseversion = parseInt(version[0]);
-                var build = parseInt(version[1]) + 1;
-                this.VERSION = releaseversion + "." + build + "." + cacheversion;
-                CacheManager.WriteStorage("version", this.VERSION);
-                return this.VERSION;
-            };
-            Environment.UpdateCache = function () {
-                var version = this.GetVersion().split(".");
-                var cacheversion = parseInt(version[2]) + 1;
-                var releaseversion = parseInt(version[0]);
-                var build = parseInt(version[1]);
-                this.VERSION = releaseversion + "." + build + "." + cacheversion;
-                CacheManager.WriteStorage("version", this.VERSION);
-                return this.VERSION;
-            };
-            Environment.UpdateRelease = function () {
-                var version = this.GetVersion().split(".");
-                var cacheversion = 0;
-                var build = parseInt(version[1]);
-                var releaseversion = parseInt(version[0]) + 1;
-                this.VERSION = releaseversion + "." + build + "." + cacheversion;
-                CacheManager.WriteStorage("version", this.VERSION);
-                return this.VERSION;
-            };
-            Environment.GetVersion = function () {
-                if (CacheManager.Contains("version")) {
-                    this.VERSION = CacheManager.Get("version").data;
-                    return this.VERSION;
-                }
-                else {
-                    this.VERSION = "1.0.0";
-                    return this.VERSION;
-                }
-            };
             Environment.GetBaseURL = function (et) {
                 if (et.toString() == EnvironmentType.Local.toString()) {
                     return Environment.LocalBaseURL;
@@ -365,12 +321,22 @@ var FC;
                     return Environment.RemoteBaseURL;
                 }
             };
+            Environment.GetMediaURL = function (et) {
+                if (et.toString() == EnvironmentType.Local.toString()) {
+                    return Environment.MediaURLRootLocal;
+                }
+                if (et.toString() == EnvironmentType.Remote.toString()) {
+                    return Environment.MediaURLRoot;
+                }
+            };
             Environment.VERSION = "";
             Environment.GeoIPURL = "https://freegeoip.net/json/";
             Environment.LocalBaseURL = "http://localhost:8888";
             Environment.RemoteBaseURL = "https://festival-calendar.nl:8888";
             Environment.GeoServicesURL = "http://wmdevelopment.nl:8080";
             Environment.MediaURLRoot = "https://festival-calendar.nl:8888/";
+            Environment.MediaURLRootLocal = "http://localhost:8888/";
+            Environment.UploadStateKey = "4C3A3ADE-CCD0-4CAC-A46A-1E8410DDA79C";
             Environment.MEDIA_ROOT_ID = "710FE0A0-8894-40DB-8D7D-2FCBD7BA14CF";
             Environment.FESTIVAL_DIR_ROOT_ID = "1c9f99e9-1ff2-4eef-9f94-25b400340fba";
             Environment.ARTIST_DIR_ROOT_ID = "3aa4eee3-5821-40ce-a82c-5018b890b824";
@@ -427,15 +393,13 @@ var FC;
                     UserCulture: window.navigator.language,
                     CurrentTicks: new Date().getTime()
                 });
-                this.URLRoot = Environment.GetBaseURL(EnvironmentType.Remote);
+                this.URLRoot = Environment.GetBaseURL(EnvironmentType.Local);
                 this.ServiceHeaders = new FC.Shared.Models.SystemHeaders();
                 this.ServiceHeaders.Culture = this.Client.UserCulture;
                 this.ServiceHeaders.UserDateTime = this.Client.CurrentTicks;
                 this.ServiceHeaders.ContentType = 'application/json';
                 this.ServiceHeaders.Accept = 'application/json';
-                if (FC.Shared.Util.CacheManager.GetInstance().Contains("Token")) {
-                    this.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().Get("Token").data;
-                }
+                this.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().GetCookieValue("Token");
             }
             return AppConfig;
         }());
@@ -455,13 +419,27 @@ var FC;
                 this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
                 this.GetCompleted = new Object();
                 this.Config = new FC.Core.AppConfig();
-                this.Loading = FC.Shared.Util.LoadQueue.GetInstance();
+                // this.Loading = FC.Shared.Util.LoadQueue.GetInstance();
             }
+            //public Create<T>(model: T) {
+            //}
+            //public Delete<T>(model: T) {
+            //}
+            //public Update<T>(model: T) {
+            //}
+            //public ForceDelete<T>(model: T) {
+            //}
+            ServiceBase /*implements INT.IServiceBase<any>*/.prototype.SetCookie = function (name, value, expires) {
+                document.cookie = name + "=" + value + "; expires=" + expires.toUTCString() + ";path=/";
+            };
+            ServiceBase /*implements INT.IServiceBase<any>*/.prototype.DeleteCookie = function (name) {
+                document.cookie = name + "=; expires=1970/1/1/ 12:00:00;path=/";
+            };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.Upload = function (url, files) {
                 var _this = this;
                 var vm = this;
                 url = $AppConfig.URLRoot + url;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var config = this.Config;
                 var vm = this;
                 var result;
@@ -472,43 +450,51 @@ var FC;
                     formData.append(v.name, v);
                     index++;
                 });
-                config.ServiceHeaders["Content-Type"] = undefined;
-                config.ServiceHeaders["Process-Data"] = false;
+                $AppConfig.ServiceHeaders["Content-Type"] = undefined;
+                $AppConfig.ServiceHeaders["Process-Data"] = false;
+                $AppConfig.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().GetCookieValue("Token");
                 result = this.$http({
-                    headers: config.ServiceHeaders,
+                    headers: $AppConfig.ServiceHeaders,
                     url: url,
                     data: formData,
                     method: 'POST',
                     cache: false,
                 }).then(function (response) { return _this.handlerResponded(url, response, {}); });
+                result.then(function (r) {
+                    if (r.ResponseToken) {
+                        vm.SetCookie("Token", r.ResponseToken, new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDay(), new Date().getHours() + 6, new Date().getMinutes()));
+                    }
+                });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.Get = function (url, params) {
                 var _this = this;
                 var vm = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var result;
                 if (vm.GetCompleted[url] == null || vm.GetCompleted[url] == true) {
                     vm.GetCompleted[url] == false;
                     url = $AppConfig.URLRoot + url;
+                    $AppConfig.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().GetCookieValue("Token");
                     if (params && params.length > 0) {
                         result = this.$http.get(url, {
                             headers: $AppConfig.ServiceHeaders,
                             params: params
                         }).then(function (response) { return _this.handlerResponded(url, response, params); });
                         result.catch(function () {
-                            vm.Loading.TriggerFailure(url);
+                            // vm.Loading.TriggerFailure(url);
                         });
                     }
                     else {
+                        $AppConfig.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().GetCookieValue("Token");
                         result = this.$http.get(url, {
                             headers: $AppConfig.ServiceHeaders
                         }).then(function (response) { return _this.handlerResponded(url, response, params); });
                         result.catch(function () {
-                            vm.Loading.TriggerFailure(url);
+                            //vm.Loading.TriggerFailure(url);
                         });
                     }
                     return result;
@@ -521,7 +507,7 @@ var FC;
                 var _this = this;
                 var hdrs = {};
                 var prms = {};
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 if (params) {
                     prms = params;
                 }
@@ -535,13 +521,13 @@ var FC;
                     params: prms
                 }).then(function (response) { return _this.handlerRespondedRaw(response, params); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.GetRawTyped = function (url, params, headers) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var hdrs = {};
                 var prms = {};
                 var vm = this;
@@ -557,16 +543,17 @@ var FC;
                     params: prms
                 }).then(function (response) { return _this.handlerRespondedRaw(response, params); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.JSONP = function (url, params) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var result;
                 var vm = this;
                 url = $AppConfig.URLRoot + url;
+                $AppConfig.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().GetCookieValue("Token");
                 if (params && params.length > 0) {
                     result = this.$http.jsonp(url, {
                         headers: $AppConfig.ServiceHeaders,
@@ -579,13 +566,13 @@ var FC;
                     }).then(function (response) { return _this.handlerResponded(url, response, params); });
                 }
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.RawJSONP = function (url, params, headers) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var hdrs = {};
                 var prms = {};
                 var vm = this;
@@ -601,13 +588,13 @@ var FC;
                     params: prms
                 }).then(function (response) { return _this.handlerRespondedRaw(response, params); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.PostRaw = function (url, params, headers) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 var vm = this;
                 var result;
                 var hdrs = {};
@@ -623,34 +610,42 @@ var FC;
                     params: prms
                 }).then(function (response) { return _this.handlerRespondedRaw(response, params); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.Post = function (url, svcMsg) {
                 var _this = this;
-                this.Loading.Listen(url);
+                //this.Loading.Listen(url);
                 url = $AppConfig.URLRoot + url;
                 var config = this.Config;
                 var vm = this;
                 var result;
+                $AppConfig.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().GetCookieValue("Token");
                 result = this.$http({
-                    headers: config.ServiceHeaders,
+                    headers: $AppConfig.ServiceHeaders,
                     url: url,
                     data: svcMsg,
                     method: 'POST'
                 }).then(function (response) { return _this.handlerResponded(url, response, {}); });
                 result.catch(function () {
-                    vm.Loading.TriggerFailure(url);
+                    //vm.Loading.TriggerFailure(url);
                 });
                 return result;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.handlerResponded = function (url, response, params) {
                 var vm = this;
                 vm.GetCompleted[url] = true;
-                vm.Loading.TriggerComplete(url["ReplaceAll"]($AppConfig.URLRoot, "")["ReplaceAll"]('/', ''));
+                //vm.Loading.TriggerComplete(url["ReplaceAll"]($AppConfig.URLRoot, "")["ReplaceAll"]('/', ''));
                 if (params && params.length > 0) {
                     response.Params = params;
+                }
+                if (response) {
+                    if (response.data) {
+                        if (response.data.ResponseToken) {
+                            vm.SetCookie("Token", response.data.ResponseToken, new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDay(), new Date().getHours() + 6, new Date().getMinutes()));
+                        }
+                    }
                 }
                 return new FC.Shared.Models.ServiceResponse(response.data);
             };
@@ -966,7 +961,6 @@ var FC;
     (function (Shared) {
         var Controllers;
         (function (Controllers) {
-            var ENV = FC.Core.Environment;
             (function (ServiceType) {
                 ServiceType[ServiceType["ArtistService"] = 0] = "ArtistService";
                 ServiceType[ServiceType["FestivalService"] = 1] = "FestivalService";
@@ -1012,7 +1006,6 @@ var FC;
                     this._timeout = null;
                     var vm = this;
                     this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
-                    this.IsUpdated();
                     this.$scope = $scope;
                     this.$scope.inst = this;
                     this.$scope.Now = new Date();
@@ -1197,10 +1190,7 @@ var FC;
                     return vm.$scope.UserFavorites.Contains("ContentID", contentID);
                 };
                 BaseController.prototype.SetUserFavorites = function () {
-                    var vm = this;
-                    vm.FavoriteService.GetUserFavorites().then(function (r) {
-                        vm.$scope.UserFavorites = new FC.List(r.Data);
-                    });
+                    throw new Error("BaseController.SetUserFavorites is obsolete");
                 };
                 BaseController.prototype.DoMarkFavorite = function (contentID, type) {
                     var vm = this;
@@ -1475,36 +1465,6 @@ var FC;
                         return d.toLocaleDateString();
                     }
                 };
-                BaseController.prototype.IsUpdated = function () {
-                    var vm = this;
-                    if (vm.CacheManager.Contains("version")) {
-                        vm.CacheManager.GetStorage("version", function (r) {
-                            if (r.data != ENV.GetVersion()) {
-                                vm.CacheManager.DeleteStorage("sys-genres");
-                                vm.CacheManager.DeleteStorage("user-genres");
-                                vm.CacheManager.DeleteStorage("active-theme");
-                                vm.CacheManager.DeleteStorage("sys-countries");
-                                vm.CacheManager.DeleteStorage("user-location");
-                                vm.CacheManager.DeleteStorage("user-countries");
-                                vm.CacheManager.DeleteStorage("sys-months");
-                                vm.CacheManager.DeleteStorage("sys-years");
-                                vm.CacheManager.WriteStorage("version", ENV.GetVersion());
-                                window.location.reload();
-                            }
-                        });
-                    }
-                    else {
-                        vm.CacheManager.DeleteStorage("sys-genres");
-                        vm.CacheManager.DeleteStorage("user-genres");
-                        vm.CacheManager.DeleteStorage("active-theme");
-                        vm.CacheManager.DeleteStorage("sys-countries");
-                        vm.CacheManager.DeleteStorage("user-location");
-                        vm.CacheManager.DeleteStorage("user-countries");
-                        vm.CacheManager.DeleteStorage("sys-months");
-                        vm.CacheManager.DeleteStorage("sys-years");
-                        vm.CacheManager.WriteStorage("version", ENV.GetVersion());
-                    }
-                };
                 BaseController.prototype.detectByLang = function ($scope) {
                     var vm = this;
                     $AppConfig.CurrentCountry = navigator.language;
@@ -1531,7 +1491,7 @@ var FC;
                                         tmp.push(v);
                                     }
                                 });
-                                CacheManager.Write("UserCountries", tmp, 99999999999999999999);
+                                CacheManager.WriteStorage("UserCountries", tmp, 99999999999999999999);
                             });
                             vm.$scope.MemReg.Register("sys-countries-set", true);
                         }
@@ -1807,6 +1767,21 @@ var FC;
                     opts.controllerAs = 'vm';
                     opts.locals = { local: { ServerMsg: $scope.ServerMsg, model: $scope.model } };
                     opts.templateUrl = '/Scripts/modules/details/views/dialogs/alerts/delete-confirm.html';
+                    opts.parent = document.body;
+                    opts.clickOutsideToClose = true;
+                    $scope.MtModal.show(opts);
+                };
+                BaseController.prototype.Warn = function ($scope, msg) {
+                    var vm = this;
+                    var opts = {};
+                    //$scope.MemReg.Register("ServerMsg", $scope.ServerMsg);
+                    if ($scope.MtModal) {
+                        $scope.MtModal.hide();
+                    }
+                    opts.controller = FC.Core.Controllers.AlertController;
+                    opts.controllerAs = 'vm';
+                    opts.locals = { local: { ServerMsg: $scope.ServerMsg, model: msg } };
+                    opts.templateUrl = '/Scripts/modules/details/views/dialogs/alerts/warning.html';
                     opts.parent = document.body;
                     opts.clickOutsideToClose = true;
                     $scope.MtModal.show(opts);
@@ -3033,335 +3008,236 @@ var FC;
     })(Modules = FC.Modules || (FC.Modules = {}));
 })(FC || (FC = {}));
 var CalendarModule = new FC.Modules.Calendar.Calendar(angular.module('FC.Modules.Calendar', ApplicationDependencies), Application);
-///<reference path="../../Core/ServiceBase.ts" />
-///<reference path="../../../Shared/CoreModel/KeyValuePair.ts" />
-///<reference path="../AppConfig.ts" />
-var FC;
-(function (FC) {
-    var Core;
-    (function (Core) {
-        var Services;
-        (function (Services) {
-            var Coordinate = (function () {
-                function Coordinate() {
-                }
-                return Coordinate;
-            }());
-            Services.Coordinate = Coordinate;
-            var NominatimService = (function (_super) {
-                __extends(NominatimService, _super);
-                function NominatimService(http, q) {
-                    _super.call(this, http, q);
-                    this.Euro = 0;
-                }
-                //public GetUserlocation(lat: number, long: number): ng.IPromise<FC.Shared.Models.NLocation> {
-                //    //var location: FC.Shared.Models.NLocation;
-                //    //return this.GetRaw(Environment.GeoServicesURL+'/reverse.php?format=html&lat=' + lat + '&lon=' + long + '&format=json');
-                //}
-                NominatimService.prototype.GetList = function () {
-                    throw new Error("NominatimService.GetList() is not implemented.");
-                };
-                NominatimService.prototype.GetCoordByCode = function (code) {
-                    return this.GetRaw(Core.Environment.GeoServicesURL + '/search.php?format=html&countrycodes=' + code + '&format=json');
-                };
-                NominatimService.$inject = ['$http', '$q'];
-                return NominatimService;
-            }(FC.Core.ServiceBase));
-            Services.NominatimService = NominatimService;
-            Application.app.service('FC.Core.Services.NominatimService', FC.Core.Services.NominatimService);
-        })(Services = Core.Services || (Core.Services = {}));
-    })(Core = FC.Core || (FC.Core = {}));
-})(FC || (FC = {}));
-///<reference path="../Calendar.ts"/>
-///<reference path="../../Core/ServiceBase.ts" />
-var FC;
-(function (FC) {
-    var Modules;
-    (function (Modules) {
-        var Calendar;
-        (function (Calendar) {
-            var Services;
-            (function (Services) {
-                var CalendarService = (function (_super) {
-                    __extends(CalendarService, _super);
-                    function CalendarService(http, q) {
-                        _super.call(this, http, q);
-                    }
-                    CalendarService.prototype.GetList = function () {
-                        throw new Error("CalendarService.GetList() is not implemented.");
-                    };
-                    CalendarService.prototype.GetMonths = function () {
-                        return this.Get('/API/Calendar/GetMonths');
-                    };
-                    CalendarService.prototype.GetFestivals = function (genre, month, year) {
-                        return this.Get('/API/Festival/GetByMonth?&genre=' + genre + '&month=' + (month + 1) + '&year=' + year);
-                    };
-                    CalendarService.prototype.GetFestivalsByCountry = function (genre, month, year, country) {
-                        return this.Get('/API/Festival/GetByCountry?&genre=' + genre + '&month=' + (month + 1) + '&year=' + year + '&country=' + country);
-                    };
-                    CalendarService.prototype.GetDaysInMonth = function (year, month) {
-                        if (!CacheManager.Contains('monthdays-' + year + '-' + month)) {
-                            var result = this.Get('/API/Calendar/GetDaysInMonth?year=' + year + '&month=' + month);
-                            result.then(function (r) {
-                                CacheManager.WriteStorage('monthdays-' + year + '-' + month, r.Data);
-                            });
-                            return result;
-                        }
-                        else {
-                            var rsp = { Data: {}, Message: "" };
-                            rsp.Data = CacheManager.Get('monthdays-' + year + '-' + month).data;
-                            rsp.Message = '{"success":"true"}';
-                            return this.$q.resolve(rsp);
-                        }
-                    };
-                    CalendarService.prototype.GetFilteredFestivals = function (month, year, genres, countries) {
-                        var filter = new FC.Shared.ServiceMessages.FestivalFilter();
-                        filter.GenreIDs = new Array();
-                        filter.CountryIDs = new Array();
-                        if (genres) {
-                            genres.forEach(function (v, k) {
-                                filter.GenreIDs.push(v.GenreID);
-                            });
-                        }
-                        if (countries) {
-                            countries.forEach(function (v, k) {
-                                filter.CountryIDs.push(v.CountryID);
-                            });
-                        }
-                        filter.MonthNum = month;
-                        filter.YearNum = year;
-                        return this.Post('/API/Festival/GetFiltered', new FC.Shared.Models.ServiceMessage(filter));
-                    };
-                    CalendarService.prototype.GetByMonthYear = function (month, year) {
-                        var filter = new FC.Shared.ServiceMessages.FestivalFilter();
-                        filter.MonthNum = month;
-                        filter.YearNum = year;
-                        return this.Post('/API/Festival/GetFiltered', new FC.Shared.Models.ServiceMessage(filter));
-                    };
-                    CalendarService.$inject = ['$http', '$q'];
-                    return CalendarService;
-                }(FC.Core.ServiceBase));
-                Services.CalendarService = CalendarService;
-                CalendarModule.$Application.RegisterService('FC.Modules.Calendar.Services.CalendarService', FC.Modules.Calendar.Services.CalendarService);
-            })(Services = Calendar.Services || (Calendar.Services = {}));
-        })(Calendar = Modules.Calendar || (Modules.Calendar = {}));
-    })(Modules = FC.Modules || (FC.Modules = {}));
-})(FC || (FC = {}));
-///<reference path="../../Core/FC.ts" />
-///<reference path="../../Core/Services/NominatimService.ts" />
-///<reference path="../Calendar.ts"/>
-///<reference path="../Services/CalendarService.ts"/>
-///<reference path="../../../Shared/Controllers/BaseController.ts"/>
-///<reference path="../../../Shared/Util/CacheManager.ts"/>
-//Loading properties;
-// IsThemesLoading: boolean;//
-// IsCountriesLoading: boolean;//
-// IsGenresLoading: boolean;//
-// IsFestivalsLoading: boolean;//
-var FC;
-(function (FC) {
-    var Modules;
-    (function (Modules) {
-        var Calendar;
-        (function (Calendar) {
-            var Controllers;
-            (function (Controllers) {
-                var CalendarController = (function (_super) {
-                    __extends(CalendarController, _super);
-                    function CalendarController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, $sce, URLManagerService, CalendarService, NewsService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
-                        var genreSvc = new FC.Modules.Genres.Services.GenreService($http, $q);
-                        var vm = this;
-                        this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
-                        this.$scope = $scope;
-                        this.URLManager = new FC.Core.Services.URLManagerService($http, $q, null);
-                        this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
-                        this.initLoadingScope();
-                        this._InitColDbo();
-                        this._InitServices(CalendarService, NewsService);
-                        this._InitializeDateData($scope);
-                        if (!this.$scope.ActiveYear) {
-                            if ($routeParams["year"] != null) {
-                                this.$scope.ActiveYear = $routeParams["year"];
-                            }
-                            else if (CacheManager.Contains("ActiveYear")) {
-                                vm.$scope.ActiveYear = CacheManager.Get("ActiveYear").data;
-                            }
-                            else {
-                                this.$scope.ActiveYear = new Date().getFullYear();
-                            }
-                        }
-                        if (!this.$scope.ActiveMonth) {
-                            if ($routeParams["month"] != null) {
-                                this.$scope.ActiveMonth = $routeParams["month"];
-                            }
-                            else if (CacheManager.Contains("ActiveMonth")) {
-                                vm.$scope.ActiveMonth = CacheManager.Get("ActiveMonth").data;
-                            }
-                            else {
-                                vm.$scope.ActiveMonth = new Date().getMonth() + 1;
-                            }
-                        }
-                        this._InitViewData($scope);
-                        this.WatchSearchResult();
-                        this.URLManager.AddURL("festival", "FestivalURL", "festival/{0}/");
-                        this.URLManager.AddURL("festival", "FestivalURL", "festival/{0}/{1}");
-                    }
-                    CalendarController.prototype._InitColDbo = function () {
-                        this.Festivals = new Array();
-                    };
-                    CalendarController.prototype._InitServices = function (CalendarService, NewsService) {
-                        this.CalendarSvc = CalendarService;
-                        this.NewsSvc = NewsService;
-                    };
-                    CalendarController.prototype.WatchSearchResult = function () {
-                        var vm = this;
-                        vm.$scope.HasSearchResults = false;
-                        vm.$scope.IsFestivalsLoading = true;
-                        vm.$scope.SearchNoResults = false;
-                        vm.$scope.Searching = false;
-                        window.addEventListener("Searching", function () {
-                            vm.CacheManager.DeleteStorage("search-result");
-                            vm.$scope.IsFestivalsLoading = true;
-                            vm.$scope.SearchNoResults = false;
-                            vm.$scope.Searching = true;
-                            vm.$scope.IsLoading = true;
-                        });
-                        window.addEventListener("SearchCompletedWithResults", function () {
-                            vm.$scope.Searching = false;
-                            vm.CacheManager.GetStorage("search-result", function (data) {
-                                vm.$scope.HasSearchResults = true;
-                                var d = data.data;
-                                if (d.length == 0) {
-                                    vm.$scope.SearchNoResults = true;
-                                    vm.$scope.Searching = false;
-                                    vm.$scope.IsLoading = false;
-                                }
-                                else {
-                                    vm.$scope.BaseIsLoading = false;
-                                    vm.$scope.Festivals = d;
-                                    vm.$scope.Searching = false;
-                                    vm.$scope.IsLoading = false;
-                                }
-                            });
-                        });
-                        window.addEventListener("SearchCompletedWithNoResults", function () {
-                            vm.$scope.IsLoading = false;
-                            vm.$scope.SearchNoResults = true;
-                            vm.$scope.Searching = false;
-                        });
-                    };
-                    CalendarController.prototype._InitializeDateData = function ($scope) {
-                        //var vm = this;
-                        //this.CalendarYears = [new Date().getFullYear(), new Date().getFullYear() + 1];
-                        //$scope.ActiveYear = new Date().getFullYear();
-                        //this.CalendarSvc.GetMonths().then(function (r: INT.IServiceResponse<Array<string>>) {
-                        //    vm.CalendarMonths = r.Data;
-                        //});
-                    };
-                    CalendarController.prototype.compare = function (a, b) {
-                        if (a.OrderDate < b.OrderDate) {
-                            return -1;
-                        }
-                        else if (a.OrderDate > b.OrderDate) {
-                            return 1;
-                        }
-                        else {
-                            return 0;
-                        }
-                    };
-                    CalendarController.prototype._InitViewData = function ($scope) {
-                        var vm = this;
-                        var genres = new Array();
-                        var genresFilter = new Array();
-                        if (vm.CacheManager.Contains('ActiveGenres')) {
-                            var tmpGenres = vm.CacheManager.Get('ActiveGenres');
-                            genres = tmpGenres.data;
-                            genresFilter = genres;
-                        }
-                        var countriesFilter = new Array();
-                        if (vm.CacheManager.Contains("UserCountries")) {
-                            countriesFilter = vm.CacheManager.Get('UserCountries').data;
-                        }
-                        vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genresFilter, countriesFilter).then(function (result) {
-                            vm.$scope.Festivals = result.Data;
-                            vm.$scope.IsLoading = false;
-                        });
-                        window.addEventListener("ActiveGenres_Deleted", function (e) {
-                            vm.$scope.IsLoading = true;
-                            var countriesFilter = new Array();
-                            if (vm.CacheManager.Contains("UserCountries")) {
-                                countriesFilter = vm.CacheManager.Get('UserCountries').data;
-                            }
-                            vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, new Array(), countriesFilter).then(function (result) {
-                                vm.$scope.Festivals = result.Data;
-                                vm.$scope.IsLoading = false;
-                            });
-                        });
-                        window.addEventListener('ActiveGenres_Writed', function (e) {
-                            vm.$scope.IsLoading = true;
-                            var genres = new Array();
-                            var tmpGenres = vm.CacheManager.Get('ActiveGenres');
-                            genres = tmpGenres.data;
-                            var genresFilter = genres;
-                            var countriesFilter = new Array();
-                            if (vm.CacheManager.Contains("UserCountries")) {
-                                countriesFilter = vm.CacheManager.Get('UserCountries').data;
-                            }
-                            vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genresFilter, countriesFilter).then(function (result) {
-                                vm.$scope.Festivals = result.Data;
-                                vm.$scope.IsLoading = false;
-                            });
-                        });
-                        window.addEventListener('UserCountries_Writed', function (e) {
-                            var countries = vm.CacheManager.GetStorage('UserCountries');
-                            var genres = new Array();
-                            if (vm.CacheManager.Contains("ActiveGenres")) {
-                                genres = vm.CacheManager.Get('ActiveGenres').data;
-                            }
-                            vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genres, countries.data).then(function (result) {
-                                vm.$scope.Festivals = result.Data;
-                                vm.$scope.IsLoading = false;
-                            });
-                        });
-                        window.addEventListener('UserCountries_Deleted', function (e) {
-                            var countriesFilter = new Array();
-                            if (vm.CacheManager.Contains("UserCountries")) {
-                                countriesFilter = vm.CacheManager.Get('UserCountries').data;
-                            }
-                            var genres = vm.CacheManager.GetStorage('UserCountries');
-                            vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genres.data, countriesFilter).then(function (result) {
-                                vm.$scope.Festivals = result.Data;
-                                vm.$scope.IsLoading = false;
-                            });
-                        });
-                    };
-                    CalendarController.prototype.GetFestivalURL = function (festival) {
-                        var vm = this;
-                        var retUrl = this.URLManager.GetURL("festival", "FestivalURL", [festival.FestivalID.toString()]);
-                        return retUrl;
-                    };
-                    CalendarController.$inject = [
-                        '$http',
-                        '$q',
-                        '$scope',
-                        '$route',
-                        '$routeParams',
-                        '$location',
-                        '$mdDialog',
-                        '$sce',
-                        "FC.Core.Services.URLManagerService",
-                        "FC.Modules.Calendar.Services.CalendarService",
-                        "FC.Modules.News.Services.NewsService"
-                    ];
-                    return CalendarController;
-                }(FC.Shared.Controllers.BaseController));
-                Controllers.CalendarController = CalendarController;
-                CalendarModule.GetApplication().RegisterController("FC.Modules.Calendar.Controllers.CalendarController", FC.Modules.Calendar.Controllers.CalendarController);
-            })(Controllers = Calendar.Controllers || (Calendar.Controllers = {}));
-        })(Calendar = Modules.Calendar || (Modules.Calendar = {}));
-    })(Modules = FC.Modules || (FC.Modules = {}));
-})(FC || (FC = {}));
+/////<reference path="../../Core/FC.ts" />
+/////<reference path="../../Core/Services/NominatimService.ts" />
+/////<reference path="../Calendar.ts"/>
+/////<reference path="../Services/CalendarService.ts"/>
+/////<reference path="../../../Shared/Controllers/BaseController.ts"/>
+/////<reference path="../../../Shared/Util/CacheManager.ts"/>
+////Loading properties;
+//// IsThemesLoading: boolean;//
+//// IsCountriesLoading: boolean;//
+//// IsGenresLoading: boolean;//
+//// IsFestivalsLoading: boolean;//
+//module FC.Modules.Calendar.Controllers {
+//    import CM = FC.Shared.CoreModel;
+//    import INT = FC.Shared.Interfaces;
+//    import MODELS = FC.Shared.Models;
+//    import MODULES = FC.Modules;
+//    export class CalendarController extends FC.Shared.Controllers.BaseController {
+//        public $scope: FC.Shared.ViewModels.ICalendarVm;
+//        public _inst: FC.Modules.Calendar.Controllers.CalendarController;
+//        //base
+//        public URLManager: FC.Core.Services.URLManagerService;
+//        private CalendarSvc: FC.Modules.Calendar.Services.CalendarService;
+//        public NewsSvc: FC.Modules.News.Services.NewsService;
+//        public CacheManager: FC.Shared.Util.CacheManager;
+//        private CalendarMonths: Array<string>;
+//        private CalendarYears: Array<number>;
+//        public ActiveMonthNum: number;
+//        public ActiveYear: number;
+//        public UserGenres: Array<string>;
+//        //col data
+//        public Festivals: Array<FC.Shared.ViewModels.IFestivalVM>;
+//        static $inject = [
+//            '$http',
+//            '$q',
+//            '$scope',
+//            '$route',
+//            '$routeParams',
+//            '$location',
+//            '$mdDialog',
+//            '$sce',
+//            "FC.Core.Services.URLManagerService",
+//            "FC.Modules.Calendar.Services.CalendarService",
+//            "FC.Modules.News.Services.NewsService"
+//        ];
+//        private _InitColDbo() {
+//            this.Festivals = new Array<FC.Shared.ViewModels.IFestivalVM>();
+//        }
+//        private _InitServices(
+//            CalendarService: FC.Modules.Calendar.Services.CalendarService,
+//            NewsService: FC.Modules.News.Services.NewsService
+//        ) {
+//            this.CalendarSvc = CalendarService;
+//            this.NewsSvc = NewsService;
+//        }
+//        private WatchSearchResult() {
+//            var vm = this;
+//            vm.$scope.HasSearchResults = false;
+//            vm.$scope.IsFestivalsLoading = true;
+//            vm.$scope.SearchNoResults = false;
+//            vm.$scope.Searching = false;
+//            window.addEventListener("Searching", function () {
+//                vm.CacheManager.DeleteStorage("search-result");
+//                vm.$scope.IsFestivalsLoading = true;
+//                vm.$scope.SearchNoResults = false;
+//                vm.$scope.Searching = true;
+//                vm.$scope.IsLoading = true;
+//            })
+//            window.addEventListener("SearchCompletedWithResults", function () {
+//                vm.$scope.Searching = false;
+//                vm.CacheManager.GetStorage("search-result", function (data: any) {
+//                    vm.$scope.HasSearchResults = true;
+//                    var d = data.data as FC.Shared.ViewModels.IFestivalVM[];
+//                    if (d.length == 0) {
+//                        vm.$scope.SearchNoResults = true;
+//                        vm.$scope.Searching = false;
+//                        vm.$scope.IsLoading = false;
+//                    } else {
+//                        vm.$scope.BaseIsLoading = false;
+//                        vm.$scope.Festivals = d;
+//                        vm.$scope.Searching = false;
+//                        vm.$scope.IsLoading = false;
+//                    }
+//                });
+//            });
+//            window.addEventListener("SearchCompletedWithNoResults", function () {
+//                vm.$scope.IsLoading = false;
+//                vm.$scope.SearchNoResults = true;
+//                vm.$scope.Searching = false;
+//            });
+//        }
+//        private _InitializeDateData($scope: any) {
+//            //var vm = this;
+//            //this.CalendarYears = [new Date().getFullYear(), new Date().getFullYear() + 1];
+//            //$scope.ActiveYear = new Date().getFullYear();
+//            //this.CalendarSvc.GetMonths().then(function (r: INT.IServiceResponse<Array<string>>) {
+//            //    vm.CalendarMonths = r.Data;
+//            //});
+//        }
+//        private compare(a, b) {
+//            if (a.OrderDate < b.OrderDate) {
+//                return -1;
+//            }
+//            else if (a.OrderDate > b.OrderDate) {
+//                return 1;
+//            }
+//            else {
+//                return 0;
+//            }
+//        }
+//        private _InitViewData($scope: any) {
+//            var vm = this;
+//            var genres: FC.Shared.Models.UGenre[] = new Array<FC.Shared.Models.UGenre>();
+//            var genresFilter: MODELS.UGenre[] = new Array<MODELS.UGenre>();
+//            if (vm.CacheManager.Contains('ActiveGenres')) {
+//                var tmpGenres = vm.CacheManager.Get<FC.Shared.Models.UGenre[]>('ActiveGenres');
+//                genres = tmpGenres.data;
+//                genresFilter = genres;
+//            }
+//            var countriesFilter: MODELS.UCountry[] = new Array<MODELS.UCountry>();
+//            if (vm.CacheManager.Contains("UserCountries")) {
+//                countriesFilter = vm.CacheManager.Get<MODELS.UCountry[]>('UserCountries').data;
+//            }
+//            vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genresFilter, countriesFilter).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
+//                vm.$scope.Festivals = result.Data;
+//                vm.$scope.IsLoading = false;
+//            });
+//            window.addEventListener("ActiveGenres_Deleted", function (e) {
+//                vm.$scope.IsLoading = true;
+//                var countriesFilter: MODELS.UCountry[] = new Array<MODELS.UCountry>();
+//                if (vm.CacheManager.Contains("UserCountries")) {
+//                    countriesFilter = vm.CacheManager.Get<MODELS.UCountry[]>('UserCountries').data;
+//                }
+//                vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, new Array<MODELS.UGenre>(), countriesFilter).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
+//                    vm.$scope.Festivals = result.Data;
+//                    vm.$scope.IsLoading = false;
+//                });
+//            });
+//            window.addEventListener('ActiveGenres_Writed', function (e) {
+//                vm.$scope.IsLoading = true;
+//                var genres = new Array<FC.Shared.Models.UGenre>();
+//                var tmpGenres = vm.CacheManager.Get<FC.Shared.Models.UGenre[]>('ActiveGenres');
+//                genres = tmpGenres.data;
+//                var genresFilter = genres;
+//                var countriesFilter: MODELS.UCountry[] = new Array<MODELS.UCountry>();
+//                if (vm.CacheManager.Contains("UserCountries")) {
+//                    countriesFilter = vm.CacheManager.Get<MODELS.UCountry[]>('UserCountries').data;
+//                }
+//                vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genresFilter, countriesFilter).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
+//                    vm.$scope.Festivals = result.Data;
+//                    vm.$scope.IsLoading = false;
+//                });
+//            });
+//            window.addEventListener('UserCountries_Writed', function (e) {
+//                var countries = vm.CacheManager.GetStorage('UserCountries');
+//                var genres = new Array<MODELS.UGenre>();
+//                if (vm.CacheManager.Contains("ActiveGenres")) {
+//                    genres = vm.CacheManager.Get<MODELS.UGenre[]>('ActiveGenres').data;
+//                }
+//                vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genres, countries.data).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
+//                    vm.$scope.Festivals = result.Data;
+//                    vm.$scope.IsLoading = false;
+//                });
+//            });
+//            window.addEventListener('UserCountries_Deleted', function (e) {
+//                var countriesFilter: MODELS.UCountry[] = new Array<MODELS.UCountry>();
+//                if (vm.CacheManager.Contains("UserCountries")) {
+//                    countriesFilter = vm.CacheManager.Get<MODELS.UCountry[]>('UserCountries').data;
+//                }
+//                var genres = vm.CacheManager.GetStorage('UserCountries');
+//                vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genres.data, countriesFilter).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
+//                    vm.$scope.Festivals = result.Data;
+//                    vm.$scope.IsLoading = false;
+//                });
+//            });
+//        }
+//        constructor(
+//            $http,
+//            $q,
+//            $scope,
+//            $route,
+//            $routeParams,
+//            $location,
+//            $mdDialog,
+//            $sce,
+//            URLManagerService: FC.Core.Services.URLManagerService,
+//            CalendarService: FC.Modules.Calendar.Services.CalendarService,
+//            NewsService: FC.Modules.News.Services.NewsService
+//        ) {
+//            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+//            var genreSvc = new FC.Modules.Genres.Services.GenreService($http, $q);
+//            var vm = this;
+//            this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
+//            this.$scope = $scope;
+//            this.URLManager = new FC.Core.Services.URLManagerService($http,$q,null);
+//            this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
+//            this.initLoadingScope();
+//            this._InitColDbo();
+//            this._InitServices(CalendarService, NewsService);
+//            this._InitializeDateData($scope);
+//            if (!this.$scope.ActiveYear) {
+//                if ($routeParams["year"] != null) {
+//                    this.$scope.ActiveYear = $routeParams["year"];
+//                } else if (CacheManager.Contains("ActiveYear")) {
+//                    vm.$scope.ActiveYear = CacheManager.Get<number>("ActiveYear").data;
+//                } else {
+//                    this.$scope.ActiveYear = new Date().getFullYear();
+//                }
+//            }
+//            if (!this.$scope.ActiveMonth) {
+//                if ($routeParams["month"] != null) {
+//                    this.$scope.ActiveMonth = $routeParams["month"];
+//                } else if (CacheManager.Contains("ActiveMonth")) {
+//                    vm.$scope.ActiveMonth = CacheManager.Get<number>("ActiveMonth").data;
+//                } else {
+//                    vm.$scope.ActiveMonth = new Date().getMonth() + 1;
+//                }
+//            }
+//            this._InitViewData($scope);
+//            this.WatchSearchResult();
+//            this.URLManager.AddURL("festival", "FestivalURL", "festival/{0}/");
+//            this.URLManager.AddURL("festival", "FestivalURL", "festival/{0}/{1}");
+//        }
+//        public GetFestivalURL(festival: FC.Shared.Models.UFestival): string {
+//            var vm = this;
+//            var retUrl = this.URLManager.GetURL("festival", "FestivalURL", [festival.FestivalID.toString()]);
+//            return retUrl;
+//        }
+//    }
+//    CalendarModule.GetApplication().RegisterController("FC.Modules.Calendar.Controllers.CalendarController", FC.Modules.Calendar.Controllers.CalendarController);
+//} 
 ///<reference path="../../Core/FC.ts"/>
 ///<reference path="../Calendar.ts" />
 ///<reference path="../../../Shared/CoreModel/KeyValuePair.ts"/>
@@ -3389,13 +3265,19 @@ var FC;
                         vm.$scope.MemReg = FC.Shared.Util.MemReg.GetInstance();
                         vm.$scope.MtModal = $mdDialog;
                         vm.$scope.IsLoading = false;
-                        this.init();
+                        CacheManager.ClearStorage();
                         this.addFilterChangeListener();
                         this.handleSearch();
                         this.$scope.ShowCancelSearch = false;
+                        vm.init();
                     }
                     SimpleCalendarController.prototype.ClearFilters = function () {
-                        CacheManager.ClearStorage();
+                        CacheManager.DeleteStorage("Filter_Year");
+                        CacheManager.DeleteStorage("Filter_Month");
+                        CacheManager.DeleteStorage("ActiveGenres");
+                        CacheManager.DeleteStorage("ActiveCountries");
+                        CacheManager.DeleteStorage("ActiveLocations");
+                        CacheManager.DeleteStorage("ActiveArtists");
                         var e = new CustomEvent("ClearFilter");
                         window.dispatchEvent(e);
                         this.init();
@@ -3423,25 +3305,92 @@ var FC;
                         var month = new Date().getMonth() + 1;
                         var year = new Date().getFullYear();
                         var countries = new Array();
+                        var locations = new Array();
+                        var artists = new Array();
+                        vm.$scope.IsLoading = false;
                         try {
-                            CacheManager.Get("Filter_Month", function (storage) {
-                                month = storage.data;
-                                if (!month) {
-                                    month = new Date().getMonth() + 1;
+                            if (CacheManager.GetCookieValue("UserID")) {
+                                vm.FavoriteService.GetUserFavorites(CacheManager.GetCookieValue("UserID"), FC.Shared.Enum.InternalContentType.All).then(function (r) {
+                                    var filter = new FC.Shared.ServiceMessages.FestivalFilter(r.Data.filter(function (v, k) {
+                                        return v.ContentType == FC.Shared.Enum.InternalContentType.Genre;
+                                    }), r.Data.filter(function (v, k) {
+                                        return v.ContentType == FC.Shared.Enum.InternalContentType.Artist;
+                                    }), r.Data.filter(function (v, k) {
+                                        return v.ContentType == FC.Shared.Enum.InternalContentType.Location;
+                                    }), r.Data.filter(function (v, k) {
+                                        return v.ContentType == FC.Shared.Enum.InternalContentType.Country;
+                                    }));
+                                    if (CacheManager.GetCookieValue("Filter_Month")) {
+                                        filter.MonthNum = parseInt(CacheManager.GetCookieValue("Filter_Month"));
+                                    }
+                                    if (CacheManager.GetCookieValue("Filter_Year")) {
+                                        filter.YearNum = parseInt(CacheManager.GetCookieValue("Filter_Year"));
+                                    }
+                                    if (vm.CacheManager.Contains("ActiveGenres")) {
+                                        genres = vm.CacheManager.Get("ActiveGenres").data;
+                                        genres.forEach(function (v, k) {
+                                            filter.GenreIDs.push(v.GenreID);
+                                        });
+                                    }
+                                    if (vm.CacheManager.Contains("ActiveCountries")) {
+                                        countries = vm.CacheManager.Get("ActiveCountries").data;
+                                        countries.forEach(function (v, k) {
+                                            filter.CountryIDs.push(v.CountryID);
+                                        });
+                                    }
+                                    if (vm.CacheManager.Contains("ActiveArtists")) {
+                                        artists = vm.CacheManager.Get("ActiveArtists").data;
+                                        artists.forEach(function (v, k) {
+                                            filter.ArtistIDs.push(v.CountryID);
+                                        });
+                                    }
+                                    if (vm.CacheManager.Contains("ActiveLocations")) {
+                                        locations = vm.CacheManager.Get("ActiveLocations").data;
+                                        locations.forEach(function (v, k) {
+                                            filter.LocationIDs.push(v.LocationID);
+                                        });
+                                    }
+                                    vm.CalendarService.GetByFilter(filter).then(function (r) {
+                                        vm.$scope.Festivals = r.Data;
+                                        vm.$scope.IsLoading = false;
+                                    });
+                                });
+                            }
+                            else {
+                                var filter = new FC.Shared.ServiceMessages.FestivalFilter();
+                                filter.YearNum = -1;
+                                filter.MonthNum = -1;
+                                var genres = new Array();
+                                var countries = new Array();
+                                var locations = new Array();
+                                var artists = new Array();
+                                var month = new Date().getMonth() + 1;
+                                var year = new Date().getFullYear();
+                                if (CacheManager.GetCookieValue("Filter_Month")) {
+                                    month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
                                 }
-                            });
-                            vm.CacheManager.Get("Filter_Year", function (storage) {
-                                year = storage.data;
-                                if (!year) {
-                                    year = new Date().getFullYear();
+                                if (CacheManager.GetCookieValue("Filter_Year")) {
+                                    year = parseInt(CacheManager.GetCookieValue("Filter_Year"));
                                 }
-                            });
-                            vm.CacheManager.Get("ActiveGenres", function (storage) {
-                                genres = storage.data;
-                            });
-                            vm.CacheManager.Get("ActiveCountries", function (storage) {
-                                countries = storage.data;
-                            });
+                                if (vm.CacheManager.Contains("ActiveGenres")) {
+                                    genres = vm.CacheManager.Get("ActiveGenres").data;
+                                }
+                                if (vm.CacheManager.Contains("ActiveCountries")) {
+                                    countries = vm.CacheManager.Get("ActiveCountries").data;
+                                }
+                                if (vm.CacheManager.Contains("ActiveArtists")) {
+                                    artists = vm.CacheManager.Get("ActiveArtists").data;
+                                }
+                                if (vm.CacheManager.Contains("ActiveLocations")) {
+                                    locations = vm.CacheManager.Get("ActiveLocations").data;
+                                }
+                                filter.YearNum = year;
+                                filter.MonthNum = month;
+                                vm.CalendarService.GetFilteredFestivals(filter.MonthNum, filter.YearNum, genres, countries).then(function (r) {
+                                    vm.$scope.Festivals = r.Data;
+                                    vm.$scope.IsLoading = false;
+                                });
+                            }
                         }
                         catch (e) {
                             year = new Date().getFullYear();
@@ -3449,40 +3398,46 @@ var FC;
                             genres = new Array();
                             countries = new Array();
                         }
-                        vm.$scope.IsLoading = true;
-                        vm.CalendarService.GetFilteredFestivals(month, year, genres, countries).then(function (r) {
-                            vm.$scope.Festivals = r.Data;
-                            vm.$scope.IsLoading = false;
-                        });
                     };
                     SimpleCalendarController.prototype.addFilterChangeListener = function () {
                         var vm = this;
+                        //document.getElementById("initialResult").remove();
                         window.addEventListener("FilterChanged", function (e) {
                             if (e) {
                                 if (e.detail) {
                                     vm.$scope.IsLoading = true;
                                     var d = e.detail;
                                     var genres = new Array();
+                                    var countries = new Array();
+                                    var locations = new Array();
+                                    var artists = new Array();
                                     var month = new Date().getMonth() + 1;
                                     var year = new Date().getFullYear();
-                                    CacheManager.Get("Filter_Month", function (storage) {
-                                        month = storage.data;
-                                    });
-                                    vm.CacheManager.Get("Filter_Year", function (storage) {
-                                        year = storage.data;
-                                    });
-                                    vm.CacheManager.Get("ActiveGenres", function (storage) {
-                                        genres = storage.data;
-                                    });
-                                    vm.CalendarService.GetFilteredFestivals(month, year, genres, null).then(function (r) {
+                                    if (CacheManager.GetCookieValue("Filter_Month")) {
+                                        month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
+                                    }
+                                    if (CacheManager.GetCookieValue("Filter_Year")) {
+                                        year = parseInt(CacheManager.GetCookieValue("Filter_Year"));
+                                    }
+                                    if (vm.CacheManager.Contains("ActiveGenres")) {
+                                        genres = vm.CacheManager.Get("ActiveGenres").data;
+                                    }
+                                    if (vm.CacheManager.Contains("ActiveCountries")) {
+                                        countries = vm.CacheManager.Get("ActiveCountries").data;
+                                    }
+                                    if (vm.CacheManager.Contains("ActiveArtists")) {
+                                        artists = vm.CacheManager.Get("ActiveArtists").data;
+                                    }
+                                    if (vm.CacheManager.Contains("ActiveLocations")) {
+                                        locations = vm.CacheManager.Get("ActiveLocations").data;
+                                    }
+                                    vm.CalendarService.GetFilteredFestivals(month, year, genres, countries).then(function (r) {
                                         vm.$scope.Festivals = r.Data;
                                         vm.$scope.IsLoading = false;
                                     });
                                 }
                             }
                         });
-                    };
-                    SimpleCalendarController.prototype.initCalendar = function () {
                     };
                     //public ActiveGenreID: number;
                     SimpleCalendarController.$inject = [
@@ -3593,6 +3548,84 @@ var FC;
                 }(FC.Shared.Models.BaseModel));
                 Models.FestivalMonthItem = FestivalMonthItem;
             })(Models = Calendar.Models || (Calendar.Models = {}));
+        })(Calendar = Modules.Calendar || (Modules.Calendar = {}));
+    })(Modules = FC.Modules || (FC.Modules = {}));
+})(FC || (FC = {}));
+///<reference path="../Calendar.ts"/>
+///<reference path="../../Core/ServiceBase.ts" />
+var FC;
+(function (FC) {
+    var Modules;
+    (function (Modules) {
+        var Calendar;
+        (function (Calendar) {
+            var Services;
+            (function (Services) {
+                var CalendarService = (function (_super) {
+                    __extends(CalendarService, _super);
+                    function CalendarService(http, q) {
+                        _super.call(this, http, q);
+                    }
+                    CalendarService.prototype.GetList = function () {
+                        throw new Error("CalendarService.GetList() is not implemented.");
+                    };
+                    CalendarService.prototype.GetMonths = function () {
+                        return this.Get('/API/Calendar/GetMonths');
+                    };
+                    CalendarService.prototype.GetFestivals = function (genre, month, year) {
+                        return this.Get('/API/Festival/GetByMonth?&genre=' + genre + '&month=' + (month + 1) + '&year=' + year);
+                    };
+                    CalendarService.prototype.GetFestivalsByCountry = function (genre, month, year, country) {
+                        return this.Get('/API/Festival/GetByCountry?&genre=' + genre + '&month=' + (month + 1) + '&year=' + year + '&country=' + country);
+                    };
+                    CalendarService.prototype.GetDaysInMonth = function (year, month) {
+                        if (!CacheManager.Contains('monthdays-' + year + '-' + month)) {
+                            var result = this.Get('/API/Calendar/GetDaysInMonth?year=' + year + '&month=' + month);
+                            result.then(function (r) {
+                                CacheManager.WriteStorage('monthdays-' + year + '-' + month, r.Data);
+                            });
+                            return result;
+                        }
+                        else {
+                            var rsp = { Data: {}, Message: "" };
+                            rsp.Data = CacheManager.Get('monthdays-' + year + '-' + month).data;
+                            rsp.Message = '{"success":"true"}';
+                            return this.$q.resolve(rsp);
+                        }
+                    };
+                    CalendarService.prototype.GetByFilter = function (filter) {
+                        return this.Post('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage(filter));
+                    };
+                    CalendarService.prototype.GetFilteredFestivals = function (month, year, genres, countries) {
+                        var filter = new FC.Shared.ServiceMessages.FestivalFilter();
+                        filter.GenreIDs = new Array();
+                        filter.CountryIDs = new Array();
+                        if (genres) {
+                            genres.forEach(function (v, k) {
+                                filter.GenreIDs.push(v.GenreID);
+                            });
+                        }
+                        if (countries) {
+                            countries.forEach(function (v, k) {
+                                filter.CountryIDs.push(v.CountryID);
+                            });
+                        }
+                        filter.MonthNum = month;
+                        filter.YearNum = year;
+                        return this.Post('/API/Festival/GetFiltered', new FC.Shared.Models.ServiceMessage(filter));
+                    };
+                    CalendarService.prototype.GetByMonthYear = function (month, year) {
+                        var filter = new FC.Shared.ServiceMessages.FestivalFilter();
+                        filter.MonthNum = month;
+                        filter.YearNum = year;
+                        return this.Post('/API/Festival/GetFiltered', new FC.Shared.Models.ServiceMessage(filter));
+                    };
+                    CalendarService.$inject = ['$http', '$q'];
+                    return CalendarService;
+                }(FC.Core.ServiceBase));
+                Services.CalendarService = CalendarService;
+                CalendarModule.$Application.RegisterService('FC.Modules.Calendar.Services.CalendarService', FC.Modules.Calendar.Services.CalendarService);
+            })(Services = Calendar.Services || (Calendar.Services = {}));
         })(Calendar = Modules.Calendar || (Modules.Calendar = {}));
     })(Modules = FC.Modules || (FC.Modules = {}));
 })(FC || (FC = {}));
@@ -3728,6 +3761,61 @@ var FC;
             }(FC.Shared.Controllers.BaseController));
             Controllers.HeadController = HeadController;
             Application.RegisterController("FC.Core.Controllers.HeadController", FC.Core.Controllers.HeadController);
+        })(Controllers = Core.Controllers || (Core.Controllers = {}));
+    })(Core = FC.Core || (FC.Core = {}));
+})(FC || (FC = {}));
+///<reference path="../../Core/FC.ts"/>
+///<reference path="../FC.ts" />
+///<reference path="../../../Shared/CoreModel/KeyValuePair.ts"/>
+///<reference path="../../../Shared/Controllers/BaseController.ts"/>
+var FC;
+(function (FC) {
+    var Core;
+    (function (Core) {
+        var Controllers;
+        (function (Controllers) {
+            var NavBarController = (function (_super) {
+                __extends(NavBarController, _super);
+                function NavBarController($http, $q, $scope, $mdDialog, $location, $routeParams, $sce) {
+                    _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    var vm = this;
+                    vm.$scope.inst = this;
+                    vm.$scope = $scope;
+                    vm.$scope.MtModal = $mdDialog;
+                    if (CacheManager.GetCookieValue("UserID")) {
+                        vm.FavoriteService.GetUserFavorites(CacheManager.GetCookieValue("UserID"), FC.Shared.Enum.InternalContentType.All).then(function (r) {
+                            var genres = r.Data.filter(function (k, v) {
+                                return k.ContentType == FC.Shared.Enum.InternalContentType.Genre;
+                            });
+                            var artists = r.Data.filter(function (k, v) {
+                                return k.ContentType == FC.Shared.Enum.InternalContentType.Artist;
+                            });
+                            var countries = r.Data.filter(function (k, v) {
+                                return k.ContentType == FC.Shared.Enum.InternalContentType.Country;
+                            });
+                            var locations = r.Data.filter(function (k, v) {
+                                return k.ContentType == FC.Shared.Enum.InternalContentType.Location;
+                            });
+                            vm.$scope.CountryCount = countries.length;
+                            vm.$scope.ArtistCount = artists.length;
+                            vm.$scope.LocationCount = locations.length;
+                            vm.$scope.GenreCount = genres.length;
+                        });
+                    }
+                }
+                NavBarController.$inject = [
+                    '$http',
+                    '$q',
+                    '$scope',
+                    '$mdDialog',
+                    '$location',
+                    '$routeParams',
+                    "$sce"
+                ];
+                return NavBarController;
+            }(FC.Shared.Controllers.BaseController));
+            Controllers.NavBarController = NavBarController;
+            Application.RegisterController("FC.Core.Controllers.NavBarController", FC.Core.Controllers.NavBarController);
         })(Controllers = Core.Controllers || (Core.Controllers = {}));
     })(Core = FC.Core || (FC.Core = {}));
 })(FC || (FC = {}));
@@ -4165,6 +4253,45 @@ var FC;
     })(Core = FC.Core || (FC.Core = {}));
 })(FC || (FC = {}));
 ///<reference path="../../Core/ServiceBase.ts" />
+///<reference path="../../../Shared/CoreModel/KeyValuePair.ts" />
+///<reference path="../AppConfig.ts" />
+var FC;
+(function (FC) {
+    var Core;
+    (function (Core) {
+        var Services;
+        (function (Services) {
+            var Coordinate = (function () {
+                function Coordinate() {
+                }
+                return Coordinate;
+            }());
+            Services.Coordinate = Coordinate;
+            var NominatimService = (function (_super) {
+                __extends(NominatimService, _super);
+                function NominatimService(http, q) {
+                    _super.call(this, http, q);
+                    this.Euro = 0;
+                }
+                //public GetUserlocation(lat: number, long: number): ng.IPromise<FC.Shared.Models.NLocation> {
+                //    //var location: FC.Shared.Models.NLocation;
+                //    //return this.GetRaw(Environment.GeoServicesURL+'/reverse.php?format=html&lat=' + lat + '&lon=' + long + '&format=json');
+                //}
+                NominatimService.prototype.GetList = function () {
+                    throw new Error("NominatimService.GetList() is not implemented.");
+                };
+                NominatimService.prototype.GetCoordByCode = function (code) {
+                    return this.GetRaw(Core.Environment.GeoServicesURL + '/search.php?format=html&countrycodes=' + code + '&format=json');
+                };
+                NominatimService.$inject = ['$http', '$q'];
+                return NominatimService;
+            }(FC.Core.ServiceBase));
+            Services.NominatimService = NominatimService;
+            Application.app.service('FC.Core.Services.NominatimService', FC.Core.Services.NominatimService);
+        })(Services = Core.Services || (Core.Services = {}));
+    })(Core = FC.Core || (FC.Core = {}));
+})(FC || (FC = {}));
+///<reference path="../../Core/ServiceBase.ts" />
 ///<reference path="../../../Shared/Util/CacheManager.ts" />
 var FC;
 (function (FC) {
@@ -4567,32 +4694,30 @@ var FC;
                         vm.$scope.FormID = 'CCFDB150-42F0-4F0E-8CA3-C48069E09CBE';
                         vm.$scope.MemReg = FC.Shared.Util.MemReg.GetInstance();
                         vm.$scope.Save = this.Save;
-                        vm.$scope.Close = this.Close;
                         vm.$scope.Reset = this.Reset;
                         vm.$scope.MtModal = $mdDialog;
                         vm.$scope.IsLoading = true;
                         vm.SetCountryList();
-                        if (CacheManager.Contains("sys-countries")) {
-                            vm.$scope.SysCountries = CacheManager.Get("sys-countries").data;
+                        vm.$scope.IsActive = this.IsActive;
+                        if (vm.$scope.SelectedCountries == null) {
+                            vm.$scope.SelectedCountries = new Array();
+                            vm.$scope.Selected = "SELECT COUNTRIES";
                         }
-                        vm.$scope.ToggleCountry = this.ToggleCountry;
-                        if (vm.$scope.MemReg.Get("UserCountries")) {
-                            vm.$scope.inst.$scope.SelectedCountries = vm.$scope.MemReg.Get("UserCountries");
+                        if (vm.$scope.SelectedCountries.length == 1) {
+                            vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
                         }
                         else {
-                            vm.$scope.SelectedCountries = new Array();
-                            if (CacheManager.Contains("UserCountries")) {
-                                vm.$scope.inst.$scope.SelectedCountries = CacheManager.Get("UserCountries").data;
-                                vm.$scope.IsLoading = false;
-                            }
+                            vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRIES SELECTED";
                         }
-                        vm.$scope.IsActive = this.IsActive;
+                        if (vm.$scope.SelectedCountries.length == 0) {
+                            vm.$scope.Selected = "SELECT COUNTRIES";
+                        }
                         //this.RecoverModel(this.$scope.model, this.$scope);
                     }
                     CountryFilterController.prototype.IsActive = function (country) {
                         var vm = this;
-                        if (CacheManager.Contains("UserCountries")) {
-                            var activated = CacheManager.Get("UserCountries").data;
+                        if (CacheManager.Contains("ActiveCountries")) {
+                            var activated = CacheManager.Get("ActiveCountries").data;
                             var isactive = activated.some(function (g, i) {
                                 return g.CountryID == country.CountryID;
                             });
@@ -4603,34 +4728,29 @@ var FC;
                         }
                     };
                     CountryFilterController.prototype.ToggleCountry = function ($scope, country) {
-                        $scope = $scope.inst.$scope;
-                        var any = false;
-                        var modified = false;
-                        debugger;
-                        any = $scope.SelectedCountries.some(function (v, i) {
-                            if (v.CountryID == country.CountryID) {
-                                return true;
-                            }
-                            else {
-                                return false;
-                            }
-                        });
-                        if (any == false) {
-                            $scope.SelectedCountries.push(country);
-                            modified = true;
+                        var vm = this;
+                        if (!this.IsActive(country)) {
+                            vm.$scope.SelectedCountries.push(country);
+                            CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 999999999999999);
                         }
                         else {
-                            var index = $scope.SelectedCountries.indexOf(country);
-                            if (index > -1) {
-                                delete $scope.SelectedCountries[index];
-                                $scope.SelectedCountries = $scope.RepairArray($scope.SelectedCountries);
-                                modified = true;
-                            }
+                            var tmp = new Array();
+                            vm.$scope.SelectedCountries.forEach(function (v, i) {
+                                if (v.CountryID != country.CountryID) {
+                                    tmp.push(v);
+                                }
+                            });
+                            vm.$scope.SelectedCountries = tmp;
+                            CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 999999999999999);
                         }
-                        if (modified) {
-                            CacheManager.WriteStorage("UserCountries", $scope.SelectedCountries, 999999999999999);
-                            modified = false;
+                        if (vm.$scope.SelectedCountries.length == 1) {
+                            vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
                         }
+                        else {
+                            vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRIES SELECTED";
+                        }
+                        vm.$scope.model.Countries = vm.$scope.SelectedCountries;
+                        vm.Save(vm.$scope);
                     };
                     CountryFilterController.prototype.SetCountryList = function () {
                         var vm = this;
@@ -4641,15 +4761,12 @@ var FC;
                     };
                     CountryFilterController.prototype.Save = function ($scope) {
                         var vm = this;
-                        vm.Close($scope);
+                        vm.$scope.MtModal.cancel();
+                        var e = new FC.Modules.Filtering.FilterChangedEvent(this.$scope.model);
                         //vm.$scope.IsLoading = true;
                     };
-                    CountryFilterController.prototype.Close = function ($scope) {
-                        $("#CountryFilterControl").removeClass('ctx-visible').addClass('ctx-hidden');
-                        $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
-                    };
                     CountryFilterController.prototype.Reset = function ($scope) {
-                        CacheManager.DeleteStorage("UserCountries");
+                        CacheManager.DeleteStorage("ActiveCountries");
                         $scope.Close();
                     };
                     //public ActiveGenreID: number;
@@ -4658,7 +4775,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$route',
                         '$routeParams',
                         '$location',
                         "$sce"
@@ -4809,6 +4925,9 @@ var FC;
                     };
                     CountriesService.prototype.GetPaged = function (size, page) {
                         return this.Get('/API/Country/GetPaged?size=' + size + '&page=' + page);
+                    };
+                    CountriesService.prototype.Search = function (name) {
+                        return this.Get('/API/Country/Search?name=' + name);
                     };
                     CountriesService.prototype.GetSorted = function (sortIndex, page) {
                         if (page === void 0) { page = 1; }
@@ -5603,6 +5722,182 @@ var FC;
     })(Modules = FC.Modules || (FC.Modules = {}));
 })(FC || (FC = {}));
 var FavoritesModule = new FC.Modules.Favorites.Favorites(angular.module('FC.Modules.Favorites', ApplicationDependencies), Application);
+///<reference path="../../Core/FC.ts"/>
+///<reference path="../Favorites.ts" />
+///<reference path="../../../Shared/CoreModel/KeyValuePair.ts"/>
+///<reference path="../../../Shared/Controllers/BaseController.ts"/>
+var FC;
+(function (FC) {
+    var Modules;
+    (function (Modules) {
+        var Favorites;
+        (function (Favorites) {
+            var Controllers;
+            (function (Controllers) {
+                var FavoriteController = (function (_super) {
+                    __extends(FavoriteController, _super);
+                    function FavoriteController($http, $q, $mdDialog, $scope, $routeParams, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                        var vm = this;
+                        vm.$scope.SelectedArtists = new Array();
+                        vm.$scope.SelectedGenres = new Array();
+                        vm.$scope.SelectedLocations = new Array();
+                        vm.$scope.SelectedCountries = new Array();
+                        vm.$scope.SelectedFestivals = new Array();
+                        //vm.$scope.model = new FC.Shared.Models.UGenre();
+                    }
+                    FavoriteController.prototype.FavoriteActive = function (contentID) {
+                        var vm = this;
+                        var result = new Array();
+                        if (vm.$scope.SelectedArtists.filter(function (v, k) {
+                            return (v.ArtistID == contentID);
+                        }).length > 0) {
+                            return true;
+                        }
+                        if (vm.$scope.SelectedCountries.filter(function (v, k) {
+                            return (v.CountryID == contentID);
+                        }).length > 0) {
+                            return true;
+                        }
+                        if (vm.$scope.SelectedFestivals.filter(function (v, k) {
+                            return (v.FestivalID == contentID);
+                        }).length > 0) {
+                            return true;
+                        }
+                        if (vm.$scope.SelectedGenres.filter(function (v, k) {
+                            return (v.GenreID == contentID);
+                        }).length > 0) {
+                            return true;
+                        }
+                        return false;
+                    };
+                    FavoriteController.prototype.RegisterType = function (icType) {
+                        var vm = this;
+                        //debugger;
+                        vm.FavoriteService.GetUserFavorites(CacheManager.GetCookieValue("UserID"), icType).then(function (r) {
+                            vm.handleToggleResponse(vm, icType, r.Data);
+                        });
+                    };
+                    FavoriteController.prototype.handleToggleResponse = function (vm, icType, data) {
+                        switch (icType) {
+                            case FC.Shared.Enum.InternalContentType.Artist:
+                                vm.$scope.SelectedArtists = new Array();
+                                data.forEach(function (v, k) {
+                                    if (v != null) {
+                                        if (v.Content) {
+                                            vm.$scope.SelectedArtists.push(v.Content);
+                                        }
+                                    }
+                                });
+                                break;
+                            case FC.Shared.Enum.InternalContentType.Festival:
+                                vm.$scope.SelectedFestivals = new Array();
+                                data.forEach(function (v, k) {
+                                    if (v != null) {
+                                        if (v.Content) {
+                                            vm.$scope.SelectedFestivals.push(v.Content);
+                                        }
+                                    }
+                                });
+                                break;
+                            case FC.Shared.Enum.InternalContentType.Country:
+                                vm.$scope.SelectedCountries = new Array();
+                                data.forEach(function (v, k) {
+                                    if (v != null) {
+                                        if (v.Content) {
+                                            vm.$scope.SelectedCountries.push(v.Content);
+                                        }
+                                    }
+                                });
+                                break;
+                            case FC.Shared.Enum.InternalContentType.Location:
+                                vm.$scope.SelectedLocations = new Array();
+                                data.forEach(function (v, k) {
+                                    if (v != null) {
+                                        if (v.Content) {
+                                            vm.$scope.SelectedLocations.push(v.Content);
+                                        }
+                                    }
+                                });
+                                break;
+                            case FC.Shared.Enum.InternalContentType.Genre:
+                                vm.$scope.SelectedGenres = new Array();
+                                data.forEach(function (v, k) {
+                                    if (v != null) {
+                                        if (v.Content) {
+                                            vm.$scope.SelectedGenres.push(v.Content);
+                                        }
+                                    }
+                                });
+                                break;
+                        }
+                    };
+                    FavoriteController.prototype.ToggleFavorite = function (icType, contentID) {
+                        var vm = this;
+                        vm.FavoriteService.IsFavorite(CacheManager.GetCookieValue("UserID"), contentID).then(function (r) {
+                            if (r.Data == true) {
+                                vm.FavoriteService.UnmarkFavorite(contentID).then(function (r) {
+                                    if (r.Data.SUCCESS == true) {
+                                        vm.FavoriteService.GetUserFavorites(CacheManager.GetCookieValue("UserID"), icType).then(function (r) {
+                                            vm.handleToggleResponse(vm, icType, r.Data);
+                                        });
+                                    }
+                                });
+                            }
+                            if (r.Data == false) {
+                                vm.FavoriteService.MarkFavorite(contentID, icType).then(function (r) {
+                                    if (r.Data.SUCCESS == true) {
+                                        vm.FavoriteService.GetUserFavorites(CacheManager.GetCookieValue("UserID"), icType).then(function (r) {
+                                            vm.handleToggleResponse(vm, icType, r.Data);
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    };
+                    FavoriteController.prototype.search = function (icType) {
+                        var vm = this;
+                        if (icType == FC.Shared.Enum.InternalContentType.Genre) {
+                            this.GenreService.Search(this.$scope.SearchKey).then(function (r) {
+                                vm.$scope.SearchResult = r.Data;
+                            });
+                        }
+                        if (icType == FC.Shared.Enum.InternalContentType.Location) {
+                            this.LocationService.Search(this.$scope.SearchKey).then(function (r) {
+                                vm.$scope.SearchResult = r.Data;
+                            });
+                        }
+                        if (icType == FC.Shared.Enum.InternalContentType.Artist) {
+                            this.ArtistService.Search(this.$scope.SearchKey).then(function (r) {
+                                vm.$scope.SearchResult = r.Data;
+                            });
+                        }
+                        if (icType == FC.Shared.Enum.InternalContentType.Country) {
+                            this.CountriesSvc.Search(this.$scope.SearchKey).then(function (r) {
+                                vm.$scope.SearchResult = r.Data;
+                            });
+                        }
+                        if (icType == FC.Shared.Enum.InternalContentType.Festival) {
+                        }
+                    };
+                    //public ActiveGenreID: number;
+                    FavoriteController.$inject = [
+                        '$http',
+                        '$q',
+                        '$mdDialog',
+                        '$scope',
+                        '$routeParams',
+                        '$location',
+                        "$sce",
+                    ];
+                    return FavoriteController;
+                }(FC.Shared.Controllers.BaseController));
+                Controllers.FavoriteController = FavoriteController;
+                FavoritesModule.GetApplication().RegisterController("FC.Modules.Favorites.Controllers.FavoriteController", FC.Modules.Favorites.Controllers.FavoriteController);
+            })(Controllers = Favorites.Controllers || (Favorites.Controllers = {}));
+        })(Favorites = Modules.Favorites || (Modules.Favorites = {}));
+    })(Modules = FC.Modules || (FC.Modules = {}));
+})(FC || (FC = {}));
 ///<reference path="../../Core/ServiceBase.ts" />
 var FC;
 (function (FC) {
@@ -5623,11 +5918,14 @@ var FC;
                     FavoriteService.prototype.MarkFavorite = function (contentID, contentType) {
                         return this.Get('/API/Favorite/Mark/?&contentID=' + contentID + '&type=' + contentType);
                     };
-                    FavoriteService.prototype.GetUserFavorites = function () {
-                        return this.Get('/API/Favorite/GetUserFavorites');
+                    FavoriteService.prototype.GetUserFavorites = function (userID, icType) {
+                        return this.Get('/API/Favorite/GetUserFavorites?&userID=' + userID + '&icType=' + icType);
                     };
-                    FavoriteService.prototype.IsFavorite = function (contentID) {
-                        return this.Get('/API/Favorite/IsFavorite/?&contentID=' + contentID);
+                    FavoriteService.prototype.GetUserFavoritesCount = function (userID, icType) {
+                        return this.Get('/API/Favorite/GetUserFavoritesCount?&userID=' + userID + '&icType=' + icType);
+                    };
+                    FavoriteService.prototype.IsFavorite = function (userID, contentID) {
+                        return this.Get('/API/Favorite/IsFavorite/?&userID=' + userID + '&contentID=' + contentID);
                     };
                     FavoriteService.prototype.UnmarkFavorite = function (contentID) {
                         return this.Get('/API/Favorite/Unmark/?&contentID=' + contentID);
@@ -5694,188 +5992,74 @@ var FC;
             (function (Controllers) {
                 var FestivalCRUDController = (function (_super) {
                     __extends(FestivalCRUDController, _super);
-                    function FestivalCRUDController($http, $q, $scope, $route, $routeParams, $location, $sce, $mdDialog) {
+                    function FestivalCRUDController($http, $q, $scope, $routeParams, $location, $sce, $mdDialog) {
                         _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
                         var vm = this;
                         this.$scope = $scope;
-                        vm.CheckAuth($scope);
                         this.$scope.inst = this;
-                        this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
-                        this.$scope.FormID = "C018E5F4-1C4F-42BB-8537-85FFA794B0F4";
-                        this.$scope.SaveFieldState = this.SaveFieldState;
-                        this.$scope.GetFieldState = this.GetFieldState;
-                        this.$scope.GetMediaPickerFieldState = this.GetMediaPickerFieldState;
                         this.$scope.SaveFormState = this.SaveFormState;
-                        this.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
                         this.$location = $location;
                         this.$scope.model = new FC.Shared.Models.UFestival();
-                        this._InitGenres();
-                        this.AddListeners(this.$scope);
-                        this.$scope.$location = $location;
-                        this.$scope.$routeParams = $routeParams;
-                        if ($routeParams["step"]) {
-                            this.$scope.WizardStep = $routeParams["step"];
-                        }
-                        else {
-                            this.$scope.WizardStep = 1;
-                        }
-                        if ($routeParams["festivalID"]) {
-                            vm.$scope.IsEditing = true;
-                            vm.$scope.FestivalID = $routeParams["festivalID"];
-                            vm.$scope.SaveFieldState($scope, "FestivalID", vm.$scope.FestivalID);
-                            vm.$scope.IsCreating = false;
-                            vm.$scope.model = null;
-                        }
-                        else {
-                            vm.$scope.IsCreating = true;
-                            vm.$scope.IsEditing = false;
-                        }
-                        //if (!this.AuthService.HasAuth()) {
-                        //    $location.path('/login');
-                        //}
-                        var d = new Date();
-                        this.$scope.MinDateStart = d;
-                        this.$scope.MaxDateStart = new Date(d.getFullYear() + 2, 11, 31);
-                        this.$scope.MaxDateEnd = new Date(d.getFullYear() + 2, 11, 31);
-                        this.$scope.MinDateEnd = new Date(d.getFullYear() + 2, 11, 31);
-                        this.$scope.DoChangeStartDate = this.DoChangeStartDate;
-                        this.$scope.DoSaveCreate = this.DoSaveCreate;
-                        this.$scope.DoSaveDelete = this.DoSaveDelete;
-                        this.$scope.DoSaveEdit = this.DoSaveEdit;
-                        this.RecoverModel();
+                        this.$scope.MtModal = $mdDialog;
+                        this.$scope.Token = CacheManager.GetCookieValue("Token");
+                        window.addEventListener("LogoImageSaved", function (e) {
+                            vm.$scope.model.LogoID = e.detail;
+                            vm.$scope.MtModal.hide();
+                            vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + "/" + vm.$scope.model.LogoID;
+                            vm.DoSaveCRUD(FC.Shared.Controllers.ActionType.Update, FC.Shared.Controllers.ServiceType.FestivalService, $scope);
+                        });
+                        window.addEventListener("HeaderImageSaved", function (e) {
+                            vm.$scope.model.ProfileImageID = e.detail;
+                            vm.$scope.MtModal.hide();
+                            vm.DoSaveCRUD(FC.Shared.Controllers.ActionType.Update, FC.Shared.Controllers.ServiceType.FestivalService, $scope);
+                            ///vm.$scope["ProfileHeaderPath"]= FC.Core.Environment.MediaURLRoot + "/" + vm.$scope.model.LogoID;
+                        });
                     }
-                    FestivalCRUDController.prototype.DoChangeStartDate = function ($scope) {
-                        this.$scope.MinDateEnd = $scope.model.StartDate;
+                    FestivalCRUDController.prototype.RegisterID = function (id) {
+                        this.$scope.model.FestivalID = id;
                     };
-                    FestivalCRUDController.prototype.DoSaveCreate = function ($scope) {
-                        $scope = $scope.inst.$scope;
-                        $scope.inst.FestivalService.Create($scope.model).then(function (r) {
-                            $scope.ServerMsg = r.Message;
-                            if (r.Data.SUCCESS == true) {
-                                $scope.IsCreated = true;
-                                $scope.IsCreating = false;
-                                $scope.FinishForm($scope);
-                            }
-                            else {
-                                $scope.IsCreated = false;
-                                $scope.IsCreating = true;
-                            }
-                        });
-                    };
-                    FestivalCRUDController.prototype.DoSaveEdit = function ($scope) {
-                        $scope = $scope.inst.$scope;
-                        $scope.inst.FestivalService.Update($scope.model).then(function (r) {
-                            $scope.ServerMsg = r.Message;
-                            if (r.Data.SUCCESS == true) {
-                                $scope.IsEdited = true;
-                                $scope.IsEditing = false;
-                                $scope.FinishForm($scope);
-                            }
-                            else {
-                                $scope.IsEdited = false;
-                                $scope.IsEditing = true;
-                            }
-                        });
-                    };
-                    FestivalCRUDController.prototype.DoSaveDelete = function ($scope) {
-                        $scope = $scope.inst.$scope;
-                        $scope.inst.FestivalService.Delete($scope.model).then(function (r) {
-                            $scope.ServerMsg = r.Message;
-                            if (r.Data.SUCCESS == true) {
-                                $scope.IsDeleted = true;
-                                $scope.IsDeleting = false;
-                            }
-                            else {
-                                $scope.IsDeleted == false;
-                                $scope.IsDeleting = true;
-                            }
-                        });
-                    };
-                    FestivalCRUDController.prototype.RecoverModel = function () {
+                    FestivalCRUDController.prototype.GetSelectedLogo = function () {
                         var vm = this;
-                        var r = _super.prototype.RecoverModel.call(this, vm.$scope.model, vm.$scope);
-                        vm.$scope.model = r;
-                        if (vm.$scope.IsEditing && !vm.$scope.model.Name) {
-                            vm.FestivalService.GetFestival(vm.$scope.$routeParams["festivalID"]).then(function (r) {
-                                if (vm.$scope.inst.MediaIsObsolete(vm.$scope.model.LogoID)) {
-                                    vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=true&MediaID=' + vm.$scope.model.LogoID;
-                                }
-                                else {
-                                    vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=false&MediaID=' + vm.$scope.model.LogoID;
-                                }
-                                vm.$scope.model = r.Data;
-                                vm.$scope.model.StartDate = new Date(r.Data.StartDate.toString());
-                                vm.$scope.model.EndDate = new Date(r.Data.EndDate.toString());
-                                vm.RestoreModel(vm.$scope);
-                            });
-                        }
-                        if (vm.$scope.model && vm.$scope.model.StartDate && vm.$scope.model.EndDate) {
-                            vm.$scope.model.StartDate = new Date(vm.$scope.model.toString());
-                            vm.$scope.model.EndDate = new Date(vm.$scope.model.EndDate.toString());
-                            if (vm.$scope.inst.MediaIsObsolete(vm.$scope.model.LogoID)) {
-                                vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=true&MediaID=' + vm.$scope.model.LogoID;
-                            }
-                            else {
-                                vm.$scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=false&MediaID=' + vm.$scope.model.LogoID;
-                            }
-                        }
-                    };
-                    //public SaveFieldState($scope: FC.Shared.ViewModels.IFestivalCRUDVM, name: string, value: any): void {
-                    //    FC.Shared.CoreModel.Recovery.Add($scope.FormID, name, value);
-                    //}
-                    //public GetFieldState($scope: FC.Shared.ViewModels.IFestivalCRUDVM, name: string): void {
-                    //    if ($scope.model) {
-                    //        $scope.model[name] = FC.Shared.CoreModel.Recovery.Get<string>($scope.FormID, name);
-                    //    }
-                    //}
-                    FestivalCRUDController.prototype.GetMediaPickerFieldState = function ($scope, name) {
-                        var v = FC.Shared.CoreModel.Recovery.Get($scope.FormID, name);
-                        $scope.model[name] = v;
-                        $scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&MediaID=' + v;
-                    };
-                    FestivalCRUDController.prototype.GetArtistPickerFieldState = function ($scope, name) {
-                        var v = FC.Shared.CoreModel.Recovery.Get($scope.FormID, name);
-                        // $scope.model[name] = v;
-                    };
-                    FestivalCRUDController.prototype.SaveFormState = function ($scope) {
-                        FC.Shared.CoreModel.Recovery.SaveState($scope.FormID, $scope.$location.path());
-                    };
-                    FestivalCRUDController.prototype.AddListeners = function ($scope) {
-                        $scope = $scope.inst.$scope;
-                        window.addEventListener("FestivalLogoSaved", function (e) {
-                            $scope.model.LogoID = e["detail"].MediaID;
-                            if ($scope.inst.MediaIsObsolete($scope.model.LogoID)) {
-                                $scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=true&MediaID=' + e["detail"].MediaID;
-                            }
-                            else {
-                                $scope.FestivalLogoPath = FC.Core.Environment.MediaURLRoot + '/?action=getimg&Width=150&IsObsolete=false&MediaID=' + e["detail"].MediaID;
-                            }
-                            $scope.SaveFieldState($scope, 'Logo', $scope.model.LogoID);
+                        window.addEventListener("ModalMediaSaveEvent", function (e) {
+                            vm.$scope.model.LogoID = e.detail;
                         });
-                        window.addEventListener("ArtistPickerSaved", function (e) {
-                            $scope.model.Artists = e["detail"].SelectedArtists;
-                            $scope.SaveFieldState($scope, 'Artists', $scope.model.Artists);
-                        });
-                        window.addEventListener("GenrePickerSaved", function (e) {
-                            $scope.model.Genres = e["detail"].SelectedGenres;
-                            $scope.SaveFieldState($scope, 'Genres', $scope.model.Genres);
-                        });
+                        return vm.$scope.model.LogoID;
                     };
-                    FestivalCRUDController.prototype._InitGenres = function () {
+                    FestivalCRUDController.prototype.OpenLogoModal = function (dirID, validationWidth, validationHeight, isThumbnail) {
+                        if (isThumbnail === void 0) { isThumbnail = false; }
                         var vm = this;
-                        if (this.CacheManager.Contains("sys-genres")) {
-                            vm.$scope.SysGenres = this.CacheManager.GetStorage("sys-genres").data;
+                        var opts = {};
+                        //$scope.MemReg.Register("ServerMsg", $scope.ServerMsg);
+                        if (vm.$scope.MtModal) {
+                            vm.$scope.MtModal.hide();
                         }
-                        if (this.CacheManager.Contains("sys-countries")) {
-                            vm.$scope.SysCountries = this.CacheManager.GetStorage("sys-countries").data;
+                        opts.controller = FC.Modules.Media.Controllers.MediaModalController;
+                        opts.controllerAs = 'vm';
+                        opts.templateUrl = '/Scripts/modules/media/views/media-modal.html';
+                        opts.locals = { local: [vm.$scope.MtModal, "LogoImageSaved", dirID, this.$scope.Token, validationWidth, validationHeight, isThumbnail] },
+                            opts.clickOutsideToClose = true;
+                        vm.$scope.MtModal.show(opts);
+                    };
+                    FestivalCRUDController.prototype.OpenHeaderImageModal = function (dirID, validationWidth, validationHeight, isThumbnail) {
+                        if (isThumbnail === void 0) { isThumbnail = false; }
+                        var vm = this;
+                        var opts = {};
+                        //$scope.MemReg.Register("ServerMsg", $scope.ServerMsg);
+                        if (vm.$scope.MtModal) {
+                            vm.$scope.MtModal.hide();
                         }
+                        opts.controller = FC.Modules.Media.Controllers.MediaModalController;
+                        opts.controllerAs = 'vm';
+                        opts.templateUrl = '/Scripts/modules/media/views/media-modal.html';
+                        opts.locals = { local: [vm.$scope.MtModal, "HeaderImageSaved", dirID, this.$scope.Token, validationWidth, validationHeight, isThumbnail] },
+                            opts.clickOutsideToClose = true;
+                        vm.$scope.MtModal.show(opts);
                     };
                     //public ActiveGenreID: number;
                     FestivalCRUDController.$inject = [
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
                         '$routeParams',
                         '$location',
                         "$sce",
@@ -5930,8 +6114,24 @@ var FC;
                     FestivalService.prototype.GetFestival = function (festivalId) {
                         return this.Get('/API/Festival/GetByID?&id=' + festivalId);
                     };
+                    FestivalService.prototype.GetByFilter = function (filter) {
+                        if (CacheManager.GetCookieValue("UserID")) {
+                            return this.Post('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage(filter));
+                        }
+                        else {
+                            return this.Post('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage(filter));
+                        }
+                    };
                     FestivalService.prototype.Create = function (festival) {
                         return this.Post('/API/Festival/Create', new FC.Shared.Models.ServiceMessage(festival));
+                    };
+                    FestivalService.prototype.ToggleGenre = function (festivalID, genreID) {
+                        if (festivalID && genreID) {
+                            return this.Get('/API/Festival/ToggleGenre?&festivalID=' + festivalID + "&genreID=" + genreID);
+                        }
+                        else {
+                            return null;
+                        }
                     };
                     FestivalService.prototype.Update = function (festival) {
                         return this.Post('/API/Festival/Update', new FC.Shared.Models.ServiceMessage(festival));
@@ -6092,20 +6292,36 @@ var FC;
                         vm.$scope.Close = this.Close;
                         vm.$scope.Reset = this.Reset;
                         vm.$scope.MtModal = $mdDialog;
-                        vm.SetGenreList();
-                        if (vm.$scope.MemReg.Get("ActiveCountries")) {
-                            vm.$scope.inst.$scope.SelectedCountries = vm.$scope.MemReg.Get("ActiveCountries");
+                        vm.$scope.SelectedCountries = new Array();
+                        var userID = CacheManager.GetCookieValue("UserID");
+                        if (CacheManager.Contains("ActiveCountries")) {
+                            vm.$scope.inst.$scope.SelectedCountries = CacheManager.Get("ActiveCountries").data;
+                        }
+                        if (userID) {
+                            vm.FavoriteService.GetUserFavorites(userID, FC.Shared.Enum.InternalContentType.Country).then(function (r) {
+                                r.Data.forEach(function (v, k) {
+                                    if (v.Content) {
+                                        var any = vm.$scope.SelectedCountries.some(function (country, k) {
+                                            return country.CountryID == v.ContentID;
+                                        });
+                                        if (any == false) {
+                                            vm.$scope.SelectedCountries.push(v.Content);
+                                        }
+                                    }
+                                });
+                                CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedCountries, 9999999999);
+                            });
+                        }
+                        vm.SetCountryList();
+                        vm.$scope.IsActive = this.IsActive;
+                        if (vm.$scope.SelectedCountries.length == 1) {
+                            vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
                         }
                         else {
-                            vm.$scope.SelectedCountries = new Array();
-                            if (CacheManager.Contains("ActiveCountries")) {
-                                vm.$scope.inst.$scope.SelectedCountries = CacheManager.Get("ActiveCountries").data;
-                            }
+                            vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRIES SELECTED";
                         }
-                        vm.$scope.IsActive = this.IsActive;
-                        vm.$scope.Selected = "0 SELECTED";
-                        if (vm.$scope.SelectedCountries != null) {
-                            vm.$scope.Selected = this.$scope.SelectedCountries.length + " SELECTED";
+                        if (vm.$scope.SelectedCountries.length == 0) {
+                            vm.$scope.Selected = "SELECT COUNTRIES";
                         }
                         //this.RecoverModel(this.$scope.model, this.$scope);
                         vm.$scope.IsLoading = false;
@@ -6156,7 +6372,6 @@ var FC;
                             return isactive;
                         }
                         else {
-                            return false;
                         }
                     };
                     CountryFilterController.prototype.ToggleCountry = function (country) {
@@ -6176,10 +6391,19 @@ var FC;
                             vm.$scope.Selected = tmp.length + " SELECTED";
                             CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 999999999999999);
                         }
-                        vm.$scope.Selected = vm.$scope.SelectedCountries.length + " SELECTED";
+                        if (vm.$scope.SelectedCountries.length == 1) {
+                            vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
+                        }
+                        else {
+                            vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRIES SELECTED";
+                        }
+                        if (vm.$scope.SelectedCountries.length == 0) {
+                            vm.$scope.Selected = "SELECT COUNTRIES";
+                        }
                         vm.$scope.model.Countries = vm.$scope.SelectedCountries;
+                        vm.Save();
                     };
-                    CountryFilterController.prototype.SetGenreList = function () {
+                    CountryFilterController.prototype.SetCountryList = function () {
                         var vm = this;
                         vm.CountriesSvc.GetAll().then(function (r) {
                             vm.$scope.SysCountries = r.Data;
@@ -6446,14 +6670,14 @@ var FC;
                         vm.$scope.Year = new Date().getFullYear().toString();
                         vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
                         try {
-                            vm.CacheManager.Get("Filter_Month", function (storage) {
-                                vm.$scope.Month = storage.data;
+                            if (CacheManager.GetCookieValue("Filter_Month")) {
+                                vm.$scope.Month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
                                 vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
-                            });
-                            vm.CacheManager.Get("Filter_Year", function (storage) {
-                                vm.$scope.Year = storage.data.toString();
+                            }
+                            if (CacheManager.GetCookieValue("Filter_Year")) {
+                                vm.$scope.Year = CacheManager.GetCookieValue("Filter_Year");
                                 vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
-                            });
+                            }
                         }
                         catch (e) {
                             vm.$scope.Year = new Date().getFullYear().toString();
@@ -6476,14 +6700,14 @@ var FC;
                             if (e) {
                                 if (e.detail) {
                                     var d = e.detail;
-                                    vm.CacheManager.Get("Filter_Month", function (storage) {
-                                        vm.$scope.Month = storage.data;
+                                    if (CacheManager.GetCookieValue("Filter_Month")) {
+                                        vm.$scope.Month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
                                         vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
-                                    });
-                                    vm.CacheManager.Get("Filter_Year", function (storage) {
-                                        vm.$scope.Year = storage.data.toString();
+                                    }
+                                    if (CacheManager.GetCookieValue("Filter_Year")) {
+                                        vm.$scope.Year = CacheManager.GetCookieValue("Filter_Year");
                                         vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
-                                    });
+                                    }
                                     vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
                                 }
                             }
@@ -6521,14 +6745,14 @@ var FC;
                         return vm.$scope.Month == month;
                     };
                     DateFilterController.prototype.DoChangeYear = function () {
-                        CacheManager.WriteStorage("Filter_Year", this.$scope.Year, 1000 * 60 * 60 * 24);
+                        CacheManager.SetCookieValue("Filter_Year", this.$scope.Year);
                         var e = new Filtering.FilterChangedEvent(this.$scope);
                         this.$scope.MtModal.hide();
                     };
                     DateFilterController.prototype.ToggleMonth = function (month) {
                         if (this.$scope.Month != month) {
                             this.$scope.Month = month;
-                            CacheManager.WriteStorage("Filter_Month", this.$scope.Month, 1000 * 60 * 60 * 24);
+                            CacheManager.SetCookieValue("Filter_Month", this.$scope.Month.toString());
                             var e = new Filtering.FilterChangedEvent(this.$scope);
                         }
                         if (month == -1) {
@@ -6846,6 +7070,74 @@ var FC;
         (function (Genres) {
             var Controllers;
             (function (Controllers) {
+                var GenreFormController = (function (_super) {
+                    __extends(GenreFormController, _super);
+                    function GenreFormController($http, $q, $mdDialog, $scope, $routeParams, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                        var vm = this;
+                        this.RecoverModel(this.$scope.model, this.$scope);
+                        //vm.$scope.model = new FC.Shared.Models.UGenre();
+                    }
+                    GenreFormController.prototype.GenreActive = function (genre) {
+                        var vm = this;
+                        var result = vm.$scope.SelectedGenres.filter(function (v, k) {
+                            return v.GenreID == genre.GenreID;
+                        });
+                        if (result.length == 1) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    };
+                    GenreFormController.prototype.RegisterID = function (festivalID) {
+                        var vm = this;
+                        vm.GenreService.GetByFestivalID(festivalID).then(function (r) {
+                            vm.$scope.SelectedGenres = r.Data;
+                        });
+                    };
+                    GenreFormController.prototype.DoSelectGenre = function (festivalID, genreID) {
+                        var vm = this;
+                        this.FestivalService.ToggleGenre(festivalID, genreID).then(function (r) {
+                            vm.$scope.SelectedGenres = r.Data.Data;
+                        });
+                    };
+                    GenreFormController.prototype.search = function () {
+                        var vm = this;
+                        this.GenreService.Search(this.$scope.SearchKey).then(function (r) {
+                            vm.$scope.SearchResult = r.Data;
+                        });
+                    };
+                    //public ActiveGenreID: number;
+                    GenreFormController.$inject = [
+                        '$http',
+                        '$q',
+                        '$mdDialog',
+                        '$scope',
+                        '$routeParams',
+                        '$location',
+                        "$sce",
+                    ];
+                    return GenreFormController;
+                }(FC.Shared.Controllers.BaseController));
+                Controllers.GenreFormController = GenreFormController;
+                GenresModule.GetApplication().RegisterController("FC.Modules.Genres.Controllers.GenreFormController", FC.Modules.Genres.Controllers.GenreFormController);
+            })(Controllers = Genres.Controllers || (Genres.Controllers = {}));
+        })(Genres = Modules.Genres || (Modules.Genres = {}));
+    })(Modules = FC.Modules || (FC.Modules = {}));
+})(FC || (FC = {}));
+///<reference path="../../Core/FC.ts"/>
+///<reference path="../Genres.ts" />
+///<reference path="../../../Shared/CoreModel/KeyValuePair.ts"/>
+///<reference path="../../../Shared/Controllers/BaseController.ts"/>
+var FC;
+(function (FC) {
+    var Modules;
+    (function (Modules) {
+        var Genres;
+        (function (Genres) {
+            var Controllers;
+            (function (Controllers) {
                 var _OldGenreFilterController = (function (_super) {
                     __extends(_OldGenreFilterController, _super);
                     function _OldGenreFilterController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce) {
@@ -6985,27 +7277,43 @@ var FC;
                         vm.$scope.Reset = this.Reset;
                         vm.$scope.MtModal = $mdDialog;
                         vm.$scope.SelectedGenreIds = "";
-                        vm.SetGenreList();
-                        if (vm.$scope.MemReg.Get("ActiveGenres")) {
-                            vm.$scope.inst.$scope.SelectedGenres = vm.$scope.MemReg.Get("ActiveGenres");
-                        }
-                        else {
-                            vm.$scope.SelectedGenres = new Array();
-                            if (CacheManager.Contains("ActiveGenres")) {
-                                vm.$scope.inst.$scope.SelectedGenres = CacheManager.Get("ActiveGenres").data;
+                        vm.$scope.IsActive = this.IsActive;
+                        var userID = CacheManager.GetCookieValue("UserID");
+                        if (CacheManager.Contains("ActiveGenres")) {
+                            vm.$scope.SelectedGenres = CacheManager.Get("ActiveGenres").data;
+                            if (vm.$scope.SelectedGenres.length == 1) {
+                                vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRE SELECTED";
+                            }
+                            else {
+                                vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRES SELECTED";
                             }
                         }
-                        vm.$scope.IsActive = this.IsActive;
-                        vm.$scope.Selected = "0 SELECTED";
-                        if (vm.$scope.SelectedGenres != null) {
-                            vm.$scope.Selected = this.$scope.SelectedGenres.length + " SELECTED";
+                        if (userID) {
+                            vm.FavoriteService.GetUserFavorites(userID, FC.Shared.Enum.InternalContentType.Genre).then(function (r) {
+                                r.Data.forEach(function (v, k) {
+                                    if (v.Content) {
+                                        var any = vm.$scope.SelectedGenres.some(function (genre, k) {
+                                            return genre.GenreID == v.ContentID;
+                                        });
+                                        if (any == false) {
+                                            vm.$scope.SelectedGenres.push(v.Content);
+                                        }
+                                        vm.$scope.Selected = vm.$scope.SelectedGenres.length + " SELECTED";
+                                    }
+                                });
+                                CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 9999999999);
+                            });
                         }
+                        if (vm.$scope.SelectedGenres.length == 0) {
+                            vm.$scope.Selected = "SELECT GENRES";
+                        }
+                        vm.SetGenreList();
                         //this.RecoverModel(this.$scope.model, this.$scope);
                         vm.$scope.IsLoading = false;
                         vm.$scope.model = new FC.Modules.Filtering.Models.FilterBarVM();
                         vm.addFilterChangeListener();
                         window.addEventListener('ClearFilter', function () {
-                            vm.$scope.Selected = "0 SELECTED";
+                            vm.$scope.Selected = "SELECT GENRES";
                             vm.$scope.SelectedGenres = new Array();
                             CacheManager.DeleteStorage('ActiveGenres');
                         });
@@ -7017,11 +7325,20 @@ var FC;
                                 if (e.detail) {
                                     var d = e.detail;
                                     if (d.Genres) {
-                                        vm.$scope.Selected = d.Genres.length + " SELECTED";
+                                        vm.$scope.Selected = d.Genres.length + " GENRE(S) SELECTED";
                                         d.Genres.forEach(function (g, i) {
                                             vm.$scope.SelectedGenreIds += g.GenreID + ',';
                                         });
                                         vm.$scope.SelectedGenres = d.Genres;
+                                        if (vm.$scope.SelectedGenres.length == 1) {
+                                            vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRE SELECTED";
+                                        }
+                                        else {
+                                            vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRES SELECTED";
+                                        }
+                                        if (vm.$scope.SelectedGenres.length == 0) {
+                                            vm.$scope.Selected = "SELECT GENRES";
+                                        }
                                         vm.$scope.SelectedGenreIds = vm.$scope.SelectedGenreIds.substr(0, vm.$scope.SelectedGenreIds.length - 1);
                                     }
                                 }
@@ -7071,20 +7388,33 @@ var FC;
                                 }
                             });
                             vm.$scope.SelectedGenres = tmp;
-                            vm.$scope.Selected = tmp.length + " SELECTED";
                             CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 999999999999999);
                         }
                         vm.$scope.SelectedGenres.forEach(function (v, i) {
                             vm.$scope.SelectedGenreIds += v.GenreID + ",";
                         });
-                        vm.$scope.Selected = vm.$scope.SelectedGenres.length + " SELECTED";
+                        if (vm.$scope.SelectedGenres) {
+                            if (vm.$scope.SelectedGenres.length == 0) {
+                                vm.$scope.Selected = "SELECT GENRES";
+                            }
+                            else {
+                                vm.$scope.Selected = vm.$scope.SelectedGenres.length + " GENRE(S) SELECTED";
+                            }
+                        }
                         vm.$scope.SelectedGenreIds = vm.$scope.SelectedGenreIds.substr(0, vm.$scope.SelectedGenreIds.length - 1);
                         vm.$scope.model.Genres = vm.$scope.SelectedGenres;
+                        this.Save();
                     };
                     GenreFilterController.prototype.SetGenreList = function () {
                         var vm = this;
                         vm.GenreService.GetAllGenres().then(function (r) {
                             vm.$scope.SysGenres = r.Data;
+                            if (CacheManager.Contains("ActiveGenres")) {
+                                vm.$scope.SelectedGenres = CacheManager.GetStorage("ActiveGenres").data;
+                            }
+                            else {
+                                vm.$scope.SelectedGenres = new Array();
+                            }
                         });
                     };
                     GenreFilterController.prototype.Save = function () {
@@ -7591,6 +7921,9 @@ var FC;
                     };
                     GenreService.prototype.GetByID = function (id) {
                         return this.Get('/API/Genre/GetByID?id=' + id);
+                    };
+                    GenreService.prototype.GetByFestivalID = function (id) {
+                        return this.Get('/API/Genre/GetByFestivalID?festivalID=' + id);
                     };
                     GenreService.prototype.GetAllRoot = function () {
                         return this.Get('/API/Genre/GetAllRoot');
@@ -8256,6 +8589,9 @@ var FC;
                     LocationService.prototype.GetList = function () {
                         return this.Get('/API/Location/GetList');
                     };
+                    LocationService.prototype.GetByID = function (id) {
+                        return this.Get('/API/Location/GetByID?id=' + id);
+                    };
                     LocationService.prototype.Search = function (keyword) {
                         return this.Get('/API/Location/GetByPartialName?name=' + keyword);
                     };
@@ -8366,6 +8702,30 @@ var FC;
                         else {
                             throw new Error("No directory id is defined.");
                         }
+                        if ($local[3]) {
+                            vm.$scope.DirectoryID = $local[2];
+                        }
+                        else {
+                            throw new Error("Not authorized, because there is no token defined.");
+                        }
+                        if ($local[4]) {
+                            vm.$scope.ValidationWidth = $local[4];
+                        }
+                        else {
+                            vm.$scope.ValidationWidth = 0;
+                        }
+                        if ($local[5]) {
+                            vm.$scope.ValidationHeight = $local[5];
+                        }
+                        else {
+                            vm.$scope.ValidationHeight = 0;
+                        }
+                        if ($local[6] && $local[6] == true) {
+                            vm.$scope.IsThumbnail = true;
+                        }
+                        else {
+                            vm.$scope.IsThumbnail = false;
+                        }
                         vm.$scope.DoEditMediaDir = this.DoEditMediaDir;
                         vm.$scope.DoSaveEditMediaDir = this.DoSaveEditMediaDir;
                         vm.$scope.DoDeleteMediaDir = this.DoDeleteMediaDir;
@@ -8391,7 +8751,6 @@ var FC;
                         vm.$scope.URLRoot = ENV.MediaURLRoot;
                         vm.$scope.ShortenFileName = vm.ShortenFileName;
                         vm.$scope.ActivateMediaItem = vm.ActivateMediaItem;
-                        vm.SetDirectories($scope);
                         vm.initAdvancedUpload($scope.inst.$scope);
                         if (!vm.$scope.inst.AuthService.HasAuth(FC.Shared.Enum.Roles.GetAdmins())) {
                             vm.$scope.IsMediaDirCreating = false;
@@ -8408,60 +8767,31 @@ var FC;
                         if (CacheManager.Contains("Token")) {
                             vm.$scope.Token = CacheManager.Get("Token").data;
                         }
+                        else {
+                            vm.$scope.Token = CacheManager.GetCookieValue("Token");
+                        }
                         //window.addEventListener("");
                         window.addEventListener("FCDataLoadingComplete", function (e) {
                             vm.$scope.inst.$scope.IsLoading = false;
                         });
                         window.addEventListener("MediaServiceFileUploaded", function (e) {
                             var state = e["detail"];
-                            //vm.$scope = vm.$scope.inst.$scope;
-                            //vm.$scope.ServerMsg = state.Data.MSG;
-                            //vm.$scope.IsMediaItemCreated = true;
-                            //vm.$scope.IsLoading = true;
-                            //vm.MediaSvc.GetDirByID(vm.$scope.ActiveDir.DirectoryID).then(function (r) {
-                            //    vm.$scope.ActiveDir = r.Data;
-                            //    vm.$scope.IsLoading = false;
-                            //    if (state.Data.SUCCESS==true) {
-                            //        vm.$scope.DoCancelCRUD($scope);
-                            //        vm.$scope.IsMediaDirCreating = false;
-                            //        vm.$scope.IsCreating = false;
-                            //        vm.$scope.IsDeleting = false;
-                            //        vm.$scope.IsEditing = false;
-                            //        vm.$scope.IsMediaDirEditing = false;
-                            //        vm.$scope.IsMediaDirDeleting = false;
-                            //    } else {
-                            //        vm.$scope.IsMediaItemCreated = false;
-                            //        vm.$scope.IsMediaDirCreating = false;
-                            //        vm.$scope.IsCreating = false;
-                            //        vm.$scope.IsDeleting = false;
-                            //        vm.$scope.IsEditing = false;
-                            //        vm.$scope.IsMediaDirEditing = false;
-                            //        vm.$scope.IsMediaDirDeleting = false;
-                            //    }
-                            //});
                         });
-                        window.addEventListener("iframeSrcChanged", function () {
-                            vm.SetDirectories($scope);
+                        this.SetDirectories(vm.$scope);
+                        window.addEventListener("iframeSrcChanged", function (r) {
                             var currentNum = vm.MemReg.Get("PrevMediaCount") || 0;
                             if ($scope.ActiveDir) {
-                                vm.MediaSvc.GetDirByID($scope.ActiveDir.DirectoryID).then(function (r) {
+                                vm.MediaSvc.HandleUploaded($scope.ActiveDir.DirectoryID).then(function (r) {
                                     vm.$scope.ActiveDir = r.Data;
                                     vm.$scope.IsLoading = false;
+                                    if (r.State) {
+                                        vm.$scope.State = r.State;
+                                    }
                                 });
                             }
                         });
-                        vm.MediaSvc.GetDirByID(vm.$scope.DirectoryID).then(function (r) {
-                            vm.$scope.ActiveDir = r.Data;
-                            vm.$scope.IsLoading = false;
-                            if (vm.$scope.ActiveDir.DirectoryID == vm.$scope.RootID) {
-                                vm.$scope.ShowFolderUp = false;
-                            }
-                            else {
-                                vm.$scope.ShowFolderUp = true;
-                            }
-                        });
                         $scope.getUploadURL = function () {
-                            var url = vm.$sce.trustAsResourceUrl(FC.Core.Environment.MediaURLRoot + "/API/Media/Upload?dirID=" + vm.$scope.DirectoryID + "&width=0&height=0&thumb=false&Token=" + vm.$scope.Token);
+                            var url = vm.$sce.trustAsResourceUrl($AppConfig.URLRoot + "/API/Media/Upload?dirID=" + vm.$scope.DirectoryID + "&width=" + vm.$scope.ValidationWidth + "&height=" + vm.$scope.ValidationHeight + "&thumb=" + vm.$scope.IsThumbnail + "&Token=" + vm.$scope.Token + "&callback=uploadcb");
                             return url;
                         };
                         vm.$scope.Save = vm.Save;
@@ -8473,7 +8803,6 @@ var FC;
                         }
                     }
                     MediaModalController.prototype.DoCreate = function ($scope) {
-                        $scope.inst.CheckAuth($scope);
                         $scope = $scope.inst.$scope;
                         $scope.IsCreating = true;
                         $scope.IsMediaDirCreating = false;
@@ -8482,46 +8811,45 @@ var FC;
                         $scope.IsMediaDirEditing = false;
                     };
                     MediaModalController.prototype.handleDroppedFiles = function ($scope, files, $form) {
-                        var vm = this;
-                        //TODO: This is not the way that we want but it works for now. Problem: when files is uploaded and there is a success/failure response from server. My scope seems not to be available.
-                        $scope = $scope.inst.$scope;
-                        if (!$scope.Token) {
-                            //$scope.DoCancelCRUD($scope);
-                            var state = new FC.Shared.ViewModels.RepositoryState();
-                            state.MSG = "You are not authorized to upload images.";
-                            var r = { Data: state, Message: "You are not authorized to upload images.", StatusCode: 500, Params: null };
-                            window.dispatchEvent(new CustomEvent("MediaServiceFileUploaded", { 'detail': r }));
-                        }
-                        else {
-                            this.MediaSvc.UploadFiles(files, vm.$scope.ActiveDir.DirectoryID, vm.$scope.Token).then(function (state) {
-                                vm.$scope = vm.$scope.inst.$scope;
-                                vm.$scope.ServerMsg = state.Data.MSG;
-                                vm.$scope.IsMediaItemCreated = true;
-                                vm.$scope.IsLoading = true;
-                                vm.MediaSvc.GetDirByID(vm.$scope.ActiveDir.DirectoryID).then(function (r) {
-                                    vm.$scope.ActiveDir = r.Data;
-                                    vm.$scope.IsLoading = false;
-                                    if (state.Data.SUCCESS == true) {
-                                        vm.$scope.DoCancelCRUD($scope);
-                                        vm.$scope.IsMediaDirCreating = false;
-                                        vm.$scope.IsCreating = false;
-                                        vm.$scope.IsDeleting = false;
-                                        vm.$scope.IsEditing = false;
-                                        vm.$scope.IsMediaDirEditing = false;
-                                        vm.$scope.IsMediaDirDeleting = false;
-                                    }
-                                    else {
-                                        vm.$scope.IsMediaItemCreated = false;
-                                        vm.$scope.IsMediaDirCreating = false;
-                                        vm.$scope.IsCreating = false;
-                                        vm.$scope.IsDeleting = false;
-                                        vm.$scope.IsEditing = false;
-                                        vm.$scope.IsMediaDirEditing = false;
-                                        vm.$scope.IsMediaDirDeleting = false;
-                                    }
-                                });
-                            });
-                        }
+                        throw new Error("Method not supported");
+                        //var vm = this;
+                        ////TODO: This is not the way that we want but it works for now. Problem: when files is uploaded and there is a success/failure response from server. My scope seems not to be available.
+                        //$scope = $scope.inst.$scope;
+                        //if (!$scope.Token) {
+                        //    //$scope.DoCancelCRUD($scope);
+                        //    var state = new FC.Shared.ViewModels.RepositoryState();
+                        //    state.MSG = "You are not authorized to upload images.";
+                        //    var r: INT.IServiceResponse<VM.RepositoryState> = { Data: state, Message: "You are not authorized to upload images.", StatusCode: 500, Params: null,State:null };
+                        //    window.dispatchEvent(new CustomEvent("MediaServiceFileUploaded", { 'detail': r }));
+                        //} else {
+                        //    this.MediaSvc.UploadFiles(files, vm.$scope.ActiveDir.DirectoryID, vm.$scope.Token).then(function (state) {
+                        //        vm.$scope = vm.$scope.inst.$scope;
+                        //        vm.$scope.ServerMsg = state.Data.MSG;
+                        //        vm.$scope.IsMediaItemCreated = true;
+                        //        vm.$scope.IsLoading = true;
+                        //        vm.MediaSvc.GetDirByID(vm.$scope.ActiveDir.DirectoryID).then(function (r) {
+                        //            vm.$scope.ActiveDir = r.Data;
+                        //            vm.$scope.IsLoading = false;
+                        //            if (state.Data.SUCCESS == true) {
+                        //                vm.$scope.DoCancelCRUD($scope);
+                        //                vm.$scope.IsMediaDirCreating = false;
+                        //                vm.$scope.IsCreating = false;
+                        //                vm.$scope.IsDeleting = false;
+                        //                vm.$scope.IsEditing = false;
+                        //                vm.$scope.IsMediaDirEditing = false;
+                        //                vm.$scope.IsMediaDirDeleting = false;
+                        //            } else {
+                        //                vm.$scope.IsMediaItemCreated = false;
+                        //                vm.$scope.IsMediaDirCreating = false;
+                        //                vm.$scope.IsCreating = false;
+                        //                vm.$scope.IsDeleting = false;
+                        //                vm.$scope.IsEditing = false;
+                        //                vm.$scope.IsMediaDirEditing = false;
+                        //                vm.$scope.IsMediaDirDeleting = false;
+                        //            }
+                        //        });
+                        //    });
+                        //}
                     };
                     MediaModalController.prototype.initAdvancedUpload = function ($scope) {
                         var vm = this;
@@ -8612,16 +8940,6 @@ var FC;
                             $scope.ShowFolderUp = false;
                         }
                         vm.SetDirectories($scope);
-                        //vm.MediaSvc.GetDirByID(dir.DirectoryID).then(function (r) {
-                        //    vm.$scope.ActiveDir = dir;
-                        //    vm.initAdvancedUpload($scope);
-                        //    $scope.IsLoading = false;
-                        //    if (vm.$scope.ActiveDir.DirectoryID == vm.$scope.RootID) {
-                        //        vm.$scope.ShowFolderUp = false;
-                        //    } else {
-                        //        vm.$scope.ShowFolderUp = true;
-                        //    }
-                        //});
                     };
                     MediaModalController.prototype.RegisterEvt = function (evt) {
                         var vm = this;
@@ -8645,16 +8963,16 @@ var FC;
                     };
                     MediaModalController.prototype.SetDirectories = function ($scope) {
                         var rootDir = $scope.RootID;
-                        if ($scope.ActiveDir) {
-                            rootDir = $scope.ActiveDir.DirectoryID;
+                        if ($scope.DirectoryID) {
+                            rootDir = $scope.DirectoryID;
                         }
                         var vm = this;
                         if (rootDir) {
                             this.MediaSvc.GetDirByID(rootDir).then(function (r) {
-                                $scope.IsLoading = false;
-                                $scope.ActiveDir = r.Data;
-                                if ($scope.Crumb.length == 0) {
-                                    $scope.Crumb[0] = $scope.ActiveDir;
+                                vm.$scope.IsLoading = false;
+                                vm.$scope.ActiveDir = r.Data;
+                                if (vm.$scope.Crumb.length == 0) {
+                                    vm.$scope.Crumb[0] = $scope.ActiveDir;
                                 }
                                 vm.$scope.RootDir = $scope.ActiveDir;
                                 // vm.$scope.Crumb.push($scope.ActiveDir);
@@ -8664,7 +8982,7 @@ var FC;
                                 else {
                                     vm.$scope.ShowFolderUp = true;
                                 }
-                                vm.initAdvancedUpload($scope);
+                                vm.initAdvancedUpload(vm.$scope);
                             });
                         }
                     };
@@ -8966,6 +9284,10 @@ var FC;
                     MediaService.prototype.GetDirByID = function (id) {
                         return this.Get('/API/Media/GetDirByID?id=' + id);
                     };
+                    MediaService.prototype.HandleUploaded = function (id) {
+                        var g = this.Get('/API/Media/HandleUploaded?id=' + id);
+                        return g;
+                    };
                     MediaService.prototype.GetDirectoryMedia = function (id) {
                         return this.Get('/API/Media/GetDirectoryMedia?id=' + id);
                     };
@@ -9024,16 +9346,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/menus", "/Scripts/Modules/Menu/Views/overview.html", "FC.Modules.Menu.Controllers.MenuOverviewController", "vm");
-                    this.$Application.AddRoute("/menus/:pagenum", "/Scripts/Modules/Menu/Views/overview.html", "FC.Modules.Menu.Controllers.MenuOverviewController", "vm");
-                    this.$Application.AddRoute("/menus/sort/:character", "/Scripts/Modules/Menu/Views/overview.html", "FC.Modules.Menu.Controllers.MenuOverviewController", "vm");
-                    this.$Application.AddRoute("/menus/menuitems/create", "/Scripts/Modules/Menu/Views/create-item.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-                    this.$Application.AddRoute("/menus/menuitems/create/:step", "/Scripts/Modules/Menu/Views/create-item.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-                    this.$Application.AddRoute("/menus/menusections/create", "/Scripts/Modules/Menu/Views/create-section.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-                    this.$Application.AddRoute("/menus/menusections/create/:step", "/Scripts/Modules/Menu/Views/create-section.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-                    this.$Application.AddRoute("/menus/menuitems/edit/:menuitemid", "/Scripts/Modules/Menu/Views/create-item.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-                    this.$Application.AddRoute("/menus/menusections/edit/:menusectionid", "/Scripts/Modules/Menu/Views/create-section.html", "FC.Modules.Menu.Controllers.MenuCRUDController", "vm");
-                    this.$Application.AddRoute("/menus/menuitems/:sectionid", "/Scripts/Modules/Menu/Views/menuitems-overview.html", "FC.Modules.Menu.Controllers.MenuOverviewController", "vm");
                 }
                 Menu.prototype.GetApplication = function () {
                     return this.$Application;
@@ -9061,132 +9373,16 @@ var FC;
             (function (Controllers) {
                 var MenuController = (function (_super) {
                     __extends(MenuController, _super);
-                    function MenuController($http, $q, $scope, $route, $routeParams, $location, $mdDialog) {
+                    function MenuController($http, $q, $scope, $routeParams, $location, $mdDialog) {
                         _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
                         this.$scope = $scope;
                         var vm = this;
                         this.$scope.inst = this;
-                        this.$scope.ToggleMobile = this.ToggleMobile;
-                        this.$scope.ToggleGenreFilter = this.ToggleGenreFilter;
-                        this.$scope.ToggleCountryFilter = this.ToggleCountryFilter;
-                        this.$scope.MtModal = $mdDialog;
-                        this.$scope.OpenLoginModal = this.OpenLoginModal;
-                        this.$scope.OpenMyProfileModal = this.OpenMyProfileModal;
-                        $("#MainOverlay").click(function () {
-                            $("#MenuMobile").removeClass('ctx-visible').addClass('ctx-hidden');
-                            $("#GenreFilterControl").removeClass('ctx-visible').addClass('ctx-hidden');
-                            $("#CountryFilterControl").removeClass('ctx-visible').addClass('ctx-hidden');
-                            $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
-                        });
-                        if (CacheManager.Contains("ActiveGenres")) {
-                            var g = CacheManager.Get("ActiveGenres").data;
-                            this.$scope.GenreCount = g.length;
-                        }
-                        if (CacheManager.Contains("UserCountries")) {
-                            var c = CacheManager.Get("UserCountries").data;
-                            vm.$scope.CountryCount = c.length;
-                        }
-                        window.addEventListener("ActiveGenres_Writed", function () {
-                            if (CacheManager.Contains("ActiveGenres")) {
-                                var g = CacheManager.Get("ActiveGenres").data;
-                                vm.$scope.GenreCount = g.length;
-                            }
-                        });
-                        window.addEventListener("ActiveGenres_Deleted", function () {
-                            vm.$scope.GenreCount = 0;
-                        });
-                        window.addEventListener("UserCountries_Writed", function () {
-                            if (CacheManager.Contains("UserCountries")) {
-                                var c = CacheManager.Get("UserCountries").data;
-                                vm.$scope.CountryCount = c.length;
-                            }
-                        });
-                        window.addEventListener("UserCountries_Deleted", function () {
-                            vm.$scope.CountryCount = 0;
-                        });
-                        window.addEventListener("AUTH_SUCCESS", function () {
-                            vm.$scope.MtModal.hide();
-                        });
-                        vm.$scope.IsLoading = true;
-                        window.addEventListener("FCDataLoadingComplete", function () {
-                            vm.$scope.IsLoading = false;
-                        });
                     }
-                    MenuController.prototype.OpenLoginModal = function ($scope) {
-                        $("#MenuMobile").removeClass('ctx-visible').addClass('ctx-hidden');
-                        $("#GenreFilterControl").removeClass('ctx-visible').addClass('ctx-hidden');
-                        $("#CountryFilterControl").removeClass('ctx-visible').addClass('ctx-hidden');
-                        $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
-                        var opts = {};
-                        opts.controller = FC.Modules.Auth.Controllers.AuthController;
-                        opts.templateUrl = '/Scripts/modules/auth/views/login.html';
-                        opts.parent = document.body;
-                        opts.clickOutsideToClose = true;
-                        $scope.MtModal.show(opts).then(function (answer) {
-                            //$scope.status = 'You said the information was "' + answer + '".';
-                        }, function () {
-                            // $scope.status = 'You cancelled the dialog.';
-                        });
-                    };
-                    MenuController.prototype.OpenMyProfileModal = function ($scope) {
-                        $("#MenuMobile").removeClass('ctx-visible').addClass('ctx-hidden');
-                        $("#GenreFilterControl").removeClass('ctx-visible').addClass('ctx-hidden');
-                        $("#CountryFilterControl").removeClass('ctx-visible').addClass('ctx-hidden');
-                        $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
-                        var opts = {};
-                        opts.controller = FC.Modules.Details.Controllers.FestivalDetailDialogController;
-                        opts.templateUrl = '/Scripts/modules/details/views/dialogs/profile/myprofile.html';
-                        opts.parent = document.body;
-                        opts.clickOutsideToClose = true;
-                        $scope.MtModal.show(opts).then(function (answer) {
-                            //$scope.status = 'You said the information was "' + answer + '".';
-                        }, function () {
-                            // $scope.status = 'You cancelled the dialog.';
-                        });
-                    };
-                    MenuController.prototype.ToggleGenreFilter = function ($scope) {
-                        $("#MenuMobile").removeClass('ctx-visible').addClass('ctx-hidden');
-                        $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
-                        var opts = {};
-                        opts.controller = FC.Modules.Genres.Controllers.GenreFilterController;
-                        opts.templateUrl = '/Scripts/modules/genres/views/genre-filter.html';
-                        opts.parent = document.body;
-                        opts.clickOutsideToClose = true;
-                        $scope.MtModal.show(opts).then(function (answer) {
-                            //$scope.status = 'You said the information was "' + answer + '".';
-                        }, function () {
-                            // $scope.status = 'You cancelled the dialog.';
-                        });
-                    };
-                    MenuController.prototype.ToggleCountryFilter = function ($scope) {
-                        $("#MenuMobile").removeClass('ctx-visible').addClass('ctx-hidden');
-                        $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
-                        var opts = {};
-                        opts.controller = FC.Modules.Countries.Controllers.CountryFilterController;
-                        opts.templateUrl = '/Scripts/modules/countries/views/country-filter.html';
-                        opts.parent = document.body;
-                        opts.clickOutsideToClose = true;
-                        $scope.MtModal.show(opts).then(function (answer) {
-                            //$scope.status = 'You said the information was "' + answer + '".';
-                        }, function () {
-                            // $scope.status = 'You cancelled the dialog.';
-                        });
-                    };
-                    MenuController.prototype.ToggleMobile = function ($scope) {
-                        if ($("#MenuMobile").hasClass('ctx-hidden')) {
-                            $("#MenuMobile").removeClass('ctx-hidden').addClass('ctx-visible');
-                            $("#MainOverlay").removeClass('ctx-hidden').addClass('ctx-visible');
-                        }
-                        else {
-                            $("#MenuMobile").removeClass('ctx-visible').addClass('ctx-hidden');
-                            $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
-                        }
-                    };
                     MenuController.$inject = [
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
                         '$routeParams',
                         '$location',
                         '$mdDialog'
@@ -10454,7 +10650,7 @@ var FC;
             (function (Controllers) {
                 var SearchController = (function (_super) {
                     __extends(SearchController, _super);
-                    function SearchController($mdDialog, $http, $q, $scope, $route, $routeParams, $location, SearchService) {
+                    function SearchController($mdDialog, $http, $q, $scope, $routeParams, $location, SearchService) {
                         _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
                         this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
                         this.SearchService = new FC.Modules.Search.Services.SearchService($http, $q);
@@ -10481,6 +10677,8 @@ var FC;
                         //    }
                         //});
                     };
+                    SearchController.prototype.DoChangeSearch = function () {
+                    };
                     SearchController.prototype.DoSearch = function () {
                         var vm = this;
                         var SearchFilter = new FC.Shared.ServiceMessages.SearchFilter();
@@ -10497,6 +10695,8 @@ var FC;
                                     var e = new CustomEvent("SearchCompleteNoResult", { detail: response.Data });
                                     window.dispatchEvent(e);
                                 }
+                                vm.$scope.IsLoading = false;
+                                vm.$scope.Completed = true;
                             }).catch(function () {
                                 window.dispatchEvent(new CustomEvent("SearchCompletedWithNoResults"));
                             });
@@ -10515,7 +10715,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
                         '$routeParams',
                         '$location'
                     ];
@@ -11548,6 +11747,9 @@ var FC;
                 InternalContentType[InternalContentType["Report"] = 7] = "Report";
                 InternalContentType[InternalContentType["Genre"] = 8] = "Genre";
                 InternalContentType[InternalContentType["Artist"] = 9] = "Artist";
+                InternalContentType[InternalContentType["Advertisement"] = 10] = "Advertisement";
+                InternalContentType[InternalContentType["Country"] = 11] = "Country";
+                InternalContentType[InternalContentType["All"] = 12] = "All";
             })(Enum.InternalContentType || (Enum.InternalContentType = {}));
             var InternalContentType = Enum.InternalContentType;
         })(Enum = Shared.Enum || (Shared.Enum = {}));
@@ -11864,6 +12066,9 @@ var FC;
                     this.Message = r.Message;
                     this.StatusCode = r.StatusCode;
                     this.Params = r.Params;
+                    this.State = r.State;
+                    this.RequestToken = r.RequestToken;
+                    this.ResponseToken = r.ResponseToken;
                 }
                 return ServiceResponse;
             }());
@@ -12182,7 +12387,37 @@ var FC;
         var ServiceMessages;
         (function (ServiceMessages) {
             var FestivalFilter = (function () {
-                function FestivalFilter() {
+                function FestivalFilter(genres, artists, locations, countries) {
+                    if (genres === void 0) { genres = null; }
+                    if (artists === void 0) { artists = null; }
+                    if (locations === void 0) { locations = null; }
+                    if (countries === void 0) { countries = null; }
+                    this.GenreIDs = new Array();
+                    this.ArtistIDs = new Array();
+                    this.LocationIDs = new Array();
+                    this.FestivalIDs = new Array();
+                    this.CountryIDs = new Array();
+                    var vm = this;
+                    if (genres) {
+                        genres.forEach(function (v, k) {
+                            vm.GenreIDs.push(v.ContentID);
+                        });
+                    }
+                    if (artists) {
+                        artists.forEach(function (v, k) {
+                            vm.ArtistIDs.push(v.ContentID);
+                        });
+                    }
+                    if (locations) {
+                        locations.forEach(function (v, k) {
+                            vm.LocationIDs.push(v.ContentID);
+                        });
+                    }
+                    if (countries) {
+                        countries.forEach(function (v, k) {
+                            vm.CountryIDs.push(v.ContentID);
+                        });
+                    }
                 }
                 return FestivalFilter;
             }());
@@ -12310,6 +12545,17 @@ var FC;
             var Roles = (function () {
                 function Roles() {
                 }
+                Roles.GetAllPublic = function () {
+                    return [
+                        Roles.Advertiser,
+                        Roles.Festival,
+                        Roles.Venue,
+                        Roles.Artist,
+                        Roles.EndUser,
+                        Roles.Retailer,
+                        Roles.TravelAgent
+                    ];
+                };
                 Roles.GetAnonymous = function () {
                     return [
                         this.Anonymous,
@@ -12366,7 +12612,14 @@ var FC;
                         this.Admin,
                         this.SponsorAdmin,
                         this.FestivalAdmin,
-                        this.Owner
+                        this.Owner,
+                        Roles.Advertiser,
+                        Roles.Festival,
+                        Roles.Venue,
+                        Roles.Artist,
+                        Roles.EndUser,
+                        Roles.Retailer,
+                        Roles.TravelAgent
                     ];
                 };
                 Roles.GetAdmins = function () {
@@ -12384,6 +12637,12 @@ var FC;
                         this.Owner
                     ];
                 };
+                Roles.Festival = "Festival";
+                Roles.Artist = "Artist";
+                Roles.Venue = "Venue";
+                Roles.Retailer = "Retailer";
+                Roles.TravelAgent = "TravelAgent";
+                Roles.Advertiser = "Advertiser";
                 Roles.Anonymous = "Anonymous";
                 Roles.UserAdmin = "UserAdmin";
                 Roles.Reporter = "Reporter";
@@ -12671,114 +12930,100 @@ var FC;
         })(Util = Shared.Util || (Shared.Util = {}));
     })(Shared = FC.Shared || (FC.Shared = {}));
 })(FC || (FC = {}));
-var FC;
-(function (FC) {
-    var Shared;
-    (function (Shared) {
-        var Util;
-        (function (Util) {
-            var QueueMsg = (function () {
-                function QueueMsg() {
-                }
-                return QueueMsg;
-            }());
-            Util.QueueMsg = QueueMsg;
-            var LoadQueue = (function () {
-                function LoadQueue() {
-                    this.queue = new Array();
-                }
-                LoadQueue.GetInstance = function () {
-                    String.prototype['ReplaceAll'] = function (search, replacement) {
-                        var target = this;
-                        return target.split(search).join(replacement);
-                    };
-                    if (LoadQueue.lqinst == null) {
-                        LoadQueue.lqinst = new LoadQueue();
-                    }
-                    return LoadQueue.lqinst;
-                };
-                LoadQueue.prototype.TriggerComplete = function (key) {
-                    key = key["ReplaceAll"]('/', '');
-                    var e = new CustomEvent(key + "Complete");
-                    window.dispatchEvent(e);
-                };
-                LoadQueue.prototype.TriggerFailure = function (key) {
-                    key = key["ReplaceAll"]('/', '');
-                    var e = new CustomEvent(key + "Failure");
-                    window.dispatchEvent(e);
-                };
-                LoadQueue.prototype.Listen = function (key) {
-                    key = key["ReplaceAll"]('/', '');
-                    var qm = new QueueMsg();
-                    var vm = LoadQueue.GetInstance();
-                    qm.completed = false;
-                    qm.key = key;
-                    var any = false;
-                    any = vm.queue.some(function (v, k) {
-                        return v.key == key;
-                    });
-                    if (any) {
-                        console.info("KEY EXISTS: " + key);
-                    }
-                    else {
-                        vm.queue.push(qm);
-                        window.addEventListener(key + "Complete", function () {
-                            var msg = vm.queue.filter(function (v, i) {
-                                if (v.key == key) {
-                                    return true;
-                                }
-                                else {
-                                    return false;
-                                }
-                            })[0];
-                            if (msg) {
-                                var i = vm.queue.indexOf(msg);
-                                msg.completed = true;
-                                vm.queue[i] = msg;
-                                var totalLength = vm.queue.length;
-                                var completedLength = vm.queue.filter(function (v, i) {
-                                    return v.completed;
-                                }).length;
-                                if (totalLength == completedLength) {
-                                    var e = new CustomEvent("FCDataLoadingComplete", { 'detail': vm.queue });
-                                    vm.queue = new Array();
-                                    window.dispatchEvent(e);
-                                }
-                            }
-                        });
-                        window.addEventListener(key + "Failure", function () {
-                            var msg = vm.queue.filter(function (v, i) {
-                                if (v.key == key) {
-                                    return true;
-                                }
-                                else {
-                                    return false;
-                                }
-                            })[0];
-                            if (msg) {
-                                var i = vm.queue.indexOf(msg);
-                                msg.completed = true;
-                                msg.failed = true;
-                                vm.queue[i] = msg;
-                                var totalLength = vm.queue.length;
-                                var completedLength = vm.queue.filter(function (v, i) {
-                                    return (v.completed || v.failed);
-                                }).length;
-                                if (totalLength == completedLength) {
-                                    var e = new CustomEvent("FCDataLoadingComplete", { 'detail': vm.queue });
-                                    vm.queue = new Array();
-                                    window.dispatchEvent(e);
-                                }
-                            }
-                        });
-                    }
-                };
-                return LoadQueue;
-            }());
-            Util.LoadQueue = LoadQueue;
-        })(Util = Shared.Util || (Shared.Util = {}));
-    })(Shared = FC.Shared || (FC.Shared = {}));
-})(FC || (FC = {}));
+//module FC.Shared.Util {
+//    export class QueueMsg {
+//        public key: string;
+//        public completed: boolean;
+//        public failed: boolean;
+//    }
+//    export class LoadQueue {
+//        public queue = new Array<QueueMsg>();
+//        public static lqinst: LoadQueue;
+//        public static GetInstance() {
+//            String.prototype['ReplaceAll'] = function (search, replacement) {
+//                var target = this;
+//                return target.split(search).join(replacement);
+//            };
+//            if (LoadQueue.lqinst == null) {
+//                LoadQueue.lqinst = new LoadQueue();
+//            }
+//            return LoadQueue.lqinst;
+//        }
+//        public TriggerComplete(key: string) {
+//            key = key["ReplaceAll"]('/', '');
+//            var e = new CustomEvent(key+"Complete");
+//            window.dispatchEvent(e);
+//        }
+//        public TriggerFailure(key: string) {
+//            key = key["ReplaceAll"]('/', '');
+//            var e = new CustomEvent(key+"Failure");
+//            window.dispatchEvent(e);
+//        }
+//        public Listen(key: string): void {
+//            key = key["ReplaceAll"]('/', '');
+//            var qm = new QueueMsg();
+//            var vm = LoadQueue.GetInstance();
+//            qm.completed = false;
+//            qm.key = key;
+//            var any = false;
+//            any = vm.queue.some(function (v, k) {
+//                return v.key == key;
+//            });
+//            if (any) {
+//                console.info("KEY EXISTS: " + key);
+//            } else {
+//                vm.queue.push(qm);
+//                window.addEventListener(key + "Complete", function () {
+//                    var msg: QueueMsg = vm.queue.filter(function (v, i) {
+//                        if (v.key == key) {
+//                            return true;
+//                        } else {
+//                            return false;
+//                        }
+//                    })[0];
+//                    if (msg) {
+//                        var i = vm.queue.indexOf(msg);
+//                        msg.completed = true;
+//                        vm.queue[i] = msg;
+//                        var totalLength = vm.queue.length;
+//                        var completedLength = vm.queue.filter(function (v, i) {
+//                            return v.completed;
+//                        }).length;
+//                        if (totalLength == completedLength) {
+//                            var e = new CustomEvent("FCDataLoadingComplete", { 'detail': vm.queue });
+//                            vm.queue = new Array<QueueMsg>();
+//                            window.dispatchEvent(e);
+//                        }
+//                    }
+//                });
+//                window.addEventListener(key + "Failure", function () {
+//                    var msg: QueueMsg = vm.queue.filter(function (v, i) {
+//                        if (v.key == key) {
+//                            return true;
+//                        } else {
+//                            return false;
+//                        }
+//                    })[0];
+//                    if (msg) {
+//                        var i = vm.queue.indexOf(msg);
+//                        msg.completed = true;
+//                        msg.failed = true;
+//                        vm.queue[i] = msg;
+//                        var totalLength = vm.queue.length;
+//                        var completedLength = vm.queue.filter(function (v, i) {
+//                            return (v.completed || v.failed);
+//                        }).length;
+//                        if (totalLength == completedLength) {
+//                            var e = new CustomEvent("FCDataLoadingComplete", { 'detail': vm.queue });
+//                            vm.queue = new Array<QueueMsg>();
+//                            window.dispatchEvent(e);
+//                        }
+//                    }
+//                });
+//            }
+//        }
+//    }
+//} 
 var FC;
 (function (FC) {
     var Shared;

@@ -33,7 +33,7 @@
                 <DataGridTextColumn Header="First name" Binding="{Binding UserFirstname}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Last name" Binding="{Binding UserLastname}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Middle name" Binding="{Binding UserMiddlename}"></DataGridTextColumn>
-                <DataGridCheckBoxColumn Header="Activated" Binding="{Binding IsActive}">
+                <DataGridCheckBoxColumn Header="Activated" Binding="{Binding UserActivated}">
                 </DataGridCheckBoxColumn>
             </DataGrid.Columns>
         </DataGrid>

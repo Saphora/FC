@@ -97,14 +97,14 @@ namespace FC.BL.Repositories
             }
         }
 
-        private  GenreRespository _gr { get; set; }
-        public  GenreRespository Genres
+        private  GenreRepository _gr { get; set; }
+        public  GenreRepository Genres
         {
             get
             {
                 if (_gr == null)
                 {
-                    _gr = new GenreRespository();
+                    _gr = new GenreRepository();
                     return _gr;
                 }
                 else

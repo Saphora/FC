@@ -33,15 +33,14 @@ var FC;
                         vm.$scope.MtModal = $mdDialog;
                         vm.$scope.SelectedGenreIds = "";
                         vm.SetGenreList();
-                        if (vm.$scope.MemReg.Get("ActiveGenres")) {
-                            vm.$scope.inst.$scope.SelectedGenres = vm.$scope.MemReg.Get("ActiveGenres");
-                        }
-                        else {
-                            vm.$scope.SelectedGenres = new Array();
-                            if (CacheManager.Contains("ActiveGenres")) {
-                                vm.$scope.inst.$scope.SelectedGenres = CacheManager.Get("ActiveGenres").data;
-                            }
-                        }
+                        //if (vm.$scope.MemReg.Get("ActiveGenres")) {
+                        //    vm.$scope.inst.$scope.SelectedGenres = vm.$scope.MemReg.Get<Array<MODELS.UGenre>>("ActiveGenres");
+                        //} else {
+                        //    vm.$scope.SelectedGenres = new Array<MODELS.UGenre>();
+                        //    if (CacheManager.Contains("ActiveGenres")) {
+                        //        vm.$scope.inst.$scope.SelectedGenres = CacheManager.Get<Array<MODELS.UGenre>>("ActiveGenres").data;
+                        //    }
+                        //}
                         vm.$scope.IsActive = this.IsActive;
                         vm.$scope.Selected = "0 SELECTED";
                         if (vm.$scope.SelectedGenres != null) {

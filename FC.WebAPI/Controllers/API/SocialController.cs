@@ -32,19 +32,19 @@ namespace FC.WebAPI.Controllers.API
         [HttpGet]
         public ServiceResponse<List<SocialProfileType>> GetAllTypes()
         {
-            return new ServiceResponse<List<SocialProfileType>>(repo.GetAllTypes(), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<SocialProfileType>>(repo.GetAllTypes(), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<SocialProfile> GetByID(Guid? id)
         {
-            return new ServiceResponse<SocialProfile>(repo.GetByID(id), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<SocialProfile>(repo.GetByID(id), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpGet, HttpPost]
         public ServiceResponse<List<SocialProfile>> GetByContentID(Guid? id)
         {
-            return new ServiceResponse<List<SocialProfile>>(repo.GetByContentID(id), HttpStatusCode.OK, "OK");
+            return new ServiceResponse<List<SocialProfile>>(repo.GetByContentID(id), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpGet, HttpPost]

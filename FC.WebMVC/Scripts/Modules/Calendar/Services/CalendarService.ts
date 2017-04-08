@@ -45,6 +45,10 @@ module FC.Modules.Calendar.Services {
             }
         }
 
+        public GetByFilter(filter: FC.Shared.ServiceMessages.FestivalFilter) {
+            return this.Post<Array<FC.Shared.ViewModels.IFestivalVM>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
+        }
+
         public GetFilteredFestivals(month: number, year: number, genres: Array<MODELS.UGenre>, countries: Array<MODELS.UCountry>) {
             var filter = new FC.Shared.ServiceMessages.FestivalFilter();
             filter.GenreIDs = new Array<string>();

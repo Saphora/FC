@@ -1,13 +1,24 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Error</title>
-</head>
-<body>
-    <hgroup>
-        <h1>Error.</h1>
-        <h2>An error occurred while processing your request.</h2>
-    </hgroup>
-</body>
-</html>
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section META {
+}
+<div class="row">
+    <div class="col-xs-24">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5">
+                    ERROR
+                </span>
+            </div>
+            <div class="card-block">
+                <p>
+                    There was an error while proccessing your request.
+                </p>
+                <center>
+                    <a href="/" class="btn btn-danger">CALENDAR</a>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>

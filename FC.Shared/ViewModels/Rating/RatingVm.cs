@@ -8,6 +8,7 @@ namespace FC.Shared.ViewModels.Rating
 {
     public class RatingVm
     {
+        public Guid? ContentItemID { get; set; }
         public int StarCount { get; set; }
         public int Counter { get; set; }
         public bool Star1Active { get { return (StarCount == 1 || StarCount > 1 ? true : false); } }

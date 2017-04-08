@@ -95,7 +95,7 @@ namespace FC.Office.Controls.Users
                         vm.SysRoles.Remove(g);
                     }
                 }
-
+                
                 this.vm.SelectedCount = string.Format("{0} selected", Roles.Count());
             }
             else

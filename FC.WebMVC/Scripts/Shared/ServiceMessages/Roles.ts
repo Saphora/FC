@@ -2,6 +2,12 @@
 
 module FC.Shared.Enum {
     export class Roles {
+        public static Festival: string = "Festival";
+        public static Artist: string = "Artist";
+        public static Venue: string = "Venue";
+        public static Retailer: string = "Retailer";
+        public static TravelAgent: string = "TravelAgent";
+        public static Advertiser: string = "Advertiser";
         public static Anonymous: string = "Anonymous";
         public static UserAdmin: string = "UserAdmin";
         public static Reporter: string = "Reporter";
@@ -22,6 +28,18 @@ module FC.Shared.Enum {
         public static SponsorAdmin: string = "SponsorAdmin";
         public static FestivalAdmin: string = "FestivalAdmin";
         public static Owner: string = "Owner";
+
+        public static GetAllPublic() {
+            return [
+                Roles.Advertiser,
+                Roles.Festival,
+                Roles.Venue,
+                Roles.Artist,
+                Roles.EndUser,
+                Roles.Retailer,
+                Roles.TravelAgent
+            ];
+        }
 
 
         public static GetAnonymous(): string[] {
@@ -84,7 +102,14 @@ module FC.Shared.Enum {
                 this.Admin,
                 this.SponsorAdmin,
                 this.FestivalAdmin,
-                this.Owner
+                this.Owner,
+                Roles.Advertiser,
+                Roles.Festival,
+                Roles.Venue,
+                Roles.Artist,
+                Roles.EndUser,
+                Roles.Retailer,
+                Roles.TravelAgent
             ];
         }
 

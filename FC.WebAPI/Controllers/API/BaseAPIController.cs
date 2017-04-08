@@ -15,9 +15,14 @@ using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Security.Cryptography;
 using System.Text;
+using FC.Shared.Helpers;
+using FC.Shared.Enum;
+using FC.WebAPI.Attribs;
 
 namespace FC.WebAPI.Controllers.API
 {
+
+    [SetToken]
     public abstract class BaseAPIController : ApiController
     {
         protected static AuthorizationRepository AUTH { get; set; }
@@ -26,12 +31,15 @@ namespace FC.WebAPI.Controllers.API
         protected AuthorizationRepository AuthRepo { get; set; }
         protected GenericMessageRepository MsgRepo { get; set; }
         public CultureInfo UserCulture { get; set; }
+        public MemReg Registry { get; set; }
         public DateTime UserDateTime { get; set; }
+        public RepositoryState LastState { get; set; }
         
         public RegionInfo _RegionInfo { get; set; }
         protected string _CultureIsoName { get; set; }
         public BaseAPIController()
         {
+            Registry = MemReg.GetInstance();
             string headerDateTime = "";
             string culture = "";
             string country = "";
@@ -72,19 +80,21 @@ namespace FC.WebAPI.Controllers.API
             this.AuthRepo = AuthorizationRepository.Current;
         }
 
-
-
         protected ServiceResponse<T> HandleException<T>(Exception ex)
         {
             string msg = "Internal server error. Please try again later.";
             MsgRepo.Create("Server error occured", msg, ex, GenericMessageStatus.GenericError);
-            ServiceResponse<T> response = new ServiceResponse<T>(Activator.CreateInstance<T>(), HttpStatusCode.InternalServerError, msg);
+            ServiceResponse<T> response = new ServiceResponse<T>(Activator.CreateInstance<T>(), HttpStatusCode.InternalServerError, msg, this.Repositories.Auth.ActiveToken);
             return response;
         }
 
-        protected ServiceResponse<RepositoryState> HandleRepositoryState(RepositoryState state)
+        protected RepositoryState GetStateByKey(Guid key)
         {
+            return Registry.Get(key.ToString()) as RepositoryState;
+        }
 
+        protected ServiceResponse<RepositoryState> HandleRepositoryState(RepositoryState state, Guid? token=null, Guid? stateKey=null)
+        {
             GenericMessage msg = new GenericMessage();
             HttpStatusCode code = HttpStatusCode.InternalServerError;
             msg.Message = state.MSG;
@@ -130,7 +140,13 @@ namespace FC.WebAPI.Controllers.API
             {
                 code = HttpStatusCode.NotModified;
             }
-            ServiceResponse<RepositoryState> response = new ServiceResponse<RepositoryState>(state, code, state.MSG);
+            ServiceResponse<RepositoryState> response;
+            if (stateKey != null)
+            {
+                Registry.Set(stateKey.Value.ToString(), state);
+            }
+
+            response = new ServiceResponse<RepositoryState>(state, code, state.MSG, this.Repositories.Auth.ActiveToken);
             return response;
         }
 
@@ -186,144 +202,52 @@ namespace FC.WebAPI.Controllers.API
             }
             return m;
         }
+        
 
-        public bool IsAuthorized(string roleName, Guid? pToken=null)
+        public bool IsAuthorized(string[] roles, bool refreshToken=true, Guid? pToken=null)
         {
             this.AuthRepo = AuthorizationRepository.Current;
-            Role role = this.AuthRepo.GetRoleByName(roleName);
-            if (this.AuthRepo.Session == null)
-            {
-                if (pToken == null)
-                {
-                    if (HttpContext.Current.Request.Params["Token"] != null || HttpContext.Current.Request.Headers["Token"] != null)
-                    {
-                        string t = "";
-                        if (HttpContext.Current.Request.Params["Token"] != null)
-                        {
-                            t = HttpContext.Current.Request.Params["Token"];
-                        }
-                        if (HttpContext.Current.Request.Headers["Token"] != null)
-                        {
-                            t = HttpContext.Current.Request.Headers["Token"];
-                        }
-                        if (!string.IsNullOrEmpty(t))
-                        {
-                            Guid token = Guid.Parse(t);
-                            this.AuthRepo.Session = this.AuthRepo.GetByToken(token);
-                            this.AuthRepo.CurrentUser = this.AuthRepo.Session.User;
-
-                            if (this.AuthRepo.CurrentUser != null)
-                            {
-                                this.AuthRepo.CurrentUserRoles = this.AuthRepo.GetUserRoles(this.AuthRepo.CurrentUser.UserID);
-                            }
-                            this.AuthRepo.CurrentUserRoles = this.AuthRepo.CurrentUser.Roles;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                } else
-                {
-                    this.AuthRepo.Session = this.AuthRepo.GetByToken(pToken);
-                    this.AuthRepo.CurrentUser = this.AuthRepo.Session.User;
-
-                    if (this.AuthRepo.CurrentUser != null)
-                    {
-                        this.AuthRepo.CurrentUserRoles = this.AuthRepo.GetUserRoles(this.AuthRepo.CurrentUser.UserID);
-                    }
-                    this.AuthRepo.CurrentUserRoles = this.AuthRepo.CurrentUser.Roles;
-                }
-            }
-            if (!this.AuthRepo.CurrentUser.Roles.Where(w => w.RoleID == role.RoleID).Any())
-            {
-                return false;
-            }
-            this.AuthRepo.SetSessionState(true, true, System.Web.HttpContext.Current, this.ControllerContext);
-            return true;
-            
-        }
-        //public NotAuthorizedException NotAuthorized()
-        //{
-        //    HttpContext.Current.Response.TrySkipIisCustomErrors = true;
-        //    if (this.AuthRepo.CurrentUserRoles != null)
-        //    {
-        //        throw new NotAuthorizedException(AuthRepo.Session, this.AuthRepo.CurrentUserRoles.Select(s => s.Name).ToList());
-        //    }
-        //    else
-        //    {
-        //        throw new NotAuthorizedException(AuthRepo.Session, new List<string>());
-        //    }
-        //}
-
-        public bool IsAuthorized(string[] roles, Guid? pToken=null)
-        {
-            this.AuthRepo = AuthorizationRepository.Current;
-            bool hasNone = true;
             List<string> r = roles.ToList();
             r.Add("Developer");
+            if (pToken == null)
+            {
+                pToken = this.Repositories.Auth.GetHTTPToken();
+            } else
+            {
+                if (!this.Repositories.Auth.SetHTTPToken(pToken))
+                {
+                    return false;
+                }
+            }
+            if (refreshToken)
+            {
+                this.Repositories.Auth.RefreshToken(this.Repositories.Auth.Session, true);
+            }
+            return this.Repositories.Auth.UserHasRoles(roles);
+        }
 
-            if (this.AuthRepo.Session == null)
+        public bool IsAuthorAuthorized(Guid? authorID, Guid? pToken=null)
+        {
+            this.AuthRepo = AuthorizationRepository.Current;
+            if (pToken == null)
             {
-                if(pToken == null)
-                {
-                    if (HttpContext.Current.Request.Params["Token"] != null || HttpContext.Current.Request.Headers["Token"] != null)
-                    {
-                        string t = "";
-                        if (HttpContext.Current.Request.Params["Token"] != null)
-                        {
-                            t = HttpContext.Current.Request.Params["Token"];
-                        }
-                        if (HttpContext.Current.Request.Headers["Token"] != null)
-                        {
-                            t = HttpContext.Current.Request.Headers["Token"];
-                        }
-                        if (!string.IsNullOrEmpty(t))
-                        {
-                            Guid token = Guid.Parse(t);
-                            this.AuthRepo.Session = this.AuthRepo.GetByToken(token);
-                            this.AuthRepo.CurrentUser = this.AuthRepo.Session.User;
-                            this.AuthRepo.CurrentUserRoles = this.AuthRepo.CurrentUser.Roles;
-                        }
-                    } else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.AuthRepo.Session = this.AuthRepo.GetByToken(pToken);
-                    this.AuthRepo.CurrentUser = this.AuthRepo.Session.User;
-                    this.AuthRepo.CurrentUserRoles = this.AuthRepo.CurrentUser.Roles;
-                }
-            }
-            foreach (string roleName in r)
-            {
-                if (this.AuthRepo.CurrentUserRoles != null)
-                {
-                    if (this.AuthRepo.CurrentUserRoles.Where(w => w.Name == roleName).Any())
-                    {
-                        hasNone = false;
-                    }
-                }
-            }
-            if (!hasNone)
-            {
-                this.AuthRepo.SetSessionState(true, true, System.Web.HttpContext.Current, this.ControllerContext);
-                return true;
+                pToken = this.Repositories.Auth.GetHTTPToken();
             }
             else
             {
-                return false;
-                //NotAuthorizedException e = new NotAuthorizedException(AuthRepo.Session, this.AuthRepo.CurrentUserRoles.Select(s => s.Name).ToList());
-                //System.Web.HttpContext.Current.Response.StatusCode = 403;
-                //throw e;
+                if (!this.Repositories.Auth.SetHTTPToken(pToken))
+                {
+                    return false;
+                }
             }
+
+            this.Repositories.Auth.RefreshToken(this.Repositories.Auth.Session, true);
+            return this.Repositories.Auth.UserHasRoles(Roles.GetAdmins(), authorID);
         }
 
         public ServiceResponse<RepositoryState> NotAuthorized()
         {
-            return new ServiceResponse<RepositoryState>(new RepositoryState { SUCCESS = false, MSG = $"You are not authorized to perform this action." }, HttpStatusCode.Forbidden, "You are not authorized to perform this action.");
+            return new ServiceResponse<RepositoryState>(new RepositoryState { SUCCESS = false, MSG = $"You are not authorized to perform this action." }, HttpStatusCode.Forbidden, "You are not authorized to perform this action.", this.Repositories.Auth.ActiveToken);
         }
 
         public string GetMd5Hash(MD5 md5Hash, byte[] bytes)

@@ -4,9 +4,6 @@
 var BrowserDetect = {
     init: function () {
         this.browser = this.searchString(this.dataBrowser) || "Other";
-        if (this.browser == "Explorer") {
-            window.alert("We are so sorry! We do not support Internet Explorer at the moment. Try again later or use any other browser.");
-        }
         this.version = this.searchVersion(navigator.userAgent) || this.searchVersion(navigator.appVersion) || "Unknown";
     },
     searchString: function (data) {

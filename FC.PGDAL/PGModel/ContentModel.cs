@@ -10,17 +10,8 @@ namespace FC.PGDAL.PGModel
         public ContentModel()
             : base("name=ContentModel")
         {
-            this.Configuration.LazyLoadingEnabled = true; ///todo: 
-        }
-        private static ContentModel inst { get; set; }
-        public static ContentModel GetInstance()
-        {
-            if (ContentModel.inst == null)
-            {
-                ContentModel.inst = new ContentModel();
-                inst.Configuration.LazyLoadingEnabled = false;
-            }
-            return ContentModel.inst;
+            this.Configuration.LazyLoadingEnabled = true; ///todo
+
         }
         public virtual DbSet<Favorite> Favorites { get; set; }
         public virtual DbSet<UFestival> Festivals { get; set; }

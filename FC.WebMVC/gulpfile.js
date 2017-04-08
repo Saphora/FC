@@ -1,6 +1,5 @@
 ﻿var gulp = require('gulp');
 var sass = require('gulp-sass');
-var bs = require('browser-sync').create();
 var run_sequence = require('run-sequence');
 var fs = require('fs');
 var debug = true;
@@ -25,12 +24,6 @@ gulp.task('sasswatch', function () {
     return gulp.src('./Resources/sassv2/**/*.scss')
                 .pipe(sass())
                 .pipe(gulp.dest('App/Resources/cssv2'))
-                .pipe(bs.reload({ stream: true }));
-});
-
-gulp.task('watch', ['browser-sync'], function () {
-    gulp.watch("./Resources/sassv2/**/*.scss", ['sasswatch']).on('change', bs.reload);
-    gulp.watch("*.html").on('change', bs.reload);
 });
 
 //var gulp = require('gulp');
