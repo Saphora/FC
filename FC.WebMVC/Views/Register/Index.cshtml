@@ -69,15 +69,50 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.Label("How do you like to join?", htmlAttributes: new { @class = "control-label col-md-24" })
+                                    @Html.Label("How do you want to join?", htmlAttributes: new { @class = "control-label col-md-24" })
                                     <div class="col-md-24">
                                         <select name="AccountTypes" class="form-control">
-                                            <option value="@FC.Shared.Enum.Roles.EndUser" selected="selected">I just love festivals!</option>
-                                            <option value="@FC.Shared.Enum.Roles.Retailer,@FC.Shared.Enum.Roles.Advertiser,@FC.Shared.Enum.Roles.Partner">I want to advertise</option>
-                                            <option value="@FC.Shared.Enum.Roles.Artist,@FC.Shared.Enum.Roles.Advertiser">I want join as artist</option>
-                                            <option value="@FC.Shared.Enum.Roles.Festival">I want to join as festival</option>
-                                            <option value="@FC.Shared.Enum.Roles.Venue,@FC.Shared.Enum.Roles.Festival,@FC.Shared.Enum.Roles.Advertiser">I want to join as venue</option>
-                                            @*<option value="@FC.Shared.Enum.Roles.Retailer,@FC.Shared.Enum.Roles.Advertiser,@FC.Shared.Enum.Roles.Partner">I want to join as retailer</option>*@
+                                            @if (ViewBag.IncomingType == "user")
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.EndUser" selected="selected">I JUST LOVE FESTIVALS</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.EndUser">I JUST LOVE FESTIVALS</option>
+                                            }
+
+                                            @if (ViewBag.IncomingType == "advertisement")
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.Retailer,@FC.Shared.Enum.Roles.Advertiser,@FC.Shared.Enum.Roles.Partner" selected="selected">JOIN AS PARTNER</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.Retailer,@FC.Shared.Enum.Roles.Advertiser,@FC.Shared.Enum.Roles.Partner">JOIN AS PARTNER</option>
+                                            }
+                                            @if (ViewBag.IncomingType == "artist")
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.Artist,@FC.Shared.Enum.Roles.Advertiser" selected="selected">SIGN UP AS ARTIST</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.Artist,@FC.Shared.Enum.Roles.Advertiser">SIGN UP AS ARTIST</option>
+                                            }
+                                            @if (ViewBag.IncomingType == "festival")
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.Festival,@FC.Shared.Enum.Roles.Advertiser" selected="selected">SIGN UP MY FESTIVAL</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.Festival,@FC.Shared.Enum.Roles.Advertiser">SIGN UP MY FESTIVAL</option>
+                                            }
+                                            @if (ViewBag.Incomingtype == "venue")
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.Venue,@FC.Shared.Enum.Roles.Festival,@FC.Shared.Enum.Roles.Advertiser" selected="selected">SIGN UP MY VENUE</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@FC.Shared.Enum.Roles.Venue,@FC.Shared.Enum.Roles.Festival,@FC.Shared.Enum.Roles.Advertiser">SIGN UP MY VENUE</option>
+                                            }
                                         </select>
                                     </div>
                                 </div>

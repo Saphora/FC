@@ -9,22 +9,22 @@
     <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
 }
 
+
 <div class="row">
-    <div class="col-xs-24 introbox">
-        <center>
-            <h1>HEADLINES</h1>
-        </center>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-24 filter-control" ng-controller="FC.Modules.Filtering.Controllers.FilterBarController as vm">
-        <div class="inner">
-            <div class="filter-control-item float-left">
-                <a href="/news" class="btn btn-default"><i class="fa fa-calendar" style="position:relative;top:-2px"></i> CALENDAR</a>
+    <div class="col-xs-24">
+        <div class="navigation-bar">
+            <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-danger">
+                <i class="fa fa-angle-left"></i> BACK
+            </a>
+            <div class="crumb">
+                <a href="/news">
+                    HEADLINES
+                </a>
             </div>
         </div>
     </div>
 </div>
+
 <div class="row news-overview-wrapper" ng-controller="FC.Modules.News.Controllers.NewsOverviewController as vm">
     <div class="col-xl-8 col-lg-8 col-md-12 col-sm-24 col-xs-24">
         <ng-include src="'/Scripts/modules/news/views/news-card.html'" ng-repeat="(i,n) in ColData1"></ng-include>

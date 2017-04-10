@@ -31,17 +31,18 @@
 }
 
 @section META {
+    <title>FESTIVAL CALENDAR | MANAGE YOUR PROFILE</title>
 }
 
 <div class="row">
     <div class="col-xs-24">
         <div class="navigation-bar">
-            <a href="/news" class="btn btn-danger">
+            <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-danger">
                 <i class="fa fa-angle-left"></i> BACK
             </a>
             <div class="crumb">
                 <a href="/Profile/Index">
-                    MY FESTIVAL CALENDAR
+                    MY ACCOUNT
                 </a>
             </div>
         </div>
@@ -70,7 +71,8 @@
 <div class="row">
     <div class="col-md-24">
         <div class="alert alert-info">
-            This section is still under construction and might not work as expected. Please come back later when you discover any issue.
+            This section is still under construction we are aware of the fact that some functionality is missing or that some functionality may not work as expected. Please come back later since we are aiming to update as much as possible.
+            If you discover any issue, or you want support please let us know at info@@festival-calendar.nl
         </div>
     </div>
 </div>
@@ -191,7 +193,8 @@
                 </div>
             </div>
         </div>
-        
+        @if (Html.HasViewAuth(new string[] { FC.Shared.Enum.Roles.Festival, FC.Shared.Enum.Roles.Venue }))
+        {
         <div class="card list-view-card  venues-list-view">
             <div class="card-header">
                 <span class="h5">MY VENUES</span>
@@ -228,44 +231,9 @@
                 </ul>
             </div>
         </div>
+        }
     </div>
     <div class="col-xl-8">
-
-        <div class="card">
-            <div class="card-header">
-                <span class="h5">FAVORITE ARTISTS</span>
-            </div>
-            <div class="card-block" ng-controller="FC.Modules.Favorites.Controllers.FavoriteController as vm" ng-init="vm.RegisterType(9)">
-                @Html.Hidden("section", "details")
-                <div class="form-horizontal">
-                    <div class="form-group ">
-                        <input type="text" class="form-control" ng-change="vm.search(9)" ng-model="SearchKey" />
-                        <div class="row autocomplete-picker">
-                            <div class="col-xs-24">
-                                <ul class="search-result">
-                                    <li>
-                                        <a href="#" ng-repeat="Artist in SearchResult" ng-click="$event.preventDefault();vm.ToggleFavorite(9, Artist.ArtistID)">
-                                            <i class="fa fa-square-o" ng-if="!vm.FavoriteActive(Artist.ArtistID)"></i>
-                                            <i class="fa fa-check-square-o" ng-if="vm.FavoriteActive(Artist.ArtistID)"></i>
-                                            {{Artist.Name.toUpperCase()}}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-xs-24">
-                                <ul class="selected">
-                                    <li ng-repeat="Artist in SelectedArtists" ng-click="$event.preventDefault();vm.ToggleFavorite(9, Artist.ArtistID)">
-                                        <a href="#" class="btn-sm btn-danger">
-                                            <i class="fa fa-remove"></i> {{Artist.Name.toUpperCase()}}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="card list-view-card  advertisement-list-view">
             <div class="card-header">
                 <span class="h5">

@@ -23,32 +23,14 @@ namespace FC.WebAPI.Controllers.API
             repo = new ArtistRepository();
         }
 
-        [HttpGet]
-        public ServiceResponse<List<ArtistListVm>> GetPaged(int size, int page)
-        {
-            List<ArtistListVm> result = new List<ArtistListVm>();
-            if (page > repo.GetPageCount(size))
-            {
-                throw new HttpException(404, "Page size invalid");
-            }
-            result = repo.GetPaged(size, page);
-            return new ServiceResponse<List<ArtistListVm>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
-        }
 
         [HttpGet]
         public ServiceResponse<List<MaterializedArtistListVM>> GetSorted(string sortIndex, int page=1)
         {
+            throw new Exception("Not implemented.");
             List<MaterializedArtistListVM> result = new List<MaterializedArtistListVM>();
-            result = repo.GetSorted(sortIndex, page);
+            ///result = repo.GetSorted(sortIndex, page);
             return new ServiceResponse<List<MaterializedArtistListVM>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
-        }
-
-
-
-        [HttpGet]
-        public ServiceResponse<int> GetPagedCount(string sortIndex, int page = 1)
-        {
-            return new ServiceResponse<int>(repo.GetPagedCount(page, sortIndex), HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpGet, HttpPost]

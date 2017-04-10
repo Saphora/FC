@@ -80,7 +80,7 @@ module FC.Modules.Filtering.Controllers {
             }
 
             if (vm.$scope.SelectedCountries.length == 0) {
-                vm.$scope.Selected = "SELECT COUNTRIES";
+                vm.$scope.Selected = "SELECT COUNTRY";
             }
             //this.RecoverModel(this.$scope.model, this.$scope);
             vm.$scope.IsLoading = false;
@@ -88,7 +88,7 @@ module FC.Modules.Filtering.Controllers {
             vm.$scope.model = new FC.Modules.Filtering.Models.FilterBarVM();
             vm.addFilterChangeListener();
             window.addEventListener('ClearFilter', function () {
-                vm.$scope.Selected = "0 SELECTED";
+                vm.$scope.Selected = "SELECT COUNTRIES";
                 vm.$scope.SelectedCountries = new Array<FC.Shared.Models.UCountry>();
                 CacheManager.DeleteStorage('ActiveGenres');
             });
@@ -101,7 +101,14 @@ module FC.Modules.Filtering.Controllers {
                     if (e.detail) {
                         var d = e.detail as FC.Modules.Filtering.Models.FilterBarVM;
                         if (d.Countries) {
-                            vm.$scope.Selected = d.Countries.length + " SELECTED";
+                            if (vm.$scope.SelectedCountries.length == 1) {
+                                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
+                            } else {
+                                vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRIES SELECTED";
+                            }
+                            if (vm.$scope.SelectedCountries.length == 0) {
+                                vm.$scope.Selected = "SELECT COUNTRY";
+                            } 
                             vm.$scope.SelectedCountries = d.Countries;
                         }
                     }

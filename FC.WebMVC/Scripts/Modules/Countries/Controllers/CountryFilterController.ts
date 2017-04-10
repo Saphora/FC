@@ -99,7 +99,7 @@ module FC.Modules.Countries.Controllers {
             if (!this.IsActive(country)) {
                 vm.$scope.SelectedCountries.push(country);
 
-                CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 999999999999999);
+                CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 1000*60*60*5);
             } else {
                 var tmp = new Array<MODELS.UCountry>();
                 
@@ -110,7 +110,7 @@ module FC.Modules.Countries.Controllers {
                 });
                 vm.$scope.SelectedCountries = tmp;
 
-                CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 999999999999999);
+                CacheManager.WriteStorage("ActiveCountries", vm.$scope.SelectedCountries, 1000 * 60 * 60 * 5);
             }
             if (vm.$scope.SelectedCountries.length == 1) {
                 vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";

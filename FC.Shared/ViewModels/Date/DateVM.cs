@@ -19,8 +19,10 @@ namespace FC.Shared.ViewModels.Date
         public string Y2 { get; set; }
         public string Y3 { get; set; }
         public string Y4 { get; set; }
+        public int MonthNum { get; set; }
         public string Month { get; set; }
         public string Day { get; set; }
+        public int DayNum { get; set; }
         public string Hour { get; set; }
         public string Minute { get; set; }
         public string AgoString { get; set; }
@@ -81,6 +83,8 @@ namespace FC.Shared.ViewModels.Date
                 int hour = int.Parse(t.ToString("HH", CultureInfo.InvariantCulture)) + 1;
                 this.Hour = hour.ToString();
                 this.Minute = t.ToString("mm", CultureInfo.InvariantCulture);
+                this.MonthNum = t.Month;
+                this.DayNum = t.Day;
                 switch (t.Month)
                 {
                     case 1:

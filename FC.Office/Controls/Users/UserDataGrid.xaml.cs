@@ -81,7 +81,7 @@ namespace FC.Office.Controls.Users
         {
             if(e != null)
             {
-                if (repositories.Auth.ActionAuthorized(new string[] { Roles.Developer }))
+                if (repositories.Auth.WPFActionAuthorized(new string[] { Roles.Developer }))
                 {
                     var s = this.repositories.Auth.ForceDelete(vm.Model);
                     if (s.SUCCESS)

@@ -43,7 +43,7 @@ namespace FC.Office.Controls.Login
         private void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
             this.vm = DataContext as LoginModel;
-            var s = repositories.Auth.Login(this.uname.Text, this.pss.Password.ToString());
+            var s = repositories.Auth.WPFLogin(this.uname.Text, this.pss.Password.ToString());
             if (s != null)
             {
                 if (s.Authenticated && s.Authorized)
@@ -85,7 +85,7 @@ namespace FC.Office.Controls.Login
             if(e.Key == Key.Enter)
             {
                 this.vm = DataContext as LoginModel;
-                var s = repositories.Auth.Login(this.uname.Text, this.pss.Password.ToString());
+                var s = repositories.Auth.WPFLogin(this.uname.Text, this.pss.Password.ToString());
                 if (s != null)
                 {
                     if (s.Authenticated && s.Authorized)

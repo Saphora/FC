@@ -38,7 +38,7 @@
         FriendlyStartDate: ISimpleDateTime;
         FriendlyEndDate: ISimpleDateTime;
         IsSoldOut: string;
-        Rating: string;
+        Rating: Shared.ViewModels.RatingVm;
         SafeLocation: string;
         AlbumID: string;
         Album: FC.Shared.Models.MediaDirectory;

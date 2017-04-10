@@ -49,13 +49,12 @@ module FC.Modules.Calendar.Controllers {
             vm.$scope.FormID = '908ADBE0-5121-4857-9D3A-E829DCCE9D80';
             vm.$scope.MemReg = FC.Shared.Util.MemReg.GetInstance();
             vm.$scope.MtModal = $mdDialog;
-            vm.$scope.IsLoading = false;
-            CacheManager.ClearStorage();
             this.addFilterChangeListener();
             this.handleSearch();
             this.$scope.ShowCancelSearch = false;
             vm.init();
         }
+
         public ClearFilters() {
             CacheManager.DeleteStorage("Filter_Year");
             CacheManager.DeleteStorage("Filter_Month");
@@ -67,8 +66,22 @@ module FC.Modules.Calendar.Controllers {
             window.dispatchEvent(e);
             this.init();
         }
+
+        public ClearFavorites() {
+            var vm = this;
+            if (CacheManager.GetCookieValue("UserID")) {
+                vm.FavoriteService.RemoveAllUserFavorites(CacheManager.GetCookieValue("UserID")).then(function (r) {
+                    vm.ClearFilters();
+                });
+            } else {
+                vm.ClearFilters();
+            }
+        }
         private handleSearch() {
             var vm = this;
+            window.addEventListener("SearchStart", function (e: CustomEventInit) {
+                vm.$scope.IsLoading = true;
+            });
             window.addEventListener("SearchReset", function (e: CustomEventInit) {
                 var festivals = e.detail;
                 vm.init();
@@ -76,12 +89,14 @@ module FC.Modules.Calendar.Controllers {
             window.addEventListener("SearchComplete", function (e: CustomEventInit) {
                 var festivals = e.detail;
                 vm.$scope.Festivals = festivals;
+                vm.$scope.IsLoading = false;
                 vm.$scope.ShowCancelSearch = true;
             });
             window.addEventListener("SearchCompleteNoResult", function (e: CustomEventInit) {
                 var festivals = e.detail;
                 vm.$scope.Festivals = [];
                 vm.$scope.ShowCancelSearch = true;
+                vm.$scope.IsLoading = false;
             });
         }
         private init() {
@@ -92,7 +107,9 @@ module FC.Modules.Calendar.Controllers {
             var countries = new Array<MODELS.UCountry>();
             var locations = new Array<MODELS.Location>();
             var artists = new Array<MODELS.UArtist>();
-            vm.$scope.IsLoading = false;
+            vm.$scope.IsLoading = true;
+            var e = new CustomEvent("CalendarLoading");
+            window.dispatchEvent(e);
             try {
 
 
@@ -122,31 +139,42 @@ module FC.Modules.Calendar.Controllers {
                         }
                         if (vm.CacheManager.Contains("ActiveGenres")) {
                             genres = vm.CacheManager.Get<Array<FC.Shared.Models.UGenre>>("ActiveGenres").data;
-                            genres.forEach(function (v, k) {
-                                filter.GenreIDs.push(v.GenreID);
-                            });
+                            if (genres.forEach) {
+                                genres.forEach(function (v, k) {
+                                    filter.GenreIDs.push(v.GenreID);
+                                });
+                            }
                         }
                         if (vm.CacheManager.Contains("ActiveCountries")) {
                             countries = vm.CacheManager.Get<Array<FC.Shared.Models.UCountry>>("ActiveCountries").data;
-                            countries.forEach(function (v, k) {
-                                filter.CountryIDs.push(v.CountryID);
-                            });
+
+                            if (countries.forEach) {
+                                countries.forEach(function (v, k) {
+                                    filter.CountryIDs.push(v.CountryID);
+                                });
+                            }
                         }
                         if (vm.CacheManager.Contains("ActiveArtists")) {
                             artists = vm.CacheManager.Get<Array<FC.Shared.Models.UArtist>>("ActiveArtists").data;
-                            artists.forEach(function (v, k) {
-                                filter.ArtistIDs.push(v.CountryID);
-                            });
+                            if (artists.forEach) {
+                                artists.forEach(function (v, k) {
+                                    filter.ArtistIDs.push(v.CountryID);
+                                });
+                            }
                         }
                         if (vm.CacheManager.Contains("ActiveLocations")) {
                             locations = vm.CacheManager.Get<Array<FC.Shared.Models.Location>>("ActiveLocations").data;
-                            locations.forEach(function (v, k) {
-                                filter.LocationIDs.push(v.LocationID);
-                            });
+                            if (locations.forEach) {
+                                locations.forEach(function (v, k) {
+                                    filter.LocationIDs.push(v.LocationID);
+                                });
+                            }
                         }
                         vm.CalendarService.GetByFilter(filter).then(function (r) {
                             vm.$scope.Festivals = r.Data;
                             vm.$scope.IsLoading = false;
+                            var e = new CustomEvent("CalendarLoaded");
+                            window.dispatchEvent(e);
                         });
                     });
                 } else {
@@ -185,6 +213,8 @@ module FC.Modules.Calendar.Controllers {
                     vm.CalendarService.GetFilteredFestivals(filter.MonthNum, filter.YearNum, genres, countries).then(function (r) {
                         vm.$scope.Festivals = r.Data;
                         vm.$scope.IsLoading = false;
+                        var e = new CustomEvent("CalendarLoaded");
+                        window.dispatchEvent(e);
                     });
                 }
             } catch (e) {
@@ -202,6 +232,9 @@ module FC.Modules.Calendar.Controllers {
                 if (e) {
                     if (e.detail) {
                         vm.$scope.IsLoading = true;
+
+                        var evt = new CustomEvent("CalendarLoading");
+                        window.dispatchEvent(evt);
                         var d = e.detail as FC.Modules.Filtering.Models.FilterBarVM;
                         var genres = new Array<MODELS.UGenre>();
                         var countries = new Array<MODELS.UCountry>();
@@ -231,6 +264,8 @@ module FC.Modules.Calendar.Controllers {
                         vm.CalendarService.GetFilteredFestivals(month,year,genres,countries).then(function (r) {
                             vm.$scope.Festivals = r.Data;
                             vm.$scope.IsLoading = false;
+                            var evt = new CustomEvent("CalendarLoaded");
+                            window.dispatchEvent(evt);
                         });
                     }
                 }

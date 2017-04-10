@@ -58,6 +58,11 @@ module FC.Modules.Search.Controllers {
         public DoChangeSearch(): void {
 
         }
+        public ResetSearch(): void {
+            var vm = this;
+            vm.$scope.Keyword = "";
+            vm.DoSearch();
+        }
         public DoSearch() {
             var vm = this;
             var SearchFilter = new FC.Shared.ServiceMessages.SearchFilter();
@@ -65,6 +70,8 @@ module FC.Modules.Search.Controllers {
             if (SearchFilter.Keyword.length > 2) {
                 vm.$scope.IsLoading = true;
                 vm.$scope.IsSearching = true;
+                var e = new CustomEvent("SearchStart");
+                window.dispatchEvent(e);
                 vm.SearchService.Search(SearchFilter).then(function (response: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
                     if (response.Data) {
                         var e = new CustomEvent("SearchComplete", { detail: response.Data });

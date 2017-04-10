@@ -12,7 +12,10 @@ namespace FC.WebMVC
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            routes.MapRoute(
+                name: "Error",
+                url: "error/{number}",
+                defaults: new { controller = "Error", Action = "Index", number = UrlParameter.Optional });
             routes.MapRoute(
                 name: "Activate",
                 url: "register/activate/{id}",

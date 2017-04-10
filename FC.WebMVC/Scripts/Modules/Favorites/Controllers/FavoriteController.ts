@@ -161,27 +161,27 @@ module FC.Modules.Favorites.Controllers {
         public search(icType:FC.Shared.Enum.InternalContentType) {
             var vm = this;
             if (icType == FC.Shared.Enum.InternalContentType.Genre) {
-                this.GenreService.Search(this.$scope.SearchKey).then(function (r) {
+                this.GenreService.Search(this.$scope.SearchKey.toLowerCase()).then(function (r) {
                     vm.$scope.SearchResult = r.Data;
                 });
             }
             if (icType == FC.Shared.Enum.InternalContentType.Location) {
-                this.LocationService.Search(this.$scope.SearchKey).then(function (r) {
+                this.LocationService.Search(this.$scope.SearchKey.toLowerCase()).then(function (r) {
                     vm.$scope.SearchResult = r.Data;
                 });
             }
             if (icType == FC.Shared.Enum.InternalContentType.Artist) {
-                this.ArtistService.Search(this.$scope.SearchKey).then(function (r) {
+                this.ArtistService.Search(this.$scope.SearchKey.toLowerCase()).then(function (r) {
                     vm.$scope.SearchResult = r.Data;
                 });
             }
             if (icType == FC.Shared.Enum.InternalContentType.Country) {
-                this.CountriesSvc.Search(this.$scope.SearchKey).then(function (r) {
+                this.CountriesSvc.Search(this.$scope.SearchKey.toLowerCase()).then(function (r) {
                     vm.$scope.SearchResult = r.Data;
                 });
             }
             if (icType == FC.Shared.Enum.InternalContentType.Festival) {
-                //this.FestivalService.Search(this.$scope.SearchKey).then(function (r) {
+                //this.FestivalService.Search(this.$scope.SearchKey.toLowerCase()).then(function (r) {
                 //    vm.$scope.SearchResult = r.Data;
                 //});
             }

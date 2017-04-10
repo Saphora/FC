@@ -1,4 +1,5 @@
 ﻿using FC.BL.Repositories;
+using FC.Shared.Config;
 using FC.Shared.Entities;
 using FC.Shared.Enum;
 using System;
@@ -23,8 +24,9 @@ namespace FC.WebMVC.Controllers
             return View(user);
         }
         // GET: Register
-        public ActionResult Index()
+        public ActionResult Index(string type = "user")
         {
+            ViewBag.IncomingType = type;
             return View();
         }
 
@@ -89,31 +91,40 @@ namespace FC.WebMVC.Controllers
                 RepositoryState state = this.repositories.Auth.Create(user);
                 this.repositories.Roles.AddByUserID(Roles.EndUser, state.AffectedID);
                 if (state.SUCCESS)
-                {
-                    Client = new System.Net.Mail.SmtpClient("festival-calendar.nl", 587);
-                    Client.Credentials = new System.Net.NetworkCredential("noreply@festival-calendar.nl", "brother2030");
-                    Client.DeliveryFormat = System.Net.Mail.SmtpDeliveryFormat.International;
-                    Client.EnableSsl = true;
+                {   
+                    System.Web.Mail.MailMessage myMail = new System.Web.Mail.MailMessage();
+                    myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpserver", FCConfig.SMTP_SERVER);
+                    myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpserverport",FCConfig.SMTP_PORT);
+                    myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/sendusing", "2");
+                    myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate", "1");
+                    //Use 0 for anonymous
+                    myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/sendusername",FCConfig.NOREPLY_MAIL_NL);
+                    myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/sendpassword",FCConfig.NOREPLY_MAIL_NL_PASSWORD);
+                    myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpusessl","true");
+                    myMail.From = "FESTIVAL-CALENDAR.NL <"+FCConfig.NOREPLY_MAIL_NL+">";
+                    myMail.To = user.UserEmailAddress;
+                    myMail.Subject = "Please verify your e-mail address";
+                    myMail.BodyFormat = System.Web.Mail.MailFormat.Html;
+
                     string name = $"{user.UserLastname}, {user.UserFirstname}";
                     if (user.UserMiddlename != null)
                     {
                         name = $"{user.UserLastname}, {user.UserFirstname},  {user.UserMiddlename}";
                     }
-                    MailMessage msg = new MailMessage(
-                        new MailAddress("noreply@festival-calendar.nl", "Festival Calendar", UTF8Encoding.UTF8),
-                        new MailAddress(user.UserEmailAddress, name, UTF8Encoding.UTF8)
-                    );
-                    msg.Subject = "Verify your account";
-                    msg.SubjectEncoding = UTF8Encoding.UTF8;
-                    msg.IsBodyHtml = true;
+
                     var vd = new ViewDataDictionary();
                     vd.Add("Token", user.ActivationToken);
                     vd.Add("Name", name);
-                    msg.Body = this.ToHtml("ActivationMail", vd, new ControllerContext(HttpContext, this.RouteData, this));
-                    Client.Send(msg);
+                    vd.Add("Email", user.UserEmailAddress);
+                    vd.Add("Expires", DateTime.Now);
+                    myMail.Body = this.ToHtml("ActivationMail", vd, new ControllerContext(HttpContext, this.RouteData, this));
+                    System.Web.Mail.SmtpMail.SmtpServer = string.Format("{0}:{1}", FCConfig.SMTP_SERVER, FCConfig.SMTP_PORT);
+                    System.Web.Mail.SmtpMail.Send(myMail);
+                    
                     //    "Verify your account",
                     //    this.ToHtml("RegisterMail", new ViewDataDictionary(), new ControllerContext(HttpContext, this.RouteData, this))
                     return RedirectToAction("Success", "Register", new { userid = state.AffectedID });
+                    
 
                     //user.UserEmailAddress, "Festival calendar account verification", "Please copy the link below into a browser to activate your account."));
                 }
@@ -137,6 +148,19 @@ namespace FC.WebMVC.Controllers
             this.repositories.Auth.Session = null;
             this.repositories.Auth.CurrentUserRoles = null;
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            this.repositories.Auth.Logout(this.repositories.Auth.Session.SessionID);
+            this.AppUser = null;
+            this.repositories.Auth.CurrentUser = null;
+            this.repositories.Auth.Session = null;
+            this.repositories.Auth.CurrentUserRoles = null;
+            HttpContext.Response.Cookies.Get("Token").Expires = DateTime.MinValue;
+            HttpContext.Response.Cookies.Get("UserID").Expires = DateTime.MinValue;
+            return Redirect("/");
         }
 
         [HttpPost]
@@ -178,6 +202,7 @@ namespace FC.WebMVC.Controllers
 
         public ActionResult ForgotPassword()
         {
+
             return View();
         }
 
@@ -185,53 +210,86 @@ namespace FC.WebMVC.Controllers
         public ActionResult ForgotPassword(string userEmailAddress)
         {
             ApplicationUser user = this.repositories.Auth.GetUserByEmail(userEmailAddress);
-            var sess = AppUserSession.Factory(SessionType.PasswordReset, user.UserID);
+            if (user != null)
+            {
+                var sess = AppUserSession.Factory(SessionType.PasswordReset, user.UserID);
 
-            Client = new System.Net.Mail.SmtpClient("festival-calendar.nl", 587);
-            Client.Credentials = new System.Net.NetworkCredential("noreply@festival-calendar.nl", "brother2030");
-            Client.DeliveryFormat = System.Net.Mail.SmtpDeliveryFormat.International;
-            Client.EnableSsl = true;
-            string name = $"{user.UserLastname}, {user.UserFirstname}";
-            if (user.UserMiddlename != null)
-            {
-                name = $"{user.UserLastname}, {user.UserFirstname},  {user.UserMiddlename}";
-            }
-            MailMessage msg = new MailMessage(
-                new MailAddress("noreply@festival-calendar.nl", "Festival Calendar", UTF8Encoding.UTF8),
-                new MailAddress(user.UserEmailAddress, name, UTF8Encoding.UTF8)
-            );
-            msg.Subject = "Reset your password";
-            msg.SubjectEncoding = UTF8Encoding.UTF8;
-            msg.IsBodyHtml = true;
-            var vd = new ViewDataDictionary();
-            vd.Add("Token", sess.Token);
-            vd.Add("Name", name);
-            vd.Add("Email", user.UserEmailAddress);
-            vd.Add("Expires", sess.Expires);
-            var state = this.repositories.Auth.StartSession(sess);
-            msg.Body = this.ToHtml("ForgotPasswordMail", vd, new ControllerContext(HttpContext, this.RouteData, this));
-            if (state.SUCCESS)
-            {
-                Client.Send(msg);
-                this.Flash(new RepositoryState(true, "Password reset email send to " + userEmailAddress));
-                return Redirect("/");
+
+                System.Web.Mail.MailMessage myMail = new System.Web.Mail.MailMessage();
+                myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpserver", FCConfig.SMTP_SERVER);
+                myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpserverport", FCConfig.SMTP_PORT);
+                myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/sendusing", "2");
+                myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate", "1");
+                //Use 0 for anonymous
+                myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/sendusername", FCConfig.NOREPLY_MAIL_NL);
+                myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/sendpassword", FCConfig.NOREPLY_MAIL_NL_PASSWORD);
+                myMail.Fields.Add("http://schemas.microsoft.com/cdo/configuration/smtpusessl", "true");
+                myMail.From = "FESTIVAL-CALENDAR.NL <" + FCConfig.NOREPLY_MAIL_NL + ">";
+                myMail.To = user.UserEmailAddress;
+                myMail.Subject = "Reset your Festival Calendar password";
+                myMail.BodyFormat = System.Web.Mail.MailFormat.Html;
+
+                string name = $"{user.UserLastname}, {user.UserFirstname}";
+                if (user.UserMiddlename != null)
+                {
+                    name = $"{user.UserLastname}, {user.UserFirstname},  {user.UserMiddlename}";
+                }
+                var state = this.repositories.Auth.StartSession(sess);
+                if (state.SUCCESS)
+                {
+                    var vd = new ViewDataDictionary();
+                    vd.Add("Token", sess.Token);
+                    vd.Add("Name", name);
+                    vd.Add("Email", user.UserEmailAddress);
+                    vd.Add("Expires", DateTime.Now);
+                    myMail.Body = this.ToHtml("ForgotPasswordMail", vd, new ControllerContext(HttpContext, this.RouteData, this));
+                    System.Web.Mail.SmtpMail.SmtpServer = string.Format("{0}:{1}", FCConfig.SMTP_SERVER, FCConfig.SMTP_PORT);
+                    System.Web.Mail.SmtpMail.Send(myMail);
+
+                    this.Flash(new RepositoryState(true, "Password reset e-mail send to " + userEmailAddress));
+                    return Redirect("/");
+                }
+                else
+                {
+                    this.Flash(state);
+                    return RedirectToAction("ForgotPassword");
+                }
             } else
             {
-                this.Flash(state);
-                return RedirectToAction("ForgotPassword");
+                this.Flash(new RepositoryState(false, $"No such user is found with e-mail address "+ userEmailAddress));
+                return Redirect("/");
             }
+            
         }
 
         public ActionResult ResetPassword(Guid? token)
         {
-            AppUserSession session = this.repositories.Auth.GetByToken(token);
-            ApplicationUser user = this.repositories.Auth.GetUserByID(session.UserID);
-            if(session.Expires < DateTime.Now)
+            AppUserSession session = this.repositories.Auth.GetByToken(token, true, false);
+            if (session != null)
             {
-                this.Flash(new RepositoryState(false, "Password reset link expired. Request a new password reset link."));
+                
+                ApplicationUser user = this.repositories.Auth.GetUserByID(session.UserID);
+                if (user != null)
+                {
+                    if (session.Expires < DateTime.Now)
+                    {
+                        this.Flash(new RepositoryState(false, "Password reset link expired. Request a new password reset link."));
+                        return RedirectToAction("ForgotPassword");
+                    } else
+                    {
+                        return View(user);
+                    }
+                } else
+                {
+                    this.Flash(new RepositoryState(false, "Password reset link is not valid please request a new one."));
+                    return RedirectToAction("ForgotPassword");
+                }
+                
+            } else
+            {
+                this.Flash(new RepositoryState(false,"Password reset link is not valid please request a new one."));
                 return RedirectToAction("ForgotPassword");
             }
-            return View(user);
         }
         
         [HttpPost]

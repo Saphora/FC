@@ -13,6 +13,7 @@ img {
             max-height:272px;
             overflow:hidden;
             img {
+                min-width: 100%;
                 margin-top: 0 !important;
                 max-height: 272px !important;
                 min-height:272px;
@@ -25,6 +26,7 @@ img {
             max-height:220px;
             overflow:hidden;
             img {
+                min-width: 100%;
                 margin-top: 0 !important;
                 min-height:220px;
                 max-height: 272px !important;
@@ -37,6 +39,7 @@ img {
             max-height:220px;
             overflow:hidden;
             img {
+                min-width: 100%;
                 margin-top: 0 !important;
                 min-height:180px;
                 max-height: 272px !important;
@@ -54,12 +57,50 @@ img {
             font-size:12px;
             margin: 0 !important;
             padding: 0 !important;
-            color: $LinkColorDefault !important;
+            color: #333 !important;
         }
         a {
             color: $LinkColorDefault !important;
             font-weight:bold;
             text-decoration:none;
+        }
+        .shorttxt {
+            width: 100%;
+            padding-bottom: 20px !important;
+            p {
+
+            strong {
+
+                color: #333;
+            }
+            }
+        }
+    }
+    .keywords {
+        position:relative;
+        left: 15px;
+        i {
+            float:left;
+            font-size: 16px;
+            margin-top: 3px;
+        }
+        ul {
+            float:left;
+            list-style: none;
+            margin: 0;
+            padding:0;
+            li {
+                font-family:Arial;
+                font-size: 10px;
+                margin-left: 5px;
+                padding: 2px;
+                padding-right: 5px;
+                padding-left:5px;
+                background-color: $BGInput;
+                border: 1px solid $BGInputBorder;
+                color: #333;
+                float:left;
+            }
         }
     }
     .date-time {
@@ -113,13 +154,10 @@ img {
     .col-xl-8 {
         .card-block {
             .top {
-                min-height:220px;
-                max-height:220px;
                 overflow:hidden;
                 img {
+                    min-width:100%;
                     margin-top: 0 !important;
-                    max-height: 220px !important;
-                    min-height:220px;
                 }   
             }
         }
@@ -127,13 +165,9 @@ img {
     .col-lg-8 {
          .card-block {
             .top {
-                min-height:180px;
-                max-height:220px;
-                overflow:hidden;
                 img {
+                    min-width:100%;
                     margin-top: 0 !important;
-                    max-height: 220px !important;
-                    min-height:180px;
                 }   
             }
         }
@@ -173,13 +207,8 @@ img {
     .col-xs-24 {
         .card-block {
             .top {
-                min-height:160px;
-                max-height:160px;
-                overflow:hidden;
                 img {
                     margin-top: 0 !important;
-                    max-height: 160px !important;
-                    min-height:160px;
                 }   
             }
         }
@@ -194,12 +223,12 @@ img {
         .top {
             max-height: 120px;
             max-width:100%;
+            min-width: 100%;
             overflow:hidden;
             padding: 0 !important;
             img {
                 position:relative;
-                top: 50%;
-                margin-top: -50px;
+                min-width: 100%;
             }
         }
         .bottom {

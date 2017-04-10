@@ -43539,9 +43539,9 @@ a.text-danger:focus, a.text-danger:hover {
       font-family: 'Oswald';
       padding-left: 20px; }
       .filter-control .filter-control-item .textbox.searching {
-        width: calc(100% - 72px);
-        max-width: calc(100% - 72px);
-        max-width: calc(100% - 72px); }
+        width: calc(100% - 80px);
+        max-width: calc(100% - 80px);
+        max-width: calc(100% - 80px); }
     .filter-control .filter-control-item.float-left {
       float: left;
       margin-right: auto; }
@@ -54634,6 +54634,7 @@ img {
   max-height: 272px;
   overflow: hidden; }
   .news-detail .col-xl-16 .news-header-image img {
+    min-width: 100%;
     margin-top: 0 !important;
     max-height: 272px !important;
     min-height: 272px; }
@@ -54643,6 +54644,7 @@ img {
   max-height: 220px;
   overflow: hidden; }
   .news-detail .col-lg-14 .news-header-image img {
+    min-width: 100%;
     margin-top: 0 !important;
     min-height: 220px;
     max-height: 272px !important; }
@@ -54652,6 +54654,7 @@ img {
   max-height: 220px;
   overflow: hidden; }
   .news-detail .col-md-14 .news-header-image img {
+    min-width: 100%;
     margin-top: 0 !important;
     min-height: 180px;
     max-height: 272px !important; }
@@ -54664,11 +54667,40 @@ img {
     font-size: 12px;
     margin: 0 !important;
     padding: 0 !important;
-    color: #E06246 !important; }
+    color: #333 !important; }
   .news-detail .news-text-wrapper a {
     color: #E06246 !important;
     font-weight: bold;
     text-decoration: none; }
+  .news-detail .news-text-wrapper .shorttxt {
+    width: 100%;
+    padding-bottom: 20px !important; }
+    .news-detail .news-text-wrapper .shorttxt p strong {
+      color: #333; }
+
+.news-detail .keywords {
+  position: relative;
+  left: 15px; }
+  .news-detail .keywords i {
+    float: left;
+    font-size: 16px;
+    margin-top: 3px; }
+  .news-detail .keywords ul {
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+    .news-detail .keywords ul li {
+      font-family: Arial;
+      font-size: 10px;
+      margin-left: 5px;
+      padding: 2px;
+      padding-right: 5px;
+      padding-left: 5px;
+      background-color: #EEEEEE;
+      border: 1px solid #DDDDDD;
+      color: #333;
+      float: left; }
 
 .news-detail .date-time {
   float: left;
@@ -54709,22 +54741,14 @@ img {
       font-size: 25px; }
 
 .news-overview-wrapper .col-xl-8 .card-block .top {
-  min-height: 220px;
-  max-height: 220px;
   overflow: hidden; }
   .news-overview-wrapper .col-xl-8 .card-block .top img {
-    margin-top: 0 !important;
-    max-height: 220px !important;
-    min-height: 220px; }
+    min-width: 100%;
+    margin-top: 0 !important; }
 
-.news-overview-wrapper .col-lg-8 .card-block .top {
-  min-height: 180px;
-  max-height: 220px;
-  overflow: hidden; }
-  .news-overview-wrapper .col-lg-8 .card-block .top img {
-    margin-top: 0 !important;
-    max-height: 220px !important;
-    min-height: 180px; }
+.news-overview-wrapper .col-lg-8 .card-block .top img {
+  min-width: 100%;
+  margin-top: 0 !important; }
 
 .news-overview-wrapper .col-md-12 .card-block .top {
   position: relative;
@@ -54746,26 +54770,20 @@ img {
     height: auto;
     margin-top: 0 !important; }
 
-.news-overview-wrapper .col-xs-24 .card-block .top {
-  min-height: 160px;
-  max-height: 160px;
-  overflow: hidden; }
-  .news-overview-wrapper .col-xs-24 .card-block .top img {
-    margin-top: 0 !important;
-    max-height: 160px !important;
-    min-height: 160px; }
+.news-overview-wrapper .col-xs-24 .card-block .top img {
+  margin-top: 0 !important; }
 
 .news-card .card-block {
   padding: 0; }
   .news-card .card-block .top {
     max-height: 120px;
     max-width: 100%;
+    min-width: 100%;
     overflow: hidden;
     padding: 0 !important; }
     .news-card .card-block .top img {
       position: relative;
-      top: 50%;
-      margin-top: -50px; }
+      min-width: 100%; }
   .news-card .card-block .bottom .news-card-footer {
     position: absolute;
     margin-top: -50px;
@@ -82140,6 +82158,8 @@ i.fa-festival-calendar {
     float: left; }
 
 html {
+  min-height: 100%;
+  height: 100%;
   font-size: 16px !important; }
 
 * {
@@ -82155,6 +82175,8 @@ a {
   border-bottom: 2px solid #333; }
 
 body {
+  height: 100%;
+  min-height: 100%;
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -82167,7 +82189,8 @@ body {
   left: 0;
   /* Preserve aspet ratio */
   width: 100%;
-  height: 100%; }
+  height: 100%;
+  margin-bottom: 60px; }
 
 .overlay-wrapper {
   position: fixed;
@@ -82291,13 +82314,16 @@ i.fc-icon {
   top: 0;
   left: 0;
   width: 100%;
-  height: 50px;
+  min-height: 45px;
   z-index: 1000;
   background: #333; }
   .menu-mobile .left {
     margin-top: 10px;
     margin-left: 20px;
     float: left; }
+    .menu-mobile .left .fb-like {
+      float: left;
+      width: 120px; }
     .menu-mobile .left ul {
       margin: 0;
       padding: 0;
@@ -82320,12 +82346,16 @@ i.fc-icon {
       font-size: 25px;
       width: 30px;
       height: 30px;
-      color: #FFF; }
+      margin-top: 0px;
+      color: #FFF !important; }
       .menu-mobile .right a:hover {
         color: #ccc; }
+  .menu-mobile .middle .fb-like {
+    left: 50%;
+    margin-left: -60px; }
   .menu-mobile .mobile-menu-context {
     position: fixed;
-    top: 50px;
+    top: 45px;
     left: 0;
     width: 100%;
     z-index: 1000;
@@ -82333,7 +82363,7 @@ i.fc-icon {
     transition: height 1s;
     overflow: hidden; }
     .menu-mobile .mobile-menu-context.ctx-visible {
-      height: 50px; }
+      min-height: 50px; }
     .menu-mobile .mobile-menu-context.ctx-hidden {
       height: 0; }
     .menu-mobile .mobile-menu-context ul {
@@ -82343,9 +82373,12 @@ i.fc-icon {
       padding: 0;
       padding: 15px; }
       .menu-mobile .mobile-menu-context ul li {
+        float: left;
+        width: 100%;
         float: left; }
         .menu-mobile .mobile-menu-context ul li a {
           float: left;
+          min-width: 272px;
           font-family: 'Oswald';
           font-size: 16px;
           color: #EEEEEE; }
@@ -82370,6 +82403,9 @@ i.fc-icon {
     margin-top: 10px;
     margin-left: 20px;
     float: left; }
+    .menu .left .fb-like {
+      float: left;
+      width: 120px; }
     .menu .left ul {
       margin: 0;
       padding: 0;
@@ -82415,11 +82451,18 @@ i.fc-icon {
 .wrp-logo {
   position: fixed;
   top: 2px;
-  margin-left: 5px;
   max-width: 150px;
   left: 50%;
   margin-left: -75px;
   z-index: 10001; }
+  .wrp-logo.mobile {
+    left: 0;
+    margin-top: 5px;
+    margin-left: 15px; }
+    .wrp-logo.mobile img {
+      float: left;
+      left: 0;
+      max-height: 35px; }
   .wrp-logo img {
     max-width: 150px; }
 
@@ -82429,9 +82472,12 @@ i.fc-icon {
   padding-bottom: 100px; }
 
 .footer {
-  position: fixed;
-  width: 100%;
+  position: absolute;
+  right: 0;
   bottom: 0;
+  left: 0;
+  width: 100%;
+  max-height: 40px;
   background-color: #333 !important; }
   .footer .container {
     padding: 5px; }
@@ -82444,8 +82490,10 @@ i.fc-icon {
         color: #FFF; }
     .footer .container .middle {
       color: #FFF; }
-    .footer .container .right * {
-      color: #FFF; }
+    .footer .container .right {
+      min-width: 200px; }
+      .footer .container .right * {
+        color: #FFF; }
 
 .card-block .card-img {
   display: inline-block;

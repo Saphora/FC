@@ -106,7 +106,7 @@ namespace FC.Shared.ViewModels.Festival
             }
             this.IsPublished = f.IsPublished;
             this.CountryID = f.CountryID;
-            
+            this.OrderDate = long.Parse(string.Format("{0}{1}{2}{3}{4}", f.StartDate.Year, f.StartDate.Month, f.StartDate.Day, f.StartDate.Hour, f.StartDate.Minute)); ;
         }
         public string City { get; set; }
         public Guid? CountryID { get; set; }
@@ -133,7 +133,7 @@ namespace FC.Shared.ViewModels.Festival
         public string YoutubeURL { get; set; }
         public string FlickrURL { get; set; }
         public string InstagramURL { get; set; }
-        public int OrderDate { get; set; }
+        public long OrderDate { get; set; }
         public bool IsPublished { get; set; }
 
     }

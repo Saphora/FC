@@ -63,5 +63,18 @@ namespace FC.WebAPI.Controllers.API
                 return this.NotAuthorized();
             }
         }
+
+        [HttpGet]
+        public ServiceResponse<RepositoryState> RemoveUserFavorites(Guid? userID)
+        {
+            if (this.Repositories.Auth.ActionAuthorized(Roles.GetAll(), userID))
+            {
+                return this.HandleRepositoryState(this.Repositories.Favorites.RemoveUserFavorites());
+            }
+            else
+            {
+                return this.NotAuthorized();
+            }
+        }
     }
 }

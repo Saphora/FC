@@ -5890,22 +5890,22 @@ var FC;
                     FavoriteController.prototype.search = function (icType) {
                         var vm = this;
                         if (icType == FC.Shared.Enum.InternalContentType.Genre) {
-                            this.GenreService.Search(this.$scope.SearchKey.toLowerCase()).then(function (r) {
+                            this.GenreService.Search(this.$scope.SearchKey).then(function (r) {
                                 vm.$scope.SearchResult = r.Data;
                             });
                         }
                         if (icType == FC.Shared.Enum.InternalContentType.Location) {
-                            this.LocationService.Search(this.$scope.SearchKey.toLowerCase()).then(function (r) {
+                            this.LocationService.Search(this.$scope.SearchKey).then(function (r) {
                                 vm.$scope.SearchResult = r.Data;
                             });
                         }
                         if (icType == FC.Shared.Enum.InternalContentType.Artist) {
-                            this.ArtistService.Search(this.$scope.SearchKey.toLowerCase()).then(function (r) {
+                            this.ArtistService.Search(this.$scope.SearchKey).then(function (r) {
                                 vm.$scope.SearchResult = r.Data;
                             });
                         }
                         if (icType == FC.Shared.Enum.InternalContentType.Country) {
-                            this.CountriesSvc.Search(this.$scope.SearchKey.toLowerCase()).then(function (r) {
+                            this.CountriesSvc.Search(this.$scope.SearchKey).then(function (r) {
                                 vm.$scope.SearchResult = r.Data;
                             });
                         }
@@ -7129,74 +7129,6 @@ var FC;
         (function (Genres) {
             var Controllers;
             (function (Controllers) {
-                var GenreFormController = (function (_super) {
-                    __extends(GenreFormController, _super);
-                    function GenreFormController($http, $q, $mdDialog, $scope, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
-                        var vm = this;
-                        this.RecoverModel(this.$scope.model, this.$scope);
-                        //vm.$scope.model = new FC.Shared.Models.UGenre();
-                    }
-                    GenreFormController.prototype.GenreActive = function (genre) {
-                        var vm = this;
-                        var result = vm.$scope.SelectedGenres.filter(function (v, k) {
-                            return v.GenreID == genre.GenreID;
-                        });
-                        if (result.length == 1) {
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
-                    };
-                    GenreFormController.prototype.RegisterID = function (festivalID) {
-                        var vm = this;
-                        vm.GenreService.GetByFestivalID(festivalID).then(function (r) {
-                            vm.$scope.SelectedGenres = r.Data;
-                        });
-                    };
-                    GenreFormController.prototype.DoSelectGenre = function (festivalID, genreID) {
-                        var vm = this;
-                        this.FestivalService.ToggleGenre(festivalID, genreID).then(function (r) {
-                            vm.$scope.SelectedGenres = r.Data.Data;
-                        });
-                    };
-                    GenreFormController.prototype.search = function () {
-                        var vm = this;
-                        this.GenreService.Search(this.$scope.SearchKey).then(function (r) {
-                            vm.$scope.SearchResult = r.Data;
-                        });
-                    };
-                    //public ActiveGenreID: number;
-                    GenreFormController.$inject = [
-                        '$http',
-                        '$q',
-                        '$mdDialog',
-                        '$scope',
-                        '$routeParams',
-                        '$location',
-                        "$sce",
-                    ];
-                    return GenreFormController;
-                }(FC.Shared.Controllers.BaseController));
-                Controllers.GenreFormController = GenreFormController;
-                GenresModule.GetApplication().RegisterController("FC.Modules.Genres.Controllers.GenreFormController", FC.Modules.Genres.Controllers.GenreFormController);
-            })(Controllers = Genres.Controllers || (Genres.Controllers = {}));
-        })(Genres = Modules.Genres || (Modules.Genres = {}));
-    })(Modules = FC.Modules || (FC.Modules = {}));
-})(FC || (FC = {}));
-///<reference path="../../Core/FC.ts"/>
-///<reference path="../Genres.ts" />
-///<reference path="../../../Shared/CoreModel/KeyValuePair.ts"/>
-///<reference path="../../../Shared/Controllers/BaseController.ts"/>
-var FC;
-(function (FC) {
-    var Modules;
-    (function (Modules) {
-        var Genres;
-        (function (Genres) {
-            var Controllers;
-            (function (Controllers) {
                 var _OldGenreFilterController = (function (_super) {
                     __extends(_OldGenreFilterController, _super);
                     function _OldGenreFilterController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce) {
@@ -7542,6 +7474,74 @@ var FC;
 //        modified = false;
 //    }
 //}
+///<reference path="../../Core/FC.ts"/>
+///<reference path="../Genres.ts" />
+///<reference path="../../../Shared/CoreModel/KeyValuePair.ts"/>
+///<reference path="../../../Shared/Controllers/BaseController.ts"/>
+var FC;
+(function (FC) {
+    var Modules;
+    (function (Modules) {
+        var Genres;
+        (function (Genres) {
+            var Controllers;
+            (function (Controllers) {
+                var GenreFormController = (function (_super) {
+                    __extends(GenreFormController, _super);
+                    function GenreFormController($http, $q, $mdDialog, $scope, $routeParams, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                        var vm = this;
+                        this.RecoverModel(this.$scope.model, this.$scope);
+                        //vm.$scope.model = new FC.Shared.Models.UGenre();
+                    }
+                    GenreFormController.prototype.GenreActive = function (genre) {
+                        var vm = this;
+                        var result = vm.$scope.SelectedGenres.filter(function (v, k) {
+                            return v.GenreID == genre.GenreID;
+                        });
+                        if (result.length == 1) {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    };
+                    GenreFormController.prototype.RegisterID = function (festivalID) {
+                        var vm = this;
+                        vm.GenreService.GetByFestivalID(festivalID).then(function (r) {
+                            vm.$scope.SelectedGenres = r.Data;
+                        });
+                    };
+                    GenreFormController.prototype.DoSelectGenre = function (festivalID, genreID) {
+                        var vm = this;
+                        this.FestivalService.ToggleGenre(festivalID, genreID).then(function (r) {
+                            vm.$scope.SelectedGenres = r.Data.Data;
+                        });
+                    };
+                    GenreFormController.prototype.search = function () {
+                        var vm = this;
+                        this.GenreService.Search(this.$scope.SearchKey).then(function (r) {
+                            vm.$scope.SearchResult = r.Data;
+                        });
+                    };
+                    //public ActiveGenreID: number;
+                    GenreFormController.$inject = [
+                        '$http',
+                        '$q',
+                        '$mdDialog',
+                        '$scope',
+                        '$routeParams',
+                        '$location',
+                        "$sce",
+                    ];
+                    return GenreFormController;
+                }(FC.Shared.Controllers.BaseController));
+                Controllers.GenreFormController = GenreFormController;
+                GenresModule.GetApplication().RegisterController("FC.Modules.Genres.Controllers.GenreFormController", FC.Modules.Genres.Controllers.GenreFormController);
+            })(Controllers = Genres.Controllers || (Genres.Controllers = {}));
+        })(Genres = Modules.Genres || (Modules.Genres = {}));
+    })(Modules = FC.Modules || (FC.Modules = {}));
+})(FC || (FC = {}));
 ///<reference path="../../Core/FC.ts"/>
 ///<reference path="../Genres.ts" />
 ///<reference path="../../../Shared/CoreModel/KeyValuePair.ts"/>
@@ -13376,12 +13376,12 @@ var FC;
     (function (Shared) {
         var ViewModels;
         (function (ViewModels) {
-            var ArtistListVM = (function () {
-                function ArtistListVM() {
+            var ArtistSearchResult = (function () {
+                function ArtistSearchResult() {
                 }
-                return ArtistListVM;
+                return ArtistSearchResult;
             }());
-            ViewModels.ArtistListVM = ArtistListVM;
+            ViewModels.ArtistSearchResult = ArtistSearchResult;
         })(ViewModels = Shared.ViewModels || (Shared.ViewModels = {}));
     })(Shared = FC.Shared || (FC.Shared = {}));
 })(FC || (FC = {}));
@@ -13391,12 +13391,12 @@ var FC;
     (function (Shared) {
         var ViewModels;
         (function (ViewModels) {
-            var ArtistSearchResult = (function () {
-                function ArtistSearchResult() {
+            var ArtistListVM = (function () {
+                function ArtistListVM() {
                 }
-                return ArtistSearchResult;
+                return ArtistListVM;
             }());
-            ViewModels.ArtistSearchResult = ArtistSearchResult;
+            ViewModels.ArtistListVM = ArtistListVM;
         })(ViewModels = Shared.ViewModels || (Shared.ViewModels = {}));
     })(Shared = FC.Shared || (FC.Shared = {}));
 })(FC || (FC = {}));

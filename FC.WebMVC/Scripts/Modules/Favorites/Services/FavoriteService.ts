@@ -18,6 +18,10 @@ module FC.Modules.Favorites.Services {
             return this.Get<IList<MODELS.Favorite>>('/API/Favorite/GetList');
         }
 
+        public RemoveAllUserFavorites(userID: string) {
+            return this.Get('/API/Favorite/RemoveUserFavorites?&userID=' + userID);
+        }
+
         public MarkFavorite(contentID: string, contentType: FC.Shared.Enum.InternalContentType): ng.IPromise<INT.IServiceResponse<VM.RepositoryState>> {
             return this.Get('/API/Favorite/Mark/?&contentID=' + contentID + '&type=' + contentType);
         }

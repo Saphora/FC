@@ -1,5 +1,6 @@
 ﻿using FC.BL.Validation;
 using FC.Interfaces.Data;
+using FC.PGDAL.PGModel;
 using FC.Shared.Entities;
 using FC.Shared.ViewModels.Artist;
 using Npgsql;
@@ -19,111 +20,6 @@ namespace FC.BL.Repositories
         public ArtistRepository() : base()
         { }
 
-        public decimal GetPageCount(int size)
-        {
-            Decimal d = new Decimal((float)Db.Artists.Count() / (float)size);
-            return Math.Ceiling(d) -1;
-        }
-
-        public List<ArtistListVm> GetPaged(int size, int page)
-        {
-            List<ArtistListVm> result = new List<ArtistListVm>();
-            int from = 0;
-            if (page == 1)
-            {
-                from = 0;
-            }
-            else if (page > 1 && page <= GetPageCount(size))
-            {
-                from = size * page - 1;
-            }
-            foreach (UArtist a in Db.Artists.OrderBy(o => o.Name).Skip(from).Take(size).ToList())
-            {
-                ArtistListVm vm = new ArtistListVm();
-                vm.Name = a.Name;
-                vm.ArtistID = a.ArtistID.Value;
-                vm.Thumbnail = a.Thumbnail;
-                result.Add(vm);
-            }
-
-            return result;
-        }
-
-        public List<UArtist> Search(string name)
-        {
-            if(name == null)
-            {
-                name = "";
-            }
-            name = name.ToLower();
-            return Db.Artists.Where(w => w.Name.ToLower().Contains(name)).OrderBy(o=>o.Name).Take(10).ToList();
-        }
-
-        public List<MaterializedArtistListVM> GetSorted(string search = "0-9", int page = 1)
-        {
-            if (search == "0-9")
-            {
-                List<MaterializedArtistListVM> result = Db.MaterializedArtists.Where(w => w.ArtistName.StartsWith("0") ||
-                w.ArtistName.StartsWith("0") ||
-                w.ArtistName.StartsWith("1") ||
-                w.ArtistName.StartsWith("2") ||
-                w.ArtistName.StartsWith("3") ||
-                w.ArtistName.StartsWith("4") ||
-                w.ArtistName.StartsWith("5") ||
-                w.ArtistName.StartsWith("6") ||
-                w.ArtistName.StartsWith("7") ||
-                w.ArtistName.StartsWith("8") ||
-                w.ArtistName.StartsWith("9") || w.ArtistName.StartsWith("a") || w.ArtistName.StartsWith("A")).OrderBy(o => o.ArtistName).Take(50 * page).ToList();
-                return result;
-            }
-            else
-            {
-                if (search != null)
-                {
-                    search = search.First().ToString().ToUpper() + search.Substring(1);
-                }
-                else
-                {
-                    search = "0-9";
-                }
-            }
-            return Db.MaterializedArtists.Where(w => w.ArtistName.StartsWith(search)).Take(50 * page).ToList();
-        }
-
-        public int GetPagedCount(int page, string search)
-        {
-            int result = 0;
-            if (search == "0-9")
-            {
-                IQueryable<MaterializedArtistListVM> tmp = Db.MaterializedArtists.Where(w => w.ArtistName.StartsWith("0") ||
-               w.ArtistName.StartsWith("0") ||
-               w.ArtistName.StartsWith("1") ||
-               w.ArtistName.StartsWith("2") ||
-               w.ArtistName.StartsWith("3") ||
-               w.ArtistName.StartsWith("4") ||
-               w.ArtistName.StartsWith("5") ||
-               w.ArtistName.StartsWith("6") ||
-               w.ArtistName.StartsWith("7") ||
-               w.ArtistName.StartsWith("8") ||
-               w.ArtistName.StartsWith("9") || w.ArtistName.StartsWith("a") || w.ArtistName.StartsWith("A")).OrderBy(o => o.ArtistName);
-                tmp = tmp.Skip((page - 1) * 50).Take(50);
-                result = tmp.Count();
-                return result;
-            }
-            else
-            {
-                if (search != null)
-                {
-                    search = search.First().ToString().ToUpper() + search.Substring(1);
-                    result = Db.MaterializedArtists.Where(w => w.ArtistName.StartsWith(search)).OrderBy(o => o.ArtistName).Skip((page - 1) * 50).Take(50).Count();
-                    return result;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
 
         public UArtist GetByID(Guid? id)
         {
@@ -146,15 +42,12 @@ namespace FC.BL.Repositories
         {
             return Db.Artists.Where(w=>w.IsDeleted == false).OrderBy(o => o.Name);
         }
-        
-        public List<MaterializedArtistListVM> GetMaterialized(int page, int pageCount=50)
-        {
-            return Db.MaterializedArtists.OrderBy(o=>o.ArtistName).Skip(pageCount * page).Take(pageCount).ToList();
-        }
-
-
-
      
+        public List<UArtist> Search(string name)
+        {
+            name = name.ToLower();
+            return Db.Artists.Where(w => w.Name.ToLower().Contains(name)).OrderBy(o => o.Name).ToList();
+        }
 
         public RepositoryState Create(UArtist artist)
         {

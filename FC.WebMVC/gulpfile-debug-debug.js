@@ -1,4 +1,4 @@
-﻿var gulp = require('gulp');
+var gulp = require('gulp');
 var sass = require('gulp-sass');
 
 
@@ -8,14 +8,14 @@ var debug = true;
 var minify = require('gulp-minify');
 
 gulp.task('compress', function () {
-    gulp.src('festival-calendar.js')
+    gulp.src('*.js')
       .pipe(minify({
           ext: {
               src: '-debug.js',
               min: '.js'
           },
           exclude: ['tasks'],
-          ignoreFiles: ['gulpfile.js','.combo.js', '-min.js']
+          ignoreFiles: ['.combo.js', '-min.js']
       }))
       .pipe(gulp.dest('./'))
 });

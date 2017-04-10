@@ -32,25 +32,33 @@ namespace FC.BL.Repositories
         {
             get
             {
-                if (HttpContext.Current.Items.Contains("AppUserSession"))
+                if (HttpContext.Current != null)
                 {
-                    return (AppUserSession)HttpContext.Current.Items["AppUserSession"];
-                }
-                else
+                    if (HttpContext.Current.Items.Contains("AppUserSession"))
+                    {
+                        return (AppUserSession)HttpContext.Current.Items["AppUserSession"];
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                } else
                 {
                     return null;
                 }
             }
             set
             {
-                if (!HttpContext.Current.Items.Contains("AppUserSession"))
+                if (HttpContext.Current != null)
                 {
-                    HttpContext.Current.Items.Add("AppUserSession", value);
-                }
-                else
-                {
-                    HttpContext.Current.Items["AppUserSession"] = value;
-
+                    if (!HttpContext.Current.Items.Contains("AppUserSession"))
+                    {
+                        HttpContext.Current.Items.Add("AppUserSession", value);
+                    }
+                    else
+                    {
+                        HttpContext.Current.Items["AppUserSession"] = value;
+                    }
                 }
             }
         }
@@ -58,48 +66,72 @@ namespace FC.BL.Repositories
         {
             get
             {
-                if (HttpContext.Current.Items.Contains("CurrentUser"))
+                if (HttpContext.Current != null)
                 {
-                    return (ApplicationUser)HttpContext.Current.Items["CurrentUser"];
+                    if (HttpContext.Current.Items.Contains("CurrentUser"))
+                    {
+                        return (ApplicationUser)HttpContext.Current.Items["CurrentUser"];
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 } else
                 {
-                    return null;
+                    return WPFUser;
                 }
             }
             set
             {
-                if (!HttpContext.Current.Items.Contains("CurrentUser"))
+                if (HttpContext.Current != null)
                 {
-                    HttpContext.Current.Items.Add("CurrentUser", value);
-                }
-                else
+                    if (!HttpContext.Current.Items.Contains("CurrentUser"))
+                    {
+                        HttpContext.Current.Items.Add("CurrentUser", value);
+                    }
+                    else
+                    {
+                        HttpContext.Current.Items["CurrentUser"] = value;
+                    }
+                } else
                 {
-                    HttpContext.Current.Items["CurrentUser"] = value;
+                    WPFUser = value;
                 }
             }
             //TODO: GET THIS FROM HTTP CONTEXT CURRENT.
         }
         public List<Role> CurrentUserRoles
         {
+            
             get
             {
-                if (HttpContext.Current.Items.Contains("CurrentUserRoles"))
+                if (HttpContext.Current != null)
                 {
-                    return (List<Role>)HttpContext.Current.Items["CurrentUserRoles"];
-                }
-                else
+                    if (HttpContext.Current.Items.Contains("CurrentUserRoles"))
+                    {
+                        return (List<Role>)HttpContext.Current.Items["CurrentUserRoles"];
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                } else
                 {
                     return null;
                 }
             }
             set
             {
-                if(!HttpContext.Current.Items.Contains("CurrentUserRoles"))
+                if (HttpContext.Current != null)
                 {
-                    HttpContext.Current.Items.Add("CurrentUserRoles", value);
-                } else
-                {
-                    HttpContext.Current.Items["CurrentUserRoles"] = value;
+                    if (!HttpContext.Current.Items.Contains("CurrentUserRoles"))
+                    {
+                        HttpContext.Current.Items.Add("CurrentUserRoles", value);
+                    }
+                    else
+                    {
+                        HttpContext.Current.Items["CurrentUserRoles"] = value;
+                    }
                 }
             }
         }
@@ -107,23 +139,34 @@ namespace FC.BL.Repositories
         {
             get
             {
-                if (HttpContext.Current.Items.Contains("ActiveToken"))
+                if (HttpContext.Current != null)
                 {
-                    return (Guid?)HttpContext.Current.Items["ActiveToken"];
-                }
-                else
+                    if (HttpContext.Current.Items.Contains("ActiveToken"))
+                    {
+                        return (Guid?)HttpContext.Current.Items["ActiveToken"];
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                } else
                 {
                     return null;
                 }
+                
             }
             set
             {
-                if (!HttpContext.Current.Items.Contains("ActiveToken"))
+                if (HttpContext.Current != null)
                 {
-                    HttpContext.Current.Items.Add("ActiveToken", value);
-                } else
-                {
-                    HttpContext.Current.Items["ActiveToken"] = value;
+                    if (!HttpContext.Current.Items.Contains("ActiveToken"))
+                    {
+                        HttpContext.Current.Items.Add("ActiveToken", value);
+                    }
+                    else
+                    {
+                        HttpContext.Current.Items["ActiveToken"] = value;
+                    }
                 }
             }
         }
@@ -155,6 +198,8 @@ namespace FC.BL.Repositories
         public bool HasAuth { get; set; }
         public bool IsAuthorized { get; set; }
         public bool IsAlmostExpired { get; set; }
+        public ApplicationUser WPFUser {get;set;}
+        public List<Role> WPFUserRoles { get; set; }
 
         private AuthorizationRepository() : base()
         {
@@ -209,7 +254,7 @@ namespace FC.BL.Repositories
 
         public bool IsOfficeUser(string[] roles)
         {
-            return this.UserHasRoles(roles);
+            return this.WPFUserHasRoles(roles);
         }
 
         public RepositoryState ForceDelete(ApplicationUser model)
@@ -221,7 +266,7 @@ namespace FC.BL.Repositories
                     this.Db.AppUserSessions.RemoveRange(this.Db.AppUserSessions.Where(w => w.UserID == model.UserID));
                     this.Db.U2R.RemoveRange(this.Db.U2R.Where(w => w.UserID == model.UserID));
                     this.Db.Favorites.RemoveRange(this.Db.Favorites.Where(w => w.UserID == model.UserID));
-                    this.Db.Media.RemoveRange(this.Db.Media.Where(w => w.DirectoryID == model.MediaDirectoryID));
+                    this.Db.Media.RemoveRange(this.Db.Media.Where(w => w.AuthorID == model.UserID));
                     this.Db.MediaDirectories.RemoveRange(this.Db.MediaDirectories.Where(w => w.DirectoryID == model.MediaDirectoryID));
                     this.Db.ApplicationUsers.Remove(this.Db.ApplicationUsers.Find(model.UserID));
                     this.Db.SaveChanges();
@@ -842,6 +887,15 @@ namespace FC.BL.Repositories
                 return false;
             }
         }
+        /// <summary>
+        /// Checks if the authenticated user roles matches one of the roles in roleNames
+        /// </summary>
+        /// <param name="roleNames"></param>
+        /// <returns></returns>
+        public bool WPFActionAuthorized(string[] roleNames)
+        {
+            return this.WPFUserHasRoles(roleNames);
+        }
 
         /// <summary>
         /// Checks if the authenticated user roles matches one of the roles in roleNames
@@ -920,6 +974,69 @@ namespace FC.BL.Repositories
                         this.HasAuth = false;
                         this.CurrentUser = null;
                         this.CurrentUserRoles = null;
+                        return null;
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// Sign a user in. This function should only used in the Backoffice.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public AppUserSession WPFLogin(string username, string password, bool encrypt = true)
+        {
+            using (Db = new ContentModel())
+            {
+                string pass = GetMd5Hash(this.MD5Hasher, password);
+                if (encrypt == false)
+                {
+                    pass = password;
+                }
+                ApplicationUser authUser = this.Db.ApplicationUsers.Where(w => w.UserEmailAddress == username && w.UserPassword == pass).FirstOrDefault();
+                if (authUser == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    authUser.Roles = this.Db.U2R.Where(w => w.UserID == authUser.UserID).Select(s => s.Role).ToList();
+                    if (authUser != null)
+                    {
+                        authUser.Roles = this.Db.U2R.Where(w => w.UserID == authUser.UserID).Select(s => s.Role).ToList();
+                        AppUserSession session = new AppUserSession("Login", "ControllerContext")
+                        {
+                            UserID = authUser.UserID,
+                            Authorized = true,
+                            Authenticated = true,
+                            Created = DateTime.Now,
+                            Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName,
+                            Expires = DateTime.Now.AddMinutes(10),
+                            Token = Guid.NewGuid(),
+                            SessionID = Guid.NewGuid(),
+                            Mode = Shared.Enum.AuthMode.LOCAL,
+                            Active = true,
+                            URI = "SECURE"
+                        };
+                        this.WPFUser = authUser;
+                        this.HasAuth = true;
+                        if (authUser.Roles.Count() == 0)
+                        {
+                            authUser.Roles.Add(Db.Roles.Where(w => w.Name == Roles.EndUser).FirstOrDefault());
+                        }
+                        this.WPFUserRoles = authUser.Roles;
+                        //this.Session = session;
+                        this.Db.AppUserSessions.Add(session);
+                        this.Db.SaveChanges();
+                        //this.WriteTokenCookie(session);
+                        return session;
+                    }
+                    else
+                    {
+                        this.HasAuth = false;
+                        this.WPFUser = null;
+                        this.WPFUserRoles = null;
                         return null;
                     }
                 }
@@ -1012,6 +1129,38 @@ namespace FC.BL.Repositories
                     }
                 }
             }
+        }
+        /// <summary>
+        /// Checks if the user has one of the passed roles in roleNames array.
+        /// </summary>
+        /// <param name="roleNames"></param>
+        /// <returns></returns>
+        public bool WPFUserHasRoles(string[] roleNames, Guid? authorID = null)
+        {
+            bool hasNone = true;
+            using (Db = new ContentModel())
+            {
+                this.WPFUserRoles = Db.U2R.Where(w => w.UserID == this.WPFUser.UserID).Select(s => s.Role).ToList();
+                foreach (string roleName in roleNames)
+                {
+                    if (this.WPFUserRoles != null)
+                    {
+                        if (this.WPFUserRoles.Where(w => w.Name == roleName).Any())
+                        {
+                            hasNone = false;
+                        }
+                    }
+                }
+                if (!hasNone)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+                
         }
 
 
@@ -1282,13 +1431,27 @@ namespace FC.BL.Repositories
                 {
                     if (HttpContext.Current.Request.Headers["Token"] != "null")
                     {
-                        token = Guid.Parse(HttpContext.Current.Request.Headers["Token"]);
+                        try
+                        {
+                            token = Guid.Parse(HttpContext.Current.Request.Headers["Token"]);
+                        } catch(Exception e)
+                        {
+                            token = null;
+                            this.HandleException(e);
+                        }
                         this.ActiveToken = token;
                     }
                 }
                 if (HttpContext.Current.Request.Cookies["Token"] != null)
                 {
-                    token = Guid.Parse(HttpContext.Current.Request.Cookies["Token"].Value);
+                    try
+                    {
+                        token = Guid.Parse(HttpContext.Current.Request.Cookies["Token"].Value);
+                    } catch(Exception e)
+                    {
+                        token = null;
+                        this.HandleException(e);
+                    }
                     this.ActiveToken = token;
                 }
                 if (token != null)

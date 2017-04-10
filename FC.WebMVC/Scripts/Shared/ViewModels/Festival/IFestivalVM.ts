@@ -23,5 +23,6 @@
         InstagramURL: string;
         CountryName: string;
         OrderDate: number;
+        Rating: FC.Shared.ViewModels.RatingVm;
     }
 }

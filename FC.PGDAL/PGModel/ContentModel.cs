@@ -118,9 +118,9 @@ namespace FC.PGDAL.PGModel
 
 
         /* Materialized Views */
-        public virtual DbSet<MaterializedArtistListVM> MaterializedArtists { get; set; }
-        public virtual DbSet<MaterializedFestivalListVM> MaterializedFestivals { get; set; }
-        public virtual DbSet<MaterializedNews> MaterializedNews { get; set; }
+        //public virtual DbSet<MaterializedArtistListVM> MaterializedArtists { get; set; }
+        //public virtual DbSet<MaterializedFestivalListVM> MaterializedFestivals { get; set; }
+        //public virtual DbSet<MaterializedNews> MaterializedNews { get; set; }
 
     }
 

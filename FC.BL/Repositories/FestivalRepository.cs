@@ -250,7 +250,7 @@ namespace FC.BL.Repositories
                     vmResult.Add(vm);
                 }
             }
-            return vmResult.OrderBy(o => o.StartDateExplosion.Day).ThenBy(o=>o.StartDateExplosion.Month).ThenBy(o=>o.StartDateExplosion.Y4).ToList();
+            return vmResult.OrderBy(o => o.StartDateExplosion.Day).ThenBy(o=>o.StartDateExplosion.MonthNum).ThenBy(o=>o.StartDateExplosion.Y4).ToList();
         }
 
         public List<FestivalVM> Search(string keyword)
@@ -274,11 +274,8 @@ namespace FC.BL.Repositories
                     ret.Add(f);
                 }
             }
-            return ret.Distinct().Select(s => new FestivalVM(s))
-                .OrderBy(o => o.StartDateExplosion.Day)
-                .ThenBy(o => o.StartDateExplosion.Month)
-                .ThenBy(o => o.StartDateExplosion.Y4)
-                .ToList();
+            var r = ret.Distinct().Select(s => new FestivalVM(s)).OrderByDescending(o => o.StartDateExplosion.Year).ThenByDescending(o=>o.StartDateExplosion.MonthNum).ThenByDescending(o=>o.StartDateExplosion.DayNum).ToList();
+            return r;
         }
         
 

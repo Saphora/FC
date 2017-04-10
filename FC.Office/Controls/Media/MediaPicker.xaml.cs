@@ -144,7 +144,13 @@ namespace FC.Office.Controls.Media
             }
             else
             {
-                client.mkdir(dir.DirID.Value.ToString());
+                try
+                {
+                    client.mkdir(dir.DirID.Value.ToString());
+                } catch(Exception ex)
+                {
+                    Console.Write(ex.Message);
+                }
                 client.chdir(dir.DirID.Value.ToString());
             }
             client.upload(fname);

@@ -6,11 +6,13 @@
     List<UNews> newsList = ViewBag.NewsList as List<UNews>;
     if (Model.ThumbnailID == null)
     {
-        ViewBag.Thumbnail = FC.Shared.Config.FCConfig.API+"/427af3b3-995f-4df7-a62d-c53ad4518f52.img?&width=800&height=272&crop=true";
+        ViewBag.Thumbnail = FC.Shared.Config.FCConfig.API + "/427af3b3-995f-4df7-a62d-c53ad4518f52.img?&width=800&height=272";
+        ViewBag.FBThumbnail = FC.Shared.Config.FCConfig.API + "/427af3b3-995f-4df7-a62d-c53ad4518f52.img?&width=460&height=165";
     }
     else
     {
-        ViewBag.Thumbnail = FC.Shared.Config.FCConfig.API+"/"+Model.ThumbnailID+".img?&width=800&height=272&crop=true";
+        ViewBag.Thumbnail = FC.Shared.Config.FCConfig.API + "/" + Model.ThumbnailID + ".img?&width=800&height=272";
+        ViewBag.FBThumbnail = FC.Shared.Config.FCConfig.API + "/" + Model.ThumbnailID + ".img?&width=460&height=165";
     }
 
 }
@@ -20,14 +22,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="FESTIVAL CALENDAR - @Model.Title" />
     <meta property="og:description" content="@Model.MetaDescription" />
-    <meta property="og:image" content="@ViewBag.Thumbnail" />
+    <meta property="og:image" content="@ViewBag.FBThumbnail" />
     <meta name="keywords" content="@Model.MetaKeys" />
     <meta name="description" content="@Model.MetaDescription" />
 }
 <div class="row news-detail">
     <div class="col-sm-24 col-md-14 col-lg-14 col-xl-16">
         <div class="navigation-bar">
-            <a href="/news" class="btn btn-danger">
+            <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-danger">
                 <i class="fa fa-angle-left"></i> BACK
             </a>
             <div class="crumb">
@@ -56,10 +58,25 @@
                     <i class="fa fa-clock-o"></i><span> @Model.CreateDate.ToLocalTime()</span>
                 </div>
                 <div class="news-text-wrapper">
-                    <p>
-                        <strong>@Model.MetaDescription</strong>
-                    </p>
+                    <div class="shorttxt">
+                        <p>
+                            <strong>@Model.MetaDescription</strong>
+                        </p>
+                    </div>
                     @Html.Raw(Model.Text)
+                </div>
+                <div class="row">
+                    <div class="col-xs-24 keywords">
+                        <i class="fa fa-tag"></i>
+                        <ul>
+                            @foreach (string keyword in Model.MetaKeys.Split(','))
+                            {
+                                <li>
+                                    @keyword
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
                 <div class="share-social-controls">
                     <label>SHARE THIS ARTICLE:</label>
@@ -71,10 +88,13 @@
         </div>
     </div>
     <div class="col-sm-24 col-md-10 col-lg-10 col-xl-8" ng-controller="FC.Modules.News.Controllers.NewsOverviewController as vm">
-        @foreach (UNews model in newsList)
-        {
-            @Html.Partial("NewsCard", model)
+        @{
+            foreach (UNews model in newsList.Take(3))
+            {
+                @Html.Partial("NewsCard", model)
+            }
         }
+        <a href="/news" class="btn btn-danger" title="GO TO NEWS OVERVIEW" style="width:100%;">SHOW OVERVIEW</a>
     </div>
 </div>
 <script>

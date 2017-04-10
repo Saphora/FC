@@ -91,7 +91,7 @@ module FC.Core {
     }
     export class AppConfig {
         constructor() {
-            this.URLRoot = Environment.GetBaseURL(EnvironmentType.Local);
+            this.URLRoot = Environment.GetBaseURL(EnvironmentType.Remote);
             this.ServiceHeaders = new FC.Shared.Models.SystemHeaders();
             this.ServiceHeaders.Culture = this.Client.UserCulture;
             this.ServiceHeaders.UserDateTime = this.Client.CurrentTicks;

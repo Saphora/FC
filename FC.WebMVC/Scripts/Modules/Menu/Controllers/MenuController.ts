@@ -35,7 +35,16 @@ module FC.Modules.Menu.Controllers {
             var vm = this;
             this.$scope.inst = this;
         }
-        
+
+        public ToggleMobile($scope: VM.IMenuVM) {
+            if ($("#MenuMobile").hasClass('ctx-hidden')) {
+                $("#MenuMobile").removeClass('ctx-hidden').addClass('ctx-visible');
+                $("#MainOverlay").removeClass('ctx-hidden').addClass('ctx-visible');
+            } else {
+                $("#MenuMobile").removeClass('ctx-visible').addClass('ctx-hidden');
+                $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
+            }
+        }
     }
     MenuModule.GetApplication().RegisterController("FC.Modules.Menu.Controllers.MenuController", FC.Modules.Menu.Controllers.MenuController);
 }

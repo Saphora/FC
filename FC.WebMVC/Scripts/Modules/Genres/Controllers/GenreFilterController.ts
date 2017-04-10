@@ -54,7 +54,6 @@ module FC.Modules.Genres.Controllers {
             vm.$scope.IsActive = this.IsActive;
 
             var userID = CacheManager.GetCookieValue("UserID");
-
             if (CacheManager.Contains("ActiveGenres")) {
                 vm.$scope.SelectedGenres = CacheManager.Get<List<MODELS.UGenre>>("ActiveGenres").data;
                 if (vm.$scope.SelectedGenres.length == 1) {
@@ -73,13 +72,16 @@ module FC.Modules.Genres.Controllers {
                             if (any == false) {
                                 vm.$scope.SelectedGenres.push(v.Content as MODELS.UGenre);
                             }
-                            vm.$scope.Selected = vm.$scope.SelectedGenres.length + " SELECTED";
                         }
                     });
-                    CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 9999999999);
+                    CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 1000 * 60 * 60 * 5);
                 });
             }
-            if (vm.$scope.SelectedGenres.length == 0) {
+            if (vm.$scope.SelectedGenres) {
+                if (vm.$scope.SelectedGenres.length == 0) {
+                    vm.$scope.Selected = "SELECT GENRES";
+                }
+            } else {
                 vm.$scope.Selected = "SELECT GENRES";
             }
             
@@ -162,7 +164,7 @@ module FC.Modules.Genres.Controllers {
             if (!this.IsActive(genre)) {
                 
                 vm.$scope.SelectedGenres.push(genre);
-                CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 999999999999999);
+                CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 1000 * 60 * 60 * 5);
                 
 
             } else {
@@ -175,7 +177,7 @@ module FC.Modules.Genres.Controllers {
                 });
                 vm.$scope.SelectedGenres = tmp;
                 
-                CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 999999999999999);
+                CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedGenres, 1000*60*60*5);
             }
             vm.$scope.SelectedGenres.forEach(function (v, i) {
                 vm.$scope.SelectedGenreIds += v.GenreID + ",";

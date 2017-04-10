@@ -39,40 +39,53 @@
     <div id="fb-root"></div>
     <img alt="festival calendar background" src="Resources/images/bg.jpg" id="bg" />
     <div id="MainOverlay" class="overlay ctx-hidden"></div>
-    <div class="menu-mobile visible-xs-down visible-sm-down visible-md-down hidden-xl-up">
+    <div class="menu-mobile visible-sm-down" ng-controller="FC.Modules.Menu.Controllers.MenuController as vm">
         <div class="container">
-            <div class="left visible-sm-up">
-                <ul>
-                    <li>
-                        <a href="https://www.facebook.com/Festival-Calendar-523659261065735/?fref=ts" target="_blank"><span class="icon fb"></span></a>
-                        <a href="https://www.youtube.com/" target="_blank"><span class="icon youtube"></span></a>
-                        <a href="https://www.vimeo.com/" target="_blank"><span class="icon vimeo"></span></a>
-                    </li>
-                </ul>
-            </div>
-            <div class="middle">
-                <div class="wrp-logo">
-                    <img class="logo" src="/Resources/images/logoc.png" title="Festival-Calendar.com" />
+            <div class="left">
+                <div class="wrp-logo mobile">
+                    <a href="/" title="FESTIVAL CALENDAR | Discover the most amazing festivals world wide!">
+                        <img src="~/Resources/images/logoc.png" title="Festival-Calendar.com" />
+                    </a>
                 </div>
             </div>
+            <div class="middle">
+            </div>
             <div class="right">
-                <a href="#">
+                <a href="#" ng-click="$event.preventDefault();vm.ToggleMobile()" style="color:#FFF;" class="opener">
                     <i class="fa fa-bars"></i>
                 </a>
+                <div id="MenuMobile" class="mobile-menu-context ctx-hidden">
+                    <div class="container">
+                        <ul>
+                            <li>
+                                <a href="/" title="Festivals @DateTime.Now.Month/@DateTime.Now.Year">CALENDAR</a>
+                            </li>
+                            <li>
+                                <a href="/news" title="NEWS">NEWS</a>
+                            </li>
+                            @if (!Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
+                            {
+                                <li>
+                                    <a href="/login" title="SIGN IN AT FESTIVAL CALENDAR">SIGN UP</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="/profile/index" title="SIGN IN AT FESTIVAL CALENDAR">MY ACCOUNT</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="menu hidden-sm-down hidden-lg-down">
+    <div class="menu hidden-sm-down">
         <div class="container">
             <div class="left">
-                <ul>
-                    <li>
-                        <a href="https://www.facebook.com/Festival-Calendar-523659261065735/?fref=ts" target="_blank"><span class="icon fb"></span></a>
-                        <a href="https://www.youtube.com/" target="_blank"><span class="icon youtube"></span></a>
-                        <a href="https://www.vimeo.com/" target="_blank"><span class="icon vimeo"></span></a>
-                    </li>
-                </ul>
-                <span class="slogan hidden-sm">DISCOVER THE MOST AMAZING FESTIVALS!</span>
+                <div style="float:left; margin-top: 5px; margin-left: -15px;" class="fb-like" data-href="https://www.facebook.com/festivalcalendarcom/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+                <span style="float:left;" class="slogan hidden-md-down">DISCOVER THE MOST AMAZING FESTIVALS!</span>
             </div>
             <div class="middle">
                 <div class="wrp-logo">
@@ -94,7 +107,7 @@
                     @if (!Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
                     {
                         <li>
-                            <a href="/login" title="SIGN IN AT FESTIVAL CALENDAR">LOGIN</a>
+                            <a href="/login" title="SIGN IN AT FESTIVAL CALENDAR">SIGN UP</a>
                         </li>
                     }
                     else
@@ -110,8 +123,7 @@
     <div id="main" class="main container">
         @RenderBody()
     </div>
-
-    <footer class="footer">
+    <footer class="footer navbar-fixed-bottom">
         <div class="container">
             <div class="row">
                 <div class="col-xs-8 left">
@@ -123,11 +135,12 @@
 
                 </div>
                 <div class="col-xs-8 right">
-                    <h5 style="color:#FFF; font-size: 12px; margin-top: 10px; float:right;">&copy; FESTIVAL CALENDAR | VERSION BETA 1.0</h5>
+                    <h5 style="color:#FFF; font-size: 12px; margin-top: 10px; float:right;">&copy; FESTIVAL CALENDAR | BETA 1.0</h5>
                 </div>
             </div>
         </div>
     </footer>
+
     <script>
         window.fbAsyncInit = function () {
             FB.init({
@@ -148,6 +161,52 @@
     <script src="phone-countries.js"></script>
     <script src="/App/deps.min.js"></script>
     <script src="festival-calendar.js"></script>
+    @if (HttpContext.Current.Request.Url.ToString().ToLower().Contains("https://festival-calendar.nl"))
+    {
+        <script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+              ga('create', 'UA-96994585-2', 'auto');
+              ga('send', 'pageview');
+        </script>
+    }
+    else if (HttpContext.Current.Request.Url.ToString().ToLower().Contains("https://festival-calendar.com"))
+    {
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
+          ga('create', 'UA-96994585-3', 'auto');
+          ga('send', 'pageview');
+        </script>
+    }
+    else if (HttpContext.Current.Request.Url.ToString().ToLower().Contains("http://festival-calendar.nl"))
+    {
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-96994585-1', 'auto');
+          ga('send', 'pageview');
+        </script>
+    }
+    else if (HttpContext.Current.Request.Url.ToString().ToLower().Contains("http://festival-calendar.com"))
+    {
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-96994585-4', 'auto');
+          ga('send', 'pageview');
+        </script>
+    }
 </body>
 </html>

@@ -2,7 +2,7 @@
 @using FC.Shared.Config
 @{
     ViewBag.Title = "NewsCard";
-    string imgSource = FC.Shared.Config.FCConfig.API + ".img?&width=800&height=272&crop=true";
+    string imgSource = FC.Shared.Config.FCConfig.API + "/" + Model.ThumbnailID + ".img?&width=800&height=272";
 }
 
 <div class="card news-card">

@@ -39,7 +39,6 @@ module FC.Modules.Filtering.Controllers {
             vm.$scope.$q = $q;
             vm.$scope.$http = $http;
             vm.$scope.$sce = $sce;
-
             try {
                 vm.CacheManager.Get<number>("Filter_Month", function (storage) {
                     vm.$scope.Month = storage.data;
@@ -60,6 +59,23 @@ module FC.Modules.Filtering.Controllers {
             }
 
             this.addFilterChangeListenerDate();
+            vm.$scope.IsLoading = true;
+
+            window.addEventListener("CalendarLoading", function (r) {
+                vm.$scope.IsLoading = true;
+            });
+            window.addEventListener("CalendarLoaded", function (r) {
+                vm.$scope.IsLoading = false;
+            });
+            window.addEventListener("SearchStart", function (r) {
+                vm.$scope.IsLoading = true;
+            });
+            window.addEventListener("SearchComplete", function (r) {
+                vm.$scope.IsLoading = false;
+            });
+            window.addEventListener("SearchCompleteNoResult", function (r) {
+                vm.$scope.IsLoading = false;
+            });
         }
 
 

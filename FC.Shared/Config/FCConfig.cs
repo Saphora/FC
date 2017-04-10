@@ -9,20 +9,186 @@ namespace FC.Shared.Config
 {
     public class FCConfig
     {
+        public static string SMTP_SERVER
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["SMTP_SERVER"] != null)
+                {
+                    return ConfigurationManager.AppSettings["SMTP_SERVER"];
+                }
+                else
+                {
+                    throw new Exception("Application setting SMTP_SERVER was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string IMAP_SERVER
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["IMAP_SERVER"] != null)
+                {
+                    return ConfigurationManager.AppSettings["IMAP_SERVER"];
+                }
+                else
+                {
+                    throw new Exception("Application setting IMAP_SERVER was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string RELAY_SERVER
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["RELAY_SERVER"] != null)
+                {
+                    return ConfigurationManager.AppSettings["RELAY_SERVER"];
+                }
+                else
+                {
+                    throw new Exception("Application setting RELAY_SERVER was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string IMAP_PORT
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["IMAP_PORT"] != null)
+                {
+                    return ConfigurationManager.AppSettings["IMAP_PORT"];
+                }
+                else
+                {
+                    throw new Exception("Application setting IMAP_PORT was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string SMTP_PORT
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["SMTP_PORT"] != null)
+                {
+                    return ConfigurationManager.AppSettings["SMTP_PORT"];
+                }
+                else
+                {
+                    throw new Exception("Application setting SMTP_PORT was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string INFO_MAIL_NL
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["INFO_MAIL_NL"] != null)
+                {
+                    return ConfigurationManager.AppSettings["INFO_MAIL_NL"];
+                }
+                else
+                {
+                    throw new Exception("Application setting INFO_MAIL_NL was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string INFO_MAIL_NL_PASSWORD
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["INFO_MAIL_NL_PASSWORD"] != null)
+                {
+                    return ConfigurationManager.AppSettings["INFO_MAIL_NL_PASSWORD"];
+                }
+                else
+                {
+                    throw new Exception("Application setting INFO_MAIL_NL_PASSWORD was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string NOREPLY_MAIL_NL
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["NOREPLY_MAIL_NL"] != null)
+                {
+                    return ConfigurationManager.AppSettings["NOREPLY_MAIL_NL"];
+                }
+                else
+                {
+                    throw new Exception("Application setting NOREPLY_MAIL_NL was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string NOREPLY_MAIL_NL_PASSWORD
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["NOREPLY_MAIL_NL_PASSWORD"] != null)
+                {
+                    return ConfigurationManager.AppSettings["NOREPLY_MAIL_NL_PASSWORD"];
+                }
+                else
+                {
+                    throw new Exception("Application setting NOREPLY_MAIL_NL_PASSWORD was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string WESLEY_MAIL_NL
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["WESLEY_MAIL_NL"] != null)
+                {
+                    return ConfigurationManager.AppSettings["WESLEY_MAIL_NL"];
+                }
+                else
+                {
+                    throw new Exception("Application setting WESLEY_MAIL_NL was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
+        public static string WESLEY_MAIL_NL_PASSWORD
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["WESLEY_MAIL_NL_PASSWORD"] != null)
+                {
+                    return ConfigurationManager.AppSettings["WESLEY_MAIL_NL_PASSWORD"];
+                }
+                else
+                {
+                    throw new Exception("Application setting WESLEY_MAIL_NL_PASSWORD was not found. Check your Web/App.config files.");
+                }
+            }
+        }
+
         public static List<string> Domains
         {
             get
             {
                 int index = 1;
                 List<string> result = new List<string>();
-                while(index <= 100)
+                while (index <= 100)
                 {
-                    if(ConfigurationManager.AppSettings.AllKeys.Contains("DOMAIN_"+index))
+                    if (ConfigurationManager.AppSettings.AllKeys.Contains("DOMAIN_" + index))
                     {
                         string val = ConfigurationManager.AppSettings["DOMAIN_" + index];
                         result.Add(val);
                         index++;
-                    } else
+                    }
+                    else
                     {
                         break;
                     }
@@ -37,9 +203,11 @@ namespace FC.Shared.Config
         public static Guid NewsDirectoryID = Guid.Parse("e55379cd-13e3-4180-8b68-07b82e0d6172");
         public static Guid ArtistsDirectoryID = Guid.Parse("bd808f49-dee0-4ec4-9024-dec2a716948a");
         public static Guid LocationsDirectoryID = Guid.Parse("186A264A-75A0-484A-A7F1-BF44B3A631F3");
-        
-        public static Guid? ANON_USER_ID {
-            get {
+
+        public static Guid? ANON_USER_ID
+        {
+            get
+            {
                 if (ConfigurationManager.AppSettings["ANON_USER_ID"] != null)
                 {
                     return Guid.Parse(ConfigurationManager.AppSettings["ANON_USER_ID"]);
@@ -172,7 +340,7 @@ namespace FC.Shared.Config
                 }
             }
         }
-        
+
         /// <summary>
         /// The root folder of the SQL files for Code first migrations.
         /// </summary>

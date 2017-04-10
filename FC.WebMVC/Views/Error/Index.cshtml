@@ -1,0 +1,55 @@
+﻿@{ 
+    var number = 500;
+    if (ViewBag.Number != null)
+    {
+        number = ViewBag.Number;
+    }
+}
+@section META{
+    <title>FESTIVAL CALENDAR | 404 Item not found</title>
+}
+
+<div class="row">
+    <div class="col-xs-24">
+        @if (number == 404)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <span class="h5">
+                        PAGE NOT FOUND
+                    </span>
+                </div>
+                <div class="card-block">
+                    <p>The item you requested is not found.</p>
+                </div>
+            </div>
+        }
+        
+        @if (number == 500)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <span class="h5">
+                        OOPS...
+                    </span>
+                </div>
+                <div class="card-block">
+                    <p>An error has occured. Please try again later or contact us at info@festival-calendar.nl</p>
+                </div>
+            </div>
+        }
+        @if (number == 401)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <span class="h5">
+                        UNAUTHORIZED ACCESS
+                    </span>
+                </div>
+                <div class="card-block">
+                    <p>You where not authorized to access this content. Please try again later or contact us at info@festival-calendar.nl</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

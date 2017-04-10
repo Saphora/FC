@@ -5,7 +5,7 @@ module FC.Modules.Rating.Controllers {
     export class RatingController extends FC.Shared.Controllers.BaseController {
         public RatingSvc: FC.Modules.Rating.Services.RatingService;
         public Stars: string[];
-        public $scope: any;
+        public $scope: FC.Shared.ViewModels.RatingVm;
         static $inject = [
             "$http",
             "$q",
@@ -29,14 +29,16 @@ module FC.Modules.Rating.Controllers {
             super($http, $q, $scope, $location, $routeParams, $mdDialog);
             this.RatingSvc = RatingService;
             this.$scope = $scope;
-            this.$scope.Rating = FC.Shared.ViewModels.RatingVm;
         }
 
+        public SetFestival(festival: FC.Shared.ViewModels.IFestivalVM) {
+            var vm = this;
+            vm.$scope.Festival = festival;
+        }
         public GetRates(contentItemID: string, type: string) {
             var vm = this;
             this.RatingSvc.GetRate(contentItemID, type).then(function (r: FC.Shared.Interfaces.IServiceResponse<Shared.ViewModels.RatingVm>) {
-                vm.$scope.Rating = r.Data;
-
+                vm.$scope.Festival.Rating = r.Data;
             });
         }
 
@@ -48,6 +50,7 @@ module FC.Modules.Rating.Controllers {
                 });
             }
         }
+
     }
     RatingModule.GetApplication().RegisterController("FC.Modules.Rating.Controllers.RatingController", FC.Modules.Rating.Controllers.RatingController);
 }

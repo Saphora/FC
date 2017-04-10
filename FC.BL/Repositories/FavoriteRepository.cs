@@ -184,5 +184,27 @@ namespace FC.BL.Repositories
                 return this.HandleException(ex, "Cannot create news item. Please try again later.");
             }
         }
+
+        public RepositoryState RemoveUserFavorites()
+        {
+            try
+            {
+                using (Db = new PGDAL.PGModel.ContentModel())
+                {
+                    
+                    Db.Favorites.RemoveRange(Db.Favorites.Where(w=>w.UserID == AuthorizationRepository.Current.CurrentUser.UserID));
+                    Db.SaveChanges();
+                    return new RepositoryState {AffectedID = AuthorizationRepository.Current.CurrentUser.UserID, SUCCESS = true, MSG = $"Successfully unmarked favorites." };
+                }
+            }
+            catch (DbEntityValidationException ex)
+            {
+                return this.HandleException(ex, "Cannot create news item. Please try again later.");
+            }
+            catch (Exception ex)
+            {
+                return this.HandleException(ex, "Cannot create news item. Please try again later.");
+            }
+        }
     }
 }

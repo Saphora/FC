@@ -34,7 +34,7 @@
        public ShowReadMore: boolean;
        public SortOrder: number;
        public IsSoldOut: string;
-       public Rating: string;
+       public Rating: FC.Shared.ViewModels.RatingVm;
        public Name: string;
        public LogoID: string;
        public IndoorOutdoor: string;
