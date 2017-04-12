@@ -1,0 +1,101 @@
+﻿@{
+    Dictionary<string, string> Crumbs = new Dictionary<string, string>();
+    if (ViewBag.Crumbs != null)
+    {
+        Crumbs = ViewBag.Crumbs;
+    }
+
+}
+<div class="row">
+    <div class="col-xs-24">
+        <div class="navigation-bar" ng-controller="FC.Core.Controllers.NavBarController as vm">
+            @if (Crumbs.Count == 0)
+            {
+                if (Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
+                {
+                    <a href="/profile/index" class="btn btn-danger">
+                        MY PROFILE
+                    </a>
+                }
+                else
+                {
+                    <a href="/register?type=user" title="REGISTER AT FESTIVAL CALENDAR" class="btn btn-danger">
+                        REGISTER NOW
+                    </a>
+                }
+            }
+            else
+            {
+                <a href="@Crumbs.First().Key" class="btn btn-danger">
+                    <i class="fa fa-angle-double-left"></i> BACK
+                </a>
+            }
+            @{
+                int index = 0;
+                if (Crumbs.Count > 0)
+                {
+                    <div class="crumb">
+                        @foreach (var kvp in Crumbs)
+                        {
+                            <a href="@kvp.Key">
+                                @kvp.Value
+                            </a>
+                            if (index < Crumbs.Count-1)
+                            {
+                                <i class="fa fa-angle-double-right"></i>
+                            }
+                            index++;
+                        }
+                    </div>
+                }
+            }
+            @if (Crumbs.Count == 0)
+            {
+                <div class="navigation-items pull-right">
+                @if (Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
+                {
+                    <a href="/profile/index">
+                        MY GENRES
+                        @if (Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
+                        {
+                            <span class="count" ng-if="GenreCount && GenreCount > 0">
+                                {{GenreCount}}
+                            </span>
+                        }
+                    </a>
+
+                    @*<a href="/profile/index" class="hidden-xs">
+                            MY ARTISTS
+                            <span class="count" ng-if="ArtistCount">
+                                {{ArtistCount}}
+                            </span>
+                        </a>*@
+
+                    <a href="/profile/index" class="hidden-xs">
+                        MY COUNTRIES
+                        @if (Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
+                        {
+                            <span class="count" ng-if="CountryCount">
+                                {{CountryCount}}
+                            </span>
+                        }
+
+                    </a>
+                    <a href="/register/logout" class="hidden-xs pull-right">
+                        LOGOUT
+                    </a>
+                }
+                else
+                {
+                    <a href="/Register/?type=festival" class="hidden-sm-down visible-sm-up">SIGN UP MY FESTIVAL</a>
+                    <a href="/Register/?type=artist" class="hidden-sm-down visible-sm-up">SIGN UP AS ARTIST/BAND</a>
+                    <a href="/Register/?type=venue" class="hidden-sm-down visible-sm-up">SIGN UP MY VENUE</a>
+                    <a href="/Register/?type=advertisement" class="hidden-md-down visible-md-up">ADVERTISEMENT</a>
+                    <div style="position:absolute; right: 15px;" class="fb-like visible-md-down hidden-md-up" data-href="https://www.facebook.com/festivalcalendarcom/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+
+                }
+            </div>
+            }
+        </div>
+    </div>
+</div>

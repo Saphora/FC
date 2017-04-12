@@ -14,11 +14,11 @@ namespace FC.BL.Repositories
     {
         public RepositoryState Rate(RatingMsg msg, string host, string ip, Guid? UserID = null)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            try
             {
-                try
+                string key = ip;
+                using (Db = new PGDAL.PGModel.ContentModel())
                 {
-                    string key = ip;
                     if (!Db.Ratings.Where(w => w.ContentItemID == msg.ContentItemID && w.IP == key).Any())
                     {
                         Db.Ratings.Add(new Shared.Entities.Rating() { RatingID = Guid.NewGuid(), ContentItemID = msg.ContentItemID, Type = msg.ContentType, CreditAmmount = msg.CreditAmmount, UserID = UserID, Host = host, IP = key });
@@ -30,24 +30,26 @@ namespace FC.BL.Repositories
                         return new RepositoryState() { SUCCESS = false, MSG = $"Cannot rate this item because it was already rated from this IP " + ip };
                     }
                 }
-                catch (DbEntityValidationException ex)
-                {
-                    return new RepositoryState() { ValidationEx = ex, DBERROR = true, MSG = "Internal server error. Please try again later." };
-                }
-                catch (Exception ex)
-                {
-                    return new RepositoryState() { Exception = ex, DBERROR = true, MSG = "Internal server error. Please try again later." };
-                }
             }
+            catch (DbEntityValidationException ex)
+            {
+                return new RepositoryState() { ValidationEx = ex, DBERROR = true, MSG = "Internal server error. Please try again later." };
+            }
+            catch (Exception ex)
+            {
+                return new RepositoryState() { Exception = ex, DBERROR = true, MSG = "Internal server error. Please try again later." };
+            }
+            
         }
 
         public RatingVm GetRating(Guid? ContentItemID, string type)
         {
-            RatingVm result;
-            using (Db = new PGDAL.PGModel.ContentModel())
-            {
-                List<Rating> rating = Db.Ratings.Where(w => w.ContentItemID == ContentItemID && w.Type == type).ToList();
-
+                RatingVm result;
+                List<Rating> rating = new List<Rating>();
+                using (var db = new PGDAL.PGModel.ContentModel())
+                {
+                    rating = db.Ratings.Where(w => w.ContentItemID == ContentItemID && w.Type == type).ToList();
+                }
                 result = new RatingVm();
                 result.ContentItemID = ContentItemID;
                 result.Counter = rating.Count;
@@ -60,11 +62,10 @@ namespace FC.BL.Repositories
                 }
                 else
                 {
-                    return new RatingVm {ContentItemID = ContentItemID, Counter = 0, StarCount = 0 };
+                    return new RatingVm { ContentItemID = ContentItemID, Counter = 0, StarCount = 0 };
                 }
-            }
-            return result;
-
+                return result;
+            
         }
 
 

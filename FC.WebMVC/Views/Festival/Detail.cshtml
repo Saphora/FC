@@ -1,0 +1,96 @@
+﻿@model UFestival
+@section META {
+    <title>FESTIVAL CALENDAR | @Model.Name</title>
+    <meta property="og:url" content="http://festival-calendar.nl/festival/@Model.FestivalID" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@Model.Name" />
+    <meta property="og:description" content="@Model.MetaDescription" />
+    <meta property="og:image" content="@ViewBag.FBThumbnail" />
+    <meta name="keywords" content="@Model.MetaKeys" />
+    <meta name="description" content="@Model.MetaDescription" />
+}
+@{ 
+    var crumbs = new Dictionary<string, string>();
+    crumbs.Add("/", "CALENDAR");
+    crumbs.Add(string.Format("/festival/{0}", Model.FestivalID), string.Format("{0}", Model.Name.ToUpper()));
+    ViewBag.Crumbs = crumbs;
+}
+
+@Html.Partial("_Navbar")
+
+<div class="row" ng-controller="FC.Modules.Festival.Controllers.FestivalCRUDController as vm" ng-init="vm.SetFestival('@Model.FestivalID.Value.ToString()')">
+    <div class="col-xl-18 col-md-24">
+        <div class="alert alert-info">
+            This section is still under construction. We are very busy with gathering all of the festival information.
+        </div>
+        <div class="card profile-header">
+            <div class="card-header">
+                <span class="h5">
+                    {{model.Name.toUpperCase()}}
+                </span>
+                <div class="rating" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr" ng-init="rctr.GetRates(Festival.FestivalID,'festival')">
+                    <span class="count" theme="count" ng-if="rctr.$scope.DisplayCount == '0'">
+                        0
+                    </span>
+                    <span class="count" theme="count" ng-if="rctr.$scope.DisplayCount != '0'">
+                        {{rctr.$scope.DisplayCount}}
+                    </span>
+                    <a href="#" id="star_{{Festival.FestivalID}}_1" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',1)">
+                        <i class="star active fa fa-star" ng-if="rctr.$scope.Star1Active"></i>
+                        <i class="star fa fa-star" ng-if="!rctr.$scope.Star1Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Festival.FestivalID}}_2" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',2)">
+                        <i class="star active fa fa-star" ng-if="rctr.$scope.Star2Active"></i>
+                        <i class="star fa fa-star" ng-if="!rctr.$scope.Star2Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Festival.FestivalID}}_3" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',3)">
+                        <i class="star active fa fa-star" ng-if="rctr.$scope.Star3Active"></i>
+                        <i class="star fa fa-star" ng-if="!rctr.$scope.Star3Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Festival.FestivalID}}_4" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',4)">
+                        <i class="star active fa fa-star" ng-if="rctr.$scope.Star4Active"></i>
+                        <i class="star fa fa-star" ng-if="!rctr.$scope.Star4Active"></i>
+                    </a>
+                    <a href="#" id="star_{{Festival.FestivalID}}_5" ng-click="$event.preventDefault();rctr.Rate(Festival.FestivalID,'festival',5)">
+                        <i class="star active fa fa-star" ng-if="rctr.$scope.Star5Active"></i>
+                        <i class="star fa fa-star" ng-if="!rctr.$scope.Star5Active"></i>
+                    </a>
+                </div>
+                <a href="#" ng-click="$event.preventDefault();DoStartEdit('festival-name', this, $event)" for-roles="ADMIN">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </div>
+            <div class="card-block no-padding festival-header">
+                <div class="logo-wrapper">
+                    <div class="mask" ng-click="$event.preventDefault();DoStartEdit('festival-logo', this, $event)" for-roles="ADMIN">
+                        <i class="fa fa-camera"></i>
+                    </div>
+                    <img ng-if="model.LogoID" ng-src="{{MediaURLRoot}}/{{model.LogoID}}.img?&thumb=true" class="ct-logo" />
+                </div>
+                <div class="controls" for-roles="ADMIN">
+                    <a href="#" ng-click="$event.preventDefault();DoStartEdit('profile-header', this, $event)">
+                        <i class="fa fa-camera"></i>
+                    </a>
+                    <!--<a href="/#/festival/delete/{{Festival.FestivalID}}" class="btn-sm btn-default">
+                        <i class="fa fa-trash"></i> Remove
+                    </a>
+                    <a href="/#/festival/publish/{{Festival.FestivalID}}" class="btn-sm btn-default">
+                        <i class="fa fa-globe"></i> Publish
+                    </a>
+                    <a href="/#/festival/edit/{{Festival.FestivalID}}" class="btn-sm btn-default">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 hidden-lg-down">
+        <a href="/" class="btn btn-danger" style="width:272px">UPCOMING EVENTS</a>
+        <div class="row search-control" ng-controller="FC.Modules.Calendar.Controllers.SimpleCalendarController as vm">
+            <div ng-show="IsLoading==false && Festivals.length > 0" class="col-xs-24" search-result" ng-if="FestivalKey < 4" ng-repeat="(FestivalKey,Festival) in Festivals">
+                <ng-include src="'/Scripts/Modules/Festival/Views/festival-card.html'"></ng-include>
+            </div>
+        </div>
+    </div>
+</div>
+

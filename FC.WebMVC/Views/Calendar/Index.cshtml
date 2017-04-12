@@ -20,68 +20,7 @@
         }
     }
 }
-<div class="row">
-    <div class="col-xs-24">
-        <div class="navigation-bar" ng-controller="FC.Core.Controllers.NavBarController as vm">
-            @if (Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
-            {
-                <a href="/profile/index" class="btn btn-danger">
-                    MY FAVORITES
-                </a>
-            }
-            else
-            {
-                <a href="/register?type=user" title="REGISTER AT FESTIVAL CALENDAR" class="btn btn-danger">
-                    REGISTER NOW
-                </a>
-            }
-            <div class="navigation-items">
-            @if (Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
-            {
-                <a href="/profile/index">
-                    MY GENRES
-                    @if (Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
-                    {
-                        <span class="count" ng-if="GenreCount && GenreCount > 0">
-                            {{GenreCount}}
-                        </span>
-                    }
-                </a>
-
-                @*<a href="/profile/index" class="hidden-xs">
-                        MY ARTISTS
-                        <span class="count" ng-if="ArtistCount">
-                            {{ArtistCount}}
-                        </span>
-                    </a>*@
-
-                <a href="/profile/index" class="hidden-xs">
-                    MY COUNTRIES
-                    @if (Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
-                    {
-                        <span class="count" ng-if="CountryCount">
-                            {{CountryCount}}
-                        </span>
-                    }
-
-                </a>
-                <a href="/register/logout" class="hidden-xs">
-                    LOGOUT
-                </a>
-            }
-            else
-            {
-                <a href="/Register/?type=festival" class="hidden-sm-down visible-sm-up">SIGN UP MY FESTIVAL</a>
-                <a href="/Register/?type=artist" class="hidden-sm-down visible-sm-up">SIGN UP AS ARTIST/BAND</a>
-                <a href="/Register/?type=venue" class="hidden-sm-down visible-sm-up">SIGN UP MY VENUE</a>
-                <a href="/Register/?type=advertisement" class="hidden-md-down visible-md-up">ADVERTISEMENT</a>                
-                <div style="position:absolute; right: 15px;" class="fb-like visible-md-down hidden-md-up" data-href="https://www.facebook.com/festivalcalendarcom/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
-                   
-            }
-            </div>
-        </div>
-    </div>
-</div>
+@Html.Partial("_Navbar")
 @if (state != null)
 {
     <div class="row">
@@ -119,7 +58,7 @@
             <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
                 <i class="fa fa-calendar" style="position:relative;top:-2px;"></i>
             </a>
-            <input type="text" class="textbox" disabled="disabled" ng-model="DateString" />
+            <span class="textbox" ng-click="vm.ShowFilter(this)">{{DateString}}</span>
             <input type="hidden" name="Year" ng-model="Year" />
             <input type="hidden" name="Month" ng-model="Month" />
         </div>
@@ -129,7 +68,7 @@
             <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
                 <i class="fa fa-heart" style="color: #FF0000"></i>
             </a>
-            <input type="text" class="textbox" ng-model="Selected" disabled="disabled" placeholder="" />
+            <span type="text" class="textbox" placeholder="" ng-click="vm.ShowFilter(this)">{{Selected}}</span>
             <input type="hidden" name="Genres" ng-model="SelectedGenreIds" />
         </div>
     </div>
@@ -138,7 +77,7 @@
             <a href="#" class="btn btn-default" ng-click="$event.preventDefault(); vm.ShowFilter(this);">
                 <i class="fa fa-map-marker"></i>
             </a>
-            <input type="text" class="textbox" ng-model="Selected" disabled="disabled" />
+            <span class="textbox" ng-click="vm.ShowFilter(this)">{{Selected}}</span>
             <input type="hidden" name="Genres" ng-model="SelectedGenreIds" />
         </div>
     </div>
@@ -153,22 +92,14 @@
             <a href="#" title="Restore to defaults" class="btn btn-danger" ng-click="$event.preventDefault(); vm.ClearFilters();">
                 <i class="fa fa-refresh"></i> CLEAR ALL FILTERS
             </a>
-            <a href="#" title="Restore to defaults" class="btn btn-danger" ng-click="$event.preventDefault(); vm.ClearFavorites();">
-                <i class="fa fa-refresh"></i> REMOVE ALL MY FAVORITES
-            </a>
         </center>
     </div>
-    <div class="col-xs-24 no-result hidden" ng-show="IsLoading==false && Festivals.length ==0">
+    <div class="col-xs-24 no-result"  ng-show="IsLoading==false && Festivals.length ==0">
         <center>
             <h2 style="margin-top: 50px; color:#FFF !important;">
                 No festivals were found at the moment.
             </h2>
-            <h5 style="color:#FFF; margin-top: 20px;">
-                Please come back later, or try to modify your specifications.
-            </h5>
-            <p>
-                Please be aware that we need to collect data from festivals all over the world, so please come back later.
-            </p>
+            <h5 style="color:#FFF;">Try again later, we are very busy with mining all the festival information world wide.</h5>
         </center>
         <div class="no-result-controls">
             <center>

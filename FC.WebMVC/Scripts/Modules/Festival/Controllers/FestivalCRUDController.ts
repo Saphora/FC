@@ -57,7 +57,17 @@ module FC.Modules.Festival.Controllers {
                 vm.DoSaveCRUD(Shared.Controllers.ActionType.Update, Shared.Controllers.ServiceType.FestivalService, $scope);
                 ///vm.$scope["ProfileHeaderPath"]= FC.Core.Environment.MediaURLRoot + "/" + vm.$scope.model.LogoID;
             });
+            
         }
+
+        public SetFestival(id: string) {
+            var vm = this;
+            vm.FestivalService.GetFestival(id).then(function(r) {
+                vm.$scope.model = r.Data;
+                vm.$scope.IsLoading = false;
+            });
+        }
+
         public RegisterID(id: string) {
             this.$scope.model.FestivalID = id;
         }

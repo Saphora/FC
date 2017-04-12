@@ -243,11 +243,14 @@ namespace FC.BL.Repositories
                 vmResult = new List<FestivalVM>();
                 foreach(UFestival f in tmpList)
                 {
-                    f.Country = RepositoryContext.GetInstance().Countries.GetByID(f.CountryID);
-                    f.Genres = RepositoryContext.GetInstance().Genres.GetByFestivalID(f.FestivalID);
-                    RatingVm r = RepositoryContext.GetInstance().Rating.GetRating(f.FestivalID, "festival");
-                    FestivalVM vm = new FestivalVM(f,r);
-                    vmResult.Add(vm);
+                    if (f.IsPublished)
+                    {
+                        f.Country = RepositoryContext.GetInstance().Countries.GetByID(f.CountryID);
+                        f.Genres = RepositoryContext.GetInstance().Genres.GetByFestivalID(f.FestivalID);
+                        RatingVm r = RepositoryContext.GetInstance().Rating.GetRating(f.FestivalID, "festival");
+                        FestivalVM vm = new FestivalVM(f, r);
+                        vmResult.Add(vm);
+                    }
                 }
             }
             return vmResult.OrderBy(o => o.StartDateExplosion.Day).ThenBy(o=>o.StartDateExplosion.MonthNum).ThenBy(o=>o.StartDateExplosion.Y4).ToList();
@@ -269,9 +272,12 @@ namespace FC.BL.Repositories
 
                 foreach (UFestival f in result)
                 {
-                    f.Country = Db.Countries.Find(f.CountryID);
-                    f.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).Distinct().OrderBy(o => o.Name).ToList();
-                    ret.Add(f);
+                    if (f.IsPublished)
+                    {
+                        f.Country = Db.Countries.Find(f.CountryID);
+                        f.Genres = Db.G2F.Where(w => w.FestivalID == f.FestivalID).Select(s => s.Genre).Distinct().OrderBy(o => o.Name).ToList();
+                        ret.Add(f);
+                    }
                 }
             }
             var r = ret.Distinct().Select(s => new FestivalVM(s)).OrderByDescending(o => o.StartDateExplosion.Year).ThenByDescending(o=>o.StartDateExplosion.MonthNum).ThenByDescending(o=>o.StartDateExplosion.DayNum).ToList();

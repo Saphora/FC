@@ -12,9 +12,11 @@ using FC.Shared.ViewModels;
 
 using Newtonsoft.Json.Linq;
 using FC.Shared.ViewModels.Rating;
+using System.Threading.Tasks;
 
 namespace FC.WebAPI.Controllers.API
 {
+    [System.Web.Mvc.SessionState(System.Web.SessionState.SessionStateBehavior.Disabled)]
     public class RatingController : BaseAPIController
     {
         private RatingRepository RatingRepo;
@@ -33,7 +35,12 @@ namespace FC.WebAPI.Controllers.API
         [HttpGet]
         public ServiceResponse<RatingVm> GetRating(Guid? contentItemID, string type)
         {
-            return new ServiceResponse<RatingVm>(RatingRepo.GetRating(contentItemID, type), HttpStatusCode.OK, "Success-GetRating", this.Repositories.Auth.ActiveToken);
+            var result = new Shared.Entities.ServiceResponse<RatingVm>(
+                            RatingRepo.GetRating(contentItemID, type),
+                            HttpStatusCode.OK,
+                            "OK",
+                            Repositories.Auth.ActiveToken);
+            return result;
         }
     }
 }

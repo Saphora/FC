@@ -660,6 +660,9 @@ var FC;
 ///<reference path="AppConfig.ts"/>
 ///<reference path="ServiceBase.ts"/>
 ///<reference path="../../Shared/Util/CacheManager.ts"/>
+window.onresize = function (event) {
+    $("#bg").css("width", $(window).width());
+};
 var BrowserDetect = {
     init: function () {
         this.browser = this.searchString(this.dataBrowser) || "Other";
@@ -6050,6 +6053,13 @@ var FC;
                             ///vm.$scope["ProfileHeaderPath"]= FC.Core.Environment.MediaURLRoot + "/" + vm.$scope.model.LogoID;
                         });
                     }
+                    FestivalCRUDController.prototype.SetFestival = function (id) {
+                        var vm = this;
+                        vm.FestivalService.GetFestival(id).then(function (r) {
+                            vm.$scope.model = r.Data;
+                            vm.$scope.IsLoading = false;
+                        });
+                    };
                     FestivalCRUDController.prototype.RegisterID = function (id) {
                         this.$scope.model.FestivalID = id;
                     };
@@ -10564,21 +10574,17 @@ var FC;
                         this.RatingSvc = RatingService;
                         this.$scope = $scope;
                     }
-                    RatingController.prototype.SetFestival = function (festival) {
+                    RatingController.prototype.GetRates = function (contentItemID, typeName) {
                         var vm = this;
-                        vm.$scope.Festival = festival;
-                    };
-                    RatingController.prototype.GetRates = function (contentItemID, type) {
-                        var vm = this;
-                        this.RatingSvc.GetRate(contentItemID, type).then(function (r) {
-                            vm.$scope.Festival.Rating = r.Data;
+                        this.RatingSvc.GetRate(contentItemID, typeName).then(function (r) {
+                            vm.$scope = r.Data;
                         });
                     };
-                    RatingController.prototype.Rate = function (contentItemID, type, index) {
+                    RatingController.prototype.Rate = function (contentItemID, typeName, index) {
                         var vm = this;
                         if (index <= 5) {
-                            this.RatingSvc.Rate(contentItemID, type, index).then(function () {
-                                vm.GetRates(contentItemID, type);
+                            this.RatingSvc.Rate(contentItemID, typeName, index).then(function () {
+                                vm.GetRates(contentItemID, typeName);
                             });
                         }
                     };

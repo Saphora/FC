@@ -1542,7 +1542,6 @@
     <Folder Include="Scripts\Modules\Search\Models\" />
     <Folder Include="Scripts\Shared\Directives\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Festival\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1654,6 +1653,8 @@
     <Content Include="Views\Shared\DisplayTemplates\RatingVm.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\FestivalList.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Shared\_Navbar.cshtml" />
+    <Content Include="Views\Festival\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\Modules\Artists\Artists.ts" />

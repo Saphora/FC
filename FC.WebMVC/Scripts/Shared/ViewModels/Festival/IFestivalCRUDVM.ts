@@ -5,6 +5,7 @@
         MediaURLRoot: string;
         formID: string;
         FestivalID: string;
+        Upcoming: Array<FC.Shared.ViewModels.IFestivalVM>;
         FestivalLogoPath: string;
         SysArtists: Array<MOD.UArtist>;
         SysGenres: Array<MOD.UGenre>;

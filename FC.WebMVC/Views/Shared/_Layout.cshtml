@@ -58,21 +58,28 @@
                     <div class="container">
                         <ul>
                             <li>
-                                <a href="/" title="Festivals @DateTime.Now.Month/@DateTime.Now.Year">CALENDAR</a>
+                                <a href="/" title="Festivals @DateTime.Now.Month/@DateTime.Now.Year">
+                                    <i class="fa fa-calendar"></i> CALENDAR
+                                </a>
                             </li>
                             <li>
-                                <a href="/news" title="NEWS">NEWS</a>
+                                <a href="/news" title="NEWS">
+                                    <i class="fa fa-newspaper-o"></i> NEWS
+                                </a>
                             </li>
                             @if (!Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
                             {
                                 <li>
-                                    <a href="/login" title="SIGN IN AT FESTIVAL CALENDAR">SIGN UP</a>
+                                    <a href="/register" title="SIGN IN AT FESTIVAL CALENDAR"><i class="fa fa-sign-in"></i> SIGN UP</a>
                                 </li>
                             }
                             else
                             {
                                 <li>
-                                    <a href="/profile/index" title="SIGN IN AT FESTIVAL CALENDAR">MY ACCOUNT</a>
+                                    <a href="/profile/index" title="SIGN IN AT FESTIVAL CALENDAR"><i class="fa fa-user"></i> @AuthorizationRepository.Current.CurrentUser.UserFirstname.ToUpper()</a>
+                                </li>
+                                <li>
+                                    <a href="/Register/logout" title="SIGN IN AT FESTIVAL CALENDAR"><i class="fa fa-lock"></i> LOGOUT</a>
                                 </li>
                             }
                         </ul>
@@ -97,23 +104,37 @@
             <div class="right">
                 <ul class="visible-xl visible-l">
                     <li>
-                        <a href="/" title="Festivals @DateTime.Now.Month/@DateTime.Now.Year">CALENDAR</a>
+                        <a href="/" title="Festivals @DateTime.Now.Month/@DateTime.Now.Year">
+                            <i class="fa fa-calendar"></i> CALENDAR
+                        </a>
                     </li>
                     <li><span class="separator">/</span></li>
                     <li>
-                        <a href="/news" title="NEWS">NEWS</a>
+                        <a href="/news" title="NEWS">
+                            <i class="fa fa-newspaper-o"></i> NEWS
+                        </a>
                     </li>
                     <li><span class="separator">/</span></li>
                     @if (!Html.HasViewAuth(FC.Shared.Enum.Roles.GetAll()))
                     {
                         <li>
-                            <a href="/login" title="SIGN IN AT FESTIVAL CALENDAR">SIGN UP</a>
+                            <a href="/register" title="SIGN IN AT FESTIVAL CALENDAR">
+                                <i class="fa fa-sign-in"></i> SIGN UP
+                            </a>
                         </li>
                     }
                     else
                     {
                         <li>
-                            <a href="/profile/index" title="SIGN IN AT FESTIVAL CALENDAR">MY ACCOUNT</a>
+                            <a href="/Register/logout" title="SIGN OUT OF FESTIVAL CALENDAR">
+                                <i class="fa fa-lock"></i> LOGOUT
+                            </a>
+                        </li>
+                        <li><span class="separator">/</span></li>
+                        <li>
+                            <a href="/profile/index" title="MANAGE YOUR PROFILE">
+                                <i class="fa fa-user"></i>@AuthorizationRepository.Current.CurrentUser.UserFirstname.ToUpper()
+                            </a>
                         </li>
                     }
                 </ul>

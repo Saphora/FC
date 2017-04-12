@@ -1247,23 +1247,16 @@ namespace FC.BL.Repositories
             this.CurrentUser = user;
             this.CurrentUserRoles = user.Roles;
             this.Session = this.Login(user.UserEmailAddress, user.UserPassword, false);
-            if (this.ActionAuthorized(Roles.GetAll()))
-            {
-                var state = this.Update(user);
-                state.Data = this.Session;
-                return state;
-            }
-            else
-            {
-                return new RepositoryState { SUCCESS = false, MSG = "Invalid activation session." };
-            }
+            var state = this.Update(user,false);
+            state.Data = this.Session;
+            return state;
         }
         /// <summary>
         /// Update application user.
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public RepositoryState Update(ApplicationUser user)
+        public RepositoryState Update(ApplicationUser user, bool updatePassword=true)
         {
             using (Db = new PGDAL.PGModel.ContentModel())
             {
@@ -1272,7 +1265,7 @@ namespace FC.BL.Repositories
                     ApplicationUser u = Db.ApplicationUsers.Find(user.UserID);
                     u.IsActive = user.IsActive;
                     u.UserActivated = user.UserActivated;
-                    if (user.UserPassword != null)
+                    if (user.UserPassword != null && updatePassword == true)
                     {
                         u.UserPassword = GetMd5Hash(MD5Hasher, user.UserPassword);
                     }

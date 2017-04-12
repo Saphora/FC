@@ -1,6 +1,9 @@
 ﻿///<reference path="AppConfig.ts"/>
 ///<reference path="ServiceBase.ts"/>
 ///<reference path="../../Shared/Util/CacheManager.ts"/>
+window.onresize = function (event) {
+    $("#bg").css("width", $(window).width());
+}
 var BrowserDetect = {
     init: function () {
         this.browser = this.searchString(this.dataBrowser) || "Other";

@@ -46,8 +46,12 @@ namespace FC.WebMVC.Controllers
                 if (s != null)
                 {
                     s = this.repositories.Auth.RefreshToken(s, true);
+                    return Redirect("/Profile/Index");
+                } else
+                {
+                    this.Flash(new RepositoryState(false, "No activation session is found."));
+                    return Redirect("/");
                 }
-                return Redirect("/Profile/Index");
             }
             else
             {

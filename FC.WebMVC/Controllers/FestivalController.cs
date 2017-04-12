@@ -12,9 +12,22 @@ namespace FC.WebMVC.Controllers
     public class FestivalController : BaseController
     {
         // GET: Festival
-        public ActionResult Index()
+        public ActionResult Index(Guid? id = null)
         {
-            return View();
+            if (id == null)
+            {
+                return View("~/Calendar/Index");
+            } else
+            {
+                UFestival f = this.repositories.Festivals.GetByID(id);
+                if (f != null)
+                {
+                    return View("Detail", f);
+                } else
+                {
+                    return Redirect("/Error/404");
+                }
+            }
         }
 
         public ActionResult Create()
@@ -67,6 +80,7 @@ namespace FC.WebMVC.Controllers
             festival.EndDate = DateTime.Parse(endDate);
             return festival;
         }
+
         [HttpPost]
         public ActionResult Create(UFestival festival)
         {
@@ -79,12 +93,13 @@ namespace FC.WebMVC.Controllers
                 this.Flash(state);
                 if (state.SUCCESS)
                 {
-                    return RedirectToAction("Edit", state.AffectedID);
+                    return Redirect(string.Format("/Festival/Edit/{0}", state.AffectedID));
                 }
                 else
                 {
                     ViewBag.CountrySelect = (from c in this.repositories.Countries.GetAll() select new SelectListItem { Value = c.CountryID.Value.ToString(), Text = c.Name }).ToList();
-                    return RedirectToAction("Create", festival.FestivalID);
+                    this.Flash(new RepositoryState(false,"Something wen't wrong while saving your festival. Please try again later, or contact us at info@festival-calendar.nl"));
+                    return RedirectToAction("Create");
                 }
             }
             else
@@ -113,24 +128,33 @@ namespace FC.WebMVC.Controllers
         // GET: Festival
         public ActionResult Edit(Guid? id)
         {
-            var festival = this.repositories.Festivals.GetByID(id);
-            if (this.repositories.Auth.ActionAuthorized(Roles.GetAllPublic(), festival.AuthorID))
+            if (id == null)
             {
-                if (ViewBag.Flash != null)
+                this.Flash(new RepositoryState(false, "Argument ID is null"));
+                return Redirect("/Error/404");
+            }
+            else
+            {
+                var festival = this.repositories.Festivals.GetByID(id);
+                if (this.repositories.Auth.ActionAuthorized(Roles.GetAllPublic(), festival.AuthorID))
                 {
-                    var state = ViewBag.Flash as RepositoryState;
-                    if (state.Data != null)
+                    if (ViewBag.Flash != null)
                     {
-                        festival = state.Data as UFestival;
+                        var state = ViewBag.Flash as RepositoryState;
+                        if (state.Data != null)
+                        {
+                            festival = state.Data as UFestival;
+                        }
+
                     }
-                    
+                    ViewBag.CountrySelect = (from c in this.repositories.Countries.GetAll() select new SelectListItem { Value = c.CountryID.Value.ToString(), Text = c.Name }).ToList();
+                    return View("Forms/_FestivalCRUD", festival);
                 }
-                ViewBag.CountrySelect = (from c in this.repositories.Countries.GetAll() select new SelectListItem { Value = c.CountryID.Value.ToString(), Text = c.Name }).ToList();
-                return View("Forms/_FestivalCRUD", festival);
-            } else
-            {
-                this.Flash(new RepositoryState { SUCCESS = false, MSG = "You dont have the permission to access this content." });
-                return this.NotAuthorized();
+                else
+                {
+                    this.Flash(new RepositoryState { SUCCESS = false, MSG = "You dont have the permission to access this content." });
+                    return this.NotAuthorized();
+                }
             }
         }
     }

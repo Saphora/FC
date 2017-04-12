@@ -30,23 +30,19 @@ module FC.Modules.Rating.Controllers {
             this.RatingSvc = RatingService;
             this.$scope = $scope;
         }
-
-        public SetFestival(festival: FC.Shared.ViewModels.IFestivalVM) {
+        
+        public GetRates(contentItemID: string, typeName: string) {
             var vm = this;
-            vm.$scope.Festival = festival;
-        }
-        public GetRates(contentItemID: string, type: string) {
-            var vm = this;
-            this.RatingSvc.GetRate(contentItemID, type).then(function (r: FC.Shared.Interfaces.IServiceResponse<Shared.ViewModels.RatingVm>) {
-                vm.$scope.Festival.Rating = r.Data;
+            this.RatingSvc.GetRate(contentItemID, typeName).then(function (r: FC.Shared.Interfaces.IServiceResponse<Shared.ViewModels.RatingVm>) {
+                vm.$scope = r.Data;
             });
         }
 
-        public Rate(contentItemID: string, type: string, index) {
+        public Rate(contentItemID: string, typeName: string, index) {
             var vm = this;
             if (index <= 5) {
-                this.RatingSvc.Rate(contentItemID, type, index).then(function () {
-                    vm.GetRates(contentItemID, type);
+                this.RatingSvc.Rate(contentItemID, typeName, index).then(function () {
+                    vm.GetRates(contentItemID, typeName);
                 });
             }
         }

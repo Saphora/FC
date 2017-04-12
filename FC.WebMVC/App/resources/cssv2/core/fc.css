@@ -48962,10 +48962,14 @@ a.text-danger:focus, a.text-danger:hover {
         margin-right: auto;
         margin-top: 10px;
         margin-bottom: auto; }
+    .filter-control .filter-control-item span.textbox {
+      padding-top: 8px; }
     .filter-control .filter-control-item .textbox {
       float: left;
       height: 38px;
       font-size: 16px;
+      background-color: #FFF;
+      color: #333;
       border: 0;
       width: calc(100% - 38px);
       max-width: calc(100% - 38px);
@@ -48982,7 +48986,8 @@ a.text-danger:focus, a.text-danger:hover {
 
 .complex-filter {
   max-width: 768px !important;
-  min-width: 15%; }
+  min-width: 15%;
+  max-height: 500px; }
   .complex-filter .content {
     max-height: 600px;
     overflow-y: auto;
@@ -87592,9 +87597,8 @@ i.fa-festival-calendar {
     float: left; }
 
 html {
-  min-height: 100%;
-  height: 100%;
-  font-size: 16px !important; }
+  width: 100%;
+  height: 100%; }
 
 * {
   box-sizing: border-box; }
@@ -87610,21 +87614,26 @@ a {
 
 body {
   height: 100%;
-  min-height: 100%;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover; }
+  width: 100%; }
 
-#bg {
+img#bg {
+  /* Set rules to fill background */
+  min-height: 100%;
+  min-width: 1024px;
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+  /* Set up positioning */
   position: fixed;
   top: 0;
-  background-position: 50% 50%;
-  left: 0;
-  /* Preserve aspet ratio */
-  width: 100%;
-  height: 100%;
-  margin-bottom: 60px; }
+  left: 0; }
+
+@media screen and (max-width: 1024px) {
+  /* Specific to this particular image */
+  img#bg {
+    left: 50%;
+    margin-left: -512px;
+    /* 50% */ } }
 
 .overlay-wrapper {
   position: fixed;
@@ -87782,6 +87791,13 @@ i.fc-icon {
       height: 30px;
       margin-top: 0px;
       color: #FFF !important; }
+      .menu-mobile .right a i {
+        position: relative;
+        top: 2px;
+        min-width: 25px;
+        min-height: 25px;
+        text-align: center;
+        vertical-align: middle; }
       .menu-mobile .right a:hover {
         color: #ccc; }
   .menu-mobile .middle .fb-like {
@@ -87875,11 +87891,15 @@ i.fc-icon {
             background-color: red;
             text-align: center;
             vertical-align: middle; }
+          .menu .right ul li a i {
+            position: relative;
+            top: -1px;
+            max-width: 22px; }
         .menu .right ul li .separator {
           float: left;
           color: #FFF !important;
           text-align: center;
-          width: 20px;
+          width: 15px;
           display: block; }
 
 .wrp-logo {

@@ -8,7 +8,5 @@
         Star4Active:boolean;
         Star5Active: boolean;
         DisplayCount: string;
-        Festival: Shared.ViewModels.IFestivalVM;
-        Artist: Models.UFestival;
     }
 }

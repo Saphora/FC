@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     List<FC.Shared.Entities.UFestival> festivals = new List<FC.Shared.Entities.UFestival>();
     List<FC.Shared.Entities.Location> locations = new List<FC.Shared.Entities.Location>();
     List<FC.Shared.Entities.Advertisement> advertisement = new List<FC.Shared.Entities.Advertisement>();
@@ -16,14 +16,14 @@
     {
         locations = ViewBag.Locations as List<FC.Shared.Entities.Location>;
     }
-    if(ViewBag.Advertisement != null)
+    if (ViewBag.Advertisement != null)
     {
         advertisement = ViewBag.Advertisement as List<FC.Shared.Entities.Advertisement>;
     }
     var state = ViewBag.Flash;
-    if(state == null)
+    if (state == null)
     {
-        if(ViewBag.State != null)
+        if (ViewBag.State != null)
         {
             state = ViewBag.State;
         }
@@ -34,20 +34,7 @@
     <title>FESTIVAL CALENDAR | MANAGE YOUR PROFILE</title>
 }
 
-<div class="row">
-    <div class="col-xs-24">
-        <div class="navigation-bar">
-            <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-danger">
-                <i class="fa fa-angle-left"></i> BACK
-            </a>
-            <div class="crumb">
-                <a href="/Profile/Index">
-                    MY ACCOUNT
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
+@Html.Partial("_Navbar")
 
 @if (state != null)
 {
@@ -71,8 +58,8 @@
 <div class="row">
     <div class="col-md-24">
         <div class="alert alert-info">
-            This section is still under construction we are aware of the fact that some functionality is missing or that some functionality may not work as expected. Please come back later since we are aiming to update as much as possible.
-            If you discover any issue, or you want support please let us know at info@@festival-calendar.nl
+            This section is still under construction. Some functionality may not work as expected, or can be a hard thing to use.
+            We are constantly improving user experience and functionality. Please try again later if something is not working as supposed to. Or even better, let us know at info@festival-calendar.nl
         </div>
     </div>
 </div>
@@ -86,7 +73,7 @@
                 @Html.Hidden("section", "details")
                 <div class="form-horizontal">
                     <div class="form-group ">
-                        <input type="text" class="form-control" ng-change="vm.search(11)" ng-model="SearchKey" />
+                        <input type="text" class="form-control" ng-change="vm.search(11)" ng-model="SearchKey" placeholder="Type country name (English)" />
                         <div class="row autocomplete-picker">
                             <div class="col-xs-24">
                                 <ul class="search-result">
@@ -129,27 +116,27 @@
                         {
                             if (festivals.Count == 0)
                             {
-                    <li>You don't have any festivals registered.</li>
+                        <li>You don't have any festivals registered.</li>
                             }
                             foreach (FC.Shared.Entities.UFestival f in festivals.Take(10))
                             {
-                    <li>
-                        <a href="/festival/edit/@f.FestivalID" title="Edit festival @f.Name">
-                            <img src="@Html.Thumbnail(f.LogoID)" width="40" height="40" />
-                            <div class="text">
-                                <span class="lbl">@f.Name.ToUpper()</span>
-                                <br />
-                                <span class="lbl-sm">START: @f.StartDate.ToShortDateString()</span>
-                            </div>
-                            <i class="fa fa-edit"></i>
-                        </a>
-                    </li>
+                        <li>
+                            <a href="/festival/edit/@f.FestivalID" title="Edit festival @f.Name">
+                                <img src="@Html.Thumbnail(f.LogoID)" width="40" height="40" />
+                                <div class="text">
+                                    <span class="lbl">@f.Name.ToUpper()</span>
+                                    <br />
+                                    <span class="lbl-sm">START: @f.StartDate.ToShortDateString()</span>
+                                </div>
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </li>
                             }
                             if (fcount > 0)
                             {
-                    <li>
-                        <a href="/festival/create" class="btn btn-default">SHOW @fcount MORE</a>
-                    </li>
+                        <li>
+                            <a href="/festival/create" class="btn btn-default">SHOW @fcount MORE</a>
+                        </li>
                             }
                         }
                     </ul>
@@ -166,7 +153,7 @@
                 @Html.Hidden("section", "details")
                 <div class="form-horizontal">
                     <div class="form-group ">
-                        <input type="text" class="form-control" ng-change="vm.search(8)" ng-model="SearchKey" />
+                        <input type="text" class="form-control" ng-change="vm.search(8)" ng-model="SearchKey" placeholder="Type genre name (English)" />
                         <div class="row autocomplete-picker">
                             <div class="col-xs-24">
                                 <ul class="search-result">
@@ -195,42 +182,42 @@
         </div>
         @if (Html.HasViewAuth(new string[] { FC.Shared.Enum.Roles.Festival, FC.Shared.Enum.Roles.Venue }))
         {
-        <div class="card list-view-card  venues-list-view">
-            <div class="card-header">
-                <span class="h5">MY VENUES</span>
+            <div class="card list-view-card  venues-list-view">
+                <div class="card-header">
+                    <span class="h5">MY VENUES</span>
+                </div>
+                <div class="card-block">
+                    <ul>
+                        <li>
+                            <a href="/venue/create" class="btn btn-danger">CREATE NEW VENUE</a>
+                        </li>
+                        @if (locations != null)
+                        {
+                            if (locations.Count == 0)
+                            {
+                                <li>
+                                    You don't have any venues registered.
+                                </li>
+                            }
+                            foreach (FC.Shared.Entities.Location l in locations)
+                            {
+                                <li>
+                                    <a href="/venue/edit/@l.LocationID" title="Edit venue @l.LocationName.">
+                                        <img src="@Html.Thumbnail(l.ThumbnailID)" width="40" height="40" />
+                                        <span class="label">@l.LocationName.ToUpper()</span> <i class="fa fa-edit"></i>
+                                    </a>
+                                </li>
+                            }
+                            if (vcount > 0)
+                            {
+                                <li>
+                                    <a href="/festival/create" class="btn btn-default">SHOW @vcount MORE</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
             </div>
-            <div class="card-block">
-                <ul>
-                    <li>
-                        <a href="/venue/create" class="btn btn-danger">CREATE NEW VENUE</a>
-                    </li>
-                    @if (locations != null)
-                    {
-                        if (locations.Count == 0)
-                        {
-                            <li>
-                                You don't have any venues registered.
-                            </li>
-                        }
-                        foreach (FC.Shared.Entities.Location l in locations)
-                        {
-                            <li>
-                                <a href="/venue/edit/@l.LocationID" title="Edit venue @l.LocationName.">
-                                    <img src="@Html.Thumbnail(l.ThumbnailID)" width="40" height="40" />
-                                    <span class="label">@l.LocationName.ToUpper()</span> <i class="fa fa-edit"></i>
-                                </a>
-                            </li>
-                        }
-                        if (vcount > 0)
-                        {
-                            <li>
-                                <a href="/festival/create" class="btn btn-default">SHOW @vcount MORE</a>
-                            </li>
-                        }
-                    }
-                </ul>
-            </div>
-        </div>
         }
     </div>
     <div class="col-xl-8">
@@ -248,7 +235,7 @@
                     @if (advertisement != null)
                     {
                         if (advertisement.Count == 0)
-                        {   
+                        {
                             <li>You don't have any advertisement registered.</li>
                         }
                         foreach (FC.Shared.Entities.Advertisement l in advertisement.Take(10))

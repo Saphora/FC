@@ -73,6 +73,9 @@
             min-height: 38px;
 
         }
+        span.textbox {
+            padding-top: 8px;
+        }
         .textbox {
             &.searching {
                 width:calc(100% - 80px);
@@ -82,6 +85,8 @@
             float: left;
             height: 38px;
             font-size: 16px;
+            background-color: #FFF;
+            color: #333;
             border: 0;
             width:calc(100% - 38px);
             max-width:calc(100% - 38px);
@@ -101,6 +106,7 @@
 .complex-filter {
     max-width: 768px !important;
     min-width:15%;
+    max-height: 500px;
     .content {
         .h5 {
             width: 100%;

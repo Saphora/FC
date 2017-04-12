@@ -9,21 +9,7 @@
     <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
 }
 
-
-<div class="row">
-    <div class="col-xs-24">
-        <div class="navigation-bar">
-            <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-danger">
-                <i class="fa fa-angle-left"></i> BACK
-            </a>
-            <div class="crumb">
-                <a href="/news">
-                    HEADLINES
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
+@Html.Partial("_Navbar")
 
 <div class="row news-overview-wrapper" ng-controller="FC.Modules.News.Controllers.NewsOverviewController as vm">
     <div class="col-xl-8 col-lg-8 col-md-12 col-sm-24 col-xs-24">

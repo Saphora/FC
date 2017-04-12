@@ -2,7 +2,10 @@
 @using FC.Shared.Entities
 @{
     ViewBag.Title = Model.Title;
-
+    var crumbs = new Dictionary<string, string>();
+    crumbs.Add("/news", "HEADLINES");
+    crumbs.Add(string.Format("/news/{0}", Model.NewsID), string.Format("{0}", Model.Title.ToUpper()));
+    ViewBag.Crumbs = crumbs;
     List<UNews> newsList = ViewBag.NewsList as List<UNews>;
     if (Model.ThumbnailID == null)
     {
@@ -26,24 +29,10 @@
     <meta name="keywords" content="@Model.MetaKeys" />
     <meta name="description" content="@Model.MetaDescription" />
 }
+
+@Html.Partial("_Navbar")
 <div class="row news-detail">
     <div class="col-sm-24 col-md-14 col-lg-14 col-xl-16">
-        <div class="navigation-bar">
-            <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-danger">
-                <i class="fa fa-angle-left"></i> BACK
-            </a>
-            <div class="crumb">
-                <a href="/news">
-                    NEWS
-                </a>
-
-                <i class="fa fa-angle-right"></i>
-
-                <a href="/news/@Model.NewsID">
-                    @Model.Title.ToUpper()
-                </a>
-            </div>
-        </div>
         <div class="card">
             <div class="card-header">
                 <span class="h5">

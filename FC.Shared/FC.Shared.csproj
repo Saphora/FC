@@ -131,6 +131,7 @@
     <Compile Include="Entities\CarouselAd.cs" />
     <Compile Include="Entities\Favorite.cs" />
     <Compile Include="Entities\LineupItem.cs" />
+    <Compile Include="Entities\Materialized\FestivalListItem.cs" />
     <Compile Include="Entities\Materialized\MaterializedFestivalListVM.cs" />
     <Compile Include="Entities\Materialized\MaterializedArtistListVM.cs" />
     <Compile Include="Entities\Materialized\MaterializedNews.cs" />

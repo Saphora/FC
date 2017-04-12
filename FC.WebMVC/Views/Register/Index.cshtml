@@ -9,6 +9,17 @@
     <meta name="keywords" content="Festival,Calendar,Events,Artists,Social,Platform,Manage,Profile,Agenda" />
     <meta name="description" content="Plan your festival season with Festival Calendar! Discover the most amazing festivals world wide!" />
 }
+
+@{
+    var state = ViewBag.Flash as FC.BL.Repositories.RepositoryState;
+    if (state == null)
+    {
+        if (ViewBag.State != null)
+        {
+            state = ViewBag.State;
+        }
+    }
+}
 <div class="row">
     <div class="col-md-24">
         <div class="card">
@@ -124,13 +135,14 @@
                                 <div class="form-group">
                                     <div class="col-md-24">
                                         <input type="submit" value="SIGN UP NOW" class="btn btn-success pull-right" />
+                                        <a href="/login" class="btn btn-danger">I ALREADY HAVE AN ACCOUNT</a>
                                     </div>
                                 </div>
                             </div>
                         }
                     </div>
                     <div class="col-md-12 benefits">
-                        <h5>OUR BENEFITS!</h5>
+                        <h4>OUR BENEFITS!</h4>
                         <ul>
                             <li>
                                 <i class="fa fa-heart"></i> <span class="h5">PERSONALIZE SETTINGS PERMANENTLY</span>
