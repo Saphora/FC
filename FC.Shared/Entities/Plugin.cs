@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using FC.Shared.Attribs;
 namespace FC.Shared.Entities
 {
-    public class Plugin
+    public class Plugin : BaseModel
     {   
         [Key]
         public Guid? PluginID { get; set; }
@@ -37,12 +37,7 @@ namespace FC.Shared.Entities
         public Media Thumbnail { get; set; }
 
         public Guid? MediaID { get; set; }
-
-        public bool IsDeleted { get; set; }
-
-        public DateTime ArchiveDate { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Modified { get; set; }
+        [Column(TypeName = "datetime2")]
         public DateTime Expires { get; set; }
 
     }

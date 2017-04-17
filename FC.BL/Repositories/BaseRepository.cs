@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FC.PGDAL.PGModel;
+using FC.MSDAL;
 using System.Data.Entity.Validation;
 using FC.Shared.Entities;
 using FC.BL.Validation;
@@ -148,10 +148,10 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Npgsql.NpgsqlConnection connection = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["ContentModel"].ConnectionString))
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ContentModel"].ConnectionString))
                 {
 
-                    NpgsqlCommand cmd = new NpgsqlCommand(command);
+                    SqlCommand cmd = new SqlCommand(command, conn);
                     if (parameters != null)
                     {
                         cmd.Parameters.AddRange(parameters.ToArray());
@@ -162,7 +162,7 @@ namespace FC.BL.Repositories
                     return new RepositoryState { SUCCESS = true, MSG = successText };
                 }
             }
-            catch (NpgsqlException ex)
+            catch (SqlException ex)
             {
                 return this.HandleException(ex, failureText);
             }

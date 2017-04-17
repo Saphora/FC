@@ -7,7 +7,7 @@ namespace FC.PGDAL.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    public sealed class Configuration : DbMigrationsConfiguration<FC.PGDAL.PGModel.ContentModel>
+    public sealed class Configuration : DbMigrationsConfiguration<FC.MSDAL.ContentModel>
     {
         public Configuration()
         {
@@ -15,7 +15,7 @@ namespace FC.PGDAL.Migrations
             
         }
 
-        protected override void Seed(FC.PGDAL.PGModel.ContentModel context)
+        protected override void Seed(FC.MSDAL.ContentModel context)
         {
             //new SeedTruncate("CCC61E73-2FDA-4551-A4D9-C5A81E910A7B", context);
             //new SeedThemes("4E9E95DB-3F39-45DF-82D4-DDF71F5AA4F1", context);

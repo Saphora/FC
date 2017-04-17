@@ -1,8 +1,9 @@
 ﻿<div class="card news-card">
     <div class="card-header" ng-if="n.Title.length < 40">
-        <span class="h5">
+        
+        <a href="/news/{{n.NewsID}}" class="h5">
             {{n.Title.substr(0,36).toUpperCase()}}
-        </span>
+        </a>
     </div>
     <div class="card-block">
         <div class="top">

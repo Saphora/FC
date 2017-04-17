@@ -15,7 +15,7 @@ module FC.Modules.Search.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$routeParams',
+            
             '$location'
         ];
         constructor(
@@ -23,11 +23,11 @@ module FC.Modules.Search.Controllers {
             $http,
             $q,
             $scope,
-            $routeParams,
+            
             $location,
             SearchService: FC.Modules.Search.Services.SearchService
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
             this.SearchService = new FC.Modules.Search.Services.SearchService($http, $q);
             this.initializeScope($scope);
@@ -35,33 +35,19 @@ module FC.Modules.Search.Controllers {
         public initializeScope($scope) {
             this.$scope = $scope;
             this.$scope.DoSearch = this.DoSearch;
-            this.$scope.OpenModal = this.OpenModal;
             //this.$scope.GenreData = GenreData;
             //this.$scope.CountryData = CountryData;
             
         }
-
-        private OpenModal(ctr: SearchController): void {
-            //var modalInstance = ctr.$uibModal.open({
-            //    animation:true,
-            //    templateUrl: '/Scripts/Modules/Search/Views/searchresults.html',
-            //    controller: 'FC.Modules.Search.Controllers.SearchController',
-            //    controllerAs: 'vm',
-            //    size: 400,
-            //    resolve: {
-            //        items: function () {
-            //            return null;
-            //        }
-            //    }
-            //});
-        }
+        
         public DoChangeSearch(): void {
 
         }
         public ResetSearch(): void {
             var vm = this;
             vm.$scope.Keyword = "";
-            vm.DoSearch();
+            var e = new CustomEvent("SearchCleared");
+            window.dispatchEvent(e);
         }
         public DoSearch() {
             var vm = this;
@@ -72,7 +58,7 @@ module FC.Modules.Search.Controllers {
                 vm.$scope.IsSearching = true;
                 var e = new CustomEvent("SearchStart");
                 window.dispatchEvent(e);
-                vm.SearchService.Search(SearchFilter).then(function (response: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
+                vm.SearchService.Search(SearchFilter).then(function (response: INT.IServiceResponse<FC.Shared.Models.FestivalListItem[]>) {
                     if (response.Data) {
                         var e = new CustomEvent("SearchComplete", { detail: response.Data });
                         window.dispatchEvent(e);

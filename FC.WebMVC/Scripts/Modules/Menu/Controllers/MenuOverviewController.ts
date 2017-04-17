@@ -20,8 +20,7 @@ module FC.Modules.Menu.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog',
             "$sce",
@@ -33,17 +32,16 @@ module FC.Modules.Menu.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog,
             $sce,
             MenuSectionService: FC.Modules.Menu.Services.MenuSectionService,
             MenuItemService: FC.Modules.Menu.Services.MenuItemService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             this.$scope = $scope;
-            this.$scope.$routeParams = $routeParams;
+            
             //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
             this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
             this.$scope.MtModal = $mdDialog;

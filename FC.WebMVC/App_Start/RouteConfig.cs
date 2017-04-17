@@ -16,10 +16,18 @@ namespace FC.WebMVC
                 name: "Error",
                 url: "error/{number}",
                 defaults: new { controller = "Error", Action = "Index", number = UrlParameter.Optional });
-            routes.MapRoute(
-                name: "FestivalDetail",
-                url: "festival/{id}",
-                defaults: new { controller = "Festival", Action = "Index", id = UrlParameter.Optional });
+            //routes.MapRoute(
+            //    name: "FestivalDetail",
+            //    url: "festival/{id}",
+            //    defaults: new { controller = "Festival", Action = "Index", id = UrlParameter.Optional });
+            //routes.MapRoute(
+            //    name: "CreateFestival",
+            //    url: "festival/create/",
+            //    defaults: new { controller = "Festival", Action = "Create", id = UrlParameter.Optional });
+            //routes.MapRoute(
+            //    name: "EditFestival",
+            //    url: "festival/edit/",
+            //    defaults: new { controller = "Festival", Action = "Edit", id = UrlParameter.Optional });
             routes.MapRoute(
                 name: "Activate",
                 url: "register/activate/{id}",

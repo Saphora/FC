@@ -127,6 +127,6 @@
         </div>
     </div>
     <div ng-if="IsLoading == true" class="col-xs-24">
-        <ng-include src="'/Scripts/Shared/Views/loader.html'" ng-if="IsLoading==true"></ng-include>
+        @Html.Partial("_Loader")
     </div>
 </div>

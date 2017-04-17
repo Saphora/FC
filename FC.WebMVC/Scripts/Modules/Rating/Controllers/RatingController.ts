@@ -10,8 +10,6 @@ module FC.Modules.Rating.Controllers {
             "$http",
             "$q",
             "$scope",
-            "$route",
-            "$routeParams",
             "$location",
             "$mdDialog",
             "FC.Modules.Rating.Services.RatingService",
@@ -20,17 +18,20 @@ module FC.Modules.Rating.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
             $location,
             $mdDialog,
             RatingService: FC.Modules.Rating.Services.RatingService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             this.RatingSvc = RatingService;
             this.$scope = $scope;
         }
+
         
+        public SetRating(model: FC.Shared.ViewModels.RatingVm):void {
+            this.$scope = model;
+        }
+
         public GetRates(contentItemID: string, typeName: string) {
             var vm = this;
             this.RatingSvc.GetRate(contentItemID, typeName).then(function (r: FC.Shared.Interfaces.IServiceResponse<Shared.ViewModels.RatingVm>) {

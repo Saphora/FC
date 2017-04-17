@@ -18,7 +18,7 @@ namespace FC.BL.Repositories
         public List<Advertisement> GetByUser(Guid? userID)
         {
             List<Advertisement> advertisement = new List<Advertisement>();
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 advertisement.AddRange(Db.Advertisement.Where(w => w.AuthorID == userID).OrderBy(o => o.Created).ToList());
             }

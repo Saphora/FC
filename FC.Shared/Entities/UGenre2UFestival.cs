@@ -16,7 +16,7 @@ namespace FC.Shared.Entities
         public Guid? FestivalID { get; set; }
 
         [ForeignKey("GenreID")]
-        public UGenre Genre { get; set; }
+        public virtual UGenre Genre { get; set; }
 
         [ForeignKey("FestivalID")]
         public UFestival Festival { get; set; }

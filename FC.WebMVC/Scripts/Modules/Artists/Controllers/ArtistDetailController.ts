@@ -14,8 +14,7 @@ module FC.Modules.Artists.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog',
             'FC.Modules.Festival.Services.FestivalService',
@@ -31,8 +30,7 @@ module FC.Modules.Artists.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog,
             FestivalService: FC.Modules.Festival.Services.FestivalService,
@@ -43,7 +41,7 @@ module FC.Modules.Artists.Controllers {
             $sce,
             GenreService: FC.Modules.Genres.Services.GenreService
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
 
             
             //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;

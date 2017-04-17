@@ -67,12 +67,7 @@ namespace FC.Shared.Entities
         public MediaDirectory Album { get; set; }
 
         public List<SocialProfile> SocialProfiles { get; set; }
-        
-        [Index("ArtistName", IsClustered =true, IsUnique =true)]
-        [Validation(true)]
-        public string Name { get; set; }
 
-        
         [Validation(true)]
         public string Description { get; set; }
 
@@ -134,9 +129,7 @@ namespace FC.Shared.Entities
         [Validation(ValidationRule.DeezerURL)]
         public string DeezerURL { get; set; }
 
-        public bool IsDeleted { get; set; }
-
-        public DateTime? ArchiveDate { get; set; }
+        
 
         public string MetaKeys
         {

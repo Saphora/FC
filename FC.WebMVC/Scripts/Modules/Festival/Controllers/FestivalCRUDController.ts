@@ -19,7 +19,7 @@ module FC.Modules.Festival.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$routeParams',
+            
             '$location',
             "$sce",
             "$mdDialog" 
@@ -29,12 +29,12 @@ module FC.Modules.Festival.Controllers {
             $http: ng.IHttpService,
             $q,
             $scope: FC.Shared.ViewModels.IFestivalCRUDVM,
-            $routeParams,
+            
             $location: any,
             $sce,
             $mdDialog: ng.material.MDDialogService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             this.$scope = $scope;
             this.$scope.inst = this;

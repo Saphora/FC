@@ -33,7 +33,6 @@ namespace FC.Shared.Entities
         [ForeignKey("AuthorID")]
         public ApplicationUser Author { get; set; }
         
-        public string Name { get; set; }
 
         public string TicketDescription { get; set; }
         
@@ -46,7 +45,6 @@ namespace FC.Shared.Entities
         public bool ExternalTicketURL { get; set; }
         public bool InternalURL { get; set; }
         
-        public DateTime? ArchiveDate { get; set; }
         public string CurrencyBase { get; set; }
     }
 }

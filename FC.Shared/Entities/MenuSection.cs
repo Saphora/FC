@@ -16,7 +16,6 @@ namespace FC.Shared.Entities
         public string Name { get; set; }
         public string FAIcon { get; set; }
         public int SortOrder { get; set; }
-        [Index]
         public string PageKey { get; set; }
         public List<MenuItem> MenuItems { get; set; }
         public bool IsDeleted { get; set; }

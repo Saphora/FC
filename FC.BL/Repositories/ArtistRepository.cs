@@ -1,6 +1,6 @@
 ﻿using FC.BL.Validation;
 using FC.Interfaces.Data;
-using FC.PGDAL.PGModel;
+using FC.MSDAL;
 using FC.Shared.Entities;
 using FC.Shared.ViewModels.Artist;
 using Npgsql;
@@ -25,7 +25,7 @@ namespace FC.BL.Repositories
         {
             UArtist a;
 
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 a = Db.Artists.Find(id);
                 if (a != null)
@@ -52,7 +52,7 @@ namespace FC.BL.Repositories
         public RepositoryState Create(UArtist artist)
         {
 
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 if (!Db.Artists.Where(w => w.Name == artist.Name && w.IsDeleted == false).Any())
                 {
@@ -105,7 +105,7 @@ namespace FC.BL.Repositories
         public RepositoryState Update(UArtist d)
         {
 
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {
@@ -182,7 +182,7 @@ namespace FC.BL.Repositories
 
         public RepositoryState Delete(UArtist artist)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {
@@ -206,7 +206,7 @@ namespace FC.BL.Repositories
 
         public RepositoryState ForceDelete(UArtist artist)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {

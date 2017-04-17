@@ -13,11 +13,9 @@ namespace FC.Shared.Entities
     {
         [Key]
         public Guid LanguageID { get; set; }
-
-        [Index("TwoLetterLangName", IsClustered =true, IsUnique =true)]
+        
         public string TwoLetterLangName { get; set; }
-
-        [Index("LangName", IsClustered = true, IsUnique = true)]
+        
         public string LangName { get; set; }
         public string IsoCulture { get; set; }
         public int CodePage { get; set; }

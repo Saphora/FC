@@ -19,8 +19,7 @@ module FC.Modules.Countries.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog',
             'FC.Modules.Festival.Services.FestivalService',
@@ -35,8 +34,7 @@ module FC.Modules.Countries.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog,
             FestivalService: FC.Modules.Festival.Services.FestivalService,
@@ -45,9 +43,9 @@ module FC.Modules.Countries.Controllers {
             $sce,
             CountriesService: FC.Modules.Countries.Services.CountriesService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             this.$scope = $scope;
-            this.$scope.$routeParams = $routeParams;
+            
             //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
             this.setCountries();
             this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;

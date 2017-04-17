@@ -1,4 +1,5 @@
-﻿using FC.Shared.Entities;
+﻿using FC.MSDAL;
+using FC.Shared.Entities;
 using FC.Shared.ServerMessages;
 using FC.Shared.ViewModels.Rating;
 using System;
@@ -17,7 +18,7 @@ namespace FC.BL.Repositories
             try
             {
                 string key = ip;
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     if (!Db.Ratings.Where(w => w.ContentItemID == msg.ContentItemID && w.IP == key).Any())
                     {
@@ -46,7 +47,7 @@ namespace FC.BL.Repositories
         {
                 RatingVm result;
                 List<Rating> rating = new List<Rating>();
-                using (var db = new PGDAL.PGModel.ContentModel())
+                using (var db = new FC.MSDAL.ContentModel())
                 {
                     rating = db.Ratings.Where(w => w.ContentItemID == ContentItemID && w.Type == type).ToList();
                 }
@@ -66,16 +67,6 @@ namespace FC.BL.Repositories
                 }
                 return result;
             
-        }
-
-
-        public List<Rating> GetList(Guid? ContentItemID, string type)
-        {
-            using (Db = new PGDAL.PGModel.ContentModel())
-            {
-                List<Rating> rating = Db.Ratings.Where(w => w.ContentItemID == ContentItemID && w.Type == type).ToList();
-                return rating;
-            }
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FC.Shared.Entities
 {
-    public class ResellerGenre
+    public class ResellerGenre : BaseModel
     {
         [Key]
         public Guid? ResellerGenreID { get; set; }
@@ -15,12 +15,5 @@ namespace FC.Shared.Entities
         public string GenreName { get; set; }
 
         public string Description { get; set; }
-
-        public Guid? AuthorID { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Modified { get; set; }
-        public DateTime? ArchiveDate { get; set; }
-        public bool IsDeleted { get; set; }
-
     }
 }

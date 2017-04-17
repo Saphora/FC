@@ -19,8 +19,7 @@ module FC.Modules.Details.Controllers {
             '$q',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce",
             "FC.Modules.Genres.Services.GenreService",
@@ -35,7 +34,6 @@ module FC.Modules.Details.Controllers {
             $q: ng.IQService,
             $scope: FC.Shared.ViewModels.IDetailScope<FC.Shared.Models.Location>,
             $mdDialog: angular.material.MDDialogService,
-            $route: ng.route.IRoute,
             $routeParams: ng.RouteData,
             $location: ng.ILocationService,
             $sce: ng.ISCEService,
@@ -45,7 +43,7 @@ module FC.Modules.Details.Controllers {
             CalendarService: FC.Modules.Calendar.Services.CalendarService,
             LocationService: FC.Modules.Location.Services.LocationService
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             var vm = this;
             vm.FestivalService = FestivalService;
             vm.LocationService = LocationService;
@@ -66,8 +64,7 @@ module FC.Modules.Details.Controllers {
 
             //vm.$scope.DoCreate = this.DoCreate;
             //vm.$scope.DoSaveCreate = this.DoSaveCreate;
-
-            vm.determineDetailType($routeParams, $route);
+            
             vm.LogoSaveListener();
             
         }

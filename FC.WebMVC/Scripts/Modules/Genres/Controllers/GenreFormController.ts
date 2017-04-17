@@ -21,7 +21,7 @@ module FC.Modules.Genres.Controllers {
             '$q',
             '$mdDialog',
             '$scope',
-            '$routeParams',
+            
             '$location',
             "$sce",
         ];
@@ -31,11 +31,11 @@ module FC.Modules.Genres.Controllers {
             $q: ng.IQService,
             $mdDialog,
             $scope,
-            $routeParams,
+            
             $location,
             $sce
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             this.RecoverModel(this.$scope.model, this.$scope);
             

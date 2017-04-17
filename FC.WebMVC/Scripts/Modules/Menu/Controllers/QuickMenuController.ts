@@ -16,8 +16,7 @@ module FC.Modules.Menu.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog'
         ];
@@ -28,12 +27,11 @@ module FC.Modules.Menu.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog: angular.material.MDDialogService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             this.$scope = $scope;
             var vm = this;
             this.$scope.inst = this;

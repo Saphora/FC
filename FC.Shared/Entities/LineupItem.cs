@@ -22,17 +22,13 @@ namespace FC.Shared.Entities
 
         [ForeignKey("ArtistID")]
         public UArtist Artist { get; set; }
-
-        [Index]
+        [Column(TypeName = "datetime2")]
         public DateTime StartDate { get; set; }
-
-        [Index]
+        [Column(TypeName = "datetime2")]
         public DateTime EndDate { get; set; }
         
-        [Index]
         public int StartDateKey { get; set; }
-
-        [Index]
+        
         public int EndDateKey { get; set; }
 
     }

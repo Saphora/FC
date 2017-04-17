@@ -31,8 +31,7 @@ module FC.Modules.Artists.Controllers {
             '$q',
             '$mdDialog',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce",
             "FC.Modules.Genres.Services.GenreService",
@@ -46,14 +45,14 @@ module FC.Modules.Artists.Controllers {
             $mdDialog:angular.material.MDDialogService,
             $scope,
             $route,
-            $routeParams,
+            
             $location,
             $sce,
             GenreService: FC.Modules.Genres.Services.GenreService,
             ArtistsService: FC.Modules.Artists.Services.ArtistService,
             local: any[]
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             var vm = this;
             vm.$scope = $scope;
             vm.$scope.SaveEventName = local[1];

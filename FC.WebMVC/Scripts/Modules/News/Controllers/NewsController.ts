@@ -18,8 +18,7 @@ module FC.Modules.News.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog',
             "FC.Modules.News.Services.NewsService"
@@ -28,17 +27,15 @@ module FC.Modules.News.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog,
             NewsSvc: FC.Modules.News.Services.NewsService
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             this.$scope.inst = this;
             this.$scope = $scope;
             this.NewsSvc = NewsSvc;
-            this.ActiveNewsID = $routeParams["newsId"];
             this.GenreService = new FC.Modules.Genres.Services.GenreService($http, $q);
             this._Init();
 

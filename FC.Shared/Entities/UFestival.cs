@@ -30,10 +30,6 @@ namespace FC.Shared.Entities
         
         [Validation(ValidationRule.Guid, false)]
         public Guid? CountryID { get; set; }
-
-        [Index]
-        public DateTime? ArchiveDate { get; set; }
-        public bool IsDeleted { get; set; }
         
         public  List<Ticket> Tickets { get; set; }
 
@@ -50,13 +46,6 @@ namespace FC.Shared.Entities
         public  List<SocialProfile> SocialProfiles { get; set; }
         
         public  int IsSoldOut { get; set; }
-
-        
-        [Index]
-        [Validation(true)]
-        public  String Name { get; set; }
-
-        
         [Validation(ValidationRule.Guid,false)]
         public  Guid? LogoID { get; set; }
 
@@ -64,16 +53,13 @@ namespace FC.Shared.Entities
 
         [ForeignKey("CountryID")]
         public  UCountry Country { get; set; }
-
-        [Index]
+        
         public  string City { get; set; }
         
-        [Index]
         public  string Visitors { get; set; }
 
         private DateTime _stdt { get; set; }
         
-        [Index]
         public  DateTime StartDate {
             set
             {
@@ -89,7 +75,7 @@ namespace FC.Shared.Entities
 
 
         private DateTime _edt { get; set; }
-        [Index]
+
         public  DateTime EndDate {
             set
             {
@@ -135,8 +121,7 @@ namespace FC.Shared.Entities
         {
             get;set;
         }
-
-        [Index]
+        
         public bool TopFestival { get; set; }
 
         public string MetaKeys

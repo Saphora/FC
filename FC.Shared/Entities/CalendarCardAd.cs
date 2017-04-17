@@ -10,7 +10,7 @@ using FC.Shared.Attribs;
 
 namespace FC.Shared.Entities
 {
-    public class CalendarCardAd
+    public class CalendarCardAd : BaseModel
     {
         [Key]
         public Guid? CalendarAdvID { get; set; }
@@ -24,21 +24,11 @@ namespace FC.Shared.Entities
         public string Title { get; set; }
         public string Image { get; set; }
         public string TextLine { get; set; }
-
-        public DateTime? Created { get; set; }
-
-        public DateTime? Modified { get; set; }
-
-        public DateTime? ArchiveDate { get; set; }
-
-        public bool IsDeleted { get; set; }
         public bool CanRate { get; set; }
 
         public bool MusicGenresVisible { get; set; }
         [Validation(ValidationRule.Website, false)]
         public string DeepLink { get; set; }
-
-        [Validation(ValidationRule.Guid,true)]
-        public Guid? AuthorID { get; set; }
+        
     }
 }

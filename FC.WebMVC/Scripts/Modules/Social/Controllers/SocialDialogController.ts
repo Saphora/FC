@@ -31,8 +31,7 @@ module FC.Modules.Social.Controllers {
             '$uibModal',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
             'profiles',
             'genericId',
@@ -48,7 +47,6 @@ module FC.Modules.Social.Controllers {
             $uibModal,
             $scope,
             $mdDialog: angular.material.MDDialogService,
-            $route: ng.route.IRoute,
             $routeParams: ng.RouteData,
             $location: ng.ILocationService,
             $profiles: FC.Shared.Models.SocialProfile[],
@@ -58,7 +56,7 @@ module FC.Modules.Social.Controllers {
             $sce: ng.ISCEService,
             $socialService: FC.Modules.Social.Services.SocialService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.$scope.inst = this;
             vm.$scope.$location = $location;

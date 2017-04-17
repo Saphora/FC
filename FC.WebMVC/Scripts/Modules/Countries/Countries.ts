@@ -7,9 +7,6 @@ module FC.Modules.Countries {
         }
         constructor(private NgModule: ng.IModule, private app: FC.Core.FCModule) {
             this.$Application = app;
-            this.$Application.AddRoute("/countries", "/Scripts/Modules/Countries/Views/overview.html", "FC.Modules.Countries.Controllers.CountryOverviewController", "vm");
-            this.$Application.AddRoute("/countries/:pagenum", "/Scripts/Modules/Countries/Views/overview.html", "FC.Modules.Countries.Controllers.CountryOverviewController", "vm");
-            this.$Application.AddRoute("/countries/sort/:character", "/Scripts/Modules/Countries/Views/overview.html", "FC.Modules.Countries.Controllers.CountryOverviewController", "vm");
         }
     }
 }

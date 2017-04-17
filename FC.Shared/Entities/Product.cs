@@ -47,12 +47,6 @@ namespace FC.Shared.Entities
         public bool IsAllinclusive { get; set; }
         public bool ExternalProductURL { get; set; }
         public bool InternalURL { get; set; }
-
-
-        public DateTime? ArchiveDate { get; set; }
-        public bool IsDeleted { get; set; }
-        public bool IsPublished { get; set; }
-
         public string CurrencyBase { get; set; }
     }
 }

@@ -116,14 +116,11 @@ namespace FC.Shared.Entities
         public string IPv6Address { get; set; }
         public string HostName { get; set; }
         public string HostAddress { get; set; }
-
-        [Index]
+        [Column(TypeName = "datetime2")]
         public DateTime Expires { get; set; }
-
-        [Index]
+        [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
-
-        [Index]
+        [Column(TypeName = "datetime2")]
         public DateTime Modified { get; set; }
 
         public string Culture { get; set; }

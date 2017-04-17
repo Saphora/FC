@@ -54745,15 +54745,25 @@ img {
       color: #333;
       font-size: 25px; }
 
-.news-overview-wrapper .col-xl-8 .card-block .top {
+.news-overview-wrapper .middle.col-sm-24, .news-overview-wrapper .middle.col-xs-24 {
+  float: right; }
+
+.news-overview-wrapper .card .card-header a {
+  color: #FFF !important; }
+  .news-overview-wrapper .card .card-header a:hover {
+    color: #FFF !important; }
+
+.news-overview-wrapper .col-xl-8 .card .card-block .top {
   overflow: hidden; }
-  .news-overview-wrapper .col-xl-8 .card-block .top img {
+  .news-overview-wrapper .col-xl-8 .card .card-block .top img {
     min-width: 100%;
     margin-top: 0 !important; }
 
-.news-overview-wrapper .col-lg-8 .card-block .top img {
-  min-width: 100%;
-  margin-top: 0 !important; }
+.news-overview-wrapper .col-lg-8 .card .card-block .top {
+  overflow: hidden; }
+  .news-overview-wrapper .col-lg-8 .card .card-block .top img {
+    min-width: 100%;
+    margin-top: 0 !important; }
 
 .news-overview-wrapper .col-md-12 .card-block .top {
   position: relative;
@@ -76573,6 +76583,7 @@ a.text-danger:focus, a.text-danger:hover {
       width: calc(50% - 5px) !important;
       height: calc(50% - 5px) !important; }
     .card.festival-card .card-block .top .card-date {
+      margin-right: -10px;
       height: calc(50% - 5px) !important;
       width: calc(50% - 5px) !important; }
       .card.festival-card .card-block .top .card-date .hr {
@@ -76637,15 +76648,14 @@ a.text-danger:focus, a.text-danger:hover {
     width: 100%;
     height: auto; }
     .card.festival-card .card-block .bottom div {
-      margin-top: 10px;
       float: left;
+      margin-top: 5px;
       font-family: Arial;
       font-weight: bold;
       font-size: 12px;
-      width: calc(50%) !important; }
+      width: 100%; }
       .card.festival-card .card-block .bottom div .txt {
         float: left;
-        width: calc(100% - 20px);
         display: block; }
       .card.festival-card .card-block .bottom div i {
         float: left;
@@ -76656,7 +76666,7 @@ a.text-danger:focus, a.text-danger:hover {
       .card.festival-card .card-block .bottom div.genres {
         float: left;
         line-height: 10px;
-        margin-top: 0;
+        margin-top: 5px;
         width: 100% !important; }
         .card.festival-card .card-block .bottom div.genres i {
           color: red;
@@ -82269,10 +82279,10 @@ md-toolbar.dialog-header {
   .card.no-padding {
     padding: 0 !important; }
   .card .card-header {
-    padding: 5px;
+    padding: 8px;
     border-radius: 0 !important;
-    max-height: 40px !important;
-    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 80px !important;
     background-color: #333 !important;
     color: #EEEEEE;
     font-weight: bold !important; }
@@ -82282,7 +82292,9 @@ md-toolbar.dialog-header {
       padding: 0 !important; }
     .card .card-header .h5 {
       position: relative;
-      top: 5px; }
+      display: inline-block;
+      padding: 0;
+      margin-bottom: 0; }
     .card .card-header.link:hover {
       cursor: pointer;
       background-color: #666 !important;

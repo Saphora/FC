@@ -1,5 +1,5 @@
 ﻿
-using FC.PGDAL.PGModel;
+using FC.MSDAL;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;

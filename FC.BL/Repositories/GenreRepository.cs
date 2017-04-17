@@ -1,5 +1,6 @@
 ﻿using FC.BL.Validation;
 using FC.Interfaces.Data;
+using FC.MSDAL;
 using FC.Shared.Entities;
 using System;
 using System.Collections.Generic;
@@ -18,15 +19,27 @@ namespace FC.BL.Repositories
         /// <returns></returns>
         public List<UGenre> GetAll()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<UGenre> rootResult = Db.Genres.OrderBy(o => o.Name).Where(w => w.IsDeleted == false).ToList();
                 return rootResult;
             }
         }
+
+        public List<UGenre2UFestival> GetAllFestivalGenres(Guid? festivalID)
+        {
+            List<UGenre2UFestival> result = new List<UGenre2UFestival>();
+            using (var db = new ContentModel())
+            {
+                result = db.G2F.Include("Genre").Where(w=>w.FestivalID == festivalID).ToList();
+            }
+            return result;
+        }
+
+
         public List<UGenre> GetAllChildren()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<UGenre> result = Db.Genres.Where(w => w.ParentID != null && w.IsDeleted == false).OrderBy(o => o.Name).ToList();
                 return result;
@@ -35,7 +48,7 @@ namespace FC.BL.Repositories
 
         public List<UGenre> GetAllRoot()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<UGenre> tmp = Db.Genres.Where(w => w.ParentID == null && w.IsDeleted == false).ToList();
                 List<UGenre> result = new List<UGenre>();
@@ -50,7 +63,7 @@ namespace FC.BL.Repositories
 
         public List<UGenre> GetByPartialName(string name)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Genres.Where(w => w.Name.ToLower().StartsWith(name.ToLower()) && w.IsDeleted == false).OrderBy(o => o.Name).Take(10).ToList();
             }
@@ -58,7 +71,7 @@ namespace FC.BL.Repositories
 
         public UGenre GetByName(string name)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<UGenre> genres = Db.Genres.Where(w => w.Name.ToLower() == name.ToLower() && w.IsDeleted == false).ToList();
                 if (genres.Count > 1)
@@ -75,7 +88,7 @@ namespace FC.BL.Repositories
 
         public List<UGenre> GetAllDefault()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<UGenre> result = new List<UGenre>();
                 result.AddRange(Db.Genres.Where(w1 => w1.ParentID == Db.Genres.Where(w => w.Name.ToLower() == "default" && w.IsDeleted == false).FirstOrDefault().GenreID).OrderBy(o => o.Name).ToList());
@@ -85,7 +98,7 @@ namespace FC.BL.Repositories
         }
         public List<Guid?> GetAllDefaultIds()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<Guid?> result = new List<Guid?>();
                 result.AddRange(Db.Genres.Where(w1 => w1.ParentID == Db.Genres.Where(w => w.Name.ToLower() == "default" && w.IsDeleted == false).FirstOrDefault().GenreID).OrderBy(o => o.Name).Select(s => s.GenreID).ToList());
@@ -95,7 +108,7 @@ namespace FC.BL.Repositories
 
         public List<UGenre> GetByFestivalID(Guid? festivalID)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 if (Db.G2F.Where(w => w.FestivalID == festivalID).Any())
                 {
@@ -111,7 +124,7 @@ namespace FC.BL.Repositories
 
         public List<UGenre> GetByParentID(Guid? genreID)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Genres.Where(w => w.ParentID == genreID && w.IsDeleted == false).OrderBy(o => o.Name).ToList();
             }
@@ -119,7 +132,7 @@ namespace FC.BL.Repositories
 
         public UGenre GetByID(Guid? genreID)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 UGenre result = Db.Genres.Find(genreID);
                 if (result != null)
@@ -144,7 +157,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     List<string> names = Db.Genres.Where(w => w.IsDeleted == false).ToList().Select(s => s.Name.ToLower()).ToList();
                     if (names.Where(w => w.ToLower() == genre.Name.ToLower()).Any())
@@ -191,7 +204,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     UGenre g = Db.Genres.Find(genre.GenreID);
                     if (g.AuthorID == null)
@@ -235,7 +248,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     UGenre g = Db.Genres.Find(genre.GenreID);
                     g.IsDeleted = true;
@@ -262,7 +275,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     UGenre g = Db.Genres.Find(genre.GenreID);
                     Db.G2A.RemoveRange(Db.G2A.Where(w => w.GenreID == g.GenreID).ToList());

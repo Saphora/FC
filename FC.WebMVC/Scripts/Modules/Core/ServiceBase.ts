@@ -9,6 +9,8 @@
         protected $http: ng.IHttpService;
         protected $q: ng.IQService;
         protected CacheManager: FC.Shared.Util.CacheManager;
+        public Busy: boolean = false;
+        public API_COMPLETED: boolean;
         protected GetCompleted: any;
         protected Config: FC.Core.AppConfig;
         constructor($http: ng.IHttpService, $q: ng.IQService) {
@@ -17,6 +19,7 @@
             this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
             this.GetCompleted = new Object();
             this.Config = new FC.Core.AppConfig();
+            this.Busy = false;
            // this.Loading = FC.Shared.Util.LoadQueue.GetInstance();
         }
 
@@ -46,6 +49,7 @@
         protected Upload<T>(url: string, files: Array<File>): ng.IPromise<INT.IServiceResponse<T>> {
             var vm = this;
             url = $AppConfig.URLRoot + url;
+            vm.Busy = true;
             //this.Loading.Listen(url);
             var config = this.Config;
             var vm = this;
@@ -67,7 +71,10 @@
                 method: 'POST',
                 cache: false,
             }).then((response: INT.IServiceResponse<T>): ng.IPromise<INT.IServiceResponse<T>> => this.handlerResponded<T>(url, response, {}));
+
             result.then(function (r) {
+
+                vm.Busy = false;
                 if (r.ResponseToken) {
                     vm.SetCookie("Token", r.ResponseToken, new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDay(), new Date().getHours() + 6, new Date().getMinutes()));
                 }
@@ -82,6 +89,7 @@
 
         protected Get<T>(url: string, params?: any): ng.IPromise<INT.IServiceResponse<T>> {
             var vm = this;
+            vm.Busy = true;
             //this.Loading.Listen(url);
             var result: ng.IPromise<INT.IServiceResponse<T>>;
             if (vm.GetCompleted[url] == null || vm.GetCompleted[url] == true) {
@@ -122,6 +130,7 @@
                 hdrs = headers;
             }
             var vm = this;
+            vm.Busy = true;
             var result: ng.IPromise<any>;
             result = this.$http.get(url, {
                 headers: hdrs,
@@ -138,6 +147,7 @@
             var hdrs = {};
             var prms = {};
             var vm = this;
+            vm.Busy = true;
             if (params) {
                 prms = params;
             }
@@ -181,6 +191,7 @@
             var hdrs = {};
             var prms = {};
             var vm = this;
+            vm.Busy = true;
             if (params) {
                 prms = params;
             }
@@ -201,6 +212,7 @@
         protected PostRaw<T>(url: string, params?: any, headers?: any): ng.IPromise<T> {
             //this.Loading.Listen(url);
             var vm = this;
+            vm.Busy = true;
             var result: ng.IPromise<any>;
             var hdrs = {};
             var prms = {};
@@ -225,6 +237,7 @@
             url = $AppConfig.URLRoot + url;
             var config = this.Config;
             var vm = this;
+            vm.Busy = true;
             var result: ng.IPromise<INT.IServiceResponse<T>>;
             $AppConfig.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().GetCookieValue("Token");
             result = this.$http({
@@ -242,6 +255,7 @@
 
         protected handlerResponded<T>(url: string, response: any, params?: any): any {
             var vm = this;
+            vm.Busy = false;
             vm.GetCompleted[url] = true;
             //vm.Loading.TriggerComplete(url["ReplaceAll"]($AppConfig.URLRoot, "")["ReplaceAll"]('/', ''));
             if (params && params.length > 0) {
@@ -257,6 +271,8 @@
             return new FC.Shared.Models.ServiceResponse<T>(response.data);
         }
         protected handlerRespondedRaw(response: any, params?: any): any {
+            var vm = this;
+            vm.Busy = false;
             return response;
         }
     }

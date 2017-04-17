@@ -10,7 +10,7 @@ using System.Web.Routing;
 using System.Web;
 using System.Web.Http;
 using FC.Shared.ServerMessages;
-using FC.PGDAL.PGModel;
+using FC.MSDAL;
 using FC.Shared.Config;
 using FC.BL.Validation;
 using FC.Interfaces.Data;
@@ -1172,7 +1172,7 @@ namespace FC.BL.Repositories
         public RepositoryState Create(ApplicationUser user)
         {
             Guid dirID = Guid.NewGuid();
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {
@@ -1258,7 +1258,7 @@ namespace FC.BL.Repositories
         /// <returns></returns>
         public RepositoryState Update(ApplicationUser user, bool updatePassword=true)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {

@@ -1,4 +1,4 @@
-﻿using FC.PGDAL.PGModel;
+﻿using FC.MSDAL;
 
 using FC.Shared.Entities;
 using FC.Shared.EntityMapper;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FC.PGDAL.PGModel;
+using FC.MSDAL;
 
 
 namespace FC.PGDAL.Migrations.Seeds

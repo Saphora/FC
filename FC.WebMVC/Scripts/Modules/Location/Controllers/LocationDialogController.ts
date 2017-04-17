@@ -19,8 +19,7 @@ module FC.Modules.Location.Controllers {
             '$q',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce"
         ];
@@ -30,12 +29,11 @@ module FC.Modules.Location.Controllers {
             $q: ng.IQService,
             $scope,
             $mdDialog: angular.material.MDDialogService,
-            $route: ng.route.IRoute,
             $routeParams: ng.RouteData,
             $location: ng.ILocationService,
             $sce: ng.ISCEService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.$scope.inst = this;
             vm.$scope.FormID = '940BD72D-88E3-4201-98D6-042919BD918C';

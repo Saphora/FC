@@ -42,7 +42,7 @@
         //Example of star- half - full(alias)
         //Example of star- half - o
         //Example of star- o-- >
-        public constructor($route, $routeParams, $location, $http: ng.IHttpService, $q: ng.IQService, $compile) {
+        public constructor( $location, $http: ng.IHttpService, $q: ng.IQService, $compile) {
 
             var vm = this;
             vm.$http = $http;
@@ -59,11 +59,11 @@
         }
 
         public static factory() {
-            var directive = ($route, $routeParams, $location, $http, $q, $compile) => {
-                return new RolePickerDirective($route, $routeParams, $location, $http, $q, $compile);
+            var directive = ( $location, $http, $q, $compile) => {
+                return new RolePickerDirective( $location, $http, $q, $compile);
             };
 
-            directive['$inject'] = ['$route', '$routeParams', '$location', '$http', '$q', '$compile'];
+            directive['$inject'] = [ '$location', '$http', '$q', '$compile'];
 
             return directive;
         }

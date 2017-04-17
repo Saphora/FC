@@ -33,8 +33,10 @@ namespace FC.Shared.Entities
         /// </summary>
         public Guid? InternalContentID { get; set; }
         [Index]
+        [Column(TypeName = "datetime2")]
         public DateTime? Expires { get; set; }
         [Index]
+        [Column(TypeName = "datetime2")]
         public DateTime? PublishDate { get; set; }
 
         public List<UGenre> MusicGenres { get; set; }

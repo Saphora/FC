@@ -17,8 +17,7 @@ namespace FC.Shared.Entities
 
         [ForeignKey("LanguageID")]
         public Language Language { get; set; }
-
-        [Index]
+        
         public string TransKey { get; set; }
 
         public string Value { get; set; }

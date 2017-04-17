@@ -33,7 +33,7 @@ module FC.Modules.Countries.Controllers {
             '$q',
             '$mdDialog',
             '$scope',
-            '$routeParams',
+            
             '$location',
             "$sce"
         ];
@@ -44,15 +44,15 @@ module FC.Modules.Countries.Controllers {
             $mdDialog,
             $scope,
             $route,
-            $routeParams,
+            
             $location,
             $sce
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             var vm = this;
             vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
             vm.$scope.inst = vm;
-            vm.$scope.$routeParams = $routeParams;
+            
             vm.$scope.$location = $location;
             vm.MemReg = FC.Shared.Util.MemReg.GetInstance();
             vm.$scope = $scope;

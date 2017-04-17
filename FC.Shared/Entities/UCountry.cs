@@ -30,19 +30,9 @@ namespace FC.Shared.Entities
             this.CultureIsoName = c.CultureIsoName;
             this.LanguageName = c.LanguageName;
         }
-        
-        
-        public string Name { get; set; }
-
-        
         public string CultureIsoName { get; set; }
-
-        
         public string LanguageName { get; set; }
-
         public string Currency { get; set; }
         
-        public DateTime? ArchiveDate { get; set; }
-        public bool IsDeleted { get; set; }
     }
 }

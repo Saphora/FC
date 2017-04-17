@@ -20,8 +20,7 @@ module FC.Modules.Details.Controllers {
             '$uibModal',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce"
         ];
@@ -32,12 +31,11 @@ module FC.Modules.Details.Controllers {
             $uibModal,
             $scope: FC.Shared.ViewModels.IDetailScope<FC.Shared.Models.UArtist>,
             $mdDialog: angular.material.MDDialogService,
-            $route: ng.route.IRoute,
             $routeParams: ng.RouteData,
             $location: ng.ILocationService,
             $sce: ng.ISCEService
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             var vm = this;
             vm.$scope.$location = $location;
             vm.$scope.FormID = '2F97BF92-A295-4D5C-A47C-67A274801DD0';
@@ -57,8 +55,6 @@ module FC.Modules.Details.Controllers {
 
             //vm.$scope.DoCreate = this.DoCreate;
             //vm.$scope.DoSaveCreate = this.DoSaveCreate;
-
-            vm.determineDetailType($routeParams, $route);
             vm.LogoSaveListener();
 
         }

@@ -21,8 +21,7 @@ module FC.Modules.Filtering.Controllers {
             '$q',
             '$mdDialog',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce"
         ];
@@ -33,18 +32,17 @@ module FC.Modules.Filtering.Controllers {
             $q: ng.IQService,
             $mdDialog: angular.material.MDDialogService,
             $scope,
-            $route,
-            $routeParams,
+            
             $location: ng.ILocationService,
             $sce
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
 
             var vm = this;
             vm.$scope = $scope;
             vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
             vm.$scope.inst = vm;
-            vm.$scope.$routeParams = $routeParams;
+            
             vm.$scope.$location = $location;
             vm.$scope.FormID = '908ADBE0-5121-4857-9D3A-E829DCCE9D80';
             vm.$scope.MemReg = FC.Shared.Util.MemReg.GetInstance();

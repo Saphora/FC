@@ -17,8 +17,7 @@ namespace FC.Shared.Entities
         
         [Key]
         public Guid? RoleID { get; set; }
-
-        [Index]
+        
         public string Name { get; set; }
 
         public List<Permission> Permissions { get; set; }

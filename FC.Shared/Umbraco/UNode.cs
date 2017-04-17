@@ -19,6 +19,7 @@ namespace FC.Shared.Umbraco
         public Guid UNodeUID { get; set; }
         public string Text { get; set; }
         public Guid NodeObjectType { get; set; }
+        [System.ComponentModel.DataAnnotations.Schema.Column(TypeName = "datetime2")]
         public DateTime CreatedDate { get; set; }
     }
 }

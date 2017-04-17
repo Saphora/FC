@@ -33,13 +33,13 @@ namespace FC.WebAPI.Controllers.API
         }
 
         [HttpPost, HttpOptions]
-        public ServiceResponse<List<FC.Shared.ViewModels.Festival.FestivalVM>> Search([FromBody]JObject payload)
+        public ServiceResponse<List<FC.Shared.Entities.FestivalListItem>> Search([FromBody]JObject payload)
         {
             ServiceMessage<SearchFilter> filter = new ServiceMessage<SearchFilter>(payload);
             
-            List<FestivalVM> tmp = new List<FestivalVM>();
+            List<FestivalListItem> tmp = new List<FestivalListItem>();
             tmp = FR.Search(filter.Data.Keyword);
-            return new ServiceResponse<List<FestivalVM>>(tmp, HttpStatusCode.OK, "Search-SUCCESS", this.Repositories.Auth.ActiveToken);
+            return new ServiceResponse<List<FestivalListItem>>(tmp, HttpStatusCode.OK, "Search-SUCCESS", this.Repositories.Auth.ActiveToken);
         }
     }
 }

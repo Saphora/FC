@@ -21,7 +21,7 @@
 <div class="row" ng-controller="FC.Modules.Festival.Controllers.FestivalCRUDController as vm" ng-init="vm.SetFestival('@Model.FestivalID.Value.ToString()')">
     <div class="col-xl-18 col-md-24">
         <div class="alert alert-info">
-            This section is still under construction. We are very busy with gathering all of the festival information.
+            This section is still under construction. We are very busy gathering all of the festival information.
         </div>
         <div class="card profile-header">
             <div class="card-header">
@@ -86,9 +86,9 @@
     </div>
     <div class="col-xl-6 col-lg-6 hidden-lg-down">
         <a href="/" class="btn btn-danger" style="width:272px">UPCOMING EVENTS</a>
-        <div class="row search-control" ng-controller="FC.Modules.Calendar.Controllers.SimpleCalendarController as vm">
-            <div ng-show="IsLoading==false && Festivals.length > 0" class="col-xs-24" search-result" ng-if="FestivalKey < 4" ng-repeat="(FestivalKey,Festival) in Festivals">
-                <ng-include src="'/Scripts/Modules/Festival/Views/festival-card.html'"></ng-include>
+        <div class="row search-control" ng-controller="FC.Modules.Calendar.Controllers.SimpleCalendarController as vm" ng-init="vm.LoadUpcoming()">
+            <div ng-show="IsLoading==false && Festivals.length > 0" class="col-xs-24" search-result" ng-repeat="(FestivalKey,Festival) in Festivals">
+                @Html.Partial("~/Views/Festival/_FestivalCard.cshtml")
             </div>
         </div>
     </div>

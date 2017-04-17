@@ -15,8 +15,8 @@
             throw new Error("SearchService GetList is not available");
         }
 
-        Search(filter: FC.Shared.ServiceMessages.SearchFilter): ng.IPromise<INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>> {
-            return this.Post<VM.IFestivalVM[], FC.Shared.ServiceMessages.SearchFilter>('/API/Search/Search', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.SearchFilter>(filter));
+        Search(filter: FC.Shared.ServiceMessages.SearchFilter): ng.IPromise<INT.IServiceResponse<FC.Shared.Models.FestivalListItem[]>> {
+            return this.Post<MODELS.FestivalListItem[], FC.Shared.ServiceMessages.SearchFilter>('/API/Search/Search', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.SearchFilter>(filter));
         }
     }
 }

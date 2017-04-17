@@ -151,24 +151,47 @@ img {
 }
 //responsive news header images...i guess...
 .news-overview-wrapper {
+
+    .middle {
+        &.col-sm-24, &.col-xs-24 {
+            float:right;
+        }
+    }
+
+    .card {
+        .card-header {
+            a {
+                color: #FFF !important;
+                &:hover {
+                    color: #FFF !important;
+                }
+            }
+        }
+    }
     .col-xl-8 {
-        .card-block {
-            .top {
-                overflow:hidden;
-                img {
-                    min-width:100%;
-                    margin-top: 0 !important;
-                }   
+        .card { 
+           
+            .card-block {
+                .top {
+                    overflow:hidden;
+                    img {
+                        min-width:100%;
+                        margin-top: 0 !important;
+                    }   
+                }
             }
         }
     } 
     .col-lg-8 {
-         .card-block {
-            .top {
-                img {
-                    min-width:100%;
-                    margin-top: 0 !important;
-                }   
+        .card {
+            .card-block {
+                .top {
+                    overflow:hidden;
+                    img {
+                        min-width:100%;
+                        margin-top: 0 !important;
+                    }   
+                }
             }
         }
     } 

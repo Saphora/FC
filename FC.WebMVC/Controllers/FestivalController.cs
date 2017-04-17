@@ -16,7 +16,7 @@ namespace FC.WebMVC.Controllers
         {
             if (id == null)
             {
-                return View("~/Calendar/Index");
+                return View("~/Views/Calendar/Index.cshtml");
             } else
             {
                 UFestival f = this.repositories.Festivals.GetByID(id);

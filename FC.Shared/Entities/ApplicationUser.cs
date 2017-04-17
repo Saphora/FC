@@ -22,8 +22,7 @@ namespace FC.Shared.Entities
         public Guid? UserID           { get; set;}
         public Guid? ActivationToken { get; set; }
         public int UserCount        { get; set;}
-
-        [Index("UserName", IsUnique =true, IsClustered = true)]
+        
         public string UserName         { get; set;}
 
         //private string _name { get; set; }
@@ -32,7 +31,6 @@ namespace FC.Shared.Entities
         //public string Name { get { if (!string.IsNullOrEmpty(UserMiddlename)) { return $"{UserFirstname}, {UserLastname}, {UserMiddlename}"; } else { return $"{UserFirstname}, {UserLastname}"; } } set { _name = value; } }
 
         [Validation(ValidationRule.Any, true)]
-        [Index]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password should contains between 8 and 40 characters")]
         public string UserPassword     { get; set;}
         public string UserCode         { get; set;}
@@ -57,8 +55,6 @@ namespace FC.Shared.Entities
         public string City { get; set; }
 
         public string ZIPCode { get; set; }
-
-        [Index("UserEmail", IsUnique=true, IsClustered=true)]
         [Validation(ValidationRule.Email, true)]
         [RegularExpression(Validation.EMAIL, ErrorMessage ="E-mail address is not a valid format.")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "E-mail address is mandatory")]
@@ -91,6 +87,7 @@ namespace FC.Shared.Entities
         public  List<SocialProfile> Social { get; set; }
         [NotMapped]
         public  List<Role> Roles { get; set; }
+        [Column(TypeName = "datetime2")]
         public DateTime? DeletedDate { get; set; }
 
 

@@ -21,17 +21,9 @@ module FC.Modules.News.Controllers {
             '$uibModal',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
-            "FC.Core.Services.LocalizationService",
-            "FC.Core.Services.URLManagerService",
             "$sce",
-            "FC.Modules.Genres.Services.GenreService",
-            "FC.Modules.Artists.Services.ArtistService",
-            "FC.Modules.Festival.Services.FestivalService",
-            "FC.Modules.Calendar.Services.CalendarService",
-            "FC.Modules.Location.Services.LocationService"
         ];
 
         constructor(
@@ -39,12 +31,11 @@ module FC.Modules.News.Controllers {
             $q: ng.IQService,
             $scope: Models.INewsDialog,
             $mdDialog: angular.material.MDDialogService,
-            $route: ng.route.IRoute,
             $routeParams: ng.RouteData,
             $location: ng.ILocationService,
             $sce: ng.ISCEService
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             var vm = this;
             vm.NewsService = new FC.Modules.News.Services.NewsService($http, $q);
             vm.$scope.$location = $location;
@@ -78,7 +69,7 @@ module FC.Modules.News.Controllers {
             vm.$scope.DoCreate = this.DoCreate;
             vm.$scope.DoEdit = this.DoEdit;
             vm.$scope.DoDelete = this.DoDelete;
-            //vm.determineDetailType($routeParams, $route);
+            //vm.determineDetailType( $route);
             //vm.LogoSaveListener();
             vm.RegisterModel(vm.$scope);
 

@@ -45,5 +45,9 @@
         public FestivalID: string;
         public MonthNum: number;   
         public YearNum: number; 
+        public PageLength: number;
+        public CurrentLength: number;
+        public BlockLength: number;
+        public LastID: string;
     }
 }

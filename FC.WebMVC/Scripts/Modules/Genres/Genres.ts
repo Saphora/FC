@@ -7,7 +7,6 @@ module FC.Modules.Genres {
         }
         constructor(private NgModule: ng.IModule, private app: FC.Core.FCModule) {
             this.$Application = app;
-            this.$Application.AddRoute("/genres", "/scripts/modules/genres/views/overview.html", "FC.Modules.Genres.Controllers.GenreOverviewController", "vm");
         }
     }
 }

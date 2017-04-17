@@ -28,8 +28,7 @@ module FC.Modules.Artists.Controllers {
             '$uibModal',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "FC.Modules.Theming.Services.ThemingService",
             "FC.Core.Services.LocalizationService",
@@ -49,7 +48,6 @@ module FC.Modules.Artists.Controllers {
             $uibModal,
             $scope,
             $mdDialog: angular.material.MDDialogService,
-            $route: ng.route.IRoute,
             $routeParams: ng.RouteData,
             $location: ng.ILocationService,
             UrlManagerService: FC.Core.Services.URLManagerService,
@@ -61,7 +59,7 @@ module FC.Modules.Artists.Controllers {
             LocationService: FC.Modules.Location.Services.LocationService,
             TicketService: FC.Modules.Ticket.Services.TicketService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.$scope.inst = this;
             vm.$scope.$location = $location;

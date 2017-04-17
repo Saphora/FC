@@ -15,8 +15,7 @@ module FC.Modules.Menu.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog',
             "$sce"
@@ -26,13 +25,12 @@ module FC.Modules.Menu.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog,
             $sce: ng.ISCEService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
             this.setData();
 

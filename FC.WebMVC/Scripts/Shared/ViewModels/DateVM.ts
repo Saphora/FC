@@ -1,6 +1,8 @@
 ﻿module FC.Shared.ViewModels {
     export class DateVM {
         public Month: string;
+        public MonthNum: number;
+
         public Day: string;
         public Y1: string;
         public Y2: string;

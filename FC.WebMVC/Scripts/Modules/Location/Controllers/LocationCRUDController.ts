@@ -20,8 +20,7 @@ module FC.Modules.Location.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce",
             "$mdDialog"
@@ -31,13 +30,12 @@ module FC.Modules.Location.Controllers {
             $http: ng.IHttpService,
             $q,
             $scope: Models.ILocationCRUDVM,
-            $route: ng.route.IRouteProvider,
-            $routeParams,
+            
             $location: any,
             $sce,
             $mdDialog
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             this.$scope = $scope;
             vm.CheckAuth($scope);
@@ -53,32 +51,7 @@ module FC.Modules.Location.Controllers {
             this.$location = $location;
             this.$scope.model = new FC.Shared.Models.Location();
             this.$scope.$location = $location;
-            this.$scope.$routeParams = $routeParams;
-            if ($routeParams["step"]) {
-                this.$scope.WizardStep = $routeParams["step"];
-            } else {
-                this.$scope.WizardStep = 1;
-            }
-            if ($routeParams["LocationID"]) {
-                vm.FinishForm(vm.$scope);
-                vm.$scope.IsEditing = true;
-                vm.$scope.LocationID = $routeParams["LocationID"];
-                vm.$scope.SaveFieldState($scope, "LocationID", vm.$scope.LocationID);
-                vm.$scope.IsCreating = false;
-                vm.$scope.IsLoading = true;
-                vm.LocationService.GetLocation($routeParams["LocationID"]).then(function (r) {
-                    vm.$scope.model = r.Data;
-                    vm.$scope.IsLoading = false;
-                    vm.$scope.MapsReady = true;
-                    vm.$scope.MapsURL = vm.$scope.$sce.trustAsResourceUrl(
-                        'https://www.google.com/maps/embed/v1/place?&zoom=16&key=AIzaSyAaqNdfzf3K2JVYb5hu9lvabVg8rXG6RiQ&q=' + r.Data.Country.Name + '+' + r.Data.City + '+' + r.Data.Address + '&maptype=roadmap'
-                    );
-                });
-            } else {
-                vm.$scope.IsLoading = false;
-                vm.$scope.IsCreating = true;
-                vm.$scope.IsEditing = false;
-            }
+            
             this.RecoverModel();
             this.AddValidation();
 

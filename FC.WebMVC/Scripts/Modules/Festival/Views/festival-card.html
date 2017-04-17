@@ -1,6 +1,6 @@
 ﻿<div class="card festival-card">
     <div class="card-header link">
-        <a class="h5" href="/festival/{{Festival.FestivalID}}" title="{{Festival.Name}}">{{Festival.Name.toUpperCase()}}</a>
+        <a class="h5" href="/festival/?id={{Festival.FestivalID}}" title="{{Festival.Name}}">{{Festival.Name.toUpperCase()}}</a>
     </div>
     <div class="card-block">
         <div class="top">
@@ -42,7 +42,7 @@
                 <span class="g" ng-if="Festival.Genres.length > 2 && Festival.GenreCount">{{Festival.GenreCount}}</span>
             </div>
         </div>
-        <div class="rating" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr" ng-init="rctr.GetRates(Festival.FestivalID, 'festival')">
+        <div class="rating" ng-controller="FC.Modules.Rating.Controllers.RatingController as rctr" ng-init="Festival.Rating ? rctr.SetRating(Festival.Rating) : rctr.GetRates(Festival.FestivalID, 'festival')">
             <span class="count" theme="count" ng-if="rctr.$scope.DisplayCount == '0'">
                 0
             </span>

@@ -90,6 +90,7 @@
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -131,7 +132,6 @@
     <Compile Include="Entities\CarouselAd.cs" />
     <Compile Include="Entities\Favorite.cs" />
     <Compile Include="Entities\LineupItem.cs" />
-    <Compile Include="Entities\Materialized\FestivalListItem.cs" />
     <Compile Include="Entities\Materialized\MaterializedFestivalListVM.cs" />
     <Compile Include="Entities\Materialized\MaterializedArtistListVM.cs" />
     <Compile Include="Entities\Materialized\MaterializedNews.cs" />
@@ -232,6 +232,7 @@
     <Compile Include="ViewModels\Date\DateVM.cs" />
     <Compile Include="ViewModels\Festival\FestivalCRUD.cs" />
     <Compile Include="ViewModels\Festival\FestivalDetailScope.cs" />
+    <Compile Include="Entities\FestivalListItem.cs" />
     <Compile Include="ViewModels\Festival\FestivalMonthItem.cs" />
     <Compile Include="ViewModels\Festival\FestivalVM.cs" />
     <Compile Include="ViewModels\Rating\RatingVm.cs" />

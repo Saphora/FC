@@ -27,7 +27,9 @@ namespace FC.Shared.Entities
         public string Title { get; set; }
 
         [Validation(false)]
+        [Column(TypeName = "datetime2")]
         public DateTime Date { get; set; }
+        [Column(TypeName = "datetime2")]
         public DateTime CreateDate { get; set; }
 
         public Guid? MediaDirectoryID { get; set; }
@@ -95,7 +97,7 @@ namespace FC.Shared.Entities
         private string _name { get; set; }
 
         [NotMapped]
-        public string Name
+        public string SortDate
         {
             get
             {

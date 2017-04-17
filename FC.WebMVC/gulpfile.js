@@ -65,16 +65,12 @@ var dependencies = [
     'bower_components/angular-ui-tinymce/src/tinymce.js',
     'bower_components/angular-animate/angular-animate.min.js',
     'bower_components/angular-aria/angular-aria.min.js',
-    'bower_components/angular-messages/angular-messages.min.js',
-    'bower_components/angular-sanitize/angular-sanitize.min.js',
-    'bower_components/angular-route/angular-route.min.js',
-    'bower_components/angular-animate/angular-animate.min.js',
     'bower_components/angular-ui/build/angular-ui.min.js',
-    'bower_components/angular-collapse/angular-collapse.js',
     '/node_modules/moment/min/moment.min.js',
     'bower_components/angular-bootstrap/ui-bootstrap.js',
     'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
     'bower_components/angular-material/angular-material.min.js',
+    'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
 ];
 
 

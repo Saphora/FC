@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ namespace FC.Shared.Entities
     {
         private CultureInfo Culture;
         public string CultureName { get; set; }
+
+        [Column(TypeName = "datetime2")]
         public DateTime BaseDate { get; set; }
         public int DayNum { get; }
         public string DayName { get; }

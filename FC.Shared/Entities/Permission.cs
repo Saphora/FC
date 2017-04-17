@@ -19,7 +19,6 @@ namespace FC.Shared.Entities
         /// <summary>
         /// A machine friendly name, please note that all values will formatted to e.g(XXX_XXX, JOURNALIST,FESTIVAL_ADMIN).
         /// </summary>
-        [Index]
         public string PermissionKey { get; set; }
 
         /// <summary>

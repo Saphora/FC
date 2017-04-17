@@ -1,5 +1,5 @@
 ﻿using FC.Interfaces.Data;
-using FC.PGDAL.PGModel;
+using FC.MSDAL;
 using FC.Shared.Entities;
 using FC.Shared.Enum;
 using System;
@@ -19,7 +19,7 @@ namespace FC.BL.Repositories
             var favs = new List<Favorite>();
             if (icType != InternalContentType.All)
             {
-                using (var db = new PGDAL.PGModel.ContentModel())
+                using (var db = new FC.MSDAL.ContentModel())
                 {
                     favs = db.Favorites.Where(w => w.UserID == userID && w.ContentType == icType).ToList();
                 }
@@ -29,33 +29,33 @@ namespace FC.BL.Repositories
                     switch (fav.ContentType)
                     {
                         case InternalContentType.Artist:
-                            using (var tmpDb = new PGDAL.PGModel.ContentModel())
+                            using (var tmpDb = new FC.MSDAL.ContentModel())
                             {
                                 fav.Content = tmpDb.Artists.Where(w => w.ArtistID == fav.ContentID).FirstOrDefault();   
                             }
                             break;
                         case InternalContentType.Location:
 
-                            using (var tmpDb = new PGDAL.PGModel.ContentModel())
+                            using (var tmpDb = new FC.MSDAL.ContentModel())
                             {
                                 fav.Content = tmpDb.Locations.Where(w => w.LocationID == fav.ContentID).FirstOrDefault();
                             }
                             break;
                         case InternalContentType.Genre:
-                            using (var tmpDb = new PGDAL.PGModel.ContentModel())
+                            using (var tmpDb = new FC.MSDAL.ContentModel())
                             {
                                 fav.Content = tmpDb.Genres.Where(w => w.GenreID == fav.ContentID).FirstOrDefault();
                             }
                             break;
                         case InternalContentType.Country:
 
-                            using (var tmpDb = new PGDAL.PGModel.ContentModel())
+                            using (var tmpDb = new FC.MSDAL.ContentModel())
                             {
                                 fav.Content = tmpDb.Countries.Where(w => w.CountryID == fav.ContentID).FirstOrDefault();
                             }
                             break;
                         case InternalContentType.Festival:
-                            using (var tmpDb = new PGDAL.PGModel.ContentModel())
+                            using (var tmpDb = new FC.MSDAL.ContentModel())
                             {
                                 fav.Content = tmpDb.Festivals.Where(w => w.FestivalID == fav.ContentID).FirstOrDefault();
                             }
@@ -66,7 +66,7 @@ namespace FC.BL.Repositories
             else
             {
                 favs = new List<Favorite>();
-                using (var db = new PGDAL.PGModel.ContentModel())
+                using (var db = new FC.MSDAL.ContentModel())
                 {
                     favs = db.Favorites.Where(w => w.UserID == userID).ToList();
                 }
@@ -89,7 +89,7 @@ namespace FC.BL.Repositories
 
         public bool IsFavorite(Guid? contentID)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 if (Db.Favorites.Where(w => w.ContentID == contentID && w.UserID == AuthorizationRepository.Current.CurrentUser.UserID).Any())
                 {
@@ -106,7 +106,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     string typeName = "";
                     switch (type)
@@ -167,7 +167,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     Favorite fav = Db.Favorites.Where(w => w.ContentID == contentID && w.UserID == AuthorizationRepository.Current.CurrentUser.UserID).FirstOrDefault();
                     Db.Favorites.Remove(fav);
@@ -189,7 +189,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     
                     Db.Favorites.RemoveRange(Db.Favorites.Where(w=>w.UserID == AuthorizationRepository.Current.CurrentUser.UserID));

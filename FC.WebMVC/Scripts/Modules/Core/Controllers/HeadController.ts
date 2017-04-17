@@ -22,8 +22,7 @@ module FC.Core.Controllers {
             '$q',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
         ];
 
@@ -36,7 +35,7 @@ module FC.Core.Controllers {
             $routeParams: ng.RouteData,
             $location: ng.ILocationService
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             var vm = this;
             window.addEventListener("META-REFRESH", function (e: CustomEventInit) {
                 vm.$scope.META = e.detail;

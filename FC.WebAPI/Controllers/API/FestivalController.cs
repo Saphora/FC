@@ -69,7 +69,7 @@ namespace FC.WebAPI.Controllers.API
         }
 
         [HttpOptions, HttpPost]
-        public ServiceResponse<List<FestivalVM>> GetFiltered([FromBody]JObject payload)
+        public ServiceResponse<List<FestivalListItem>> GetFiltered([FromBody]JObject payload)
         {
             var token = this.AuthRepo.GetHTTPToken();
 
@@ -110,12 +110,59 @@ namespace FC.WebAPI.Controllers.API
                 }
             }
 
-            List<FestivalVM> result = FestivalRepository.GetFilteredFestival(filter.Data);
-            return new ServiceResponse<List<FestivalVM>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
+            List<FestivalListItem> result = FestivalRepository.GetFilteredFestival(filter.Data);
+            return new ServiceResponse<List<FestivalListItem>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
         }
 
         [HttpOptions, HttpPost]
-        public ServiceResponse<List<FestivalVM>> GetByFilter([FromBody]JObject payload)
+        public ServiceResponse<List<FestivalListItem>> GetUpcoming([FromBody]JObject payload)
+        {
+            var token = this.AuthRepo.GetHTTPToken();
+
+            ServiceMessage<FestivalFilter> filter = new ServiceMessage<FestivalFilter>(payload);
+            if (this.AuthRepo.UserID != null)
+            {
+                List<Favorite> genres = this.Repositories.Favorites.GetUserFavorites(this.AuthRepo.UserID, InternalContentType.Genre);
+                List<Favorite> countries = this.Repositories.Favorites.GetUserFavorites(this.AuthRepo.UserID, InternalContentType.Country);
+                List<Favorite> artists = this.Repositories.Favorites.GetUserFavorites(this.AuthRepo.UserID, InternalContentType.Artist);
+                List<Favorite> locations = this.Repositories.Favorites.GetUserFavorites(this.AuthRepo.UserID, InternalContentType.Location);
+                if (filter.Data.CountryIDs.Count == 0)
+                {
+                    foreach (Favorite c in countries)
+                    {
+                        filter.Data.CountryIDs.Add(c.ContentID);
+                    }
+                }
+                if (filter.Data.ArtistIDs.Count == 0)
+                {
+                    foreach (Favorite a in artists)
+                    {
+                        filter.Data.ArtistIDs.Add(a.ContentID);
+                    }
+                }
+                if (filter.Data.LocationIDs.Count == 0)
+                {
+                    foreach (Favorite l in locations)
+                    {
+                        filter.Data.LocationIDs.Add(l.ContentID);
+                    }
+                }
+                if (filter.Data.GenreIDs.Count == 0)
+                {
+                    foreach (Favorite g in genres)
+                    {
+                        filter.Data.GenreIDs.Add(g.ContentID);
+                    }
+                }
+            }
+
+            List<FestivalListItem> result = FestivalRepository.GetUpcoming(filter.Data);
+            return new ServiceResponse<List<FestivalListItem>>(result, HttpStatusCode.OK, "OK", this.Repositories.Auth.ActiveToken);
+        }
+
+
+        [HttpOptions, HttpPost]
+        public ServiceResponse<List<FestivalListItem>> GetByFilter([FromBody]JObject payload)
         {
             var token = this.Repositories.Auth.GetHTTPToken();
             ServiceMessage<FestivalFilter> filter = new ServiceMessage<FestivalFilter>(payload);
@@ -127,9 +174,9 @@ namespace FC.WebAPI.Controllers.API
                 filter.Data.CountryIDs.AddRange(favorites.Where(w => w.ContentType == InternalContentType.Country).Select(s => s.ContentID).ToList());
                 //filter.Data.ArtistIDs.AddRange(favorites.Where(w => w.ContentType == InternalContentType.Genre).Select(s => s.ContentID).ToList());
             }
-
-            List<FestivalVM> result = FestivalRepository.GetFilteredFestival(filter.Data);
-            return new ServiceResponse<List<FestivalVM>>(result, HttpStatusCode.OK, "OK", token);
+           
+            List<FestivalListItem> result = FestivalRepository.GetFilteredFestival(filter.Data);
+            return new ServiceResponse<List<FestivalListItem>>(result, HttpStatusCode.OK, "OK", token);
         }
 
         [HttpOptions, HttpGet, HttpPost]

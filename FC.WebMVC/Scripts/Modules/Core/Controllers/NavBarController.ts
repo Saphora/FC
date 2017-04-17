@@ -20,7 +20,7 @@ module FC.Core.Controllers {
             '$scope',
             '$mdDialog',
             '$location',
-            '$routeParams',
+            
             "$sce"
         ];
 
@@ -30,10 +30,10 @@ module FC.Core.Controllers {
             $scope: STD.Models.INavBarVM,
             $mdDialog: angular.material.MDDialogService,
             $location: ng.ILocationService,
-            $routeParams,
+            
             $sce: ng.ISCEService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.$scope.inst = this;
             vm.$scope = $scope;

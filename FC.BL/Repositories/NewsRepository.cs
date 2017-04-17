@@ -19,7 +19,7 @@ namespace FC.BL.Repositories
 
         public List<UNews> GetAll()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.News.OrderByDescending(o=>o.Created).ToList();
             }
@@ -28,7 +28,7 @@ namespace FC.BL.Repositories
         {
             UNews result;
 
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 result = Db.News.Find(id);
             }
@@ -39,7 +39,7 @@ namespace FC.BL.Repositories
         {
             List<UNews> news = new List<UNews>();
 
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 var filterDateSt = DateTime.Now.AddDays(-31);
                 page = page - 1;
@@ -56,7 +56,7 @@ namespace FC.BL.Repositories
         {
             int result;
 
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 page = page - 1;
                 int m = int.Parse(month);
@@ -75,7 +75,7 @@ namespace FC.BL.Repositories
             IQueryable<UNews> n = Db.News;
             List<UNews> result;
 
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 if (filter.CountryIDs != null)
                 {
@@ -98,7 +98,7 @@ namespace FC.BL.Repositories
 
         public RepositoryState Create(UNews news)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {
@@ -138,7 +138,7 @@ namespace FC.BL.Repositories
 
         public RepositoryState Update(UNews news)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {
@@ -192,7 +192,7 @@ namespace FC.BL.Repositories
 
         public RepositoryState Delete(UNews news)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {
@@ -215,7 +215,7 @@ namespace FC.BL.Repositories
 
         public RepositoryState ForceDelete(UNews news)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {

@@ -205,9 +205,9 @@
       <Project>{B0873D31-0F3C-49FA-80D5-6CA748B0E1D8}</Project>
       <Name>FC.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FC.PGDAL\FC.PGDAL.csproj">
-      <Project>{6c6f8feb-5dbb-45fa-8e46-14494355859e}</Project>
-      <Name>FC.PGDAL</Name>
+    <ProjectReference Include="..\FC.MSDAL\FC.MSDAL.csproj">
+      <Project>{FD0272D4-5E5D-4087-8C6E-0032F3E1FB16}</Project>
+      <Name>FC.MSDAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\FC.Shared\FC.Shared.csproj">
       <Project>{825EBABE-4B92-48DD-8696-CFCE263E2153}</Project>

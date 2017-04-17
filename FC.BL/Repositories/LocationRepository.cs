@@ -18,14 +18,14 @@ namespace FC.BL.Repositories
 
         public List<Location> GetByUser(Guid? userID)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Locations.Where(w => w.AuthorID == userID).OrderBy(o => o.Name).ToList();
             }
         }
         public Location GetByID(Guid? id)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Locations.Find(id);
             }
@@ -33,7 +33,7 @@ namespace FC.BL.Repositories
 
         public List<Location> GetSorted(Guid? countryID, string search = "0-9", int page = 1)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<Location> result = new List<Location>();
                 IQueryable<Location> query = Db.Locations;
@@ -81,7 +81,7 @@ namespace FC.BL.Repositories
 
         public int GetPagedCount(Guid? countryID, int page, string search)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 int result = 0;
                 IQueryable<Location> query = Db.Locations;
@@ -116,7 +116,7 @@ namespace FC.BL.Repositories
 
         public decimal GetPageCount(int size)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 Decimal d = new Decimal((float)Db.Locations.Count() / (float)size);
                 return Math.Ceiling(d) - 1;
@@ -125,7 +125,7 @@ namespace FC.BL.Repositories
 
         public List<Location> GetPaged(int size, int page)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<Location> result = new List<Location>();
                 int from = 0;
@@ -144,7 +144,7 @@ namespace FC.BL.Repositories
 
         public List<Location> GetAll()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Locations.Where(w => w.IsDeleted == false).OrderBy(o => o.LocationName).ToList();
             }
@@ -152,7 +152,7 @@ namespace FC.BL.Repositories
 
         public Location GetByFestivalID(Guid? id)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 UFestival f = Db.Festivals.Find(id);
                 if (f.FestivalLocation != null)
@@ -169,7 +169,7 @@ namespace FC.BL.Repositories
 
         public List<Location> GetByCountryID(Guid? id)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Locations.Where(w => w.CountryID == id).OrderBy(o => o.Name).ToList();
             }
@@ -181,7 +181,7 @@ namespace FC.BL.Repositories
             MediaRepository r = new MediaRepository();
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     List<IValidationError> errors = this.Validate<Location>(l);
                     if (errors.Count == 0)
@@ -243,7 +243,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     Location location = Db.Locations.Find(l.LocationID);
                     location.Address = l.Address;
@@ -300,7 +300,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     Location loc = Db.Locations.Find(l.LocationID);
                     loc.IsDeleted = true;
@@ -319,7 +319,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     List<UFestival> festivals = Db.Festivals.Where(w => w.FestivalLocationID == l.LocationID).ToList();
                     foreach (UFestival f in festivals)

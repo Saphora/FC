@@ -20,7 +20,7 @@ module FC.Modules.Favorites.Controllers {
             '$q',
             '$mdDialog',
             '$scope',
-            '$routeParams',
+            
             '$location',
             "$sce",
         ];
@@ -30,11 +30,11 @@ module FC.Modules.Favorites.Controllers {
             $q: ng.IQService,
             $mdDialog,
             $scope,
-            $routeParams,
+            
             $location,
             $sce
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.$scope.SelectedArtists = new Array<FC.Shared.Models.UArtist>();
             vm.$scope.SelectedGenres = new Array<FC.Shared.Models.UGenre>();

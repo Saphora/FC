@@ -12,14 +12,25 @@
 @Html.Partial("_Navbar")
 
 <div class="row news-overview-wrapper" ng-controller="FC.Modules.News.Controllers.NewsOverviewController as vm">
-    <div class="col-xl-8 col-lg-8 col-md-12 col-sm-24 col-xs-24">
-        <ng-include src="'/Scripts/modules/news/views/news-card.html'" ng-repeat="(i,n) in ColData1"></ng-include>
+    <div class="col-xl-8 col-lg-8 col-md-8 hidden-sm-down">
+        <div class="no-margin no-padding repeat-holder" ng-repeat="(i,n) in ColData1">
+            @Html.Partial("~/Views/News/_NewsCard.cshtml")
+        </div>
     </div>
-    <div class="col-xl-8 col-lg-8 col-md-12 col-sm-24 col-xs-24" >
-        <ng-include src="'/Scripts/modules/news/views/news-card.html'" ng-repeat="(i,n) in ColData2"></ng-include>
+    <div class="col-xl-8 col-lg-8 col-md-8 hidden-sm-down">
+        <div class="no-margin no-padding repeat-holder" ng-repeat="(i,n) in ColData2">
+            @Html.Partial("~/Views/News/_NewsCard.cshtml")
+        </div>
     </div>
-    <div class="col-xl-8 col-lg-8 col-md-12 col-sm-24 col-xs-24">
-        <ng-include src="'/Scripts/modules/news/views/news-card.html'" ng-repeat="(i,n) in ColData3"></ng-include>
+    <div class="col-xl-8 col-lg-8 col-md-8 hidden-sm-down">
+        <div class="no-margin no-padding repeat-holder" ng-repeat="(i,n) in ColData3">
+            @Html.Partial("~/Views/News/_NewsCard.cshtml")
+        </div>
+    </div>
+    <div class="col-sm-24 hidden-md-up">
+        <div class="no-margin no-padding repeat-holder" ng-repeat="(i,n) in model">
+            @Html.Partial("~/Views/News/_NewsCard.cshtml")
+        </div>
     </div>
         @*<div class="card overview news-overview">
             <div class="card-header">

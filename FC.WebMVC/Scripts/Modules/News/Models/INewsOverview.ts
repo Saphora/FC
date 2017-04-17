@@ -7,5 +7,6 @@
         ColData1: FC.Shared.Models.UNews[];
         ColData2: FC.Shared.Models.UNews[];
         ColData3: FC.Shared.Models.UNews[];
+        IsMobile: boolean;
     }
 }

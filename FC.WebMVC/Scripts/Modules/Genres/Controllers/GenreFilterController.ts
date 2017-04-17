@@ -21,8 +21,7 @@ module FC.Modules.Genres.Controllers {
             '$q',
             '$mdDialog',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce",
         ];
@@ -32,16 +31,15 @@ module FC.Modules.Genres.Controllers {
             $q: ng.IQService,
             $mdDialog: angular.material.MDDialogService,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $sce
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             var vm = this;
             vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
             vm.$scope.inst = vm;
-            vm.$scope.$routeParams = $routeParams;
+            
             vm.$scope.$location = $location;
             vm.$scope = $scope;
             vm.$scope.FormID = '908ADBE0-5121-4857-9D3A-E829DCCE9D80';
@@ -85,7 +83,7 @@ module FC.Modules.Genres.Controllers {
                 vm.$scope.Selected = "SELECT GENRES";
             }
             
-            vm.SetGenreList();
+            //vm.SetGenreList();
             
 
             //this.RecoverModel(this.$scope.model, this.$scope);
@@ -139,6 +137,7 @@ module FC.Modules.Genres.Controllers {
             opts.templateUrl = '/Scripts/modules/genres/views/genre-filter.html';
             opts.parent = document.body;
             opts.clickOutsideToClose = true;
+            vm.SetGenreList();
             $scope.MtModal.show(opts).then(function (answer) {
                 //$scope.status = 'You said the information was "' + answer + '".';
             }, function () {

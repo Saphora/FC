@@ -27,8 +27,7 @@ module FC.Modules.Media.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$uibModal',
             '$mdDialog',
@@ -40,8 +39,7 @@ module FC.Modules.Media.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $uibModal,
             $mdDialog,
@@ -49,7 +47,7 @@ module FC.Modules.Media.Controllers {
             $sce: any,
             $local: any
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.$sce = $sce;
             vm.$sce.whiteListR;

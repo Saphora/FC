@@ -3,6 +3,8 @@
         City: string;
         Country: FC.Shared.Models.UCountry;
         DateExplosion: FC.Shared.ViewModels.DateVM;
+        StartDateExplosion: FC.Shared.ViewModels.DateVM;
+        EndDateExplosion: FC.Shared.ViewModels.DateVM;
         Location: string;
         FestivalID: string; 
         DateString: string;

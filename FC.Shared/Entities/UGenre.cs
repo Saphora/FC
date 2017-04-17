@@ -45,7 +45,6 @@ namespace FC.Shared.Entities
         public  int VisibleOnHome { get; set; }
 
         
-        [Index("GenreName", IsUnique = true, IsClustered = true)]
         [Validation(ValidationRule.Any, true)]
         public  string Name { get; set; }
         

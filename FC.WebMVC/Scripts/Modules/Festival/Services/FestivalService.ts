@@ -17,7 +17,7 @@
             return this.Get<IList<MODELS.UFestival>>('/API/Festival/GetList');
         }
 
-        GetUpcoming(): ng.IPromise<INT.IServiceResponse<FC.Modules.Festival.Models.FestivalListVM[]>> {
+        GetUpcoming(filter: FC.Shared.ServiceMessages.FestivalFilter): ng.IPromise<INT.IServiceResponse<FC.Modules.Festival.Models.FestivalListVM[]>> {
             return this.Get<FC.Modules.Festival.Models.FestivalListVM[]>('/API/Festival/GetUpcoming');
         }
 
@@ -27,10 +27,13 @@
 
 
         public GetByFilter(filter: FC.Shared.ServiceMessages.FestivalFilter) {
+            if (!filter.MonthNum) {
+                filter.MonthNum = new Date().getMonth() + 1;
+            }
             if (CacheManager.GetCookieValue("UserID")) {
-                return this.Post<Array<FC.Shared.ViewModels.IFestivalVM>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
+                return this.Post<Array<FC.Shared.Models.FestivalListItem>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
             } else {
-                return this.Post<Array<FC.Shared.ViewModels.IFestivalVM>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
+                return this.Post<Array<FC.Shared.Models.FestivalListItem>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
             }
         }
 

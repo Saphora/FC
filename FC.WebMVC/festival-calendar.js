@@ -414,11 +414,13 @@ var FC;
     (function (Core) {
         var ServiceBase /*implements INT.IServiceBase<any>*/ = (function () {
             function ServiceBase /*implements INT.IServiceBase<any>*/($http, $q) {
+                this.Busy = false;
                 this.$http = $http;
                 this.$q = $q;
                 this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
                 this.GetCompleted = new Object();
                 this.Config = new FC.Core.AppConfig();
+                this.Busy = false;
                 // this.Loading = FC.Shared.Util.LoadQueue.GetInstance();
             }
             //public Create<T>(model: T) {
@@ -439,6 +441,7 @@ var FC;
                 var _this = this;
                 var vm = this;
                 url = $AppConfig.URLRoot + url;
+                vm.Busy = true;
                 //this.Loading.Listen(url);
                 var config = this.Config;
                 var vm = this;
@@ -461,6 +464,7 @@ var FC;
                     cache: false,
                 }).then(function (response) { return _this.handlerResponded(url, response, {}); });
                 result.then(function (r) {
+                    vm.Busy = false;
                     if (r.ResponseToken) {
                         vm.SetCookie("Token", r.ResponseToken, new Date(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDay(), new Date().getHours() + 6, new Date().getMinutes()));
                     }
@@ -473,6 +477,7 @@ var FC;
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.Get = function (url, params) {
                 var _this = this;
                 var vm = this;
+                vm.Busy = true;
                 //this.Loading.Listen(url);
                 var result;
                 if (vm.GetCompleted[url] == null || vm.GetCompleted[url] == true) {
@@ -515,6 +520,7 @@ var FC;
                     hdrs = headers;
                 }
                 var vm = this;
+                vm.Busy = true;
                 var result;
                 result = this.$http.get(url, {
                     headers: hdrs,
@@ -531,6 +537,7 @@ var FC;
                 var hdrs = {};
                 var prms = {};
                 var vm = this;
+                vm.Busy = true;
                 if (params) {
                     prms = params;
                 }
@@ -576,6 +583,7 @@ var FC;
                 var hdrs = {};
                 var prms = {};
                 var vm = this;
+                vm.Busy = true;
                 if (params) {
                     prms = params;
                 }
@@ -596,6 +604,7 @@ var FC;
                 var _this = this;
                 //this.Loading.Listen(url);
                 var vm = this;
+                vm.Busy = true;
                 var result;
                 var hdrs = {};
                 var prms = {};
@@ -620,6 +629,7 @@ var FC;
                 url = $AppConfig.URLRoot + url;
                 var config = this.Config;
                 var vm = this;
+                vm.Busy = true;
                 var result;
                 $AppConfig.ServiceHeaders.Token = FC.Shared.Util.CacheManager.GetInstance().GetCookieValue("Token");
                 result = this.$http({
@@ -635,6 +645,7 @@ var FC;
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.handlerResponded = function (url, response, params) {
                 var vm = this;
+                vm.Busy = false;
                 vm.GetCompleted[url] = true;
                 //vm.Loading.TriggerComplete(url["ReplaceAll"]($AppConfig.URLRoot, "")["ReplaceAll"]('/', ''));
                 if (params && params.length > 0) {
@@ -650,6 +661,8 @@ var FC;
                 return new FC.Shared.Models.ServiceResponse(response.data);
             };
             ServiceBase /*implements INT.IServiceBase<any>*/.prototype.handlerRespondedRaw = function (response, params) {
+                var vm = this;
+                vm.Busy = false;
                 return response;
             };
             return ServiceBase /*implements INT.IServiceBase<any>*/;
@@ -660,6 +673,12 @@ var FC;
 ///<reference path="AppConfig.ts"/>
 ///<reference path="ServiceBase.ts"/>
 ///<reference path="../../Shared/Util/CacheManager.ts"/>
+var IsMobile = function () {
+    var check = false;
+    (function (a) { if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4)))
+        check = true; })(navigator.userAgent || navigator.vendor || window['opera']);
+    return check;
+};
 window.onresize = function (event) {
     $("#bg").css("width", $(window).width());
 };
@@ -754,9 +773,6 @@ var FC;
                 this.modules = modules;
                 if (modules.length > 0) {
                     this.app = angular.module(name, modules);
-                    this.app.config(function ($routeProvider, $locationProvider) {
-                        $locationProvider.html5Mode(false);
-                    });
                 }
                 else {
                     this.app = angular.module(name);
@@ -775,26 +791,16 @@ var FC;
             FCModule.prototype.GetModule = function (name) {
                 return ModuleRegister[name];
             };
-            FCModule.prototype.AddRoute = function (urlFormat, tplName, controllerName, controllerAlias) {
-                this.app.config(function ($routeProvider, $locationProvider) {
-                    $routeProvider.when(urlFormat, {
-                        templateUrl: tplName,
-                        controller: controllerName,
-                        controllerAs: controllerAlias
-                    });
-                });
-            };
             return FCModule;
         }());
         Core.FCModule = FCModule;
     })(Core = FC.Core || (FC.Core = {}));
 })(FC || (FC = {}));
 var ApplicationDependencies = [
-    'ngRoute',
-    'ngSanitize',
     'ui.bootstrap',
     'ngMaterial',
     'ui.tinymce',
+    'infinite-scroll'
 ];
 var CONFIG;
 var Application = new FC.Core.FCModule("FC", ApplicationDependencies);
@@ -820,9 +826,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/artists", "/Scripts/Modules/Artists/Views/overview.html", "FC.Modules.Artists.Controllers.ArtistOverviewController", "vm");
-                    this.$Application.AddRoute("/artists/:pagenum", "/Scripts/Modules/Artists/Views/overview.html", "FC.Modules.Artists.Controllers.ArtistOverviewController", "vm");
-                    this.$Application.AddRoute("/artists/sort/:character", "/Scripts/Modules/Artists/Views/overview.html", "FC.Modules.Artists.Controllers.ArtistOverviewController", "vm");
                 }
                 Artists.prototype.GetApplication = function () {
                     return this.$Application;
@@ -999,7 +1002,7 @@ var FC;
             }());
             Controllers.META = META;
             var BaseController = (function () {
-                function BaseController($http, $q, $scope, $location, $routeParams, $mdDialog) {
+                function BaseController($http, $q, $scope, $location, $mdDialog) {
                     this.BaseIsLoading = true;
                     this.HtmlSafe = function ($sce, data) {
                         var vm = this;
@@ -1016,24 +1019,6 @@ var FC;
                     this.$q = $q;
                     this.$scope.$q = $q;
                     this.$scope['CONFIRMATION'] = FC.Core.Controllers.CONFIRMATION;
-                    if ($routeParams["page"]) {
-                        this.SetPageNum(parseInt($routeParams["page"]));
-                    }
-                    else {
-                        this.SetPageNum(1);
-                    }
-                    if ($routeParams["year"]) {
-                        this.$scope.ActiveYear = $routeParams["year"];
-                    }
-                    else {
-                        this.$scope.ActiveYear = new Date().getFullYear();
-                    }
-                    if ($routeParams["month"]) {
-                        this.$scope.ActiveMonth = $routeParams["month"];
-                    }
-                    else {
-                        this.$scope.ActiveMonth = new Date().getMonth() + 1;
-                    }
                     this.GenreService = new FC.Modules.Genres.Services.GenreService($http, $q);
                     this.CountriesSvc = new FC.Modules.Countries.Services.CountriesService($http, $q);
                     this.GeoIPSvc = new FC.Core.Services.GeoIPService($http, $q);
@@ -1049,7 +1034,6 @@ var FC;
                     this.RoleService = new FC.Core.Services.RolesService($http, $q);
                     //public ReportsService: FC.Modules.Report.Services.ReportsService;
                     this.$location = $location;
-                    this.$routeParams = $routeParams;
                     this.$inst = this;
                     this.$scope.IsLoading = true;
                     this.$scope.MEDIA_ROOT_ID = FC.Core.Environment.MEDIA_ROOT_ID;
@@ -1067,33 +1051,17 @@ var FC;
                     this.$scope.FinishForm = this.FinishForm;
                     this.$scope.DoCancelCRUD = this.DoCancelCRUD;
                     CONFIG = new FC.Core.AppConfig();
-                    this.initLoadingScope();
-                    this.SetCountryCache();
                     this.SetUserYearAndMonth();
-                    this.SetGenreData();
-                    this.SetPageNum($routeParams['page']);
                     this.RuleRegister = new Array();
                     this.DoAddSaveListener(null);
                     this.$scope.TinymceOptions = {
                         plugins: 'link image code, media',
                         toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
                     };
-                    this.$scope.META = new META();
-                    this.$scope.META.PageTitle = "Discover the most amazing festivals! BETA 1.0";
-                    this.$scope.META.PageKeys = "Festival, Artists, Calendar, Agenda, EDM, Dance, Hardcore, Hardrock, metal, festivals, overview, oversight";
-                    this.$scope.META.PageDesc = "Festival Calendar is THE most complete guide for your Festival, with news, updates, and many more!";
-                    this.$scope.META.PageIMG = "";
                     window.addEventListener("FCDataLoadingComplete", function (e) {
                         vm.$scope.IsLoading = false;
                     });
                 }
-                BaseController.prototype.initLoadingScope = function () {
-                    var vm = this;
-                    vm.$scope.IsThemesLoading = true;
-                    vm.$scope.IsCountriesLoading = true;
-                    vm.$scope.IsGenresLoading = true;
-                    vm.$scope.IsFestivalsLoading = true;
-                };
                 BaseController.prototype.AddValidationRule = function (rule) {
                     this.RuleRegister.push(rule);
                 };
@@ -1503,22 +1471,6 @@ var FC;
                         vm.$scope.SysCountries = CacheManager.Get("sys-countries").data;
                     }
                 };
-                BaseController.prototype.SetGenreData = function (force) {
-                    if (force === void 0) { force = false; }
-                    var vm = this;
-                    if (!vm.CacheManager.Contains("sys-genres") || force == true) {
-                        if (vm.$scope.MemReg.Get("sys-genres-set") == null) {
-                            vm.GenreService.GetAllGenres().then(function (r) {
-                                vm.CacheManager.WriteStorage("sys-genres", r.Data, 9999999999999999999);
-                                vm.$scope.SysGenres = r.Data;
-                            });
-                            vm.$scope.MemReg.Register("sys-genres-set", true);
-                        }
-                    }
-                    else {
-                        vm.$scope.SysGenres = CacheManager.Get("sys-genres").data;
-                    }
-                };
                 BaseController.prototype.ClearNullIndexes = function (arr) {
                     console.warn("BaseController::ClearNullIndexes is obsolete, use BaseController::RepairArray instead");
                     var result = new Array();
@@ -1815,8 +1767,8 @@ var FC;
             (function (Controllers) {
                 var ArtistDetailController = (function (_super) {
                     __extends(ArtistDetailController, _super);
-                    function ArtistDetailController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, FestivalService, NewsService, RatesService, BannerService, UrlManagerService, $sce, GenreService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function ArtistDetailController($http, $q, $scope, $location, $mdDialog, FestivalService, NewsService, RatesService, BannerService, UrlManagerService, $sce, GenreService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
                     }
                     //public ActiveGenreID: number;
@@ -1824,8 +1776,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         'FC.Modules.Festival.Services.FestivalService',
@@ -1858,8 +1808,8 @@ var FC;
             (function (Controllers) {
                 var ArtistDialogController = (function (_super) {
                     __extends(ArtistDialogController, _super);
-                    function ArtistDialogController($http, $q, $uibModal, $scope, $mdDialog, $route, $routeParams, $location, UrlManagerService, $sce, GenreService, ArtistsService, FestivalService, CalendarService, LocationService, TicketService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function ArtistDialogController($http, $q, $uibModal, $scope, $mdDialog, $routeParams, $location, UrlManagerService, $sce, GenreService, ArtistsService, FestivalService, CalendarService, LocationService, TicketService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.$scope.inst = this;
                         vm.$scope.$location = $location;
@@ -1893,8 +1843,6 @@ var FC;
                         '$uibModal',
                         '$scope',
                         '$mdDialog',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "FC.Modules.Theming.Services.ThemingService",
                         "FC.Core.Services.LocalizationService",
@@ -1929,8 +1877,8 @@ var FC;
             (function (Controllers) {
                 var ArtistModalController = (function (_super) {
                     __extends(ArtistModalController, _super);
-                    function ArtistModalController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce, GenreService, ArtistsService, local) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function ArtistModalController($http, $q, $mdDialog, $scope, $route, $location, $sce, GenreService, ArtistsService, local) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.ShowTravelInfo = false;
                         var vm = this;
                         vm.$scope = $scope;
@@ -2186,8 +2134,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce",
                         "FC.Modules.Genres.Services.GenreService",
@@ -2216,10 +2162,9 @@ var FC;
             (function (Controllers) {
                 var ArtistOverviewController = (function (_super) {
                     __extends(ArtistOverviewController, _super);
-                    function ArtistOverviewController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, FestivalService, NewsService, RatesService, $sce, GenreService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function ArtistOverviewController($http, $q, $scope, $route, $location, $mdDialog, FestivalService, NewsService, RatesService, $sce, GenreService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.$scope = $scope;
-                        this.$scope.$routeParams = $routeParams;
                         //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
                         this.setArtists();
                         this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
@@ -2353,8 +2298,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         'FC.Modules.Festival.Services.FestivalService',
@@ -2468,7 +2411,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/logout/:ref", "/Scripts/Modules/Auth/Views/logout.html", "FC.Modules.Auth.Controllers.AuthController", "vm");
                 }
                 Auth.prototype.GetApplication = function () {
                     return this.$Application;
@@ -2672,8 +2614,8 @@ var FC;
             (function (Controllers) {
                 var AuthController = (function (_super) {
                     __extends(AuthController, _super);
-                    function AuthController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, AuthService, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function AuthController($http, $q, $scope, $location, $mdDialog, AuthService, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.$location = $location;
                         $scope.SubmitLoginForm = this.SubmitLoginForm;
                         $scope.SubmitRegisterForm = this.SubmitRegisterForm;
@@ -2684,7 +2626,6 @@ var FC;
                         this.$scope.inst = this;
                         this.$scope = $scope;
                         this.$scope.StartLogout = this.StartLogout;
-                        this.$routeParams = $routeParams;
                         var vm = this;
                         if (window.location.href.indexOf("logout") > -1) {
                             if (this.$routeParams['ref']) {
@@ -2769,8 +2710,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         "FC.Core.Services.AuthService",
@@ -2799,7 +2738,7 @@ var FC;
                     //Example of star- half - full(alias)
                     //Example of star- half - o
                     //Example of star- o-- >
-                    function AuthDirective($route, $routeParams, $location, $http, $q, $compile) {
+                    function AuthDirective($location, $http, $q, $compile) {
                         //public template = '';
                         //public templateUrl = '';
                         //public controller = FC.Modules.Media.Controllers.MediaModalController;
@@ -2916,10 +2855,10 @@ var FC;
                         };
                     }
                     AuthDirective.factory = function () {
-                        var directive = function ($route, $routeParams, $location, $http, $q, $compile) {
-                            return new AuthDirective($route, $routeParams, $location, $http, $q, $compile);
+                        var directive = function ($location, $http, $q, $compile) {
+                            return new AuthDirective($location, $http, $q, $compile);
                         };
-                        directive['$inject'] = ['$route', '$routeParams', '$location', '$http', '$q', '$compile'];
+                        directive['$inject'] = ['$location', '$http', '$q', '$compile'];
                         return directive;
                     };
                     return AuthDirective;
@@ -2994,12 +2933,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/", "/Scripts/Modules/Calendar/Views/calendar.html", "FC.Modules.Calendar.Controllers.CalendarController", "vm");
-                    this.$Application.AddRoute("/:year/:month", "/Scripts/Modules/Calendar/Views/calendar.html", "FC.Modules.Calendar.Controllers.CalendarController", "vm");
-                    this.$Application.AddRoute("/calendar", "/Scripts/Modules/Calendar/Views/calendar.html", "FC.Modules.Calendar.Controllers.CalendarController", "vm");
-                    this.$Application.AddRoute("/calendar/:year/:month", "/Scripts/Modules/Calendar/Views/calendar.html", "FC.Modules.Calendar.Controllers.CalendarController", "vm");
-                    this.$Application.AddRoute("/calendar/:year/:month:/:country", "/Scripts/Modules/Calendar/Views/calendar.html", "FC.Modules.Calendar.Controllers.CalendarController", "vm");
-                    this.$Application.AddRoute("/festival/@:festivalName", "/scripts/modules/details/detail.html", "FC.Modules.Details.Controllers.DetailsController", "vm");
                 }
                 Calendar.prototype.GetApplication = function () {
                     return this.$Application;
@@ -3011,236 +2944,6 @@ var FC;
     })(Modules = FC.Modules || (FC.Modules = {}));
 })(FC || (FC = {}));
 var CalendarModule = new FC.Modules.Calendar.Calendar(angular.module('FC.Modules.Calendar', ApplicationDependencies), Application);
-/////<reference path="../../Core/FC.ts" />
-/////<reference path="../../Core/Services/NominatimService.ts" />
-/////<reference path="../Calendar.ts"/>
-/////<reference path="../Services/CalendarService.ts"/>
-/////<reference path="../../../Shared/Controllers/BaseController.ts"/>
-/////<reference path="../../../Shared/Util/CacheManager.ts"/>
-////Loading properties;
-//// IsThemesLoading: boolean;//
-//// IsCountriesLoading: boolean;//
-//// IsGenresLoading: boolean;//
-//// IsFestivalsLoading: boolean;//
-//module FC.Modules.Calendar.Controllers {
-//    import CM = FC.Shared.CoreModel;
-//    import INT = FC.Shared.Interfaces;
-//    import MODELS = FC.Shared.Models;
-//    import MODULES = FC.Modules;
-//    export class CalendarController extends FC.Shared.Controllers.BaseController {
-//        public $scope: FC.Shared.ViewModels.ICalendarVm;
-//        public _inst: FC.Modules.Calendar.Controllers.CalendarController;
-//        //base
-//        public URLManager: FC.Core.Services.URLManagerService;
-//        private CalendarSvc: FC.Modules.Calendar.Services.CalendarService;
-//        public NewsSvc: FC.Modules.News.Services.NewsService;
-//        public CacheManager: FC.Shared.Util.CacheManager;
-//        private CalendarMonths: Array<string>;
-//        private CalendarYears: Array<number>;
-//        public ActiveMonthNum: number;
-//        public ActiveYear: number;
-//        public UserGenres: Array<string>;
-//        //col data
-//        public Festivals: Array<FC.Shared.ViewModels.IFestivalVM>;
-//        static $inject = [
-//            '$http',
-//            '$q',
-//            '$scope',
-//            '$route',
-//            '$routeParams',
-//            '$location',
-//            '$mdDialog',
-//            '$sce',
-//            "FC.Core.Services.URLManagerService",
-//            "FC.Modules.Calendar.Services.CalendarService",
-//            "FC.Modules.News.Services.NewsService"
-//        ];
-//        private _InitColDbo() {
-//            this.Festivals = new Array<FC.Shared.ViewModels.IFestivalVM>();
-//        }
-//        private _InitServices(
-//            CalendarService: FC.Modules.Calendar.Services.CalendarService,
-//            NewsService: FC.Modules.News.Services.NewsService
-//        ) {
-//            this.CalendarSvc = CalendarService;
-//            this.NewsSvc = NewsService;
-//        }
-//        private WatchSearchResult() {
-//            var vm = this;
-//            vm.$scope.HasSearchResults = false;
-//            vm.$scope.IsFestivalsLoading = true;
-//            vm.$scope.SearchNoResults = false;
-//            vm.$scope.Searching = false;
-//            window.addEventListener("Searching", function () {
-//                vm.CacheManager.DeleteStorage("search-result");
-//                vm.$scope.IsFestivalsLoading = true;
-//                vm.$scope.SearchNoResults = false;
-//                vm.$scope.Searching = true;
-//                vm.$scope.IsLoading = true;
-//            })
-//            window.addEventListener("SearchCompletedWithResults", function () {
-//                vm.$scope.Searching = false;
-//                vm.CacheManager.GetStorage("search-result", function (data: any) {
-//                    vm.$scope.HasSearchResults = true;
-//                    var d = data.data as FC.Shared.ViewModels.IFestivalVM[];
-//                    if (d.length == 0) {
-//                        vm.$scope.SearchNoResults = true;
-//                        vm.$scope.Searching = false;
-//                        vm.$scope.IsLoading = false;
-//                    } else {
-//                        vm.$scope.BaseIsLoading = false;
-//                        vm.$scope.Festivals = d;
-//                        vm.$scope.Searching = false;
-//                        vm.$scope.IsLoading = false;
-//                    }
-//                });
-//            });
-//            window.addEventListener("SearchCompletedWithNoResults", function () {
-//                vm.$scope.IsLoading = false;
-//                vm.$scope.SearchNoResults = true;
-//                vm.$scope.Searching = false;
-//            });
-//        }
-//        private _InitializeDateData($scope: any) {
-//            //var vm = this;
-//            //this.CalendarYears = [new Date().getFullYear(), new Date().getFullYear() + 1];
-//            //$scope.ActiveYear = new Date().getFullYear();
-//            //this.CalendarSvc.GetMonths().then(function (r: INT.IServiceResponse<Array<string>>) {
-//            //    vm.CalendarMonths = r.Data;
-//            //});
-//        }
-//        private compare(a, b) {
-//            if (a.OrderDate < b.OrderDate) {
-//                return -1;
-//            }
-//            else if (a.OrderDate > b.OrderDate) {
-//                return 1;
-//            }
-//            else {
-//                return 0;
-//            }
-//        }
-//        private _InitViewData($scope: any) {
-//            var vm = this;
-//            var genres: FC.Shared.Models.UGenre[] = new Array<FC.Shared.Models.UGenre>();
-//            var genresFilter: MODELS.UGenre[] = new Array<MODELS.UGenre>();
-//            if (vm.CacheManager.Contains('ActiveGenres')) {
-//                var tmpGenres = vm.CacheManager.Get<FC.Shared.Models.UGenre[]>('ActiveGenres');
-//                genres = tmpGenres.data;
-//                genresFilter = genres;
-//            }
-//            var countriesFilter: MODELS.UCountry[] = new Array<MODELS.UCountry>();
-//            if (vm.CacheManager.Contains("UserCountries")) {
-//                countriesFilter = vm.CacheManager.Get<MODELS.UCountry[]>('UserCountries').data;
-//            }
-//            vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genresFilter, countriesFilter).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
-//                vm.$scope.Festivals = result.Data;
-//                vm.$scope.IsLoading = false;
-//            });
-//            window.addEventListener("ActiveGenres_Deleted", function (e) {
-//                vm.$scope.IsLoading = true;
-//                var countriesFilter: MODELS.UCountry[] = new Array<MODELS.UCountry>();
-//                if (vm.CacheManager.Contains("UserCountries")) {
-//                    countriesFilter = vm.CacheManager.Get<MODELS.UCountry[]>('UserCountries').data;
-//                }
-//                vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, new Array<MODELS.UGenre>(), countriesFilter).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
-//                    vm.$scope.Festivals = result.Data;
-//                    vm.$scope.IsLoading = false;
-//                });
-//            });
-//            window.addEventListener('ActiveGenres_Writed', function (e) {
-//                vm.$scope.IsLoading = true;
-//                var genres = new Array<FC.Shared.Models.UGenre>();
-//                var tmpGenres = vm.CacheManager.Get<FC.Shared.Models.UGenre[]>('ActiveGenres');
-//                genres = tmpGenres.data;
-//                var genresFilter = genres;
-//                var countriesFilter: MODELS.UCountry[] = new Array<MODELS.UCountry>();
-//                if (vm.CacheManager.Contains("UserCountries")) {
-//                    countriesFilter = vm.CacheManager.Get<MODELS.UCountry[]>('UserCountries').data;
-//                }
-//                vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genresFilter, countriesFilter).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
-//                    vm.$scope.Festivals = result.Data;
-//                    vm.$scope.IsLoading = false;
-//                });
-//            });
-//            window.addEventListener('UserCountries_Writed', function (e) {
-//                var countries = vm.CacheManager.GetStorage('UserCountries');
-//                var genres = new Array<MODELS.UGenre>();
-//                if (vm.CacheManager.Contains("ActiveGenres")) {
-//                    genres = vm.CacheManager.Get<MODELS.UGenre[]>('ActiveGenres').data;
-//                }
-//                vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genres, countries.data).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
-//                    vm.$scope.Festivals = result.Data;
-//                    vm.$scope.IsLoading = false;
-//                });
-//            });
-//            window.addEventListener('UserCountries_Deleted', function (e) {
-//                var countriesFilter: MODELS.UCountry[] = new Array<MODELS.UCountry>();
-//                if (vm.CacheManager.Contains("UserCountries")) {
-//                    countriesFilter = vm.CacheManager.Get<MODELS.UCountry[]>('UserCountries').data;
-//                }
-//                var genres = vm.CacheManager.GetStorage('UserCountries');
-//                vm.CalendarSvc.GetFilteredFestivals(vm.$scope.ActiveMonth, vm.$scope.ActiveYear, genres.data, countriesFilter).then(function (result: INT.IServiceResponse<FC.Shared.ViewModels.IFestivalVM[]>) {
-//                    vm.$scope.Festivals = result.Data;
-//                    vm.$scope.IsLoading = false;
-//                });
-//            });
-//        }
-//        constructor(
-//            $http,
-//            $q,
-//            $scope,
-//            $route,
-//            $routeParams,
-//            $location,
-//            $mdDialog,
-//            $sce,
-//            URLManagerService: FC.Core.Services.URLManagerService,
-//            CalendarService: FC.Modules.Calendar.Services.CalendarService,
-//            NewsService: FC.Modules.News.Services.NewsService
-//        ) {
-//            super($http, $q, $scope, $location, $routeParams,$mdDialog);
-//            var genreSvc = new FC.Modules.Genres.Services.GenreService($http, $q);
-//            var vm = this;
-//            this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
-//            this.$scope = $scope;
-//            this.URLManager = new FC.Core.Services.URLManagerService($http,$q,null);
-//            this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
-//            this.initLoadingScope();
-//            this._InitColDbo();
-//            this._InitServices(CalendarService, NewsService);
-//            this._InitializeDateData($scope);
-//            if (!this.$scope.ActiveYear) {
-//                if ($routeParams["year"] != null) {
-//                    this.$scope.ActiveYear = $routeParams["year"];
-//                } else if (CacheManager.Contains("ActiveYear")) {
-//                    vm.$scope.ActiveYear = CacheManager.Get<number>("ActiveYear").data;
-//                } else {
-//                    this.$scope.ActiveYear = new Date().getFullYear();
-//                }
-//            }
-//            if (!this.$scope.ActiveMonth) {
-//                if ($routeParams["month"] != null) {
-//                    this.$scope.ActiveMonth = $routeParams["month"];
-//                } else if (CacheManager.Contains("ActiveMonth")) {
-//                    vm.$scope.ActiveMonth = CacheManager.Get<number>("ActiveMonth").data;
-//                } else {
-//                    vm.$scope.ActiveMonth = new Date().getMonth() + 1;
-//                }
-//            }
-//            this._InitViewData($scope);
-//            this.WatchSearchResult();
-//            this.URLManager.AddURL("festival", "FestivalURL", "festival/{0}/");
-//            this.URLManager.AddURL("festival", "FestivalURL", "festival/{0}/{1}");
-//        }
-//        public GetFestivalURL(festival: FC.Shared.Models.UFestival): string {
-//            var vm = this;
-//            var retUrl = this.URLManager.GetURL("festival", "FestivalURL", [festival.FestivalID.toString()]);
-//            return retUrl;
-//        }
-//    }
-//    CalendarModule.GetApplication().RegisterController("FC.Modules.Calendar.Controllers.CalendarController", FC.Modules.Calendar.Controllers.CalendarController);
-//} 
 ///<reference path="../../Core/FC.ts"/>
 ///<reference path="../Calendar.ts" />
 ///<reference path="../../../Shared/CoreModel/KeyValuePair.ts"/>
@@ -3255,23 +2958,89 @@ var FC;
             (function (Controllers) {
                 var SimpleCalendarController = (function (_super) {
                     __extends(SimpleCalendarController, _super);
-                    function SimpleCalendarController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function SimpleCalendarController($http, $q, $mdDialog, $scope, $location, $sce, $InfiniteScroll) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                         var vm = this;
                         vm.$scope = $scope;
                         vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
                         vm.$scope.inst = vm;
-                        vm.$scope.$routeParams = $routeParams;
+                        vm.$scope.API = vm.FestivalService;
                         vm.$scope.$location = $location;
                         vm.$scope.FormID = '908ADBE0-5121-4857-9D3A-E829DCCE9D80';
                         vm.$scope.MemReg = FC.Shared.Util.MemReg.GetInstance();
                         vm.$scope.MtModal = $mdDialog;
                         this.addFilterChangeListener();
                         this.handleSearch();
+                        vm.filter = new FC.Shared.ServiceMessages.FestivalFilter();
+                        vm.filter.PageLength = 12;
+                        vm.filter.BlockLength = 295;
+                        vm.$scope.SearchResult = new Array();
+                        vm.$scope.API.API_COMPLETED = false;
                         this.$scope.ShowCancelSearch = false;
+                        window.addEventListener("SearchCleared", function (e) {
+                            vm.LoadMore();
+                        });
                         vm.init();
                     }
+                    SimpleCalendarController.prototype.LoadMore = function () {
+                        var vm = this;
+                        //disable for search screen
+                        if (vm.$scope.SearchResult.length == 0) {
+                            if (!vm.$scope.Festivals) {
+                                vm.$scope.Festivals = new Array();
+                            }
+                            vm.$scope.API.Busy = true;
+                            if (vm.$scope.API.API_COMPLETED == false) {
+                                vm.FestivalService.GetByFilter(vm.filter).then(function (r) {
+                                    if (r.Data.length == 0) {
+                                        vm.$scope.API.API_COMPLETED = true;
+                                        vm.$scope.API.Busy = false;
+                                    }
+                                    vm.$scope.API.Busy = false;
+                                    r.Data.forEach(function (v, k) {
+                                        vm.filter.MonthNum = parseInt(v.Start_M);
+                                        if (!vm.$scope.Festivals.some(function (v2, k2) {
+                                            return v2.FestivalID == v.FestivalID;
+                                        })) {
+                                            vm.$scope.Festivals.push(v);
+                                        }
+                                    });
+                                    vm.filter.CurrentLength = vm.$scope.Festivals.length;
+                                    vm.$scope.IsLoading = false;
+                                    var e = new CustomEvent("CalendarLoaded");
+                                    window.dispatchEvent(e);
+                                });
+                            }
+                            else {
+                                vm.$scope.API.Busy = false;
+                            }
+                        }
+                    };
+                    SimpleCalendarController.prototype.LoadUpcoming = function () {
+                        var vm = this;
+                        if (!vm.$scope.Festivals) {
+                            vm.$scope.Festivals = new Array();
+                        }
+                        vm.CalendarService.GetUpcoming(vm.filter).then(function (r) {
+                            if (r.Data.length == 0) {
+                                vm.$scope.API.API_COMPLETED = true;
+                                vm.$scope.API.Busy = false;
+                            }
+                            vm.$scope.API.Busy = false;
+                            r.Data.forEach(function (v, k) {
+                                if (!vm.$scope.Festivals.some(function (v2, k2) {
+                                    return v2.FestivalID == v.FestivalID;
+                                })) {
+                                    vm.$scope.Festivals.push(v);
+                                }
+                            });
+                            vm.filter.CurrentLength = vm.$scope.Festivals.length;
+                            vm.$scope.IsLoading = false;
+                            var e = new CustomEvent("CalendarLoaded");
+                            window.dispatchEvent(e);
+                        });
+                    };
                     SimpleCalendarController.prototype.ClearFilters = function () {
                         CacheManager.DeleteStorage("Filter_Year");
                         CacheManager.DeleteStorage("Filter_Month");
@@ -3296,8 +3065,11 @@ var FC;
                     };
                     SimpleCalendarController.prototype.handleSearch = function () {
                         var vm = this;
+                        vm.$scope.API.API_COMPLETED = false;
+                        vm.$scope.API.Busy = false;
                         window.addEventListener("SearchStart", function (e) {
                             vm.$scope.IsLoading = true;
+                            vm.$scope.SearchResult = new Array();
                         });
                         window.addEventListener("SearchReset", function (e) {
                             var festivals = e.detail;
@@ -3305,6 +3077,7 @@ var FC;
                         });
                         window.addEventListener("SearchComplete", function (e) {
                             var festivals = e.detail;
+                            vm.$scope.SearchResult = festivals;
                             vm.$scope.Festivals = festivals;
                             vm.$scope.IsLoading = false;
                             vm.$scope.ShowCancelSearch = true;
@@ -3328,100 +3101,7 @@ var FC;
                         var e = new CustomEvent("CalendarLoading");
                         window.dispatchEvent(e);
                         try {
-                            if (CacheManager.GetCookieValue("UserID")) {
-                                vm.FavoriteService.GetUserFavorites(CacheManager.GetCookieValue("UserID"), FC.Shared.Enum.InternalContentType.All).then(function (r) {
-                                    var filter = new FC.Shared.ServiceMessages.FestivalFilter(r.Data.filter(function (v, k) {
-                                        return v.ContentType == FC.Shared.Enum.InternalContentType.Genre;
-                                    }), r.Data.filter(function (v, k) {
-                                        return v.ContentType == FC.Shared.Enum.InternalContentType.Artist;
-                                    }), r.Data.filter(function (v, k) {
-                                        return v.ContentType == FC.Shared.Enum.InternalContentType.Location;
-                                    }), r.Data.filter(function (v, k) {
-                                        return v.ContentType == FC.Shared.Enum.InternalContentType.Country;
-                                    }));
-                                    if (CacheManager.GetCookieValue("Filter_Month")) {
-                                        filter.MonthNum = parseInt(CacheManager.GetCookieValue("Filter_Month"));
-                                    }
-                                    if (CacheManager.GetCookieValue("Filter_Year")) {
-                                        filter.YearNum = parseInt(CacheManager.GetCookieValue("Filter_Year"));
-                                    }
-                                    if (vm.CacheManager.Contains("ActiveGenres")) {
-                                        genres = vm.CacheManager.Get("ActiveGenres").data;
-                                        if (genres.forEach) {
-                                            genres.forEach(function (v, k) {
-                                                filter.GenreIDs.push(v.GenreID);
-                                            });
-                                        }
-                                    }
-                                    if (vm.CacheManager.Contains("ActiveCountries")) {
-                                        countries = vm.CacheManager.Get("ActiveCountries").data;
-                                        if (countries.forEach) {
-                                            countries.forEach(function (v, k) {
-                                                filter.CountryIDs.push(v.CountryID);
-                                            });
-                                        }
-                                    }
-                                    if (vm.CacheManager.Contains("ActiveArtists")) {
-                                        artists = vm.CacheManager.Get("ActiveArtists").data;
-                                        if (artists.forEach) {
-                                            artists.forEach(function (v, k) {
-                                                filter.ArtistIDs.push(v.CountryID);
-                                            });
-                                        }
-                                    }
-                                    if (vm.CacheManager.Contains("ActiveLocations")) {
-                                        locations = vm.CacheManager.Get("ActiveLocations").data;
-                                        if (locations.forEach) {
-                                            locations.forEach(function (v, k) {
-                                                filter.LocationIDs.push(v.LocationID);
-                                            });
-                                        }
-                                    }
-                                    vm.CalendarService.GetByFilter(filter).then(function (r) {
-                                        vm.$scope.Festivals = r.Data;
-                                        vm.$scope.IsLoading = false;
-                                        var e = new CustomEvent("CalendarLoaded");
-                                        window.dispatchEvent(e);
-                                    });
-                                });
-                            }
-                            else {
-                                var filter = new FC.Shared.ServiceMessages.FestivalFilter();
-                                filter.YearNum = -1;
-                                filter.MonthNum = -1;
-                                var genres = new Array();
-                                var countries = new Array();
-                                var locations = new Array();
-                                var artists = new Array();
-                                var month = new Date().getMonth() + 1;
-                                var year = new Date().getFullYear();
-                                if (CacheManager.GetCookieValue("Filter_Month")) {
-                                    month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
-                                }
-                                if (CacheManager.GetCookieValue("Filter_Year")) {
-                                    year = parseInt(CacheManager.GetCookieValue("Filter_Year"));
-                                }
-                                if (vm.CacheManager.Contains("ActiveGenres")) {
-                                    genres = vm.CacheManager.Get("ActiveGenres").data;
-                                }
-                                if (vm.CacheManager.Contains("ActiveCountries")) {
-                                    countries = vm.CacheManager.Get("ActiveCountries").data;
-                                }
-                                if (vm.CacheManager.Contains("ActiveArtists")) {
-                                    artists = vm.CacheManager.Get("ActiveArtists").data;
-                                }
-                                if (vm.CacheManager.Contains("ActiveLocations")) {
-                                    locations = vm.CacheManager.Get("ActiveLocations").data;
-                                }
-                                filter.YearNum = year;
-                                filter.MonthNum = month;
-                                vm.CalendarService.GetFilteredFestivals(filter.MonthNum, filter.YearNum, genres, countries).then(function (r) {
-                                    vm.$scope.Festivals = r.Data;
-                                    vm.$scope.IsLoading = false;
-                                    var e = new CustomEvent("CalendarLoaded");
-                                    window.dispatchEvent(e);
-                                });
-                            }
+                            var filter = this.getFilter();
                         }
                         catch (e) {
                             year = new Date().getFullYear();
@@ -3430,6 +3110,112 @@ var FC;
                             countries = new Array();
                         }
                     };
+                    //private getRemoteFilter(): ng.IPromise<FC.Shared.ServiceMessages.FestivalFilter> {
+                    //    var vm = this;
+                    //    var filter: FC.Shared.ServiceMessages.FestivalFilter = new FC.Shared.ServiceMessages.FestivalFilter();
+                    //    filter.YearNum = -1;
+                    //    filter.MonthNum = -1;
+                    //    if(CacheManager.GetCookieValue("UserID")) {
+                    //        vm.FavoriteService.GetUserFavorites(CacheManager.GetCookieValue("UserID"), Shared.Enum.InternalContentType.All).then(function (r) {
+                    //        var filter = new FC.Shared.ServiceMessages.FestivalFilter(
+                    //            r.Data.filter(function (v, k) {
+                    //                return v.ContentType == Shared.Enum.InternalContentType.Genre
+                    //            }),
+                    //            r.Data.filter(function (v, k) {
+                    //                return v.ContentType == Shared.Enum.InternalContentType.Artist
+                    //            }),
+                    //            r.Data.filter(function (v, k) {
+                    //                return v.ContentType == Shared.Enum.InternalContentType.Location
+                    //            }),
+                    //            r.Data.filter(function (v, k) {
+                    //                return v.ContentType == Shared.Enum.InternalContentType.Country
+                    //            })
+                    //        );
+                    //        if (CacheManager.GetCookieValue("Filter_Month")) {
+                    //            filter.MonthNum = parseInt(CacheManager.GetCookieValue("Filter_Month"));
+                    //            //vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
+                    //        }
+                    //        if (CacheManager.GetCookieValue("Filter_Year")) {
+                    //            filter.YearNum = parseInt(CacheManager.GetCookieValue("Filter_Year"));
+                    //            //vm.$scope.DateString = vm.months[vm.$scope.Month - 1].toUpperCase() + " / " + vm.$scope.Year;
+                    //        }
+                    //        vm.CalendarService.GetByFilter(filter).then(function (r) {
+                    //            vm.$scope.Festivals = r.Data;
+                    //            vm.$scope.IsLoading = false;
+                    //            var e = new CustomEvent("CalendarLoaded");
+                    //            window.dispatchEvent(e);
+                    //        });
+                    //    });
+                    //    }
+                    //}
+                    SimpleCalendarController.prototype.getFilter = function () {
+                        var vm = this;
+                        var genres = new Array();
+                        var countries = new Array();
+                        var locations = new Array();
+                        var artists = new Array();
+                        var month = new Date().getMonth() + 1;
+                        var year = new Date().getFullYear();
+                        if (CacheManager.GetCookieValue("Filter_Month")) {
+                            month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
+                        }
+                        else {
+                            vm.filter.MonthNum = -1;
+                        }
+                        if (CacheManager.GetCookieValue("Filter_Year")) {
+                            year = parseInt(CacheManager.GetCookieValue("Filter_Year"));
+                        }
+                        else {
+                            vm.filter.YearNum = -1;
+                        }
+                        if (vm.CacheManager.Contains("ActiveGenres")) {
+                            genres = vm.CacheManager.Get("ActiveGenres").data;
+                        }
+                        if (vm.CacheManager.Contains("ActiveCountries")) {
+                            countries = vm.CacheManager.Get("ActiveCountries").data;
+                        }
+                        if (vm.CacheManager.Contains("ActiveArtists")) {
+                            artists = vm.CacheManager.Get("ActiveArtists").data;
+                        }
+                        if (vm.CacheManager.Contains("ActiveLocations")) {
+                            locations = vm.CacheManager.Get("ActiveLocations").data;
+                        }
+                        if (vm.CacheManager.Contains("ActiveGenres")) {
+                            genres = vm.CacheManager.Get("ActiveGenres").data;
+                            if (genres.forEach) {
+                                genres.forEach(function (v, k) {
+                                    vm.filter.GenreIDs.push(v.GenreID);
+                                });
+                            }
+                        }
+                        if (vm.CacheManager.Contains("ActiveCountries")) {
+                            countries = vm.CacheManager.Get("ActiveCountries").data;
+                            if (countries.forEach) {
+                                countries.forEach(function (v, k) {
+                                    vm.filter.CountryIDs.push(v.CountryID);
+                                });
+                            }
+                        }
+                        if (vm.CacheManager.Contains("ActiveArtists")) {
+                            artists = vm.CacheManager.Get("ActiveArtists").data;
+                            if (artists.forEach) {
+                                artists.forEach(function (v, k) {
+                                    vm.filter.ArtistIDs.push(v.CountryID);
+                                });
+                            }
+                        }
+                        if (vm.CacheManager.Contains("ActiveLocations")) {
+                            locations = vm.CacheManager.Get("ActiveLocations").data;
+                            if (locations.forEach) {
+                                locations.forEach(function (v, k) {
+                                    vm.filter.LocationIDs.push(v.LocationID);
+                                });
+                            }
+                        }
+                        vm.filter.YearNum = year;
+                        vm.filter.MonthNum = month;
+                        return vm.filter;
+                    };
                     SimpleCalendarController.prototype.addFilterChangeListener = function () {
                         var vm = this;
                         //document.getElementById("initialResult").remove();
@@ -3437,34 +3223,14 @@ var FC;
                             if (e) {
                                 if (e.detail) {
                                     vm.$scope.IsLoading = true;
+                                    vm.filter.CurrentLength = 0;
+                                    vm.$scope.API.API_COMPLETED = false;
+                                    vm.$scope.API.Busy = false;
                                     var evt = new CustomEvent("CalendarLoading");
                                     window.dispatchEvent(evt);
                                     var d = e.detail;
-                                    var genres = new Array();
-                                    var countries = new Array();
-                                    var locations = new Array();
-                                    var artists = new Array();
-                                    var month = new Date().getMonth() + 1;
-                                    var year = new Date().getFullYear();
-                                    if (CacheManager.GetCookieValue("Filter_Month")) {
-                                        month = parseInt(CacheManager.GetCookieValue("Filter_Month"));
-                                    }
-                                    if (CacheManager.GetCookieValue("Filter_Year")) {
-                                        year = parseInt(CacheManager.GetCookieValue("Filter_Year"));
-                                    }
-                                    if (vm.CacheManager.Contains("ActiveGenres")) {
-                                        genres = vm.CacheManager.Get("ActiveGenres").data;
-                                    }
-                                    if (vm.CacheManager.Contains("ActiveCountries")) {
-                                        countries = vm.CacheManager.Get("ActiveCountries").data;
-                                    }
-                                    if (vm.CacheManager.Contains("ActiveArtists")) {
-                                        artists = vm.CacheManager.Get("ActiveArtists").data;
-                                    }
-                                    if (vm.CacheManager.Contains("ActiveLocations")) {
-                                        locations = vm.CacheManager.Get("ActiveLocations").data;
-                                    }
-                                    vm.CalendarService.GetFilteredFestivals(month, year, genres, countries).then(function (r) {
+                                    var filter = vm.getFilter();
+                                    vm.CalendarService.GetByFilter(filter).then(function (r) {
                                         vm.$scope.Festivals = r.Data;
                                         vm.$scope.IsLoading = false;
                                         var evt = new CustomEvent("CalendarLoaded");
@@ -3480,8 +3246,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce"
                     ];
@@ -3629,25 +3393,16 @@ var FC;
                         }
                     };
                     CalendarService.prototype.GetByFilter = function (filter) {
+                        if (!filter.MonthNum) {
+                            filter.MonthNum = new Date().getMonth() + 1;
+                        }
+                        if (!filter.YearNum) {
+                            filter.YearNum = new Date().getFullYear();
+                        }
                         return this.Post('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage(filter));
                     };
-                    CalendarService.prototype.GetFilteredFestivals = function (month, year, genres, countries) {
-                        var filter = new FC.Shared.ServiceMessages.FestivalFilter();
-                        filter.GenreIDs = new Array();
-                        filter.CountryIDs = new Array();
-                        if (genres) {
-                            genres.forEach(function (v, k) {
-                                filter.GenreIDs.push(v.GenreID);
-                            });
-                        }
-                        if (countries) {
-                            countries.forEach(function (v, k) {
-                                filter.CountryIDs.push(v.CountryID);
-                            });
-                        }
-                        filter.MonthNum = month;
-                        filter.YearNum = year;
-                        return this.Post('/API/Festival/GetFiltered', new FC.Shared.Models.ServiceMessage(filter));
+                    CalendarService.prototype.GetUpcoming = function (filter) {
+                        return this.Post('/API/Festival/GetUpcoming', new FC.Shared.Models.ServiceMessage(filter));
                     };
                     CalendarService.prototype.GetByMonthYear = function (month, year) {
                         var filter = new FC.Shared.ServiceMessages.FestivalFilter();
@@ -3703,7 +3458,7 @@ var FC;
             var AlertController = (function (_super) {
                 __extends(AlertController, _super);
                 function AlertController($http, $q, $scope, $mdDialog, $route, $routeParams, $location, $sce, local) {
-                    _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    _super.call(this, $http, $q, $scope, $location, $mdDialog);
                     var vm = this;
                     vm.$scope.inst = this;
                     vm.$scope = $scope;
@@ -3747,8 +3502,6 @@ var FC;
                     '$q',
                     '$scope',
                     '$mdDialog',
-                    '$route',
-                    '$routeParams',
                     '$location',
                     "$sce",
                     'local',
@@ -3773,7 +3526,7 @@ var FC;
             var HeadController = (function (_super) {
                 __extends(HeadController, _super);
                 function HeadController($http, $q, $scope, $mdDialog, $route, $routeParams, $location) {
-                    _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    _super.call(this, $http, $q, $scope, $location, $mdDialog);
                     var vm = this;
                     window.addEventListener("META-REFRESH", function (e) {
                         vm.$scope.META = e.detail;
@@ -3788,8 +3541,6 @@ var FC;
                     '$q',
                     '$scope',
                     '$mdDialog',
-                    '$route',
-                    '$routeParams',
                     '$location',
                 ];
                 return HeadController;
@@ -3811,8 +3562,8 @@ var FC;
         (function (Controllers) {
             var NavBarController = (function (_super) {
                 __extends(NavBarController, _super);
-                function NavBarController($http, $q, $scope, $mdDialog, $location, $routeParams, $sce) {
-                    _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                function NavBarController($http, $q, $scope, $mdDialog, $location, $sce) {
+                    _super.call(this, $http, $q, $scope, $location, $mdDialog);
                     var vm = this;
                     vm.$scope.inst = this;
                     vm.$scope = $scope;
@@ -3844,7 +3595,6 @@ var FC;
                     '$scope',
                     '$mdDialog',
                     '$location',
-                    '$routeParams',
                     "$sce"
                 ];
                 return NavBarController;
@@ -3865,7 +3615,7 @@ var STD;
         var RolePickerController = (function (_super) {
             __extends(RolePickerController, _super);
             function RolePickerController($e, $http, $q, $scope, $mdDialog, $route, $routeParams, $location, $sce) {
-                _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                _super.call(this, $http, $q, $scope, $location, $mdDialog);
                 var vm = this;
                 vm.$scope.inst = this;
                 vm.$scope = $scope;
@@ -3906,8 +3656,6 @@ var STD;
                 '$q',
                 '$scope',
                 '$mdDialog',
-                '$route',
-                '$routeParams',
                 '$location',
                 "$sce"
             ];
@@ -3928,7 +3676,7 @@ var STD;
         var RolePickerDialogController = (function (_super) {
             __extends(RolePickerDialogController, _super);
             function RolePickerDialogController($http, $q, $scope, $mdDialog, $route, $routeParams, $location, $sce) {
-                _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                _super.call(this, $http, $q, $scope, $location, $mdDialog);
                 var vm = this;
                 vm.$scope.inst = this;
                 vm.$scope = $scope;
@@ -3961,8 +3709,6 @@ var STD;
                 '$q',
                 '$scope',
                 '$mdDialog',
-                '$route',
-                '$routeParams',
                 '$location',
                 "$sce"
             ];
@@ -3983,7 +3729,7 @@ var STD;
         var StdDatePickerController = (function (_super) {
             __extends(StdDatePickerController, _super);
             function StdDatePickerController($e, $http, $q, $scope, $mdDialog, $route, $routeParams, $location, $sce) {
-                _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                _super.call(this, $http, $q, $scope, $location, $mdDialog);
                 var vm = this;
                 vm.$scope.inst = this;
                 vm.$scope = $scope;
@@ -4042,8 +3788,6 @@ var STD;
                 '$q',
                 '$scope',
                 '$mdDialog',
-                '$route',
-                '$routeParams',
                 '$location',
                 "$sce"
             ];
@@ -4062,7 +3806,7 @@ var STD;
         //Example of star- half - full(alias)
         //Example of star- half - o
         //Example of star- o-- >
-        function RolePickerDirective($route, $routeParams, $location, $http, $q, $compile) {
+        function RolePickerDirective($location, $http, $q, $compile) {
             //public template = '';
             this.templateUrl = '/Scripts/modules/Core/views/RolePickerDirective.html';
             this.controller = STD.Controllers.RolePickerController;
@@ -4086,10 +3830,10 @@ var STD;
             };
         }
         RolePickerDirective.factory = function () {
-            var directive = function ($route, $routeParams, $location, $http, $q, $compile) {
-                return new RolePickerDirective($route, $routeParams, $location, $http, $q, $compile);
+            var directive = function ($location, $http, $q, $compile) {
+                return new RolePickerDirective($location, $http, $q, $compile);
             };
-            directive['$inject'] = ['$route', '$routeParams', '$location', '$http', '$q', '$compile'];
+            directive['$inject'] = ['$location', '$http', '$q', '$compile'];
             return directive;
         };
         return RolePickerDirective;
@@ -4106,7 +3850,7 @@ var STD;
         //Example of star- half - full(alias)
         //Example of star- half - o
         //Example of star- o-- >
-        function DatePickerDirective($route, $routeParams, $location, $http, $q, $compile) {
+        function DatePickerDirective($location, $http, $q, $compile) {
             //public template = '';
             this.templateUrl = '/Scripts/modules/Core/views/StdDatePicker.html';
             this.controller = STD.Controllers.StdDatePickerController;
@@ -4167,10 +3911,10 @@ var STD;
             };
         }
         DatePickerDirective.factory = function () {
-            var directive = function ($route, $routeParams, $location, $http, $q, $compile) {
-                return new DatePickerDirective($route, $routeParams, $location, $http, $q, $compile);
+            var directive = function ($location, $http, $q, $compile) {
+                return new DatePickerDirective($location, $http, $q, $compile);
             };
-            directive['$inject'] = ['$route', '$routeParams', '$location', '$http', '$q', '$compile'];
+            directive['$inject'] = ['$location', '$http', '$q', '$compile'];
             return directive;
         };
         return DatePickerDirective;
@@ -4688,9 +4432,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/countries", "/Scripts/Modules/Countries/Views/overview.html", "FC.Modules.Countries.Controllers.CountryOverviewController", "vm");
-                    this.$Application.AddRoute("/countries/:pagenum", "/Scripts/Modules/Countries/Views/overview.html", "FC.Modules.Countries.Controllers.CountryOverviewController", "vm");
-                    this.$Application.AddRoute("/countries/sort/:character", "/Scripts/Modules/Countries/Views/overview.html", "FC.Modules.Countries.Controllers.CountryOverviewController", "vm");
                 }
                 Countries.prototype.GetApplication = function () {
                     return this.$Application;
@@ -4716,13 +4457,12 @@ var FC;
             (function (Controllers) {
                 var CountryFilterController = (function (_super) {
                     __extends(CountryFilterController, _super);
-                    function CountryFilterController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function CountryFilterController($http, $q, $mdDialog, $scope, $route, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.ShowTravelInfo = false;
                         var vm = this;
                         vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
                         vm.$scope.inst = vm;
-                        vm.$scope.$routeParams = $routeParams;
                         vm.$scope.$location = $location;
                         vm.MemReg = FC.Shared.Util.MemReg.GetInstance();
                         vm.$scope = $scope;
@@ -4810,7 +4550,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$routeParams',
                         '$location',
                         "$sce"
                     ];
@@ -4836,10 +4575,9 @@ var FC;
             (function (Controllers) {
                 var CountryOverviewController = (function (_super) {
                     __extends(CountryOverviewController, _super);
-                    function CountryOverviewController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, FestivalService, NewsService, RatesService, $sce, CountriesService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function CountryOverviewController($http, $q, $scope, $location, $mdDialog, FestivalService, NewsService, RatesService, $sce, CountriesService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.$scope = $scope;
-                        this.$scope.$routeParams = $routeParams;
                         //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
                         this.setCountries();
                         this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
@@ -4920,8 +4658,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         'FC.Modules.Festival.Services.FestivalService',
@@ -5014,13 +4750,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/details/festival/:festivalID", "/Scripts/Modules/Details/Views/festival-detail.html", "FC.Modules.Details.Controllers.DetailsController", "vm");
-                    this.$Application.AddRoute("/details/location/:locationID", "/Scripts/Modules/Details/Views/location-detail.html", "FC.Modules.Details.Controllers.LocationDetailsController", "vm");
-                    this.$Application.AddRoute("/details/artist/:artistID", "/Scripts/Modules/Details/Views/artist-detail.html", "FC.Modules.Details.Controllers.ArtistDetailsController", "vm");
-                    this.$Application.AddRoute("/details/artists/:festivalID", "/Scripts/Modules/Details/Views/festival-detail.html", "FC.Modules.Details.Controllers.DetailsController", "vm");
-                    this.$Application.AddRoute("/details/travelinfo/:festivalID", "/Scripts/Modules/Details/Views/festival-detail.html", "FC.Modules.Details.Controllers.DetailsController", "vm");
-                    this.$Application.AddRoute("/details/news/:newsID", "/Scripts/Modules/Details/Views/festival-detail.html", "FC.Modules.Details.Controllers.DetailsController", "vm");
-                    this.$Application.AddRoute("/details/report/:reportID", "/Scripts/Modules/Details/Views/festival-detail.html", "FC.Modules.Details.Controllers.DetailsController", "vm");
                 }
                 Details.prototype.GetApplication = function () {
                     return this.$Application;
@@ -5048,8 +4777,8 @@ var FC;
                 var SCTRL = FC.Shared.Controllers;
                 var ArtistDetailsController = (function (_super) {
                     __extends(ArtistDetailsController, _super);
-                    function ArtistDetailsController($http, $q, $uibModal, $scope, $mdDialog, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function ArtistDetailsController($http, $q, $uibModal, $scope, $mdDialog, $routeParams, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.$scope.$location = $location;
                         vm.$scope.FormID = '2F97BF92-A295-4D5C-A47C-67A274801DD0';
@@ -5065,7 +4794,6 @@ var FC;
                         };
                         //vm.$scope.DoCreate = this.DoCreate;
                         //vm.$scope.DoSaveCreate = this.DoSaveCreate;
-                        vm.determineDetailType($routeParams, $route);
                         vm.LogoSaveListener();
                     }
                     ArtistDetailsController.prototype.Close = function ($scope, $parent) {
@@ -5198,8 +4926,6 @@ var FC;
                         '$uibModal',
                         '$scope',
                         '$mdDialog',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce"
                     ];
@@ -5226,8 +4952,8 @@ var FC;
                 var SC = FC.Shared.Controllers;
                 var DetailsController = (function (_super) {
                     __extends(DetailsController, _super);
-                    function DetailsController($http, $q, $scope, $mdDialog, $route, $routeParams, $location, $sce, GenreService, ArtistsService, FestivalService, CalendarService, LocationService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function DetailsController($http, $q, $scope, $mdDialog, $routeParams, $location, $sce, GenreService, ArtistsService, FestivalService, CalendarService, LocationService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.FestivalService = FestivalService;
                         vm.LocationService = LocationService;
@@ -5235,8 +4961,6 @@ var FC;
                         vm.$scope = $scope;
                         vm.$scope.MtModal = $mdDialog;
                         vm.$scope.DoStartEdit = this.DoStartEdit;
-                        vm.$scope.$routeParams = $routeParams;
-                        vm.determineDetailType($routeParams, $route);
                         vm.ArtistSaveListener();
                         vm.LogoSaveListener();
                         vm.LocationSaveListener();
@@ -5448,8 +5172,6 @@ var FC;
                         '$q',
                         '$scope',
                         '$mdDialog',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce",
                         "FC.Modules.Genres.Services.GenreService",
@@ -5480,8 +5202,8 @@ var FC;
             (function (Controllers) {
                 var FestivalDetailDialogController = (function (_super) {
                     __extends(FestivalDetailDialogController, _super);
-                    function FestivalDetailDialogController($http, $q, $scope, $mdDialog, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function FestivalDetailDialogController($http, $q, $scope, $mdDialog, $routeParams, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.$scope.inst = this;
                         vm.$scope.$location = $location;
@@ -5523,8 +5245,6 @@ var FC;
                         '$q',
                         '$scope',
                         '$mdDialog',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce"
                     ];
@@ -5551,8 +5271,8 @@ var FC;
                 var SCTRL = FC.Shared.Controllers;
                 var LocationDetailsController = (function (_super) {
                     __extends(LocationDetailsController, _super);
-                    function LocationDetailsController($http, $q, $scope, $mdDialog, $route, $routeParams, $location, $sce, GenreService, ArtistsService, FestivalService, CalendarService, LocationService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function LocationDetailsController($http, $q, $scope, $mdDialog, $routeParams, $location, $sce, GenreService, ArtistsService, FestivalService, CalendarService, LocationService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.FestivalService = FestivalService;
                         vm.LocationService = LocationService;
@@ -5569,7 +5289,6 @@ var FC;
                         };
                         //vm.$scope.DoCreate = this.DoCreate;
                         //vm.$scope.DoSaveCreate = this.DoSaveCreate;
-                        vm.determineDetailType($routeParams, $route);
                         vm.LogoSaveListener();
                     }
                     LocationDetailsController.prototype.Close = function ($scope, $parent) {
@@ -5716,8 +5435,6 @@ var FC;
                         '$q',
                         '$scope',
                         '$mdDialog',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce",
                         "FC.Modules.Genres.Services.GenreService",
@@ -5771,8 +5488,8 @@ var FC;
             (function (Controllers) {
                 var FavoriteController = (function (_super) {
                     __extends(FavoriteController, _super);
-                    function FavoriteController($http, $q, $mdDialog, $scope, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function FavoriteController($http, $q, $mdDialog, $scope, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.$scope.SelectedArtists = new Array();
                         vm.$scope.SelectedGenres = new Array();
@@ -5921,7 +5638,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$routeParams',
                         '$location',
                         "$sce",
                     ];
@@ -5989,20 +5705,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/festival/add", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/add/:step", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/add/:step", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/add/:step", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/add/confirm", "/Scripts/Modules/Festival/Views/wizard/confirmation.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/add/error", "/Scripts/Modules/Festival/Views/wizard/error.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/edit/:festivalID", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/publish/:festivalID", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/delete/:festivalID", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/edit/:festivalID/:step", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/edit/:festivalID/:step", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/edit/:festivalID/:step", "/Scripts/Modules/Festival/Views/wizard/wizard.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/edit/:festivalID/confirm", "/Scripts/Modules/Festival/Views/wizard/confirmation.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
-                    this.$Application.AddRoute("/festival/edit/:festivalID/error", "/Scripts/Modules/Festival/Views/wizard/error.html", "FC.Modules.Festival.Controllers.FestivalCRUDController", "vm");
                 }
                 Festival.prototype.GetApplication = function () {
                     return this.$Application;
@@ -6030,8 +5732,8 @@ var FC;
             (function (Controllers) {
                 var FestivalCRUDController = (function (_super) {
                     __extends(FestivalCRUDController, _super);
-                    function FestivalCRUDController($http, $q, $scope, $routeParams, $location, $sce, $mdDialog) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function FestivalCRUDController($http, $q, $scope, $location, $sce, $mdDialog) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         this.$scope = $scope;
                         this.$scope.inst = this;
@@ -6105,7 +5807,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$routeParams',
                         '$location',
                         "$sce",
                         "$mdDialog"
@@ -6153,13 +5854,16 @@ var FC;
                     FestivalService.prototype.GetList = function () {
                         return this.Get('/API/Festival/GetList');
                     };
-                    FestivalService.prototype.GetUpcoming = function () {
+                    FestivalService.prototype.GetUpcoming = function (filter) {
                         return this.Get('/API/Festival/GetUpcoming');
                     };
                     FestivalService.prototype.GetFestival = function (festivalId) {
                         return this.Get('/API/Festival/GetByID?&id=' + festivalId);
                     };
                     FestivalService.prototype.GetByFilter = function (filter) {
+                        if (!filter.MonthNum) {
+                            filter.MonthNum = new Date().getMonth() + 1;
+                        }
                         if (CacheManager.GetCookieValue("UserID")) {
                             return this.Post('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage(filter));
                         }
@@ -6323,12 +6027,11 @@ var FC;
             (function (Controllers) {
                 var CountryFilterController = (function (_super) {
                     __extends(CountryFilterController, _super);
-                    function CountryFilterController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function CountryFilterController($http, $q, $mdDialog, $scope, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
                         vm.$scope.inst = vm;
-                        vm.$scope.$routeParams = $routeParams;
                         vm.$scope.$location = $location;
                         vm.$scope = $scope;
                         vm.$scope.FormID = '908ADBE0-5121-4857-9D3A-E829DCCE9D80';
@@ -6357,7 +6060,6 @@ var FC;
                                 CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedCountries, 9999999999);
                             });
                         }
-                        vm.SetCountryList();
                         vm.$scope.IsActive = this.IsActive;
                         if (vm.$scope.SelectedCountries.length == 1) {
                             vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";
@@ -6481,8 +6183,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce",
                     ];
@@ -6540,8 +6240,8 @@ var FC;
             (function (Controllers) {
                 var CountryModalController = (function (_super) {
                     __extends(CountryModalController, _super);
-                    function CountryModalController($http, $q, $scope, $route, $routeParams, $location, $mdDialog) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function CountryModalController($http, $q, $scope, $location, $mdDialog) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         this.$scope = $scope;
                         this.$scope.MtModal = $mdDialog;
@@ -6675,8 +6375,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog'
                     ];
@@ -6702,14 +6400,13 @@ var FC;
             (function (Controllers) {
                 var DateFilterController = (function (_super) {
                     __extends(DateFilterController, _super);
-                    function DateFilterController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function DateFilterController($http, $q, $mdDialog, $scope, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                         var vm = this;
                         vm.$scope = $scope;
                         vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
                         vm.$scope.inst = vm;
-                        vm.$scope.$routeParams = $routeParams;
                         vm.$scope.$location = $location;
                         vm.$scope.FormID = '908ADBE0-5121-4857-9D3A-E829DCCE9D80';
                         vm.$scope.MemReg = FC.Shared.Util.MemReg.GetInstance();
@@ -6834,8 +6531,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce"
                     ];
@@ -6893,13 +6588,12 @@ var FC;
             (function (Controllers) {
                 var FilterBarController = (function (_super) {
                     __extends(FilterBarController, _super);
-                    function FilterBarController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function FilterBarController($http, $q, $scope, $location, $mdDialog, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
                         var vm = this;
                         vm.$scope = $scope;
                         vm.$scope.MtModal = $mdDialog;
-                        vm.$scope.$routeParams = $routeParams;
                         vm.$scope.$location = $location;
                         vm.$scope.$q = $q;
                         vm.$scope.$http = $http;
@@ -6940,6 +6634,12 @@ var FC;
                             vm.$scope.IsLoading = false;
                         });
                     }
+                    FilterBarController.prototype.ClearDateCookies = function () {
+                        CacheManager.DeleteStorage("Filter_Year");
+                        CacheManager.DeleteStorage("Filter_Month");
+                        CacheManager.DeleteStorage("user-year");
+                        CacheManager.DeleteStorage("user-month");
+                    };
                     FilterBarController.prototype.addFilterChangeListenerDate = function () {
                         var vm = this;
                         window.addEventListener("FilterChanged", function (e) {
@@ -6964,8 +6664,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         '$sce'
@@ -6995,8 +6693,8 @@ var FC;
                 var CM = FC.Core.CoreModel;
                 var FilterController = (function (_super) {
                     __extends(FilterController, _super);
-                    function FilterController($http, $q, $scope, $route, $routeParams, $location, $mdDialog) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function FilterController($http, $q, $scope, $location, $mdDialog) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.months = ["January", "February", "April", "March", "May", "June", "July", "August", "September", "October", "November", "December"];
                         var vm = this;
                         this.$scope = $scope;
@@ -7056,8 +6754,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog'
                     ];
@@ -7115,7 +6811,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/genres", "/scripts/modules/genres/views/overview.html", "FC.Modules.Genres.Controllers.GenreOverviewController", "vm");
                 }
                 Genres.prototype.GetApplication = function () {
                     return this.$Application;
@@ -7141,8 +6836,8 @@ var FC;
             (function (Controllers) {
                 var GenreFormController = (function (_super) {
                     __extends(GenreFormController, _super);
-                    function GenreFormController($http, $q, $mdDialog, $scope, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function GenreFormController($http, $q, $mdDialog, $scope, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         this.RecoverModel(this.$scope.model, this.$scope);
                         //vm.$scope.model = new FC.Shared.Models.UGenre();
@@ -7183,7 +6878,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$routeParams',
                         '$location',
                         "$sce",
                     ];
@@ -7207,136 +6901,13 @@ var FC;
         (function (Genres) {
             var Controllers;
             (function (Controllers) {
-                var _OldGenreFilterController = (function (_super) {
-                    __extends(_OldGenreFilterController, _super);
-                    function _OldGenreFilterController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
-                        var vm = this;
-                        vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
-                        vm.$scope.inst = vm;
-                        vm.$scope.$routeParams = $routeParams;
-                        vm.$scope.$location = $location;
-                        vm.$scope = $scope;
-                        vm.$scope.FormID = '908ADBE0-5121-4857-9D3A-E829DCCE9D80';
-                        vm.$scope.MemReg = FC.Shared.Util.MemReg.GetInstance();
-                        vm.$scope.Save = this.Save;
-                        vm.$scope.Close = this.Close;
-                        vm.$scope.Reset = this.Reset;
-                        vm.SetGenreList();
-                        vm.$scope.ToggleGenre = this.ToggleGenre;
-                        if (vm.$scope.MemReg.Get("ActiveGenres")) {
-                            vm.$scope.inst.$scope.SelectedGenres = vm.$scope.MemReg.Get("ActiveGenres");
-                        }
-                        else {
-                            vm.$scope.SelectedGenres = new Array();
-                            if (CacheManager.Contains("ActiveGenres")) {
-                                vm.$scope.inst.$scope.SelectedGenres = CacheManager.Get("ActiveGenres").data;
-                            }
-                        }
-                        vm.$scope.IsActive = this.IsActive;
-                        //this.RecoverModel(this.$scope.model, this.$scope);
-                        vm.$scope.IsLoading = false;
-                    }
-                    _OldGenreFilterController.prototype.IsActive = function (genre) {
-                        var vm = this;
-                        if (CacheManager.Contains("ActiveGenres")) {
-                            var activated = CacheManager.Get("ActiveGenres").data;
-                            var isactive = activated.some(function (g, i) {
-                                return g.GenreID == genre.GenreID;
-                            });
-                            return isactive;
-                        }
-                        else {
-                            return false;
-                        }
-                    };
-                    _OldGenreFilterController.prototype.ToggleGenre = function ($scope, genre) {
-                        $scope = $scope.inst.$scope;
-                        var any = false;
-                        var modified = false;
-                        any = $scope.SelectedGenres.some(function (v, i) {
-                            if (v.GenreID == genre.GenreID) {
-                                return true;
-                            }
-                            else {
-                                return false;
-                            }
-                        });
-                        if (any == false) {
-                            $scope.SelectedGenres.push(genre);
-                            modified = true;
-                        }
-                        else {
-                            var index = $scope.SelectedGenres.indexOf(genre);
-                            if (index > -1) {
-                                delete $scope.SelectedGenres[index];
-                                $scope.SelectedGenres = $scope.RepairArray($scope.SelectedGenres);
-                                modified = true;
-                            }
-                        }
-                        if (modified) {
-                            CacheManager.WriteStorage("ActiveGenres", $scope.SelectedGenres, 999999999999999);
-                            modified = false;
-                        }
-                    };
-                    _OldGenreFilterController.prototype.SetGenreList = function () {
-                        var vm = this;
-                        vm.GenreService.GetAllGenres().then(function (r) {
-                            vm.$scope.SysGenres = r.Data;
-                        });
-                    };
-                    _OldGenreFilterController.prototype.Save = function ($scope) {
-                        var vm = this;
-                        vm.Close($scope);
-                        //vm.$scope.IsLoading = true;
-                    };
-                    _OldGenreFilterController.prototype.Close = function ($scope) {
-                        $("#GenreFilterControl").removeClass("ctx-visible").addClass("ctx-hidden");
-                        $("#MainOverlay").removeClass('ctx-visible').addClass('ctx-hidden');
-                    };
-                    _OldGenreFilterController.prototype.Reset = function ($scope) {
-                        CacheManager.DeleteStorage("ActiveGenres");
-                        $scope.Close();
-                    };
-                    //public ActiveGenreID: number;
-                    _OldGenreFilterController.$inject = [
-                        '$http',
-                        '$q',
-                        '$mdDialog',
-                        '$scope',
-                        '$route',
-                        '$routeParams',
-                        '$location',
-                        "$sce"
-                    ];
-                    return _OldGenreFilterController;
-                }(FC.Shared.Controllers.BaseController));
-                Controllers._OldGenreFilterController = _OldGenreFilterController;
-                GenresModule.GetApplication().RegisterController("FC.Modules.Genres.Controllers._OldGenreFilterController", FC.Modules.Genres.Controllers._OldGenreFilterController);
-            })(Controllers = Genres.Controllers || (Genres.Controllers = {}));
-        })(Genres = Modules.Genres || (Modules.Genres = {}));
-    })(Modules = FC.Modules || (FC.Modules = {}));
-})(FC || (FC = {}));
-///<reference path="../../Core/FC.ts"/>
-///<reference path="../Genres.ts" />
-///<reference path="../../../Shared/CoreModel/KeyValuePair.ts"/>
-///<reference path="../../../Shared/Controllers/BaseController.ts"/>
-var FC;
-(function (FC) {
-    var Modules;
-    (function (Modules) {
-        var Genres;
-        (function (Genres) {
-            var Controllers;
-            (function (Controllers) {
                 var GenreFilterController = (function (_super) {
                     __extends(GenreFilterController, _super);
-                    function GenreFilterController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function GenreFilterController($http, $q, $mdDialog, $scope, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
                         vm.$scope.inst = vm;
-                        vm.$scope.$routeParams = $routeParams;
                         vm.$scope.$location = $location;
                         vm.$scope = $scope;
                         vm.$scope.FormID = '908ADBE0-5121-4857-9D3A-E829DCCE9D80';
@@ -7380,7 +6951,7 @@ var FC;
                         else {
                             vm.$scope.Selected = "SELECT GENRES";
                         }
-                        vm.SetGenreList();
+                        //vm.SetGenreList();
                         //this.RecoverModel(this.$scope.model, this.$scope);
                         vm.$scope.IsLoading = false;
                         vm.$scope.model = new FC.Modules.Filtering.Models.FilterBarVM();
@@ -7428,6 +6999,7 @@ var FC;
                         opts.templateUrl = '/Scripts/modules/genres/views/genre-filter.html';
                         opts.parent = document.body;
                         opts.clickOutsideToClose = true;
+                        vm.SetGenreList();
                         $scope.MtModal.show(opts).then(function (answer) {
                             //$scope.status = 'You said the information was "' + answer + '".';
                         }, function () {
@@ -7509,8 +7081,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce",
                     ];
@@ -7566,10 +7136,9 @@ var FC;
             (function (Controllers) {
                 var GenreOverviewController = (function (_super) {
                     __extends(GenreOverviewController, _super);
-                    function GenreOverviewController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, FestivalService, NewsService, RatesService, $sce, GenreService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function GenreOverviewController($http, $q, $scope, $location, $mdDialog, FestivalService, NewsService, RatesService, $sce, GenreService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.$scope = $scope;
-                        this.$scope.$routeParams = $routeParams;
                         //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
                         this.setGenres();
                         this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
@@ -7650,8 +7219,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         'FC.Modules.Festival.Services.FestivalService',
@@ -7683,11 +7250,10 @@ var FC;
             (function (Controllers) {
                 var GenrePickerController = (function (_super) {
                     __extends(GenrePickerController, _super);
-                    function GenrePickerController($http, $q, $mdDialog, $scope, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function GenrePickerController($http, $q, $mdDialog, $scope, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.$scope.inst = vm;
-                        vm.$scope.$routeParams = $routeParams;
                         vm.$scope.$location = $location;
                         vm.$scope = $scope;
                         vm.$scope.FormID = 'C0232ABF-7A60-46D2-942D-A2843B3D1AA0';
@@ -7908,7 +7474,6 @@ var FC;
                         $scope = $scope.inst.$scope;
                         $scope.inst.GenreService.Create($scope.model).then(function (r) {
                             $scope.ServerMsg = r.Message;
-                            $scope.inst.SetGenreData(true);
                             if (r.Data.EXISTS == true) {
                                 $scope.IsCreated = false;
                                 $scope.IsCreating = true;
@@ -7942,8 +7507,6 @@ var FC;
                         '$q',
                         '$mdDialog',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "FC.Core.Services.LocalizationService",
                         "FC.Core.Services.URLManagerService",
@@ -8055,16 +7618,14 @@ var FC;
             (function (Controllers) {
                 var LoadController = (function (_super) {
                     __extends(LoadController, _super);
-                    function LoadController($http, $q, $scope, $route, $routeParams, $location, $mdDialog) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function LoadController($http, $q, $scope, $location, $mdDialog) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         LoadingModule.GetApplication().RegisterController("FC.Modules.Loading.Controllers.LoadController", FC.Modules.Loading.Controllers.LoadController);
                     }
                     LoadController.$inject = [
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$mdDialog'
                     ];
                     return LoadController;
@@ -8131,12 +7692,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/locations", "/Scripts/Modules/Location/Views/overview.html", "FC.Modules.Location.Controllers.LocationOverviewController", "vm");
-                    this.$Application.AddRoute("/locations/details/:LocationID", "/Scripts/Modules/Location/Views/details.html", "FC.Modules.Details.Controllers.LocationDetailsController", "vm");
-                    this.$Application.AddRoute("/locations/create", "/Scripts/Modules/Location/Views/create.html", "FC.Modules.Location.Controllers.LocationCRUDController", "vm");
-                    this.$Application.AddRoute("/locations/create/:step", "/Scripts/Modules/Location/Views/create.html", "FC.Modules.Location.Controllers.LocationCRUDController", "vm");
-                    this.$Application.AddRoute("/locations/edit/:LocationID", "/Scripts/Modules/Location/Views/create.html", "FC.Modules.Location.Controllers.LocationCRUDController", "vm");
-                    this.$Application.AddRoute("/locations/delete/:LocationID", "/Scripts/Modules/Location/Views/overview.html", "FC.Modules.Location.Controllers.LocationCRUDController", "vm");
                 }
                 Location.prototype.GetApplication = function () {
                     return this.$Application;
@@ -8165,8 +7720,8 @@ var FC;
                 var CORE = FC.Core;
                 var LocationCRUDController = (function (_super) {
                     __extends(LocationCRUDController, _super);
-                    function LocationCRUDController($http, $q, $scope, $route, $routeParams, $location, $sce, $mdDialog) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function LocationCRUDController($http, $q, $scope, $location, $sce, $mdDialog) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         this.$scope = $scope;
                         vm.CheckAuth($scope);
@@ -8182,32 +7737,6 @@ var FC;
                         this.$location = $location;
                         this.$scope.model = new FC.Shared.Models.Location();
                         this.$scope.$location = $location;
-                        this.$scope.$routeParams = $routeParams;
-                        if ($routeParams["step"]) {
-                            this.$scope.WizardStep = $routeParams["step"];
-                        }
-                        else {
-                            this.$scope.WizardStep = 1;
-                        }
-                        if ($routeParams["LocationID"]) {
-                            vm.FinishForm(vm.$scope);
-                            vm.$scope.IsEditing = true;
-                            vm.$scope.LocationID = $routeParams["LocationID"];
-                            vm.$scope.SaveFieldState($scope, "LocationID", vm.$scope.LocationID);
-                            vm.$scope.IsCreating = false;
-                            vm.$scope.IsLoading = true;
-                            vm.LocationService.GetLocation($routeParams["LocationID"]).then(function (r) {
-                                vm.$scope.model = r.Data;
-                                vm.$scope.IsLoading = false;
-                                vm.$scope.MapsReady = true;
-                                vm.$scope.MapsURL = vm.$scope.$sce.trustAsResourceUrl('https://www.google.com/maps/embed/v1/place?&zoom=16&key=AIzaSyAaqNdfzf3K2JVYb5hu9lvabVg8rXG6RiQ&q=' + r.Data.Country.Name + '+' + r.Data.City + '+' + r.Data.Address + '&maptype=roadmap');
-                            });
-                        }
-                        else {
-                            vm.$scope.IsLoading = false;
-                            vm.$scope.IsCreating = true;
-                            vm.$scope.IsEditing = false;
-                        }
                         this.RecoverModel();
                         this.AddValidation();
                     }
@@ -8302,8 +7831,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce",
                         "$mdDialog"
@@ -8330,8 +7857,8 @@ var FC;
             (function (Controllers) {
                 var LocationDialogController = (function (_super) {
                     __extends(LocationDialogController, _super);
-                    function LocationDialogController($http, $q, $scope, $mdDialog, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function LocationDialogController($http, $q, $scope, $mdDialog, $routeParams, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.$scope.inst = this;
                         vm.$scope.FormID = '940BD72D-88E3-4201-98D6-042919BD918C';
@@ -8424,8 +7951,6 @@ var FC;
                         '$q',
                         '$scope',
                         '$mdDialog',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         "$sce"
                     ];
@@ -8451,10 +7976,9 @@ var FC;
             (function (Controllers) {
                 var LocationOverviewController = (function (_super) {
                     __extends(LocationOverviewController, _super);
-                    function LocationOverviewController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, FestivalService, NewsService, RatesService, $sce, GenreService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function LocationOverviewController($http, $q, $scope, $location, $mdDialog, FestivalService, NewsService, RatesService, $sce, GenreService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.$scope = $scope;
-                        this.$scope.$routeParams = $routeParams;
                         //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
                         this.setLocations();
                         this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
@@ -8592,8 +8116,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         'FC.Modules.Festival.Services.FestivalService',
@@ -8721,8 +8243,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/media/embed-upload", "/Scripts/Modules/Media/Views/file-upload.html", "FC.Modules.Media.Controllers.MediaModalController", "vm");
-                    this.$Application.AddRoute("/media/browsefiles/:isxhr", "/Scripts/Modules/Media/Views/files.html", "FC.Modules.Media.Controllers.MediaModalController", "vm");
                 }
                 Media.prototype.GetApplication = function () {
                     return this.$Application;
@@ -8751,8 +8271,8 @@ var FC;
                 var ENV = FC.Core.Environment;
                 var MediaModalController = (function (_super) {
                     __extends(MediaModalController, _super);
-                    function MediaModalController($http, $q, $scope, $route, $routeParams, $location, $uibModal, $mdDialog, MediaSvc, $sce, $local) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function MediaModalController($http, $q, $scope, $location, $uibModal, $mdDialog, MediaSvc, $sce, $local) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.$sce = $sce;
                         vm.$sce.whiteListR;
@@ -9260,8 +8780,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$uibModal',
                         '$mdDialog',
@@ -9298,7 +8816,7 @@ var FC;
                     //Example of star- half - full(alias)
                     //Example of star- half - o
                     //Example of star- o-- >
-                    function MediaBrowserDirective($route, $routeParams, $location, $http, $q, $compile) {
+                    function MediaBrowserDirective($location, $http, $q, $compile) {
                         this.template = '';
                         this.templateUrl = '/Scripts/Modules/Media/Views/media-browser.html';
                         this.controller = FC.Modules.Media.Controllers.MediaModalController;
@@ -9314,10 +8832,10 @@ var FC;
                         };
                     }
                     MediaBrowserDirective.factory = function () {
-                        var directive = function ($route, $routeParams, $location, $http, $q, $compile) {
-                            return new MediaBrowserDirective($route, $routeParams, $location, $http, $q, $compile);
+                        var directive = function ($location, $http, $q, $compile) {
+                            return new MediaBrowserDirective($location, $http, $q, $compile);
                         };
-                        directive['$inject'] = ['$route', '$routeParams', '$location', '$http', '$q', '$compile'];
+                        directive['$inject'] = ['$location', '$http', '$q', '$compile'];
                         return directive;
                     };
                     return MediaBrowserDirective;
@@ -9446,8 +8964,8 @@ var FC;
             (function (Controllers) {
                 var MenuController = (function (_super) {
                     __extends(MenuController, _super);
-                    function MenuController($http, $q, $scope, $routeParams, $location, $mdDialog) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function MenuController($http, $q, $scope, $location, $mdDialog) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.$scope = $scope;
                         var vm = this;
                         this.$scope.inst = this;
@@ -9466,7 +8984,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$routeParams',
                         '$location',
                         '$mdDialog'
                     ];
@@ -9492,8 +9009,8 @@ var FC;
             (function (Controllers) {
                 var MenuCRUDController = (function (_super) {
                     __extends(MenuCRUDController, _super);
-                    function MenuCRUDController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function MenuCRUDController($http, $q, $scope, $location, $mdDialog, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
                         this.setData();
                         var vm = this;
@@ -9579,8 +9096,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         "$sce"
@@ -9607,10 +9122,9 @@ var FC;
             (function (Controllers) {
                 var MenuOverviewController = (function (_super) {
                     __extends(MenuOverviewController, _super);
-                    function MenuOverviewController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, $sce, MenuSectionService, MenuItemService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function MenuOverviewController($http, $q, $scope, $location, $mdDialog, $sce, MenuSectionService, MenuItemService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.$scope = $scope;
-                        this.$scope.$routeParams = $routeParams;
                         //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
                         this.$scope.MediaURLRoot = FC.Core.Environment.MediaURLRoot;
                         this.$scope.MtModal = $mdDialog;
@@ -9709,8 +9223,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         "$sce",
@@ -9741,8 +9253,8 @@ var FC;
             (function (Controllers) {
                 var QuickMenuController = (function (_super) {
                     __extends(QuickMenuController, _super);
-                    function QuickMenuController($http, $q, $scope, $route, $routeParams, $location, $mdDialog) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function QuickMenuController($http, $q, $scope, $location, $mdDialog) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.$scope = $scope;
                         var vm = this;
                         this.$scope.inst = this;
@@ -9766,8 +9278,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog'
                     ];
@@ -9961,13 +9471,6 @@ var FC;
                     this.NgModule = NgModule;
                     this.app = app;
                     this.$Application = app;
-                    this.$Application.AddRoute("/news", "/Scripts/Modules/News/Views/overview.html", "FC.Modules.News.Controllers.NewsOverviewController", "vm");
-                    this.$Application.AddRoute("/news/detail/:newsid", "/Scripts/Modules/News/Views/detail.html", "FC.Modules.News.Controllers.NewsOverviewController", "vm");
-                    this.$Application.AddRoute("/news/delete/:newsid", "/Scripts/Modules/News/Views/delete.html", "FC.Modules.News.Controllers.NewsCRUDController", "vm");
-                    this.$Application.AddRoute("/news/:page", "/Scripts/Modules/News/Views/overview.html", "FC.Modules.News.Controllers.NewsOverviewController", "vm");
-                    this.$Application.AddRoute("/news/:page/:year/:month", "/Scripts/Modules/News/Views/overview.html", "FC.Modules.News.Controllers.NewsOverviewController", "vm");
-                    this.$Application.AddRoute("/news/create/:step", "/Scripts/Modules/News/Views/create.html", "FC.Modules.News.Controllers.NewsCRUDController", "vm");
-                    this.$Application.AddRoute("/news/edit/:newsid", "/Scripts/Modules/News/Views/create.html", "FC.Modules.News.Controllers.NewsCRUDController", "vm");
                 }
                 News.prototype.GetApplication = function () {
                     return this.$Application;
@@ -10008,12 +9511,11 @@ var FC;
             (function (Controllers) {
                 var NewsController = (function (_super) {
                     __extends(NewsController, _super);
-                    function NewsController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, NewsSvc) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function NewsController($http, $q, $scope, $location, $mdDialog, NewsSvc) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.$scope.inst = this;
                         this.$scope = $scope;
                         this.NewsSvc = NewsSvc;
-                        this.ActiveNewsID = $routeParams["newsId"];
                         this.GenreService = new FC.Modules.Genres.Services.GenreService($http, $q);
                         this._Init();
                     }
@@ -10031,8 +9533,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         "FC.Modules.News.Services.NewsService"
@@ -10059,8 +9559,8 @@ var FC;
             (function (Controllers) {
                 var NewsCRUDController = (function (_super) {
                     __extends(NewsCRUDController, _super);
-                    function NewsCRUDController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function NewsCRUDController($http, $q, $scope, $location, $mdDialog, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
                         this.setData();
                         var vm = this;
@@ -10120,8 +9620,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         "$sce"
@@ -10149,8 +9647,8 @@ var FC;
                 var SCTRL = FC.Shared.Controllers;
                 var NewsDialogController = (function (_super) {
                     __extends(NewsDialogController, _super);
-                    function NewsDialogController($http, $q, $scope, $mdDialog, $route, $routeParams, $location, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function NewsDialogController($http, $q, $scope, $mdDialog, $routeParams, $location, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.NewsService = new FC.Modules.News.Services.NewsService($http, $q);
                         vm.$scope.$location = $location;
@@ -10182,7 +9680,7 @@ var FC;
                         vm.$scope.DoCreate = this.DoCreate;
                         vm.$scope.DoEdit = this.DoEdit;
                         vm.$scope.DoDelete = this.DoDelete;
-                        //vm.determineDetailType($routeParams, $route);
+                        //vm.determineDetailType( $route);
                         //vm.LogoSaveListener();
                         vm.RegisterModel(vm.$scope);
                     }
@@ -10219,17 +9717,8 @@ var FC;
                         '$uibModal',
                         '$scope',
                         '$mdDialog',
-                        '$route',
-                        '$routeParams',
                         '$location',
-                        "FC.Core.Services.LocalizationService",
-                        "FC.Core.Services.URLManagerService",
                         "$sce",
-                        "FC.Modules.Genres.Services.GenreService",
-                        "FC.Modules.Artists.Services.ArtistService",
-                        "FC.Modules.Festival.Services.FestivalService",
-                        "FC.Modules.Calendar.Services.CalendarService",
-                        "FC.Modules.Location.Services.LocationService"
                     ];
                     return NewsDialogController;
                 }(FC.Shared.Controllers.BaseController));
@@ -10253,22 +9742,20 @@ var FC;
             (function (Controllers) {
                 var NewsOverviewController = (function (_super) {
                     __extends(NewsOverviewController, _super);
-                    function NewsOverviewController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, $sce) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function NewsOverviewController($http, $q, $scope, $location, $mdDialog, $sce) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.ShowTravelInfo = false;
                         //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
                         var vm = this;
                         vm.$scope = $scope;
+                        vm.$scope.IsMobile = IsMobile();
+                        debugger;
                         vm.$scope.$sce = $sce;
-                        vm.$scope.META.PageTitle = "News";
-                        vm.$scope.META.PageDesc = "News overview";
-                        vm.$scope.META.PageIMG = "";
                         vm.$scope.MtModal = $mdDialog;
                         vm.$scope.$location = $location;
-                        if ($routeParams["month"] && $routeParams["year"]) {
-                            vm.$scope.Date = new Date($routeParams["year"], parseInt($routeParams["month"]) - 1);
-                        }
                         vm.$scope.IsLoading = true;
+                        vm.$scope.ActiveMonth = new Date().getMonth();
+                        vm.$scope.ActiveYear = new Date().getFullYear();
                         this.setData();
                         this.setDetailData();
                         window.addEventListener('DateChanged', function (e) {
@@ -10287,11 +9774,6 @@ var FC;
                     };
                     NewsOverviewController.prototype.setDetailData = function () {
                         var vm = this;
-                        if (vm.$routeParams["newsid"]) {
-                            vm.NewsService.GetNewsById(vm.$routeParams["newsid"]).then(function (r) {
-                                vm.$scope.Detail = r.Data;
-                            });
-                        }
                     };
                     NewsOverviewController.prototype.DoDelete = function () {
                         var vm = this;
@@ -10304,8 +9786,8 @@ var FC;
                             vm.$scope.model = r.Data;
                             vm.SplitToColData(3, r.Data);
                             var p = vm.GetPageNum() + 1;
+                            vm.$scope.IsLoading = false;
                             vm.NewsService.GetPagedCount(p, vm.$scope.ActiveMonth.toString(), vm.$scope.ActiveYear.toString()).then(function (r2) {
-                                vm.$scope.IsLoading = false;
                                 if (r2.Data > 0) {
                                     vm.$scope.ShowMore = true;
                                     vm.$scope.ShowMoreURL = "/news?page=" + (p) + "&month=" + vm.$scope.ActiveMonth.toString() + "&year=" + vm.$scope.ActiveYear.toString() + "#bottom";
@@ -10323,8 +9805,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         '$mdDialog',
                         "$sce",
@@ -10569,11 +10049,14 @@ var FC;
             (function (Controllers) {
                 var RatingController = (function (_super) {
                     __extends(RatingController, _super);
-                    function RatingController($http, $q, $scope, $route, $routeParams, $location, $mdDialog, RatingService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function RatingController($http, $q, $scope, $location, $mdDialog, RatingService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.RatingSvc = RatingService;
                         this.$scope = $scope;
                     }
+                    RatingController.prototype.SetRating = function (model) {
+                        this.$scope = model;
+                    };
                     RatingController.prototype.GetRates = function (contentItemID, typeName) {
                         var vm = this;
                         this.RatingSvc.GetRate(contentItemID, typeName).then(function (r) {
@@ -10592,8 +10075,6 @@ var FC;
                         "$http",
                         "$q",
                         "$scope",
-                        "$route",
-                        "$routeParams",
                         "$location",
                         "$mdDialog",
                         "FC.Modules.Rating.Services.RatingService",
@@ -10621,7 +10102,7 @@ var FC;
                     //Example of star- half - full(alias)
                     //Example of star- half - o
                     //Example of star- o-- >
-                    function RatingDirective($route, $routeParams, $location) {
+                    function RatingDirective($location) {
                         this.scope = {};
                         this.template = '<div class="rating" theme="rating">                ' +
                             '    <span class="count" theme="count">100K</span>  ' +
@@ -10642,10 +10123,10 @@ var FC;
                         };
                     }
                     RatingDirective.factory = function () {
-                        var directive = function ($route, $routeParams, $location) {
-                            return new RatingDirective($route, $routeParams, $location);
+                        var directive = function ($location) {
+                            return new RatingDirective($location);
                         };
-                        directive['$inject'] = ['$route', '$routeParams', '$location'];
+                        directive['$inject'] = ['$location'];
                         return directive;
                     };
                     return RatingDirective;
@@ -10732,8 +10213,8 @@ var FC;
             (function (Controllers) {
                 var SearchController = (function (_super) {
                     __extends(SearchController, _super);
-                    function SearchController($mdDialog, $http, $q, $scope, $routeParams, $location, SearchService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function SearchController($mdDialog, $http, $q, $scope, $location, SearchService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
                         this.SearchService = new FC.Modules.Search.Services.SearchService($http, $q);
                         this.initializeScope($scope);
@@ -10741,30 +10222,16 @@ var FC;
                     SearchController.prototype.initializeScope = function ($scope) {
                         this.$scope = $scope;
                         this.$scope.DoSearch = this.DoSearch;
-                        this.$scope.OpenModal = this.OpenModal;
                         //this.$scope.GenreData = GenreData;
                         //this.$scope.CountryData = CountryData;
-                    };
-                    SearchController.prototype.OpenModal = function (ctr) {
-                        //var modalInstance = ctr.$uibModal.open({
-                        //    animation:true,
-                        //    templateUrl: '/Scripts/Modules/Search/Views/searchresults.html',
-                        //    controller: 'FC.Modules.Search.Controllers.SearchController',
-                        //    controllerAs: 'vm',
-                        //    size: 400,
-                        //    resolve: {
-                        //        items: function () {
-                        //            return null;
-                        //        }
-                        //    }
-                        //});
                     };
                     SearchController.prototype.DoChangeSearch = function () {
                     };
                     SearchController.prototype.ResetSearch = function () {
                         var vm = this;
                         vm.$scope.Keyword = "";
-                        vm.DoSearch();
+                        var e = new CustomEvent("SearchCleared");
+                        window.dispatchEvent(e);
                     };
                     SearchController.prototype.DoSearch = function () {
                         var vm = this;
@@ -10804,7 +10271,6 @@ var FC;
                         '$http',
                         '$q',
                         '$scope',
-                        '$routeParams',
                         '$location'
                     ];
                     return SearchController;
@@ -10882,8 +10348,8 @@ var FC;
                 var CORE = FC.Core;
                 var SocialDialogController = (function (_super) {
                     __extends(SocialDialogController, _super);
-                    function SocialDialogController($http, $q, $uibModal, $scope, $mdDialog, $route, $routeParams, $location, $profiles, $genericId, $contentType, UrlManagerService, $sce, $socialService) {
-                        _super.call(this, $http, $q, $scope, $location, $routeParams, $mdDialog);
+                    function SocialDialogController($http, $q, $uibModal, $scope, $mdDialog, $routeParams, $location, $profiles, $genericId, $contentType, UrlManagerService, $sce, $socialService) {
+                        _super.call(this, $http, $q, $scope, $location, $mdDialog);
                         var vm = this;
                         vm.$scope.inst = this;
                         vm.$scope.$location = $location;
@@ -10994,8 +10460,6 @@ var FC;
                         '$uibModal',
                         '$scope',
                         '$mdDialog',
-                        '$route',
-                        '$routeParams',
                         '$location',
                         'profiles',
                         'genericId',
@@ -11920,6 +11384,21 @@ var FC;
                 return Favorite;
             }());
             Models.Favorite = Favorite;
+        })(Models = Shared.Models || (Shared.Models = {}));
+    })(Shared = FC.Shared || (FC.Shared = {}));
+})(FC || (FC = {}));
+var FC;
+(function (FC) {
+    var Shared;
+    (function (Shared) {
+        var Models;
+        (function (Models) {
+            var FestivalListItem = (function () {
+                function FestivalListItem() {
+                }
+                return FestivalListItem;
+            }());
+            Models.FestivalListItem = FestivalListItem;
         })(Models = Shared.Models || (Shared.Models = {}));
     })(Shared = FC.Shared || (FC.Shared = {}));
 })(FC || (FC = {}));

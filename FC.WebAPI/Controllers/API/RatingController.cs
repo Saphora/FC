@@ -24,6 +24,7 @@ namespace FC.WebAPI.Controllers.API
             RatingRepo = this.Repositories.Rating;
         }
 
+
         [HttpOptions, HttpPost]
         public string Rate([FromBody]JObject payload)
         {

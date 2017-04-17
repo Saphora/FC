@@ -114,6 +114,7 @@ namespace FC.Shared.ViewModels.Festival
         public string CountryName { get; set; }
         public DateVM StartDateExplosion { get; }
         public DateVM EndDateExplosion { get; }
+        public DateVM DateExplosion { get { return StartDateExplosion; } }
         public string Location { get; set; }
         public Guid? FestivalID { get; set; }
         public RatingVm Rating { get; set; }

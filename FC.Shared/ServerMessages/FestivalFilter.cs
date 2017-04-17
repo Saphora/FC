@@ -16,6 +16,7 @@ namespace FC.Shared.ServerMessages
             LocationIDs = new List<Guid?>();
             FestivalIDs = new List<Guid?>();
         }
+        
         public List<Guid?> GenreIDs { get; set; }
         public List<Guid?> CountryIDs { get; set; }
         public List<Guid?> ArtistIDs { get; set; }
@@ -24,5 +25,10 @@ namespace FC.Shared.ServerMessages
         public string FestivalID { get; set; }
         public int MonthNum = -1;
         public int YearNum = DateTime.Now.Year;
+        public int PageLength { get; set; }
+        public int CurrentLength { get; set; }
+        public int BlockLength { get; set; }
+
+        public Guid? LastID { get; set; }
     }
 }

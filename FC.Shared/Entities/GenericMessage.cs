@@ -33,10 +33,10 @@ namespace FC.Shared.Entities
 
         public string Message { get; set; }
 
-        [Index]
+        [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
 
-        [Index]
+        
         public string ExceptionType { get; set; }
 
         public string Exception { get; set; }
@@ -63,7 +63,7 @@ namespace FC.Shared.Entities
 
         public bool IsUserMessage { get; set; }
 
-        [Index]
+        [Column(TypeName = "datetime2")]
         public DateTime ArchiveDate { get; set; }
 
         [Index]

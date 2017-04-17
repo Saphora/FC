@@ -25,8 +25,7 @@ module FC.Modules.News.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog',
             "$sce",
@@ -36,26 +35,23 @@ module FC.Modules.News.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog,
             $sce
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             //this.$scope.GetCountryName = FestivalModule.GetApplication().GetCountryName;
             var vm = this;
             vm.$scope = $scope;
+            vm.$scope.IsMobile = IsMobile();
+            debugger;
             vm.$scope.$sce = $sce;
-            vm.$scope.META.PageTitle = "News";
-            vm.$scope.META.PageDesc = "News overview";
-            vm.$scope.META.PageIMG = "";
             vm.$scope.MtModal = $mdDialog;
             vm.$scope.$location = $location;
-            if ($routeParams["month"] && $routeParams["year"]) {
-                vm.$scope.Date = new Date($routeParams["year"], parseInt($routeParams["month"])-1);
-            }
             vm.$scope.IsLoading = true;
+            vm.$scope.ActiveMonth = new Date().getMonth();
+            vm.$scope.ActiveYear = new Date().getFullYear();
             this.setData();
             this.setDetailData();
 
@@ -78,11 +74,6 @@ module FC.Modules.News.Controllers {
 
         public setDetailData(): void {
             var vm = this;
-            if (vm.$routeParams["newsid"]) {
-                vm.NewsService.GetNewsById(vm.$routeParams["newsid"]).then(function(r) {
-                    vm.$scope.Detail = r.Data;
-                })
-            }
         }
         public DoDelete() {
             var vm = this;
@@ -94,14 +85,13 @@ module FC.Modules.News.Controllers {
             var index = 0;
             vm.NewsService.GetPaged(vm.$scope.PageNum, vm.$scope.ActiveMonth.toString(), vm.$scope.ActiveYear.toString()).then(function (r) {
                 vm.$scope.model = r.Data; 
-                vm.SplitToColData(3,r.Data);
+                vm.SplitToColData(3, r.Data);
                 var p = vm.GetPageNum() + 1;
-
+                vm.$scope.IsLoading = false;
                 vm.NewsService.GetPagedCount(p, vm.$scope.ActiveMonth.toString(), vm.$scope.ActiveYear.toString()).then(function (r2) {
-                    vm.$scope.IsLoading = false;
                     if (r2.Data > 0) {
                         vm.$scope.ShowMore = true;
-                        vm.$scope.ShowMoreURL = "/news?page=" + (p) + "&month=" + vm.$scope.ActiveMonth.toString() + "&year=" + vm.$scope.ActiveYear.toString()+"#bottom";
+                        vm.$scope.ShowMoreURL = "/news?page=" + (p) + "&month=" + vm.$scope.ActiveMonth.toString() + "&year=" + vm.$scope.ActiveYear.toString() + "#bottom";
                     } else {
                         vm.$scope.ShowMore = false;
                         vm.$scope.ShowMoreURL = "/news?page=" + vm.GetPageNum() + "&month=" + vm.$scope.ActiveMonth.toString() + "&year=" + vm.$scope.ActiveYear.toString() + "#bottom";

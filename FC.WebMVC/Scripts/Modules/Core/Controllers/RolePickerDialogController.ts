@@ -21,8 +21,7 @@ module STD.Controllers {
             '$q',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce"
         ];
@@ -37,7 +36,7 @@ module STD.Controllers {
             $location: ng.ILocationService,
             $sce: ng.ISCEService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.$scope.inst = this;
             vm.$scope = $scope;

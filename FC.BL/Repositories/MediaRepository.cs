@@ -28,7 +28,7 @@ namespace FC.BL.Repositories
 
         public MediaDirectory GetByUser(Guid? userDirectoryID)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.MediaDirectories.Where(w => w.DirectoryID == userDirectoryID).FirstOrDefault();
             }
@@ -57,7 +57,7 @@ namespace FC.BL.Repositories
 
         public MediaDirectory GetRoot()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 MediaDirectory r = Db.MediaDirectories.Find(Guid.Parse("710FE0A0-8894-40DB-8D7D-2FCBD7BA14CF"));
                 r.Media = Db.Media.Where(w => w.DirectoryID == r.DirectoryID).OrderBy(o => o.Name).ToList();
@@ -67,7 +67,7 @@ namespace FC.BL.Repositories
 
         public Guid? GetMediaTypeIDByMime(string mimeType)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 if (Db.MimeTypes.Where(w => w.Name == mimeType).Any())
                 {
@@ -89,7 +89,7 @@ namespace FC.BL.Repositories
         /// <returns></returns>
         public List<MediaDirectory> GetDirectories(Guid? parentID=null)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 if (parentID == null)
                 {
@@ -102,7 +102,7 @@ namespace FC.BL.Repositories
         
         public Media GetByID(Guid? id)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 Media m = Db.Media.Find(id);
                 if (m != null)
@@ -125,7 +125,7 @@ namespace FC.BL.Repositories
 
         public List<Media> GetMediaByDirectoryID(Guid? id)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<Media> m = Db.Media.Where(w => w.DirectoryID == id && w.IsDeleted == false).OrderBy(o => o.Name).ToList();
                 return m;
@@ -134,7 +134,7 @@ namespace FC.BL.Repositories
 
         public MediaDirectory GetDirectoryByID(Guid? id)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 if (id != null)
                 {
@@ -152,7 +152,7 @@ namespace FC.BL.Repositories
 
         public List<MediaDirectory> GetChildren(Guid? id)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 List<MediaDirectory> result = Db.MediaDirectories.Where(w => w.ParentID == id).OrderBy(o => o.Name).ToList();
                 return result;
@@ -163,7 +163,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     media.MediaID = Guid.NewGuid();
                     List<IValidationError> errors = this.Validate<Media>(media);
@@ -198,7 +198,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     Media m = Db.Media.Find(media.MediaID);
                     m.AuthorID = AuthorizationRepository.Current.CurrentUser.UserID;
@@ -240,7 +240,7 @@ namespace FC.BL.Repositories
         public RepositoryState DeleteMedia(Guid? id)
         {
             try {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     Media m = Db.Media.Find(id);
 
@@ -268,7 +268,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     Media m = Db.Media.Find(id);
                     m.IsDeleted = true;
@@ -294,7 +294,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     MediaDirectory d = Db.MediaDirectories.Find(id);
                     d.IsDeleted = true;
@@ -319,7 +319,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     MediaDirectory d = Db.MediaDirectories.Find(id);
                     List<Media> media = Db.Media.Where(w => w.DirectoryID == id).ToList();
@@ -356,7 +356,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     string absBasePath = MediaRepositoryConfig.MEDIA_ROOT;
                     string basePath = MediaRepositoryConfig.MEDIA_BASE;
@@ -412,7 +412,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     string absBasePath = MediaRepositoryConfig.MEDIA_ROOT;
                     string basePath = MediaRepositoryConfig.MEDIA_BASE;
@@ -455,7 +455,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     MediaDirectory md = this.Db.MediaDirectories.Find(mediaDir.DirectoryID);
                     md.AuthorID = AuthorizationRepository.Current.CurrentUser.UserID;
@@ -480,7 +480,7 @@ namespace FC.BL.Repositories
         
         public Media GetByObsoleteID(int obsoleteId)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return this.Db.Media.Where(w => w.ObsoleteID == obsoleteId).FirstOrDefault();
             }

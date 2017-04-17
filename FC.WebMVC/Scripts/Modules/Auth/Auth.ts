@@ -7,12 +7,6 @@ module FC.Modules.Auth {
         }
         constructor(private NgModule: ng.IModule, private app: FC.Core.FCModule) {
             this.$Application = app;
-            this.$Application.AddRoute(
-                "/logout/:ref",
-                "/Scripts/Modules/Auth/Views/logout.html",
-                "FC.Modules.Auth.Controllers.AuthController",
-                "vm"
-            );
         }
     }
 }

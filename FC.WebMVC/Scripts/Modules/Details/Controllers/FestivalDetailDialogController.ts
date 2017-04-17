@@ -18,8 +18,7 @@ module FC.Modules.Details.Controllers {
             '$q',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce"
         ];
@@ -29,12 +28,11 @@ module FC.Modules.Details.Controllers {
             $q: ng.IQService,
             $scope,
             $mdDialog: angular.material.MDDialogService,
-            $route: ng.route.IRoute,
             $routeParams: ng.RouteData,
             $location: ng.ILocationService,
             $sce: ng.ISCEService
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             var vm = this;
             vm.$scope.inst = this;
             vm.$scope.$location = $location;

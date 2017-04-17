@@ -13,8 +13,7 @@ module FC.Modules.Filtering.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog',
             '$sce'
@@ -24,17 +23,16 @@ module FC.Modules.Filtering.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog,
             $sce:ng.ISCEService
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog)
+            super($http, $q, $scope, $location,  $mdDialog)
             var vm = this;
             vm.$scope = $scope;
             vm.$scope.MtModal = $mdDialog;
-            vm.$scope.$routeParams = $routeParams
+            
             vm.$scope.$location = $location;
             vm.$scope.$q = $q;
             vm.$scope.$http = $http;
@@ -76,6 +74,13 @@ module FC.Modules.Filtering.Controllers {
             window.addEventListener("SearchCompleteNoResult", function (r) {
                 vm.$scope.IsLoading = false;
             });
+        }
+
+        private ClearDateCookies(): void {
+            CacheManager.DeleteStorage("Filter_Year");
+            CacheManager.DeleteStorage("Filter_Month");
+            CacheManager.DeleteStorage("user-year");
+            CacheManager.DeleteStorage("user-month");
         }
 
 

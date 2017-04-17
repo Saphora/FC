@@ -19,7 +19,7 @@ namespace FC.BL.Repositories
         {
             List<Stage> result;
 
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 result = Db.Stages.Where(w=>w.FestivalID == festivalID).OrderBy(o=>o.Name).ToList();
             }
@@ -31,7 +31,7 @@ namespace FC.BL.Repositories
         {
             Stage result;
 
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                result = Db.Stages.Find(id);
             }
@@ -40,7 +40,7 @@ namespace FC.BL.Repositories
 
         public RepositoryState Create(Stage t)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {
@@ -72,7 +72,7 @@ namespace FC.BL.Repositories
 
         public RepositoryState Update(Stage t)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {
@@ -109,7 +109,7 @@ namespace FC.BL.Repositories
 
         public RepositoryState Delete(Stage t)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 try
                 {

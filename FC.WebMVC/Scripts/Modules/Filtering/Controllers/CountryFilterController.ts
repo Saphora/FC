@@ -21,8 +21,6 @@ module FC.Modules.Filtering.Controllers {
             '$q',
             '$mdDialog',
             '$scope',
-            '$route',
-            '$routeParams',
             '$location',
             "$sce",
         ];
@@ -32,16 +30,15 @@ module FC.Modules.Filtering.Controllers {
             $q: ng.IQService,
             $mdDialog: angular.material.MDDialogService,
             $scope,
-            $route,
-            $routeParams,
             $location,
             $sce
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.CalendarService = new FC.Modules.Calendar.Services.CalendarService($http, $q);
             vm.$scope.inst = vm;
-            vm.$scope.$routeParams = $routeParams;
+            
             vm.$scope.$location = $location;
             vm.$scope = $scope;
             vm.$scope.FormID = '908ADBE0-5121-4857-9D3A-E829DCCE9D80';
@@ -71,7 +68,6 @@ module FC.Modules.Filtering.Controllers {
                     CacheManager.WriteStorage("ActiveGenres", vm.$scope.SelectedCountries, 9999999999);
                 });
             }
-            vm.SetCountryList();
             vm.$scope.IsActive = this.IsActive;
             if (vm.$scope.SelectedCountries.length == 1) {
                 vm.$scope.Selected = vm.$scope.SelectedCountries.length + " COUNTRY SELECTED";

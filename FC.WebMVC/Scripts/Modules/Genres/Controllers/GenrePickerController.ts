@@ -21,8 +21,7 @@ module FC.Modules.Genres.Controllers {
             '$q',
             '$mdDialog',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "FC.Core.Services.LocalizationService",
             "FC.Core.Services.URLManagerService",
@@ -36,15 +35,14 @@ module FC.Modules.Genres.Controllers {
             $q: ng.IQService,
             $mdDialog,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $sce
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.$scope.inst = vm;
-            vm.$scope.$routeParams = $routeParams;
+            
             vm.$scope.$location = $location;
             vm.$scope = $scope;
             vm.$scope.FormID = 'C0232ABF-7A60-46D2-942D-A2843B3D1AA0';
@@ -278,7 +276,6 @@ module FC.Modules.Genres.Controllers {
 
             $scope.inst.GenreService.Create($scope.model).then(function (r) {
                 $scope.ServerMsg = r.Message;
-                $scope.inst.SetGenreData(true);
                 if (r.Data.EXISTS == true) {
                     $scope.IsCreated = false;
                     $scope.IsCreating = true;

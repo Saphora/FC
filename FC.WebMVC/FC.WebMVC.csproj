@@ -1424,7 +1424,6 @@
     <Content Include="Scripts\Modules\Core\Views\RolePickerDirective.html" />
     <Content Include="Scripts\Modules\Core\Views\StdDatePicker.html" />
     <Content Include="Scripts\Modules\Countries\Services\CountriesService.js" />
-    <Content Include="Scripts\Modules\Countries\Views\country-filter.html" />
     <Content Include="Scripts\Modules\Countries\Views\overview.html" />
     <Content Include="Scripts\Modules\Details\Views\about-card.html" />
     <Content Include="Scripts\Modules\Details\Views\artist-detail.html" />
@@ -1623,7 +1622,7 @@
     <Content Include="Views\News\Index.cshtml" />
     <None Include="Properties\PublishProfiles\festival-calendar.nl.pubxml" />
     <Content Include="Views\News\Details.cshtml" />
-    <Content Include="Views\News\NewsCard.cshtml" />
+    <Content Include="Views\News\_NewsCard.cshtml" />
     <Content Include="Views\Forms\Recaptcha.cshtml" />
     <Content Include="Views\Issues\Index.cshtml" />
     <Content Include="Resources\sassv2\core\_blocks.scss" />
@@ -1655,6 +1654,8 @@
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Shared\_Navbar.cshtml" />
     <Content Include="Views\Festival\Detail.cshtml" />
+    <Content Include="Views\Festival\_FestivalCard.cshtml" />
+    <Content Include="Views\Shared\_Loader.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\Modules\Artists\Artists.ts" />
@@ -1672,7 +1673,6 @@
     <TypeScriptCompile Include="Scripts\Modules\Banners\Banners.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Banners\Services\BannerService.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Calendar\Calendar.ts" />
-    <TypeScriptCompile Include="Scripts\Modules\Calendar\Controllers\CalendarController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Calendar\Models\ICalendarVM.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Calendar\Controllers\SimpleCalendarController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Calendar\Models\FestivalMonthItem.ts" />
@@ -1734,7 +1734,6 @@
     <TypeScriptCompile Include="Scripts\Modules\Filtering\Models\ICountryFilterVM.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Filtering\Models\IFilterBarVM.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Genres\Controllers\GenreFormController.ts" />
-    <TypeScriptCompile Include="Scripts\Modules\Genres\Controllers\_GenreFilterController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Genres\Controllers\GenreFilterController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Genres\Controllers\GenreOverviewController.ts" />
     <TypeScriptCompile Include="Scripts\Modules\Genres\Controllers\GenrePickerController.ts" />
@@ -1842,6 +1841,7 @@
     <TypeScriptCompile Include="Scripts\Shared\Models\Calendar.ts" />
     <TypeScriptCompile Include="Scripts\Shared\Models\ContentDetail.ts" />
     <TypeScriptCompile Include="Scripts\Shared\Models\Favorite.ts" />
+    <TypeScriptCompile Include="Scripts\Shared\Models\FestivalListItem.ts" />
     <TypeScriptCompile Include="Scripts\Shared\Models\FestivalTicket.ts" />
     <TypeScriptCompile Include="Scripts\Shared\Models\FreeGeoIPModel.ts" />
     <TypeScriptCompile Include="Scripts\Shared\Models\LineupItem.ts" />

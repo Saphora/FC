@@ -22,8 +22,7 @@ module FC.Modules.Filtering.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog'
         ];
@@ -31,12 +30,11 @@ module FC.Modules.Filtering.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             this.$scope = $scope;
             this.$scope.MtModal = $mdDialog;

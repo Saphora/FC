@@ -46,28 +46,19 @@ module FC.Modules.Calendar.Services {
         }
 
         public GetByFilter(filter: FC.Shared.ServiceMessages.FestivalFilter) {
-            return this.Post<Array<FC.Shared.ViewModels.IFestivalVM>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
+            if (!filter.MonthNum) {
+                filter.MonthNum = new Date().getMonth() + 1;
+            }
+            if (!filter.YearNum) {
+                filter.YearNum = new Date().getFullYear();
+            }
+            return this.Post<Array<FC.Shared.Models.FestivalListItem>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetByFilter', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
         }
 
-        public GetFilteredFestivals(month: number, year: number, genres: Array<MODELS.UGenre>, countries: Array<MODELS.UCountry>) {
-            var filter = new FC.Shared.ServiceMessages.FestivalFilter();
-            filter.GenreIDs = new Array<string>();
-            filter.CountryIDs = new Array<string>();
-            if (genres) {
-                genres.forEach(function (v, k) {
-                    filter.GenreIDs.push(v.GenreID);
-
-                });
-            }
-            if (countries) {
-                countries.forEach(function (v, k) {
-                    filter.CountryIDs.push(v.CountryID);
-                });
-            }
-            filter.MonthNum = month;
-            filter.YearNum = year;
-            return this.Post<Array<FC.Shared.ViewModels.IFestivalVM>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetFiltered', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
+        public GetUpcoming(filter: FC.Shared.ServiceMessages.FestivalFilter) {
+            return this.Post<Array<FC.Shared.Models.FestivalListItem>, FC.Shared.ServiceMessages.FestivalFilter>('/API/Festival/GetUpcoming', new FC.Shared.Models.ServiceMessage<FC.Shared.ServiceMessages.FestivalFilter>(filter));
         }
+
 
         public GetByMonthYear(month: number, year: number) {
             var filter = new FC.Shared.ServiceMessages.FestivalFilter();

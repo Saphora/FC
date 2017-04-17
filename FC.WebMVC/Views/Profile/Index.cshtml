@@ -73,7 +73,7 @@
                 @Html.Hidden("section", "details")
                 <div class="form-horizontal">
                     <div class="form-group ">
-                        <input type="text" class="form-control" ng-change="vm.search(11)" ng-model="SearchKey" placeholder="Type country name (English)" />
+                        <input type="text" class="form-control" ng-change="vm.search(11)" ng-model="SearchKey" ng-model-options="{debounce:250}" placeholder="Type country name (English)" />
                         <div class="row autocomplete-picker">
                             <div class="col-xs-24">
                                 <ul class="search-result">
@@ -153,7 +153,7 @@
                 @Html.Hidden("section", "details")
                 <div class="form-horizontal">
                     <div class="form-group ">
-                        <input type="text" class="form-control" ng-change="vm.search(8)" ng-model="SearchKey" placeholder="Type genre name (English)" />
+                        <input type="text" class="form-control" ng-change="vm.search(8)" ng-model="SearchKey"  ng-model-options="{debounce:250}" placeholder="Type genre name (English)" />
                         <div class="row autocomplete-picker">
                             <div class="col-xs-24">
                                 <ul class="search-result">

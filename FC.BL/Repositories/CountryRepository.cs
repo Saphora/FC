@@ -18,7 +18,7 @@ namespace FC.BL.Repositories
 
         public UCountry GetByID(Guid? id)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Countries.Find(id);
             }
@@ -26,7 +26,7 @@ namespace FC.BL.Repositories
 
         public List<UCountry> GetAll()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Countries.OrderBy(o => o.Name).ToList();
             }
@@ -34,7 +34,7 @@ namespace FC.BL.Repositories
 
         public List<Guid?> GetAllIds()
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Countries.OrderBy(o => o.Name).Select(s => s.CountryID).ToList();
             }
@@ -49,7 +49,7 @@ namespace FC.BL.Repositories
             {
                 try
                 {
-                    using (Db = new PGDAL.PGModel.ContentModel())
+                    using (Db = new FC.MSDAL.ContentModel())
                     {
                         RegionInfo info = new RegionInfo(code.ToUpper());
                         if (info != null)
@@ -67,7 +67,7 @@ namespace FC.BL.Repositories
         
         public UCountry GetByCultureName(string cultureName)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Countries.Where(w => w.CultureIsoName == cultureName).FirstOrDefault();
             }
@@ -75,7 +75,7 @@ namespace FC.BL.Repositories
 
         public List<UCountry> Search(string name)
         {
-            using (Db = new PGDAL.PGModel.ContentModel())
+            using (Db = new FC.MSDAL.ContentModel())
             {
                 return Db.Countries.Where(w => w.Name.ToLower().Contains(name)).OrderBy(o => o.Name).Take(10).ToList();
             }
@@ -85,7 +85,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     if (!Db.Countries.Where(w => w.Name == country.Name).Any())
                     {
@@ -124,7 +124,7 @@ namespace FC.BL.Repositories
             try
             {
 
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     UCountry c = Db.Countries.Find(country.CountryID);
 
@@ -163,7 +163,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     UCountry c = Db.Countries.Find(country.CountryID);
                     c.ArchiveDate = DateTime.Now.AddDays(180);
@@ -190,7 +190,7 @@ namespace FC.BL.Repositories
         {
             try
             {
-                using (Db = new PGDAL.PGModel.ContentModel())
+                using (Db = new FC.MSDAL.ContentModel())
                 {
                     if (Db.Festivals.Where(w => w.CountryID == country.CountryID).Any() || Db.Artists.Where(w => w.CountryID == country.CountryID).Any())
                     {

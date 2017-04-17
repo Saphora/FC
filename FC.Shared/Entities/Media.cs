@@ -50,10 +50,6 @@ namespace FC.Shared.Entities
 
         [Validation(ValidationRule.Website)]
         public string MediaURL { get; set; }
-
-        public DateTime? Created { get; set; }
-        public DateTime? Modified { get; set; }
-        public DateTime? ArchiveDate { get; set; }
         
         public Guid? MediaTypeID { get; set; }
 

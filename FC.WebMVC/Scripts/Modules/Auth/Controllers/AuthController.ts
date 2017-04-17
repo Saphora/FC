@@ -19,8 +19,7 @@ module FC.Modules.Auth.Controllers {
             '$http',
             '$q',
             '$scope',
-            '$route',
-            '$routeParams',
+            
             '$location',
             '$mdDialog',
             "FC.Core.Services.AuthService",
@@ -31,14 +30,13 @@ module FC.Modules.Auth.Controllers {
             $http,
             $q,
             $scope,
-            $route,
-            $routeParams,
+            
             $location,
             $mdDialog,
             AuthService: FC.Core.Services.AuthService,
             $sce
         ) {
-            super($http, $q, $scope, $location, $routeParams,$mdDialog);
+            super($http, $q, $scope, $location, $mdDialog);
             this.$location = $location;
             $scope.SubmitLoginForm = this.SubmitLoginForm;
             $scope.SubmitRegisterForm = this.SubmitRegisterForm;
@@ -49,7 +47,7 @@ module FC.Modules.Auth.Controllers {
             this.$scope.inst = this;
             this.$scope = $scope;
             this.$scope.StartLogout = this.StartLogout;
-            this.$routeParams = $routeParams;
+            
             var vm = this;
             if (window.location.href.indexOf("logout") > -1) {
                 if (this.$routeParams['ref']) {

@@ -29,6 +29,7 @@ namespace FC.Shared.Entities
         [ForeignKey("MediaID")]
         public  Media Thumbnail { get; set; }
         public string TextLine { get; set; }
+        [Column(TypeName = "datetime2")]
         public DateTime Date { get; set; }
         public string DeepLink { get; set; }
     }

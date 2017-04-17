@@ -35,7 +35,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <TrustUrlParameters>true</TrustUrlParameters>
-    <ApplicationRevision>48</ApplicationRevision>
+    <ApplicationRevision>51</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -439,9 +439,9 @@
       <Project>{b0873d31-0f3c-49fa-80d5-6ca748b0e1d8}</Project>
       <Name>FC.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FC.PGDAL\FC.PGDAL.csproj">
-      <Project>{6c6f8feb-5dbb-45fa-8e46-14494355859e}</Project>
-      <Name>FC.PGDAL</Name>
+    <ProjectReference Include="..\FC.MSDAL\FC.MSDAL.csproj">
+      <Project>{fd0272d4-5e5d-4087-8c6e-0032f3e1fb16}</Project>
+      <Name>FC.MSDAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\FC.Shared\FC.Shared.csproj">
       <Project>{825ebabe-4b92-48dd-8696-cfce263e2153}</Project>
@@ -487,6 +487,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

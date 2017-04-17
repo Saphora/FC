@@ -1,4 +1,4 @@
-namespace FC.PGDAL.PGModel
+namespace FC.MSDAL
 {
     using System;
     using System.Data.Entity;

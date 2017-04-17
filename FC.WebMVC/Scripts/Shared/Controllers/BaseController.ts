@@ -93,14 +93,6 @@ module FC.Shared.Controllers {
         public ActiveYear: number;
         public ActiveMonth: number;
 
-        public initLoadingScope() {
-            var vm = this;
-            vm.$scope.IsThemesLoading = true;
-            vm.$scope.IsCountriesLoading = true;
-            vm.$scope.IsGenresLoading = true;
-            vm.$scope.IsFestivalsLoading = true;
-        }
-
         public AddValidationRule(rule: FC.Core.Validation.ValidationRuleItem) {
             this.RuleRegister.push(rule);
         }
@@ -201,7 +193,7 @@ module FC.Shared.Controllers {
             }
         }
 
-        constructor($http, $q:ng.IQService, $scope:FC.Shared.ViewModels.IFormVMBase<any>, $location: ng.ILocationService, $routeParams: any, $mdDialog:angular.material.MDDialogService) {
+        constructor($http, $q:ng.IQService, $scope:FC.Shared.ViewModels.IFormVMBase<any>, $location: ng.ILocationService, $mdDialog:angular.material.MDDialogService) {
             var vm = this;
             this.CacheManager = FC.Shared.Util.CacheManager.GetInstance();
             this.$scope = $scope;
@@ -211,22 +203,6 @@ module FC.Shared.Controllers {
             this.$q = $q;
             this.$scope.$q = $q;
             this.$scope['CONFIRMATION'] = FC.Core.Controllers.CONFIRMATION;
-            if ($routeParams["page"]) {
-                this.SetPageNum(parseInt($routeParams["page"]));
-            } else {
-                this.SetPageNum(1);
-            }
-
-            if ($routeParams["year"]) {
-                this.$scope.ActiveYear = $routeParams["year"];
-            } else {
-                this.$scope.ActiveYear = new Date().getFullYear();
-            }
-            if ($routeParams["month"]) {
-                this.$scope.ActiveMonth = $routeParams["month"];
-            } else {
-                this.$scope.ActiveMonth = new Date().getMonth() + 1;
-            }
             this.GenreService = new FC.Modules.Genres.Services.GenreService($http, $q);
             this.CountriesSvc = new FC.Modules.Countries.Services.CountriesService($http, $q);
             this.GeoIPSvc = new FC.Core.Services.GeoIPService($http, $q);
@@ -242,7 +218,7 @@ module FC.Shared.Controllers {
             this.RoleService = new FC.Core.Services.RolesService($http, $q);
             //public ReportsService: FC.Modules.Report.Services.ReportsService;
             this.$location = $location;
-            this.$routeParams = $routeParams;
+            
             this.$inst = this;
             this.$scope.IsLoading = true;
             this.$scope.MEDIA_ROOT_ID = FC.Core.Environment.MEDIA_ROOT_ID;
@@ -261,11 +237,7 @@ module FC.Shared.Controllers {
             this.$scope.FinishForm = this.FinishForm;
             this.$scope.DoCancelCRUD = this.DoCancelCRUD;
             CONFIG = new FC.Core.AppConfig();
-            this.initLoadingScope();
-            this.SetCountryCache();
             this.SetUserYearAndMonth();
-            this.SetGenreData();
-            this.SetPageNum($routeParams['page']);
             this.RuleRegister = new Array<FC.Core.Validation.ValidationRuleItem>();
            
             this.DoAddSaveListener(null);
@@ -274,11 +246,6 @@ module FC.Shared.Controllers {
                 plugins: 'link image code, media',
                 toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
             };
-            this.$scope.META = new META();
-            this.$scope.META.PageTitle = "Discover the most amazing festivals! BETA 1.0";
-            this.$scope.META.PageKeys = "Festival, Artists, Calendar, Agenda, EDM, Dance, Hardcore, Hardrock, metal, festivals, overview, oversight";
-            this.$scope.META.PageDesc = "Festival Calendar is THE most complete guide for your Festival, with news, updates, and many more!";
-            this.$scope.META.PageIMG = "";
             window.addEventListener("FCDataLoadingComplete", function (e) {
                 vm.$scope.IsLoading = false;
             });
@@ -633,21 +600,7 @@ module FC.Shared.Controllers {
                 vm.$scope.SysCountries = CacheManager.Get<FC.Shared.Models.UCountry[]>("sys-countries").data;
             }
         }
-
-        public SetGenreData(force: boolean=false) {
-            var vm = this;
-            if (!vm.CacheManager.Contains("sys-genres") || force == true) {
-                if (vm.$scope.MemReg.Get("sys-genres-set") == null) {
-                    vm.GenreService.GetAllGenres().then(function (r: INT.IServiceResponse<MODELS.UGenre[]>) {
-                        vm.CacheManager.WriteStorage("sys-genres", r.Data, 9999999999999999999);
-                        vm.$scope.SysGenres = r.Data;
-                    });
-                    vm.$scope.MemReg.Register("sys-genres-set", true);
-                }
-            } else {
-                vm.$scope.SysGenres = CacheManager.Get<FC.Shared.Models.UGenre[]>("sys-genres").data;
-            }
-        }
+        
 
         public ClearNullIndexes(arr: Array<any>): Array<any> {
             console.warn("BaseController::ClearNullIndexes is obsolete, use BaseController::RepairArray instead");

@@ -20,7 +20,7 @@
             //Example of star- half - full(alias)
             //Example of star- half - o
             //Example of star- o-- >
-        public constructor($route, $routeParams, $location) {
+        public constructor( $location) {
             var vm = this;
             RatingDirective.prototype.link = (scope: any, element: ng.IAugmentedJQuery, attrs: ng.IAttributes) => {
                 vm._element = element;
@@ -35,11 +35,11 @@
         }
 
         public static factory() {
-            var directive = ($route, $routeParams, $location) => {
-                return new RatingDirective($route, $routeParams, $location);
+            var directive = ( $location) => {
+                return new RatingDirective( $location);
             };
 
-            directive['$inject'] = ['$route', '$routeParams', '$location'];
+            directive['$inject'] = [ '$location'];
 
             return directive;
         }

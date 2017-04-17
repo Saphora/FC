@@ -19,11 +19,9 @@ namespace FC.Shared.Entities
         public string Address { get; set; }
 
         [Validation(ValidationRule.Zip, true)]
-        [Index]
         public string ZIPCode { get; set; }
 
         [Validation(ValidationRule.Zip, true)]
-        [Index]
         public string City { get; set; }
 
         [Validation(ValidationRule.Guid, true)]
@@ -75,17 +73,8 @@ namespace FC.Shared.Entities
         [ForeignKey("ProfileHeaderImageID")]
         public Media ProfileHeaderImage { get; set; }
 
-        public DateTime? Created { get; set; }
-        public DateTime? Modified { get; set; }
-        public DateTime? ArchiveDate { get; set; }
-        public bool IsDeleted { get; set; }
-        public bool IsPublished { get; set; }
-
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-
-        public Guid? AuthorID { get; set; }
-
         public string MetaKeys
         {
             get; set;

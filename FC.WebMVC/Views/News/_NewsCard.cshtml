@@ -1,0 +1,28 @@
+﻿<div class="card news-card">
+    <div class="card-header" ng-if="n.Title.length < 40">
+
+        <a href="/news/{{n.NewsID}}" class="h5">
+            {{n.Title.substr(0,36).toUpperCase()}}
+        </a>
+    </div>
+    <div class="card-block">
+        <div class="top">
+
+            <img ng-src="{{MediaURLRoot}}{{n.ThumbnailID}}.img?&width=800&height=272" />
+        </div>
+        <div class="bottom">
+            <div class="news-card-header">
+                <span class="value"> {{vm.FormatDate(n.Date)}}</span>
+            </div>
+            <p>
+                {{n.MetaDescription}}
+                <a href="/news/{{n.NewsID}}" class="btn-sm btn-danger" ng-if="n.MetaDescription">READ MORE</a>
+            </p>
+            <div class="news-card-footer hidden-md-down">
+
+                <span class="label">SOURCE:</span><span class="value">{{n.SourceName}}</span>
+                <!--<div class="keywords" ng-bind-html="vm.ExplodeTagString($sce,n.MetaKeys)"></div>-->
+            </div>
+        </div>
+    </div>
+</div>

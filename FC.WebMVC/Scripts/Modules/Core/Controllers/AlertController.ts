@@ -30,8 +30,7 @@ module FC.Core.Controllers {
             '$q',
             '$scope',
             '$mdDialog',
-            '$route',
-            '$routeParams',
+            
             '$location',
             "$sce",
             'local',
@@ -48,7 +47,7 @@ module FC.Core.Controllers {
             $sce: ng.ISCEService,
             local
         ) {
-            super($http, $q, $scope, $location, $routeParams, $mdDialog);
+            super($http, $q, $scope, $location,  $mdDialog);
             var vm = this;
             vm.$scope.inst = this;
             vm.$scope = $scope;

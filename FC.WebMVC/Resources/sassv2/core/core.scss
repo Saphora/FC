@@ -178,13 +178,15 @@ md-toolbar.dialog-header {
         &.no-padding {
             padding: 0!important;
         }
-        padding: 5px;
+        padding: 8px;
         border-radius: 0 !important;
-        max-height: 40px !important;
-        height: 40px !important;
+        min-height: 40px !important;
+        max-height: 80px !important;
         .h5 {
             position:relative;
-            top: 5px;
+            display: inline-block;
+            padding: 0;
+            margin-bottom: 0;
         }
         &.link {
             &:hover {
